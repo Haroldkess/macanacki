@@ -1,0 +1,213 @@
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:hexagon/hexagon.dart';
+import 'package:hexcolor/hexcolor.dart';
+import 'package:makanaki/presentation/allNavigation.dart';
+import 'package:makanaki/presentation/constants/colors.dart';
+import 'package:makanaki/presentation/widgets/text.dart';
+import 'package:makanaki/services/temps/temps_id.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../../../model/search_user_model.dart';
+import '../../../../../services/controllers/action_controller.dart';
+import '../../../../../services/middleware/action_ware.dart';
+import '../../../userprofile/user_profile_screen.dart';
+import '../../profile/profile_screen.dart';
+
+class UserResultTile extends StatelessWidget {
+  final UserSearchData data;
+  final String username;
+  const UserResultTile({super.key, required this.data, required this.username});
+
+  @override
+  Widget build(BuildContext context) {
+    ActionWare stream = context.watch<ActionWare>();
+    return Stack(
+      children: [
+        Container(
+          height: 100,
+          decoration: BoxDecoration(
+              color: Colors.white, borderRadius: BorderRadius.circular(5)),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Row(
+              children: [
+                dp(context,
+                    data.profilephoto == null ? "" : data.profilephoto!),
+                const SizedBox(
+                  width: 10,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    RichText(
+                        text: TextSpan(
+                            text: "${data.username}, ",
+                            style: GoogleFonts.spartan(
+                                textStyle: const TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.black,
+                                    decorationStyle: TextDecorationStyle.solid,
+                                    fontSize: 14)),
+                            children: [
+                          TextSpan(
+                            text: data.dob,
+                            style: GoogleFonts.spartan(
+                                textStyle: const TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.black,
+                                    decorationStyle: TextDecorationStyle.solid,
+                                    fontSize: 14)),
+                          ),
+                          // TextSpan(
+                          //   text: data.isMatched ? "Matched" : " ",
+                          //   style: GoogleFonts.spartan(
+                          //       textStyle: TextStyle(
+                          //           fontWeight: FontWeight.w400,
+                          //           color: HexColor("#0597FF"),
+                          //           decorationStyle: TextDecorationStyle.solid,
+                          //           fontSize: 10)),
+                          // )
+                        ])),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    AppText(
+                      text: "Online",
+                      fontWeight: FontWeight.w500,
+                      size: 12,
+                      color: HexColor("#0597FF"),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+        Positioned(
+          bottom: 10.0,
+          right: 10.0,
+          child: Align(
+            alignment: Alignment.bottomRight,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                username == data.username
+                    ? const SizedBox.shrink()
+                    : InkWell(
+                        onTap: () async {
+                          SharedPreferences pref =
+                              await SharedPreferences.getInstance();
+
+                          if (pref.getString(userNameKey) == data.username) {
+                            // ignore: use_build_context_synchronously
+                            PageRouting.pushToPage(
+                                context, const ProfileScreen());
+                          } else {
+                            // ignore: use_build_context_synchronously
+                            PageRouting.pushToPage(
+                                context,
+                                UsersProfile(
+                                  username: data.username!,
+                                ));
+                          }
+                        },
+                        child: followCardButton("Profile", false)),
+                const SizedBox(
+                  width: 20,
+                ),
+                username == data.username
+                    ? const SizedBox.shrink()
+                    : InkWell(
+                        onTap: () {
+                          followAction(context);
+                        },
+                        child: !stream.followIds.contains(data.id!)
+                            ? followCardButton("Follow", true)
+                            : unfollowCardButton("Unfollow")),
+              ],
+            ),
+          ),
+        )
+      ],
+    );
+  }
+
+  Future<void> followAction(BuildContext context) async {
+    ActionWare provide = Provider.of<ActionWare>(context, listen: false);
+
+
+    await ActionController.followOrUnFollowController(context, data.username!, data.id!);
+  }
+
+  Widget dp(BuildContext context, String url) {
+    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
+    var size = MediaQuery.of(context).size;
+    var padding = 8.0;
+    var w = (size.width - 4 * 1) / 6;
+    return Stack(
+      children: [
+        HexagonWidget.pointy(
+          width: w,
+          elevation: 2.0,
+          color: Colors.white,
+          cornerRadius: 20.0,
+          child: AspectRatio(
+            aspectRatio: HexagonType.POINTY.ratio,
+            // child: Image.asset(
+            //   'assets/tram.jpg',
+            //   fit: BoxFit.fitWidth,
+            // ),
+          ),
+        ),
+        HexagonWidget.pointy(
+          width: w,
+          elevation: 0.0,
+          color: HexColor("#5F5F5F"),
+          padding: 2,
+          cornerRadius: 20.0,
+          child: AspectRatio(
+              aspectRatio: HexagonType.POINTY.ratio,
+              child: Center(child: Image.network(url))),
+        ),
+      ],
+    );
+  }
+
+  Widget followCardButton(String title, bool isColor) {
+    return Container(
+      decoration: BoxDecoration(
+          color: isColor ? HexColor(primaryColor) : Colors.transparent,
+          border: Border.all(width: 1, color: HexColor(primaryColor)),
+          borderRadius: BorderRadius.circular(15),
+          shape: BoxShape.rectangle),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        child: AppText(
+          text: title,
+          color: isColor ? HexColor(backgroundColor) : HexColor(primaryColor),
+        ),
+      ),
+    );
+  }
+
+  Widget unfollowCardButton(String title) {
+    return Container(
+      decoration: BoxDecoration(
+          color: Colors.transparent,
+          border: Border.all(width: 1, color: HexColor(primaryColor)),
+          borderRadius: BorderRadius.circular(15),
+          shape: BoxShape.rectangle),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        child: AppText(
+          text: title,
+          color: HexColor(primaryColor),
+        ),
+      ),
+    );
+  }
+}

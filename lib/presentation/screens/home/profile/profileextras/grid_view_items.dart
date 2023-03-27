@@ -1,0 +1,103 @@
+import 'dart:developer';
+import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:hexcolor/hexcolor.dart';
+import 'package:makanaki/presentation/allNavigation.dart';
+import 'package:makanaki/presentation/constants/colors.dart';
+import 'package:provider/provider.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
+
+import '../../../../../model/feed_post_model.dart';
+import 'package:path_provider/path_provider.dart';
+
+import '../../../../../services/middleware/user_profile_ware.dart';
+import '../../Feed/profilefeed/user_profile_feed.dart';
+
+class GridViewItems extends StatefulWidget {
+  final FeedPost data;
+  final int index;
+  const GridViewItems({super.key, required this.data, required this.index});
+
+  @override
+  State<GridViewItems> createState() => _GridViewItemsState();
+}
+
+class _GridViewItemsState extends State<GridViewItems> {
+  String? thumbnail = "";
+  @override
+  void initState() {
+    super.initState();
+
+    getThumbnail();
+  }
+
+// getgif (){
+//   return CachedVideoPreview(
+//   path: widget.data.media!,
+//   type: SourceType.remote,
+//   httpHeaders: const <String, String>{},
+//   remoteImageBuilder: (BuildContext context, url) =>
+//       Image.network(url),
+// )
+
+//}
+  getThumbnail() async {
+    if (!widget.data.media!.contains(".mp4")) {
+      return;
+    }
+    try {
+      final fileName = await VideoThumbnail.thumbnailFile(
+        video: widget.data.media!,
+        thumbnailPath: (await getTemporaryDirectory()).path,
+        imageFormat: ImageFormat.WEBP,
+        maxHeight:
+            0, // specify the height of the thumbnail, let the width auto-scaled to keep the source aspect ratio
+        quality: 100,
+      ).whenComplete(() => log(" thumbnail generated"));
+
+      log(fileName.toString());
+      setState(() {
+        thumbnail = fileName;
+      });
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    UserProfileWare provide =
+        Provider.of<UserProfileWare>(context, listen: false);
+    return InkWell(
+      splashColor: HexColor(primaryColor),
+      onTap: () async {
+    //    provide.changeIndex(widget.index);
+        PageRouting.pushToPage(
+            context,
+            UserProfileFeed(
+              index: widget.index,
+            ));
+      },
+      child: Container(
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            image: DecorationImage(
+                fit: BoxFit.cover,
+                image: widget.data.media!.contains(".mp4")
+                    ? FileImage(File(thumbnail!))
+                    : NetworkImage(widget.data.media!) as ImageProvider)),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            widget.data.media!.contains(".mp4")
+                ? Icon(
+                    Icons.play_arrow,
+                    color: Colors.grey.withOpacity(0.9),
+                  )
+                : const SizedBox.shrink()
+          ],
+        ),
+      ),
+    );
+  }
+}

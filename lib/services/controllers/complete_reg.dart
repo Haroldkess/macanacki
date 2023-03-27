@@ -1,0 +1,62 @@
+import 'dart:developer';
+import 'package:flutter/material.dart';
+import 'package:hexcolor/hexcolor.dart';
+import 'package:makanaki/model/register_model.dart';
+import 'package:makanaki/presentation/constants/colors.dart';
+import 'package:makanaki/presentation/screens/home/tab_screen.dart';
+import 'package:makanaki/presentation/widgets/snack_msg.dart';
+import 'package:makanaki/services/controllers/login_controller.dart';
+import 'package:makanaki/services/middleware/facial_ware.dart';
+import 'package:makanaki/services/middleware/registeration_ware.dart';
+import 'package:makanaki/services/temps/temp.dart';
+import 'package:makanaki/services/temps/temps_id.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../presentation/allNavigation.dart';
+
+class CompleteRegisterationController {
+  static Future<RegisterUserModel> regData(BuildContext context) async {
+    FacialWare pic = Provider.of<FacialWare>(context, listen: false);
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    RegisterUserModel data = RegisterUserModel(
+        username: pref.getString(userNameKey),
+        genderId: pref.getInt(genderId),
+        dob: pref.getString(dobKey),
+        email: pref.getString(emailKey),
+        password: pref.getString(passwordKey),
+        photo: pic.addedPhoto);
+    return data;
+  }
+
+  static Future<void> registerationController(
+    BuildContext context,
+  ) async {
+    RegisterationWare ware =
+        Provider.of<RegisterationWare>(context, listen: false);
+    Temp temp = Provider.of<Temp>(context, listen: false);
+
+    RegisterUserModel data = await regData(context);
+    ware.isLoading3(true);
+
+    bool isDone = await ware
+        .registerUserFromApi(data)
+        .whenComplete(() => log("api function done"));
+
+    if (isDone) {
+      // ignore: use_build_context_synchronously
+      showToast(context, ware.message2, HexColor(primaryColor));
+      await Future.delayed(const Duration(seconds: 2));
+      // ignore: use_build_context_synchronously
+      temp.addIsLoggedInTemp(true).whenComplete(() => ware.isLoading3(false));
+
+      // ignore: use_build_context_synchronously
+      PageRouting.removeAllToPage(context, const TabScreen());
+    } else {
+      await ware.isLoading3(false);
+      // ignore: use_build_context_synchronously
+      showToast(context, ware.message2, Colors.red);
+      //print("something went wrong");
+    }
+  }
+}

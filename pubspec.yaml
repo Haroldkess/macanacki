@@ -1,0 +1,78 @@
+name: makanaki
+description: A new Flutter project.
+
+# The following line prevents the package from being accidentally published to
+# pub.dev using `flutter pub publish`. This is preferred for private packages.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=2.18.4 <3.0.0'
+
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.2
+  flutter_svg: ^1.1.0
+  provider: ^5.0.0
+  shared_preferences: 2.0.6
+  intl:
+  flutter_launcher_icons:
+  google_fonts:
+  animate_do:
+  hexcolor: ^2.0.5
+  hexagon: ^0.2.0-nullsafety.1
+  dimension: ^0.1.6
+  dotted_border: ^2.0.0+3
+  avatar_glow:
+  fluttertoast: ^8.1.2
+  swipe_cards: ^2.0.0+1
+  pin_code_fields: ^7.4.0
+  image_picker: ^0.8.6+3
+  mime_type: ^1.0.0
+  path: ^1.8.0
+  permission_handler: ^8.1.4+2
+  http:
+  email_validator: ^2.1.17
+  freezed_annotation: ^0.14.1
+  json_annotation: ^4.0.0
+  shimmer: ^2.0.0
+  file_picker: ^5.2.5
+  video_player: ^2.5.3
+  cached_network_image:
+  cached_video_player: ^2.0.4
+  video_thumbnail: ^0.5.3
+  numeral: ^2.0.1
+  cached_video_preview: ^1.0.6
+  # preload_page_view: ^0.1.6
+  # should_rebuild: ^1.0.1
+  better_player: ^0.0.83
+  like_button: ^2.0.5
+  animated_icon_button: ^1.0.2
+  
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^2.0.0
+  build_runner:
+  freezed: 0.14.0+1
+  json_serializable: ^4.0.2
+
+
+flutter:
+
+
+  uses-material-design: true
+
+  # To add assets to your application, add an assets section, like this:
+  assets:
+    - assets/pic/
+    - assets/icon/
+
+
