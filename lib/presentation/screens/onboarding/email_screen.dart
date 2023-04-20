@@ -40,7 +40,7 @@ class _EmailScreenState extends State<EmailScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-              height: height * 0.3,
+              height: height * 0.37,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: const [
@@ -59,9 +59,9 @@ class _EmailScreenState extends State<EmailScreen> {
                     children: [
                       AppText(
                         text: "Welcome",
-                        size: 32,
+                        size: 25,
                         color: HexColor(backgroundColor),
-                        fontWeight: FontWeight.w400,
+                        fontWeight: FontWeight.w600,
                       ),
                     ],
                   ),
@@ -72,7 +72,7 @@ class _EmailScreenState extends State<EmailScreen> {
                     children: [
                       AppText(
                         text: "Enter your email address to get started",
-                        size: 14,
+                        size: 12,
                         color: HexColor(backgroundColor),
                         fontWeight: FontWeight.w400,
                       ),
@@ -118,7 +118,7 @@ class _EmailScreenState extends State<EmailScreen> {
                           contentPadding: const EdgeInsets.only(left: 20),
                           hintText: "Enter your email here",
                           hintStyle: GoogleFonts.spartan(
-                              color: HexColor('#F5F2F9'), fontSize: 14),
+                              color: HexColor('#F5F2F9'), fontSize: 12),
                           border: InputBorder.none,
                           enabledBorder: InputBorder.none,
                           focusedBorder: InputBorder.none,

@@ -15,9 +15,9 @@ class CaptionForm extends StatefulWidget {
 }
 
 class _CaptionFormState extends State<CaptionForm> {
-  
   bool typing = false;
   bool done = false;
+  bool increase = false;
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -25,7 +25,7 @@ class _CaptionFormState extends State<CaptionForm> {
       elevation: 10,
       shadowColor: HexColor("#D8D1F4"),
       child: Container(
-        height: 58,
+        height: increase ? 80 : 58,
         width: 379,
         alignment: Alignment.center,
         decoration: BoxDecoration(
@@ -33,7 +33,7 @@ class _CaptionFormState extends State<CaptionForm> {
             shape: BoxShape.rectangle,
             border: Border.all(
                 width: 1.0,
-                color:  HexColor("#E8E6EA"),
+                color: HexColor("#E8E6EA"),
                 style: BorderStyle.solid),
             borderRadius: const BorderRadius.all(Radius.circular(8.0))),
         child: TextFormField(
@@ -48,12 +48,26 @@ class _CaptionFormState extends State<CaptionForm> {
               setState(() {
                 typing = true;
               });
+
+              if (val.length > 50) {
+                setState(() {
+                  increase = true;
+                });
+              } else {
+                setState(() {
+                  increase = false;
+                });
+              }
             } else {
               setState(() {
                 typing = false;
               });
             }
           },
+          textInputAction: TextInputAction.go,
+          maxLines: null,
+          keyboardType: TextInputType.text,
+          maxLength: 1500,
           decoration: InputDecoration(
             hintText: "  Write a caption...",
             hintStyle:

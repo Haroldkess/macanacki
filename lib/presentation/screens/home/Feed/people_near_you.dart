@@ -5,6 +5,7 @@ import 'package:makanaki/presentation/constants/params.dart';
 import 'package:makanaki/presentation/widgets/tik_tok_view.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../services/controllers/feed_post_controller.dart';
 import '../../../../services/middleware/feed_post_ware.dart';
 import '../../../uiproviders/screen/find_people_provider.dart';
 
@@ -18,7 +19,6 @@ class PeopleHome extends StatefulWidget {
 class _PeopleHomeState extends State<PeopleHome>
     with AutomaticKeepAliveClientMixin {
   PageController? controller;
-
 
   @override
   Widget build(BuildContext context) {
@@ -35,10 +35,18 @@ class _PeopleHomeState extends State<PeopleHome>
         return TikTokView(
           media: post.media!,
           data: post,
+          page: "feed",
         );
       }),
-      onPageChanged: (index) {
+      onPageChanged: (index) async {
+        FeedPostWare postLenght =
+            Provider.of<FeedPostWare>(context, listen: false);
         provide.indexChange(index);
+        int checkNum = postLenght.feedPosts.length - 5;
+        int pageNum = postLenght.feedData.currentPage! + 1;
+        if (index >= checkNum && pageNum <= postLenght.feedData.lastPage!) {
+          await FeedPostController.getFeedPostController(context, pageNum, true).whenComplete(() => print("paginated"));
+        }
       },
     );
   }

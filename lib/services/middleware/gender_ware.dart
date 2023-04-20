@@ -46,24 +46,24 @@ class genderWare extends ChangeNotifier {
           .whenComplete(() => log("gender gotten successfully"));
       if (response == null) {
         isSuccessful = false;
-        log("get gender request failed");
+      //  log("get gender request failed");
       } else if (response.statusCode == 200) {
         var jsonData = jsonDecode(response.body);
 
         var incomingData = GenderModel.fromJson(jsonData);
         genderList = incomingData.data!;
-        log(genderList.first.name!);
+     //   log(genderList.first.name!);
 
-        log("get gender  request success");
+      //  log("get gender  request success");
         isSuccessful = true;
       } else {
-        log("get gender  request failed");
+      //  log("get gender  request failed");
         isSuccessful = false;
       }
     } catch (e) {
       isSuccessful = false;
-      log("get gender  request failed");
-      log(e.toString());
+   //   log("get gender  request failed");
+    //  log(e.toString());
     }
 
     notifyListeners();

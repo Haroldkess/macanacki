@@ -9,7 +9,8 @@ import '../constants/params.dart';
 
 class AppHeader extends StatelessWidget implements PreferredSizeWidget {
   final Color color;
-  const AppHeader({super.key, required this.color});
+  int? index;
+  AppHeader({super.key, required this.color, required this.index});
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 
@@ -31,15 +32,31 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
             child: Container(
               color: color,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: index == 2
+                    ? MainAxisAlignment.end
+                    : MainAxisAlignment.spaceBetween,
                 children: [
-                  myIcon("assets/icon/makanakiicon.svg", primaryColor, 16.52,
-                      70, false),
+                  index == 2
+                      ? const SizedBox.shrink()
+                      : myIcon("assets/icon/makanakiicon.svg", primaryColor,
+                          16.52, 70, false),
                   InkWell(
                     onTap: () => PageRouting.pushToPage(
                         context, const NotificationScreen()),
-                    child: myIcon("assets/icon/notification.svg", "#828282",
-                        19.13, 17.31, true),
+                    child: Stack(
+                      children: [
+                        SvgPicture.asset(
+                          "assets/icon/notification.svg",
+                        ),
+                        const Positioned(
+                          right: 2.0,
+                          child: CircleAvatar(
+                            radius: 5,
+                            backgroundColor: Colors.red,
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ],
               ),

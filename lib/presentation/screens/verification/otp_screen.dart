@@ -78,7 +78,7 @@ class _EmailOtpState extends State<EmailOtp> {
                       AppText(
                         text: "Verify Email",
                         fontWeight: FontWeight.w700,
-                        size: 32,
+                        size: 25,
                         align: TextAlign.center,
                         color: HexColor(backgroundColor),
                       )
@@ -99,7 +99,7 @@ class _EmailOtpState extends State<EmailOtp> {
                               child: AppText(
                                 text:
                                     "Please enter the Code sent to ${widget.email}",
-                                size: 14,
+                                size: 12,
                                 maxLines: 3,
                                 overflow: TextOverflow.ellipsis,
                                 color: HexColor(backgroundColor),
@@ -114,7 +114,7 @@ class _EmailOtpState extends State<EmailOtp> {
                         Row(
                           children: [
                             AppText(
-                              text: "Password",
+                              text: "OTP",
                               size: 14,
                               color: HexColor(backgroundColor),
                               fontWeight: FontWeight.w400,
@@ -157,7 +157,7 @@ class _EmailOtpState extends State<EmailOtp> {
                           children: [
                             AppText(
                               text: "Not You? ",
-                              color: Colors.grey,
+                              color: HexColor("#FF94B7"),
                             ),
                             InkWell(
                               child: AppText(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:makanaki/model/feed_post_model.dart';
+import 'package:makanaki/model/profile_feed_post.dart';
 import 'package:makanaki/presentation/constants/colors.dart';
 import 'package:makanaki/presentation/screens/home/profile/profileextras/grid_view_items.dart';
 import 'package:provider/provider.dart';
@@ -51,8 +52,8 @@ class _ProfilePostGridLoaderState extends State<ProfilePostGridLoader> {
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3,
           childAspectRatio: 200 / 300,
-          crossAxisSpacing: 5,
-          mainAxisSpacing: 5),
+          crossAxisSpacing: 1,
+          mainAxisSpacing: 1),
       itemBuilder: (BuildContext context, int index) {
         String img = test[index];
         return Shimmer.fromColors(
@@ -90,16 +91,16 @@ class _ProfilePostGridState extends State<ProfilePostGrid> {
       shrinkWrap: true,
       //physics: const NeverScrollableScrollPhysics(),
       primary: false,
-      padding: const EdgeInsets.all(5),
+      padding: const EdgeInsets.only(top: 0),
       itemCount: stream.profileFeedPosts.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3,
           childAspectRatio: 200 / 300,
-          crossAxisSpacing: 5,
-          mainAxisSpacing: 5),
+          crossAxisSpacing: 1,
+          mainAxisSpacing: 1),
       itemBuilder: (BuildContext context, int index) {
-        FeedPost post = stream.profileFeedPosts[index];
-        return GridViewItems(
+        ProfileFeedDatum post = stream.profileFeedPosts[index];
+        return MyGridViewItems(
           data: post,
           index: index,
         );
@@ -123,15 +124,15 @@ class _PublicProfilePostGridState extends State<PublicProfilePostGrid> {
       shrinkWrap: true,
       //physics: const NeverScrollableScrollPhysics(),
       primary: false,
-      padding: const EdgeInsets.all(5),
+      padding: const EdgeInsets.only(top: 0),
       itemCount: stream.publicUserProfileModel.posts == null
           ? 0
           : stream.publicUserProfileModel.posts!.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3,
           childAspectRatio: 200 / 300,
-          crossAxisSpacing: 5,
-          mainAxisSpacing: 5),
+          crossAxisSpacing: 1,
+          mainAxisSpacing: 1),
       itemBuilder: (BuildContext context, int index) {
         PublicUserPost post = stream.publicUserProfileModel.posts![index];
         return PublicGridViewItems(

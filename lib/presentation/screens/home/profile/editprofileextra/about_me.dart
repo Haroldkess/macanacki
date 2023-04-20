@@ -5,7 +5,8 @@ import 'package:makanaki/presentation/constants/colors.dart';
 import 'package:makanaki/presentation/widgets/text.dart';
 
 class EditAboutMe extends StatelessWidget {
-  const EditAboutMe({super.key});
+   EditAboutMe({super.key, required this.about});
+    TextEditingController about;
 
   @override
   Widget build(BuildContext context) {
@@ -17,8 +18,8 @@ class EditAboutMe extends StatelessWidget {
             children: [
               AppText(
                 text: "About Me",
-                fontWeight: FontWeight.w400,
-                size: 20,
+                fontWeight: FontWeight.w600,
+                size: 17,
                 color: HexColor("#0C0C0C"),
               )
             ],
@@ -35,10 +36,18 @@ class EditAboutMe extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.only(left: 10, right: 10, bottom: 30),
             child: TextFormField(
+              controller:  about,
+              maxLength: 120,
+              cursorColor: HexColor(primaryColor),
+              keyboardType: TextInputType.text,
+              maxLines: null,
               style: GoogleFonts.overpass(
-                  color: HexColor("#D9D9D9"),
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600),
+                color: Colors.black,
+                fontSize: 13,
+                fontWeight: FontWeight.w400,
+                decoration: TextDecoration.none,
+                decorationThickness: 0,
+              ),
               decoration: InputDecoration(
                 hintText: "     Say something about yourself...",
                 hintStyle: GoogleFonts.overpass(
@@ -47,20 +56,14 @@ class EditAboutMe extends StatelessWidget {
                     fontWeight: FontWeight.w400),
                 suffixIcon: null,
                 prefixIcon: null,
-                border: UnderlineInputBorder(
-                    borderRadius: BorderRadius.circular(2.0),
-                    borderSide: const BorderSide(color: Colors.transparent)),
-                focusedBorder: const UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.transparent)),
-                enabledBorder: const UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.transparent)),
+                border: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                enabledBorder: InputBorder.none,
               ),
             ),
           ),
         ),
       ],
     );
-  
-  
   }
 }

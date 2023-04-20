@@ -46,7 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-                height: height * 0.33,
+                height: height * 0.37,
                 child: Column(
                   children: [
                     const SizedBox(
@@ -195,7 +195,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       const EdgeInsets.only(left: 20),
                                   hintText: "Enter your email here",
                                   hintStyle: GoogleFonts.spartan(
-                                      color: HexColor('#F5F2F9'), fontSize: 14),
+                                      color: HexColor('#F5F2F9'), fontSize: 12),
                                   border: InputBorder.none,
                                   enabledBorder: InputBorder.none,
                                   focusedBorder: InputBorder.none,
@@ -246,7 +246,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       hintText: "Enter your password here",
                                       hintStyle: GoogleFonts.spartan(
                                           color: HexColor('#F5F2F9'),
-                                          fontSize: 14),
+                                          fontSize: 12),
                                       border: InputBorder.none,
                                       suffixIcon: Column(
                                         mainAxisAlignment:
@@ -300,19 +300,22 @@ class _LoginScreenState extends State<LoginScreen> {
                           ],
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 30),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            CircleAvatar(
-                              radius: 40,
-                              backgroundColor: HexColor('#FC9DBF'),
-                              child: SvgPicture.asset(
-                                  "assets/icon/Fingerprint.svg"),
-                            )
-                          ],
-                        ),
+                      // Padding(
+                      //   padding: const EdgeInsets.symmetric(vertical: 30),
+                      //   child: Row(
+                      //     mainAxisAlignment: MainAxisAlignment.center,
+                      //     children: [
+                      //       CircleAvatar(
+                      //         radius: 40,
+                      //         backgroundColor: HexColor('#FC9DBF'),
+                      //         child: SvgPicture.asset(
+                      //             "assets/icon/Fingerprint.svg"),
+                      //       )
+                      //     ],
+                      //   ),
+                      // ),
+                      const SizedBox(
+                        height: 30,
                       ),
                       stream.loadStatus
                           ? const Loader(color: Colors.white)
@@ -344,9 +347,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             color: HexColor("#FF94B7"),
                           ),
                           InkWell(
-                            onTap: (){
-                              PageRouting.pushToPage( 
-                                    context,  EmailScreen());
+                            onTap: () {
+                              PageRouting.pushToPage(context, EmailScreen());
                             },
                             child: AppText(
                               text: " SignUp",

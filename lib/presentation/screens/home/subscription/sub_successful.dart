@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexagon/hexagon.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:makanaki/presentation/screens/home/subscription/get_verified_info.dart';
+import 'package:makanaki/services/controllers/user_profile_controller.dart';
 
 import '../../../allNavigation.dart';
 import '../../../constants/colors.dart';
@@ -10,8 +12,25 @@ import '../../../constants/params.dart';
 import '../../../widgets/buttons.dart';
 import '../../../widgets/text.dart';
 
-class SubSuccessfull extends StatelessWidget {
+class SubSuccessfull extends StatefulWidget {
   const SubSuccessfull({super.key});
+
+  @override
+  State<SubSuccessfull> createState() => _SubSuccessfullState();
+}
+
+class _SubSuccessfullState extends State<SubSuccessfull> {
+  @override
+  void initState() {
+    super.initState();
+
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+      UserProfileController.retrievProfileController(context, true);
+    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      UserProfileController.retrievProfileController(context, true);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +114,9 @@ class SubSuccessfull extends StatelessWidget {
               curves: buttonCurves * 5,
               textColor: primaryColor,
               onTap: () {
-                PageRouting.pushToPage(context, const VerifiedInfo());
+                PageRouting.popToPage(context);
+                PageRouting.popToPage(context);
+                // PageRouting.pushToPage(context, const VerifiedInfo());
               }),
           Container(
             height: height * 0.08,

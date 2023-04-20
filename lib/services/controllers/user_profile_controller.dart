@@ -12,20 +12,19 @@ class UserProfileController {
     UserProfileWare ware = Provider.of<UserProfileWare>(context, listen: false);
     //    ActionWare action =  Provider.of<ActionWare>(context, listen: false);
 
-
     if (isFirstLoad == false) {
       ware.isLoading(true);
       log("true");
     }
 
     bool isDone = await ware
-        .getUserProfileFromApi()
+        .getUserProfileFromApi(context)
         .whenComplete(() => log("everything from api and provider is done"));
 
     if (isDone) {
       //        await Future.forEach(ware.publicUserProfileModel., (element) async {
       //   await action.addFollowId(element.id!);
-      // }); 
+      // });
       if (isFirstLoad == false) {
         ware.isLoading(false);
       }
@@ -35,7 +34,7 @@ class UserProfileController {
       }
 
       // ignore: use_build_context_synchronously
-      showToast(context, "An error occured", Colors.red);
+      showToast2(context, "An error occured", isError: true);
     }
   }
 
@@ -45,7 +44,6 @@ class UserProfileController {
     ware.resetPublicUser();
 
     ware.isLoading2(true);
-    log("true");
 
     bool isDone = await ware
         .getPublicUserProfileFromApi(username)
@@ -57,7 +55,7 @@ class UserProfileController {
       ware.isLoading2(false);
 
       // ignore: use_build_context_synchronously
-      showToast(context, "An error occured", Colors.red);
+      showToast2(context, "An error occured", isError: true);
     }
   }
 }

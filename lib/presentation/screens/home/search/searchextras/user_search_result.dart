@@ -3,7 +3,6 @@ import 'package:makanaki/presentation/model/ui_model.dart';
 import 'package:makanaki/presentation/screens/home/search/searchextras/nothing_found.dart';
 import 'package:makanaki/presentation/screens/home/search/searchextras/search_loader.dart';
 import 'package:makanaki/presentation/screens/home/search/searchextras/user_result_tile.dart';
-import 'package:makanaki/presentation/screens/userprofile/extras/follow_tile.dart';
 import 'package:makanaki/services/middleware/search_ware.dart';
 import 'package:provider/provider.dart';
 

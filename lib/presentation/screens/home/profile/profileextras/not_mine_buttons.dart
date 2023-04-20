@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:makanaki/model/conversation_model.dart';
 import 'package:makanaki/presentation/allNavigation.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
-import 'package:makanaki/presentation/screens/home/profile/edit_profile.dart';
-import 'package:makanaki/presentation/screens/home/profile/profileextras/profile_action_buttons.dart';
-import 'package:makanaki/presentation/screens/home/settings/settings_screen.dart';
-import 'package:makanaki/presentation/screens/userprofile/followers_following.dart';
+import 'package:makanaki/presentation/screens/home/convo/chat/chat_screen.dart';
+import 'package:makanaki/presentation/widgets/snack_msg.dart';
+import 'package:makanaki/services/controllers/url_launch_controller.dart';
+import 'package:makanaki/services/middleware/chat_ware.dart';
 import 'package:provider/provider.dart';
-
-import '../../../../../model/search_user_model.dart';
 import '../../../../../services/controllers/action_controller.dart';
 import '../../../../../services/middleware/action_ware.dart';
 import '../../../../../services/middleware/user_profile_ware.dart';
+import '../../../../constants/colors.dart';
 import '../../../../widgets/text.dart';
 
 class ProfileActionButtonNotThisUsers extends StatelessWidget {
@@ -25,7 +24,8 @@ class ProfileActionButtonNotThisUsers extends StatelessWidget {
       {super.key,
       required this.icon,
       required this.onClick,
-      required this.color, required this.isSwipe});
+      required this.color,
+      required this.isSwipe});
 
   @override
   Widget build(BuildContext context) {
@@ -43,8 +43,8 @@ class ProfileActionButtonNotThisUsers extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: SvgPicture.asset(
               icon,
-              height: isSwipe ?  30 : null,
-              width:  isSwipe ?  30 : null,
+              height: isSwipe ? 30 : null,
+              width: isSwipe ? 30 : null,
               color: HexColor(color),
             ),
           ),
@@ -67,121 +67,501 @@ class UserProfileActions extends StatelessWidget {
       width: width * 0.7,
       height: height * 0.25,
       //  color: Colors.amber,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          InkWell(
-            onTap: () => PageRouting.pushToPage(context, const EditProfile()),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+      child: data.publicUserProfileModel.gender == "Business"
+          ? Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                ProfileActionButtonNotThisUsers(
-                  icon: "assets/icon/userheart.svg",
-                  isSwipe: false,
-                  onClick: () {},
-                  color: "#FFC1D6",
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Container(
-                  width: 70,
-                  alignment: Alignment.center,
-                  //color: Colors.amber,
-                  child: AppText(
-                    text: "Match",
-                    fontWeight: FontWeight.w400,
-                    size: 12,
-                    color: HexColor("#797979"),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          InkWell(
-            onTap: () async {
-              print("dfdd");
-              await followAction(context, data.publicUserProfileModel.id!,
-                  data.publicUserProfileModel.username!);
-            },
-            child: AnimatedContainer(
-              duration: Duration(seconds: 2),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  ProfileActionButtonNotThisUsers(
-                    icon: "assets/icon/follow.svg",
-                     isSwipe: false,
-                    onClick: () async {
-                      await followAction(
-                        context,
-                        data.publicUserProfileModel.id!,
-                        data.publicUserProfileModel.username!,
-                      );
-                    },
-                    color: !stream.followIds
-                            .contains(data.publicUserProfileModel.id)
-                        ? "#F94C84"
-                        : "#FFC1D6",
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  AnimatedContainer(
-                    width: 70,
-                    alignment: Alignment.center,
-                    //color: Colors.amber,
+                data.publicUserProfileModel.gender == "Business"
+                    ? InkWell(
+                        //   onTap: () => PageRouting.pushToPage(context, const EditProfile()),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ProfileActionButtonNotThisUsers(
+                              icon: "assets/icon/call.svg",
+                              isSwipe: false,
+                              onClick: () async {
+                                UserProfileWare data =
+                                    Provider.of<UserProfileWare>(context,
+                                        listen: false);
+                                if (data.publicUserProfileModel.phone == null) {
+                                  showToast2(context,
+                                      "Can't reach this Business at the moment",
+                                      isError: true);
+                                } else {
+                                  UrlLaunchController.makePhoneCall(
+                                      data.publicUserProfileModel.phone ?? "");
+                                }
+                              },
+                              color: "#FFC1D6",
+                            ),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            Container(
+                              width: 70,
+                              alignment: Alignment.center,
+                              // color: Colors.amber,
+                              child: AppText(
+                                text: "Call",
+                                fontWeight: FontWeight.w400,
+                                size: 12,
+                                color: HexColor("#797979"),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    : const SizedBox.shrink(),
+                InkWell(
+                  onTap: () async {
+                    print("dfdd");
+                    await followAction(context, data.publicUserProfileModel.id!,
+                        data.publicUserProfileModel.username!);
+                  },
+                  child: AnimatedContainer(
                     duration: Duration(seconds: 2),
+                    child: Column(
+                      mainAxisAlignment:
+                          data.publicUserProfileModel.gender == "Business"
+                              ? MainAxisAlignment.end
+                              : MainAxisAlignment.center,
+                      children: [
+                        ProfileActionButtonNotThisUsers(
+                          icon: "assets/icon/follow.svg",
+                          isSwipe: false,
+                          onClick: () async {
+                            await followAction(
+                              context,
+                              data.publicUserProfileModel.id!,
+                              data.publicUserProfileModel.username!,
+                            );
+                          },
+                          color: !stream.followIds
+                                  .contains(data.publicUserProfileModel.id)
+                              ? "#F94C84"
+                              : "#FFC1D6",
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        AnimatedContainer(
+                          width: 70,
+                          alignment: Alignment.center,
+                          //color: Colors.amber,
+                          duration: Duration(seconds: 2),
 
-                    child: !stream.followIds
-                            .contains(data.publicUserProfileModel.id)
-                        ? AppText(
-                            text: "Follow",
-                            fontWeight: FontWeight.w400,
-                            size: 12,
-                            color: HexColor("#797979"),
-                          )
-                        : AppText(
-                            text: "Unfollow",
-                            fontWeight: FontWeight.w400,
-                            size: 12,
-                            color: HexColor("#797979"),
-                          ),
+                          child: !stream.followIds
+                                  .contains(data.publicUserProfileModel.id)
+                              ? AppText(
+                                  text: "Follow",
+                                  fontWeight: FontWeight.w400,
+                                  size: 12,
+                                  color: HexColor("#797979"),
+                                )
+                              : AppText(
+                                  text: "Unfollow",
+                                  fontWeight: FontWeight.w400,
+                                  size: 12,
+                                  color: HexColor("#797979"),
+                                ),
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
-            ),
-          ),
-          InkWell(
-            onTap: () {},
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+                ),
+                InkWell(
+                  onTap: () {},
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const SizedBox(
+                        height: 4,
+                      ),
+                      ProfileActionButtonNotThisUsers(
+                        isSwipe: false,
+                        icon: "assets/icon/userchat.svg",
+                        onClick: () async {
+                          late ChatData chat;
+                          ChatWare chatWare =
+                              Provider.of<ChatWare>(context, listen: false);
+                          List<Conversation> empty = [];
+
+                          late int statusId;
+                          late int id;
+                          late ChatData chatData;
+
+                          if (chatWare.chatList.isEmpty) {
+                            statusId = 0;
+
+                            id = 0;
+
+                            chatData = ChatData(
+                              status: statusId,
+                              id: id,
+                              userOne: data.userProfileModel.username,
+                              userOneProfilePhoto:
+                                  data.userProfileModel.profilephoto,
+                              createdAt: DateTime.now(),
+                              updatedAt: DateTime.now(),
+                              blockedBy: null,
+                              userTwo: data.publicUserProfileModel.username,
+                              userTwoProfilePhoto:
+                                  data.publicUserProfileModel.profilephoto,
+                              conversations: empty,
+                            );
+                          } else {
+                            statusId = chatWare.chatList.first.status! + 1;
+
+                            id = chatWare.chatList.first.id! + 1;
+
+                            chatData = ChatData(
+                                status: statusId,
+                                id: id,
+                                userOne: data.userProfileModel.username,
+                                userOneProfilePhoto:
+                                    data.userProfileModel.profilephoto,
+                                createdAt: DateTime.now(),
+                                updatedAt: DateTime.now(),
+                                blockedBy: null,
+                                userTwo: data.publicUserProfileModel.username,
+                                userTwoProfilePhoto:
+                                    data.publicUserProfileModel.profilephoto,
+                                conversations: empty,
+                                userOneMode: data.userProfileModel.mode,
+                                userTwoMode: data.publicUserProfileModel.mode);
+                          }
+
+                          bool seen = false;
+
+                          await Future.forEach(chatWare.chatList,
+                              (element) async {
+                            // ignore: unrelated_type_equality_checks
+                            if (element.userTwo ==
+                                data.publicUserProfileModel.username) {
+                              seen = true;
+                              chat = element;
+                              PageRouting.pushToPage(
+                                  context,
+                                  ChatScreen(
+                                    user: element,
+                                    chat: element.conversations!,
+                                    dp: data
+                                        .publicUserProfileModel.profilephoto,
+                                    mode: data.publicUserProfileModel.mode,
+                                  ));
+                              return;
+                            } else if (element.userOne ==
+                                data.publicUserProfileModel.username) {
+                              chat = element;
+                              seen = true;
+                              PageRouting.pushToPage(
+                                  context,
+                                  ChatScreen(
+                                    user: element,
+                                    chat: element.conversations!,
+                                    dp: data
+                                        .publicUserProfileModel.profilephoto,
+                                    mode: data.publicUserProfileModel.mode,
+                                  ));
+                              return;
+                            } else {
+                              chat = ChatData();
+                            }
+                          });
+
+                          if (seen) {
+                            return;
+                            // ignore: use_build_context_synchronously
+
+                          } else {
+                            print(data.publicUserProfileModel.username);
+                            // ignore: use_build_context_synchronously
+                            PageRouting.pushToPage(
+                                context,
+                                ChatScreen(
+                                  user: chatData,
+                                  chat: empty,
+                                  dp: data.publicUserProfileModel.profilephoto,
+                                  mode: data.publicUserProfileModel.mode,
+                                ));
+                          }
+
+                          // chat = chatWare.chatList
+                          //     // ignore: unrelated_type_equality_checks
+                          //     .where((element) {
+                          //       final val = element.conversations!.last == "kelt"
+                          //           ? element.userTwo
+                          //           : element.userOne;
+                          //       final val2 = data.publicUserProfileModel.username;
+
+                          //       return val == val2;
+                          //     })
+                          //     .toList()
+                          //     .single;
+
+                          // if (chat.conversations!.isNotEmpty) {
+                          //   // ignore: use_build_context_synchronously
+                          //   PageRouting.pushToPage(context,
+                          //       ChatScreen(user: chat, chat: chat.conversations!));
+                          // } else {
+                          //   // ignore: use_build_context_synchronously
+                          //   PageRouting.pushToPage(
+                          //       context, ChatScreen(user: chatData, chat: empty));
+                          // }
+
+                          print("not exist");
+
+                          // PageRouting.pushToPage(
+                          //     context, ChatScreen(user: user, chat: chat));
+                        },
+                        color: "#FFC1D6",
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Container(
+                        width: 70,
+                        alignment: Alignment.center,
+                        //color: Colors.amber,
+                        child: AppText(
+                          text: "Message",
+                          fontWeight: FontWeight.w400,
+                          size: 12,
+                          color: HexColor("#797979"),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            )
+          : Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                ProfileActionButtonNotThisUsers(
-                   isSwipe: false,
-                  icon: "assets/icon/userchat.svg",
-                  onClick: () {},
-                  color: "#FFC1D6",
+                InkWell(
+                  onTap: () async {
+                    print("dfdd");
+                    await followAction(context, data.publicUserProfileModel.id!,
+                        data.publicUserProfileModel.username!);
+                  },
+                  child: AnimatedContainer(
+                    duration: Duration(seconds: 2),
+                    child: Column(
+                      mainAxisAlignment:
+                          data.publicUserProfileModel.gender == "Business"
+                              ? MainAxisAlignment.end
+                              : MainAxisAlignment.center,
+                      children: [
+                        ProfileActionButtonNotThisUsers(
+                          icon: "assets/icon/follow.svg",
+                          isSwipe: false,
+                          onClick: () async {
+                            await followAction(
+                              context,
+                              data.publicUserProfileModel.id!,
+                              data.publicUserProfileModel.username!,
+                            );
+                          },
+                          color: !stream.followIds
+                                  .contains(data.publicUserProfileModel.id)
+                              ? "#F94C84"
+                              : "#FFC1D6",
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        AnimatedContainer(
+                          width: 70,
+                          alignment: Alignment.center,
+                          //color: Colors.amber,
+                          duration: Duration(seconds: 2),
+
+                          child: !stream.followIds
+                                  .contains(data.publicUserProfileModel.id)
+                              ? AppText(
+                                  text: "Follow",
+                                  fontWeight: FontWeight.w400,
+                                  size: 12,
+                                  color: HexColor("#797979"),
+                                )
+                              : AppText(
+                                  text: "Unfollow",
+                                  fontWeight: FontWeight.w400,
+                                  size: 12,
+                                  color: HexColor("#797979"),
+                                ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-                const SizedBox(
-                  height: 5,
-                ),
-                Container(
-                  width: 70,
-                  alignment: Alignment.center,
-                  //color: Colors.amber,
-                  child: AppText(
-                    text: "Message",
-                    fontWeight: FontWeight.w400,
-                    size: 12,
-                    color: HexColor("#797979"),
+                InkWell(
+                  onTap: () {},
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const SizedBox(
+                        height: 4,
+                      ),
+                      ProfileActionButtonNotThisUsers(
+                        isSwipe: false,
+                        icon: "assets/icon/userchat.svg",
+                        onClick: () async {
+                          late ChatData chat;
+                          ChatWare chatWare =
+                              Provider.of<ChatWare>(context, listen: false);
+                          List<Conversation> empty = [];
+
+                          late int statusId;
+                          late int id;
+                          late ChatData chatData;
+
+                          if (chatWare.chatList.isEmpty) {
+                            statusId = 0;
+
+                            id = 0;
+
+                            chatData = ChatData(
+                              status: statusId,
+                              id: id,
+                              userOne: data.userProfileModel.username,
+                              userOneProfilePhoto:
+                                  data.userProfileModel.profilephoto,
+                              createdAt: DateTime.now(),
+                              updatedAt: DateTime.now(),
+                              blockedBy: null,
+                              userTwo: data.publicUserProfileModel.username,
+                              userTwoProfilePhoto:
+                                  data.publicUserProfileModel.profilephoto,
+                              conversations: empty,
+                            );
+                          } else {
+                            statusId = chatWare.chatList.first.status! + 1;
+
+                            id = chatWare.chatList.first.id! + 1;
+
+                            chatData = ChatData(
+                              status: statusId,
+                              id: id,
+                              userOne: data.userProfileModel.username,
+                              userOneProfilePhoto:
+                                  data.userProfileModel.profilephoto,
+                              createdAt: DateTime.now(),
+                              updatedAt: DateTime.now(),
+                              blockedBy: null,
+                              userTwo: data.publicUserProfileModel.username,
+                              userTwoProfilePhoto:
+                                  data.publicUserProfileModel.profilephoto,
+                              conversations: empty,
+                            );
+                          }
+
+                          bool seen = false;
+
+                          await Future.forEach(chatWare.chatList,
+                              (element) async {
+                            // ignore: unrelated_type_equality_checks
+                            if (element.userTwo ==
+                                data.publicUserProfileModel.username) {
+                              seen = true;
+                              chat = element;
+                              PageRouting.pushToPage(
+                                  context,
+                                  ChatScreen(
+                                    user: element,
+                                    chat: element.conversations!,
+                                    dp: data
+                                        .publicUserProfileModel.profilephoto,
+                                    mode: data.publicUserProfileModel.mode,
+                                  ));
+                              return;
+                            } else if (element.userOne ==
+                                data.publicUserProfileModel.username) {
+                              chat = element;
+                              seen = true;
+                              PageRouting.pushToPage(
+                                  context,
+                                  ChatScreen(
+                                    user: element,
+                                    chat: element.conversations!,
+                                    dp: data
+                                        .publicUserProfileModel.profilephoto,
+                                    mode: data
+                                        .publicUserProfileModel.profilephoto,
+                                  ));
+                              return;
+                            } else {
+                              chat = ChatData();
+                            }
+                          });
+
+                          if (seen) {
+                            return;
+                            // ignore: use_build_context_synchronously
+
+                          } else {
+                            print(data.publicUserProfileModel.username);
+                            // ignore: use_build_context_synchronously
+                            PageRouting.pushToPage(
+                                context,
+                                ChatScreen(
+                                  user: chatData,
+                                  chat: empty,
+                                  dp: data.publicUserProfileModel.profilephoto,
+                                  mode: data.publicUserProfileModel.mode,
+                                ));
+                          }
+
+                          // chat = chatWare.chatList
+                          //     // ignore: unrelated_type_equality_checks
+                          //     .where((element) {
+                          //       final val = element.conversations!.last == "kelt"
+                          //           ? element.userTwo
+                          //           : element.userOne;
+                          //       final val2 = data.publicUserProfileModel.username;
+
+                          //       return val == val2;
+                          //     })
+                          //     .toList()
+                          //     .single;
+
+                          // if (chat.conversations!.isNotEmpty) {
+                          //   // ignore: use_build_context_synchronously
+                          //   PageRouting.pushToPage(context,
+                          //       ChatScreen(user: chat, chat: chat.conversations!));
+                          // } else {
+                          //   // ignore: use_build_context_synchronously
+                          //   PageRouting.pushToPage(
+                          //       context, ChatScreen(user: chatData, chat: empty));
+                          // }
+
+                          print("not exist");
+
+                          // PageRouting.pushToPage(
+                          //     context, ChatScreen(user: user, chat: chat));
+                        },
+                        color: "#FFC1D6",
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Container(
+                        width: 70,
+                        alignment: Alignment.center,
+                        //color: Colors.amber,
+                        child: AppText(
+                          text: "Message",
+                          fontWeight: FontWeight.w400,
+                          size: 12,
+                          color: HexColor("#797979"),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
-          ),
-        ],
-      ),
     );
   }
 

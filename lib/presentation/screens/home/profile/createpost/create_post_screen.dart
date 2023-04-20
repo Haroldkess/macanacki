@@ -3,14 +3,20 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:makanaki/presentation/allNavigation.dart';
 import 'package:makanaki/presentation/constants/colors.dart';
+import 'package:makanaki/presentation/screens/home/profile/createpost/add_button.dart';
 import 'package:makanaki/presentation/screens/home/profile/createpost/caption_form.dart';
 import 'package:makanaki/presentation/screens/home/profile/createpost/video_holder.dart';
 import 'package:makanaki/presentation/widgets/buttons.dart';
 import 'package:makanaki/presentation/widgets/loader.dart';
+import 'package:makanaki/presentation/widgets/snack_msg.dart';
 import 'package:makanaki/presentation/widgets/text.dart';
+import 'package:makanaki/services/controllers/button_controller.dart';
 import 'package:makanaki/services/controllers/create_post_controller.dart';
 import 'package:makanaki/services/middleware/create_post_ware.dart';
+import 'package:makanaki/services/middleware/user_profile_ware.dart';
 import 'package:provider/provider.dart';
+
+import '../../../../../services/middleware/button_ware.dart';
 
 class CreatePostScreen extends StatefulWidget {
   const CreatePostScreen({super.key});
@@ -21,9 +27,13 @@ class CreatePostScreen extends StatefulWidget {
 
 class _CreatePostScreenState extends State<CreatePostScreen> {
   TextEditingController caption = TextEditingController();
+  TextEditingController buttonController = TextEditingController();
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      await ButtonController.retrievButtonsController(context);
+    });
   }
 
   @override
@@ -34,6 +44,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     CreatePostWare post = Provider.of<CreatePostWare>(context, listen: false);
 
     CreatePostWare stream = context.watch<CreatePostWare>();
+    UserProfileWare user = Provider.of<UserProfileWare>(context, listen: false);
 
     return Scaffold(
       body: Container(
@@ -73,26 +84,54 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                       fontWeight: FontWeight.w600,
                       size: 17,
                     ),
-                    stream.loadStatus
-                        ? Loader(color: HexColor(primaryColor))
-                        : OutlinedButton(
-                            style: OutlinedButton.styleFrom(
-                                backgroundColor: HexColor(primaryColor),
-                                fixedSize: Size(72, 24),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                side: BorderSide(
-                                    color: HexColor(primaryColor),
-                                    width: 1.0,
-                                    style: BorderStyle.solid)),
-                            onPressed: () => _submit(context),
-                            child: AppText(
-                              text: "Post",
-                              scaleFactor: 0.8,
-                              color: HexColor(backgroundColor),
-                              fontWeight: FontWeight.w500,
-                            ))
+                    Row(
+                      children: [
+                        user.userProfileModel.gender == "Business"
+                            ? OutlinedButton(
+                                style: OutlinedButton.styleFrom(
+                                    backgroundColor: HexColor("#00B074"),
+                                    fixedSize: Size(86, 0),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                    side: BorderSide(
+                                        color: HexColor("#00B074"),
+                                        width: 1.0,
+                                        style: BorderStyle.solid)),
+                                onPressed: () =>
+                                    buttonModal(context, buttonController),
+                                child: AppText(
+                                  text: "Add Button",
+                                  scaleFactor: 0.6,
+                                  color: HexColor(backgroundColor),
+                                  fontWeight: FontWeight.w600,
+                                ))
+                            : const SizedBox.shrink(),
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        stream.loadStatus
+                            ? Loader(color: HexColor(primaryColor))
+                            : OutlinedButton(
+                                style: OutlinedButton.styleFrom(
+                                    backgroundColor: HexColor(primaryColor),
+                                    fixedSize: Size(68, 0),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                    side: BorderSide(
+                                        color: HexColor(primaryColor),
+                                        width: 1.0,
+                                        style: BorderStyle.solid)),
+                                onPressed: () => _submit(context),
+                                child: AppText(
+                                  text: "Post",
+                                  scaleFactor: 0.6,
+                                  color: HexColor(backgroundColor),
+                                  fontWeight: FontWeight.w600,
+                                ))
+                      ],
+                    )
                   ],
                 ),
               ),
@@ -123,14 +162,26 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   }
 
   _submit(BuildContext context) async {
-    if (caption.text.isEmpty) {
-      Fluttertoast.showToast(
-          msg: "Please add caption",
-          backgroundColor: Colors.red.shade300,
-          gravity: ToastGravity.TOP);
-      return;
-    } else {
-      await CreatePostController.createPostController(context, caption.text);
-    }
+    ButtonWare button = Provider.of<ButtonWare>(context, listen: false);
+    UserProfileWare user = Provider.of<UserProfileWare>(context, listen: false);
+  
+      if (user.userProfileModel.gender == "Business") { 
+        if (button.url.isNotEmpty) {
+          if (button.url.contains("https://") || button.name == "Call Now") {
+            await CreatePostController.createPostController(
+                context, caption.text);
+          } else {
+            showToast2(context, "Url must contain https://", isError: true);
+          }
+        } else {
+          await CreatePostController.createPostController(
+              context, caption.text);
+        }
+      } else {
+        button.addIndex(0);
+        button.addUrl("");
+        await CreatePostController.createPostController(context, caption.text);
+      }
+    
   }
 }

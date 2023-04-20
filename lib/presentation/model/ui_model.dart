@@ -96,13 +96,13 @@ class FeedPostOption {
 }
 
 List<FeedPostOption> feedOption = [
-  FeedPostOption(id: 0, name: "Save"),
+  FeedPostOption(id: 0, name: "Download"),
   FeedPostOption(id: 1, name: "Report"),
   FeedPostOption(id: 2, name: "Report Abuse"),
 ];
 
 List<FeedPostOption> chatOption = [
-  FeedPostOption(id: 0, name: "Unmatch"),
+ // FeedPostOption(id: 0, name: "Unmatch"),
   FeedPostOption(id: 1, name: "Block User"),
   FeedPostOption(id: 2, name: "Report Abuse"),
 ];

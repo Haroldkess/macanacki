@@ -6,6 +6,7 @@ import 'package:makanaki/presentation/allNavigation.dart';
 import 'package:makanaki/presentation/constants/colors.dart';
 import 'package:makanaki/presentation/widgets/text.dart';
 import 'package:makanaki/services/temps/temps_id.dart';
+import 'package:numeral/numeral.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -23,123 +24,121 @@ class UserResultTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ActionWare stream = context.watch<ActionWare>();
-    return Stack(
-      children: [
-        Container(
-          height: 100,
-          decoration: BoxDecoration(
-              color: Colors.white, borderRadius: BorderRadius.circular(5)),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Row(
-              children: [
-                dp(context,
-                    data.profilephoto == null ? "" : data.profilephoto!),
-                const SizedBox(
-                  width: 10,
+    return InkWell(
+      onTap: () async {
+        SharedPreferences pref = await SharedPreferences.getInstance();
+
+        if (pref.getString(userNameKey) == data.username) {
+          // ignore: use_build_context_synchronously
+          PageRouting.pushToPage(context, const ProfileScreen());
+        } else {
+          // ignore: use_build_context_synchronously
+          PageRouting.pushToPage(
+              context,
+              UsersProfile(
+                username: data.username!,
+              ));
+        }
+      },
+      child: Container(
+        height: 100,
+        decoration: BoxDecoration(
+            color: Colors.white, borderRadius: BorderRadius.circular(5)),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  dp(context,
+                      data.profilephoto == null ? "" : data.profilephoto!),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        //  color: Colors.red,
+                        constraints: BoxConstraints(maxWidth: 120),
+                        child: RichText(
+                            maxLines: 2,
+                            text: TextSpan(
+                                text: "${data.username}",
+                                style: GoogleFonts.spartan(
+                                    textStyle: const TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.black,
+                                        decorationStyle:
+                                            TextDecorationStyle.solid,
+                                        fontSize: 13)),
+                                children: [
+                                  TextSpan(
+                                    text: "",
+                                    style: GoogleFonts.spartan(
+                                        textStyle: const TextStyle(
+                                            fontWeight: FontWeight.w400,
+                                            color: Colors.black,
+                                            decorationStyle:
+                                                TextDecorationStyle.solid,
+                                            fontSize: 14)),
+                                  ),
+                                  // TextSpan(
+
+                                  //   text: data.isMatched ? "Matched" : " ",
+                                  //   style: GoogleFonts.spartan(
+                                  //       textStyle: TextStyle(
+                                  //           fontWeight: FontWeight.w400,
+                                  //           color: HexColor("#0597FF"),
+                                  //           decorationStyle: TextDecorationStyle.solid,
+                                  //           fontSize: 10)),
+                                  // )
+                                ])),
+                      ),
+                   
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      AppText(
+                        text:
+                            "${Numeral(data.noOfFollowers!).format()} followers",
+                        fontWeight: FontWeight.w500,
+                        size: 10,
+                        color: HexColor("#0597FF"),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              Expanded(
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: username == data.username
+                      ? const SizedBox.shrink()
+                      : InkWell(
+                          onTap: () {
+                            followAction(context);
+                          },
+                          child: !stream.followIds.contains(data.id!)
+                              ? followCardButton("Follow", true)
+                              : unfollowCardButton("Unfollow")),
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    RichText(
-                        text: TextSpan(
-                            text: "${data.username}, ",
-                            style: GoogleFonts.spartan(
-                                textStyle: const TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    color: Colors.black,
-                                    decorationStyle: TextDecorationStyle.solid,
-                                    fontSize: 14)),
-                            children: [
-                          TextSpan(
-                            text: data.dob,
-                            style: GoogleFonts.spartan(
-                                textStyle: const TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    color: Colors.black,
-                                    decorationStyle: TextDecorationStyle.solid,
-                                    fontSize: 14)),
-                          ),
-                          // TextSpan(
-                          //   text: data.isMatched ? "Matched" : " ",
-                          //   style: GoogleFonts.spartan(
-                          //       textStyle: TextStyle(
-                          //           fontWeight: FontWeight.w400,
-                          //           color: HexColor("#0597FF"),
-                          //           decorationStyle: TextDecorationStyle.solid,
-                          //           fontSize: 10)),
-                          // )
-                        ])),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    AppText(
-                      text: "Online",
-                      fontWeight: FontWeight.w500,
-                      size: 12,
-                      color: HexColor("#0597FF"),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+              )
+            ],
           ),
         ),
-        Positioned(
-          bottom: 10.0,
-          right: 10.0,
-          child: Align(
-            alignment: Alignment.bottomRight,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                username == data.username
-                    ? const SizedBox.shrink()
-                    : InkWell(
-                        onTap: () async {
-                          SharedPreferences pref =
-                              await SharedPreferences.getInstance();
-
-                          if (pref.getString(userNameKey) == data.username) {
-                            // ignore: use_build_context_synchronously
-                            PageRouting.pushToPage(
-                                context, const ProfileScreen());
-                          } else {
-                            // ignore: use_build_context_synchronously
-                            PageRouting.pushToPage(
-                                context,
-                                UsersProfile(
-                                  username: data.username!,
-                                ));
-                          }
-                        },
-                        child: followCardButton("Profile", false)),
-                const SizedBox(
-                  width: 20,
-                ),
-                username == data.username
-                    ? const SizedBox.shrink()
-                    : InkWell(
-                        onTap: () {
-                          followAction(context);
-                        },
-                        child: !stream.followIds.contains(data.id!)
-                            ? followCardButton("Follow", true)
-                            : unfollowCardButton("Unfollow")),
-              ],
-            ),
-          ),
-        )
-      ],
+      ),
     );
   }
 
   Future<void> followAction(BuildContext context) async {
     ActionWare provide = Provider.of<ActionWare>(context, listen: false);
 
-
-    await ActionController.followOrUnFollowController(context, data.username!, data.id!);
+    await ActionController.followOrUnFollowController(
+        context, data.username!, data.id!);
   }
 
   Widget dp(BuildContext context, String url) {
@@ -185,10 +184,12 @@ class UserResultTile extends StatelessWidget {
           borderRadius: BorderRadius.circular(15),
           shape: BoxShape.rectangle),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
         child: AppText(
           text: title,
-          color: isColor ? HexColor(backgroundColor) : HexColor(primaryColor),
+          color: HexColor(backgroundColor),
+          size: 13,
+          fontWeight: FontWeight.w500,
         ),
       ),
     );
@@ -197,15 +198,17 @@ class UserResultTile extends StatelessWidget {
   Widget unfollowCardButton(String title) {
     return Container(
       decoration: BoxDecoration(
-          color: Colors.transparent,
+          color: HexColor(primaryColor),
           border: Border.all(width: 1, color: HexColor(primaryColor)),
           borderRadius: BorderRadius.circular(15),
           shape: BoxShape.rectangle),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
         child: AppText(
           text: title,
-          color: HexColor(primaryColor),
+          color: HexColor(backgroundColor),
+          size: 13,
+          fontWeight: FontWeight.w500,
         ),
       ),
     );

@@ -90,7 +90,6 @@ class AccountSettings extends StatelessWidget {
                       )
                     ],
                   ),
-               
                   const SizedBox(
                     height: 15,
                   ),
@@ -127,11 +126,17 @@ class AccountSettings extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          AppText(
-                            text: "Maggidestinforyou@gmail.com",
-                            color: HexColor("#7A7A7A"),
-                            size: 14,
-                            fontWeight: FontWeight.w400,
+                          Container(
+                            constraints: BoxConstraints(
+                                maxWidth:
+                                    MediaQuery.of(context).size.width * 0.4),
+                            child: AppText(
+                              text: "Maggidestinforyou@gmail.com",
+                              color: HexColor("#7A7A7A"),
+                              size: 14,
+                              align: TextAlign.end,
+                              fontWeight: FontWeight.w400,
+                            ),
                           ),
                           const SizedBox(
                             height: 8,
@@ -153,6 +158,5 @@ class AccountSettings extends StatelessWidget {
         )
       ],
     );
-  
   }
 }

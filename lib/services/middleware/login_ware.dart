@@ -28,32 +28,32 @@ class LoginWare extends ChangeNotifier {
   ) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     late bool isSuccessful;
-    log("hello");
+   // log("hello");
     try {
       http.Response? response = await loginUser(body)
           .whenComplete(() => log("login user request done"));
       if (response == null) {
         _message = "Something went wrong";
         isSuccessful = false;
-        log("login user  request failed");
+     //   log("login user  request failed");
       } else if (response.statusCode == 200) {
         var jsonData = jsonDecode(response.body);
         _message = jsonData["message"].toString();
         _token = jsonData["data"]["access_token"].toString();
         await pref.setString(tokenKey, _token);
-        log("login user  request success");
+      //  log("login user  request success");
         isSuccessful = true;
       } else {
         var jsonData = jsonDecode(response.body);
         _message = jsonData["message"].toString();
 
-        log("login user  request failed");
+       // log("login user  request failed");
         isSuccessful = false;
       }
     } catch (e) {
       isSuccessful = false;
-      log("login user  request failed");
-      log(e.toString());
+     // log("login user  request failed");
+    //  log(e.toString());
     }
 
     notifyListeners();

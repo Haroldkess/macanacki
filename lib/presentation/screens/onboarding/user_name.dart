@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:makanaki/presentation/constants/colors.dart';
@@ -16,7 +17,8 @@ import '../../widgets/buttons.dart';
 import '../../widgets/loader.dart';
 
 class SelectUserName extends StatefulWidget {
-  const SelectUserName({super.key});
+  final int genderId;
+  const SelectUserName({super.key, required this.genderId});
 
   @override
   State<SelectUserName> createState() => _SelectUserNameState();
@@ -32,6 +34,8 @@ class _SelectUserNameState extends State<SelectUserName> {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     RegisterationWare stream = context.watch<RegisterationWare>();
+    RegisterationWare action =
+        Provider.of<RegisterationWare>(context, listen: false);
     return Scaffold(
       backgroundColor: HexColor(backgroundColor),
       body: Padding(
@@ -48,7 +52,9 @@ class _SelectUserNameState extends State<SelectUserName> {
                       SizedBox(
                           width: width / 1.2,
                           child: AppText(
-                            text: "How would You like to be address?",
+                            text: widget.genderId == 3
+                                ? "What is your business name?"
+                                : "How would You like to be addressed?",
                             align: TextAlign.start,
                             size: 30,
                             fontWeight: FontWeight.w700,
@@ -62,7 +68,9 @@ class _SelectUserNameState extends State<SelectUserName> {
                   Row(
                     children: [
                       AppText(
-                        text: "User Name",
+                        text: widget.genderId == 3
+                            ? "Business Name"
+                            : "User Name",
                         size: 14,
                         color: HexColor(darkColor),
                         fontWeight: FontWeight.w400,
@@ -76,6 +84,7 @@ class _SelectUserNameState extends State<SelectUserName> {
                     decoration: BoxDecoration(
                         color: HexColor('#F5F2F9'),
                         shape: BoxShape.rectangle,
+                        border: Border.all(color: HexColor(primaryColor)),
                         borderRadius:
                             const BorderRadius.all(Radius.circular(8.0))),
                     child: Form(
@@ -97,27 +106,55 @@ class _SelectUserNameState extends State<SelectUserName> {
                               typing = false;
                             });
                           }
+                          action.verifyUsernameFromApi(value);
                           // RegisterUsernameController.usernameController(
                           //     context, userName.text);
                         },
                         validator: ((value) {
                           if (value!.isEmpty || value.length < 3) {
-                            return "username too short";
+                            return "name too short";
                           } else {
                             return null;
                           }
                         }),
                         decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.only(left: 20),
-                          hintText: "Enter your User name here",
+                          suffixIcon: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              stream.verifyName
+                                  ? SvgPicture.asset("assets/icon/tickgood.svg")
+                                  : SvgPicture.asset("assets/icon/tickbad.svg")
+                            ],
+                          ),
+                          contentPadding:
+                              const EdgeInsets.only(left: 20, top: 17),
+                          hintText: widget.genderId == 3
+                              ? "Enter your Business name here"
+                              : "Enter your User name here",
                           hintStyle: GoogleFonts.spartan(
-                              color: HexColor('#C0C0C0'), fontSize: 14),
+                              color: HexColor('#C0C0C0'), fontSize: 12),
                           border: InputBorder.none,
                           enabledBorder: InputBorder.none,
                           focusedBorder: InputBorder.none,
                           errorBorder: InputBorder.none,
                         ),
                       ),
+                 
+                    ),
+                  ),
+              
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5),
+                    child: Row(
+                      children: [
+                        AppText(
+                            text: stream.verifyName
+                                ? "Username is valid"
+                                : "Username already exists",
+                            color: stream.verifyName
+                                ? HexColor("#0597FF")
+                                : HexColor("#D82323")),
+                      ],
                     ),
                   ),
                   const SizedBox(
@@ -141,7 +178,7 @@ class _SelectUserNameState extends State<SelectUserName> {
                         width: width * 0.7,
                         child: RichText(
                           text: TextSpan(
-                              text: "I consent to the The MacaNacki",
+                              text: "I consent to the The MacaNacki ",
                               style: GoogleFonts.spartan(
                                   textStyle: TextStyle(
                                       fontWeight: FontWeight.w400,
@@ -199,6 +236,11 @@ class _SelectUserNameState extends State<SelectUserName> {
                           curves: buttonCurves * 5,
                           textColor: backgroundColor,
                           onTap: () async {
+                            if (action.verifyName == false) {
+                              showToast2(context, "Username already exists",
+                                  isError: true);
+                              return;
+                            }
                             if (iAgree) {
                               _submit(context);
                             } else {
@@ -220,10 +262,14 @@ class _SelectUserNameState extends State<SelectUserName> {
 
   Future<void> _submit(BuildContext context) async {
     final isValid = _formKey.currentState?.validate();
+
+    userName.text = userName.text.replaceAll(" ", "_");
+
     Temp saveUsername = Provider.of<Temp>(context, listen: false);
     if (!isValid! || userName.text.isEmpty && typing == false) {
       return;
     } else {
+    //  print(userName.text);
       saveUsername.addUserNameTemp(userName.text).whenComplete(() =>
           RegisterUsernameController.usernameController(
               context, userName.text));

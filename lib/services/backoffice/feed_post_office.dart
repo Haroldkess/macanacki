@@ -8,13 +8,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../model/create_post_model.dart';
 import '../temps/temps_id.dart';
 
-Future<http.Response?> getFeedPost() async {
+Future<http.Response?> getFeedPost(int pageNum) async {
   SharedPreferences pref = await SharedPreferences.getInstance();
   String? token = pref.getString(tokenKey);
   http.Response? response;
   try {
     response = await http.get(
-      Uri.parse('$baseUrl/public/api/post/latest'),
+      Uri.parse('$baseUrl/public/api/post/latest?page=$pageNum'),
       headers: {
         HttpHeaders.contentTypeHeader: "application/json",
         HttpHeaders.authorizationHeader: "Bearer $token",
@@ -42,7 +42,7 @@ Future<http.Response?> getUserFeedPost() async {
       },
     );
 
-    log(response.body.toString());
+   // log(response.body.toString());
   } catch (e) {
     response = null;
   }

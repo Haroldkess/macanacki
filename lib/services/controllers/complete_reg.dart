@@ -45,17 +45,23 @@ class CompleteRegisterationController {
 
     if (isDone) {
       // ignore: use_build_context_synchronously
-      showToast(context, ware.message2, HexColor(primaryColor));
+      showToast2(context, ware.message2, isError: false);
       await Future.delayed(const Duration(seconds: 2));
       // ignore: use_build_context_synchronously
-      temp.addIsLoggedInTemp(true).whenComplete(() => ware.isLoading3(false));
+      temp.addIsLoggedInTemp(true);
+      SharedPreferences pref = await SharedPreferences.getInstance();
 
       // ignore: use_build_context_synchronously
-      PageRouting.removeAllToPage(context, const TabScreen());
+      await LoginController.loginUserController(context,
+          pref.getString(emailKey)!, pref.getString(passwordKey)!, true);
+      ware.isLoading3(false);
+
+      // ignore: use_build_context_synchronously
+      //  PageRouting.removeAllToPage(context, const TabScreen());
     } else {
       await ware.isLoading3(false);
       // ignore: use_build_context_synchronously
-      showToast(context, ware.message2, Colors.red);
+      showToast2(context, ware.message2, isError: true);
       //print("something went wrong");
     }
   }

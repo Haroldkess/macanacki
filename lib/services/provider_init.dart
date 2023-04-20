@@ -4,15 +4,21 @@ import 'package:makanaki/presentation/uiproviders/screen/comment_provider.dart';
 import 'package:makanaki/presentation/uiproviders/screen/find_people_provider.dart';
 import 'package:makanaki/presentation/uiproviders/screen/tab_provider.dart';
 import 'package:makanaki/services/middleware/action_ware.dart';
+import 'package:makanaki/services/middleware/button_ware.dart';
+import 'package:makanaki/services/middleware/chat_ware.dart';
 import 'package:makanaki/services/middleware/create_post_ware.dart';
+import 'package:makanaki/services/middleware/edit_profile_ware.dart';
 import 'package:makanaki/services/middleware/facial_ware.dart';
 import 'package:makanaki/services/middleware/feed_post_ware.dart';
 import 'package:makanaki/services/middleware/gender_ware.dart';
+import 'package:makanaki/services/middleware/notification_ware..dart';
 import 'package:makanaki/services/middleware/otp_ware.dart';
+import 'package:makanaki/services/middleware/plan_ware.dart';
 import 'package:makanaki/services/middleware/registeration_ware.dart';
 import 'package:makanaki/services/middleware/search_ware.dart';
 import 'package:makanaki/services/middleware/swipe_ware.dart';
 import 'package:makanaki/services/middleware/user_profile_ware.dart';
+import 'package:makanaki/services/middleware/view_ware.dart';
 import 'package:makanaki/services/temps/temp.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
@@ -78,8 +84,26 @@ class InitProvider {
       ChangeNotifierProvider(
         create: (context) => SearchWare(),
       ),
-       ChangeNotifierProvider(
+      ChangeNotifierProvider(
         create: (context) => SwipeWare(),
+      ),
+      ChangeNotifierProvider(
+        create: (context) => ChatWare(),
+      ),
+      ChangeNotifierProvider(
+        create: (context) => PlanWare(),
+      ),
+      ChangeNotifierProvider(
+        create: (context) => NotificationWare(),
+      ),
+      ChangeNotifierProvider(
+        create: (context) => ViewWare(),
+      ),
+      ChangeNotifierProvider(
+        create: (context) => ButtonWare(),
+      ),
+      ChangeNotifierProvider(
+        create: (context) => EditProfileWare(),
       ),
     ];
 

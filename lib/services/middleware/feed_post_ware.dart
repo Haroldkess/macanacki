@@ -19,7 +19,7 @@ class FeedPostWare extends ChangeNotifier {
   List<FeedPost> _feedPosts = [];
 
   ProfileFeedModel _profileFeedData = ProfileFeedModel();
-  List<FeedPost> _profileFeedPosts = [];
+  List<ProfileFeedDatum> _profileFeedPosts = [];
   int get index => _index;
   bool get loadStatus => _loadStatus;
   bool get loadStatus2 => _loadStatus2;
@@ -27,7 +27,35 @@ class FeedPostWare extends ChangeNotifier {
   List<FeedPost> get feedPosts => _feedPosts;
 
   ProfileFeedModel get profileFeedData => _profileFeedData;
-  List<FeedPost> get profileFeedPosts => _profileFeedPosts;
+  List<ProfileFeedDatum> get profileFeedPosts => _profileFeedPosts;
+
+  void disposeValue() async {
+    _feedData = FeedData();
+    _feedPosts = [];
+    _profileFeedData = ProfileFeedModel();
+    _profileFeedPosts = [];
+    _index = 0;
+
+    notifyListeners();
+  }
+
+  Future<void> addSingleComment(ProfileComment comment, int id) async {
+    profileFeedPosts
+        .where((element) => id == element.id)
+        .single
+        .comments!
+        .add(comment);
+    // _comments.add(comment);
+    notifyListeners();
+  }
+
+  void disposeValue2() async {
+    _profileFeedData = ProfileFeedModel();
+    _profileFeedPosts = [];
+    _index = 0;
+
+    notifyListeners();
+  }
 
   Future<void> isLoading(bool isLoad) async {
     _loadStatus = isLoad;
@@ -44,38 +72,57 @@ class FeedPostWare extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> getFeedPostFromApi() async {
+  Future<bool> getFeedPostFromApi(int pageNum) async {
     late bool isSuccessful;
+    List<FeedPost> _moreFeedPosts = [];
+
     try {
-      http.Response? response = await getFeedPost()
+      http.Response? response = await getFeedPost(pageNum)
           .whenComplete(() => log("user feed posts data gotten successfully"));
       if (response == null) {
         isSuccessful = false;
-        log("get feed posts data request failed");
+        //   log("get feed posts data request failed");
       } else if (response.statusCode == 200) {
         var jsonData = jsonDecode(response.body);
 
         var incomingData = FeedData.fromJson(jsonData["data"]);
-
         _feedData = incomingData;
 
-        _feedPosts = _feedData.data!;
+        if (pageNum == 1) {
+          _feedData.data!.shuffle();
 
-        log("get feed posts data  request success");
+          _feedPosts = _feedData.data!;
+        } else {
+          _feedData.data!.shuffle();
+          _moreFeedPosts = incomingData.data!;
+          _feedPosts.addAll(_moreFeedPosts);
+        }
+        if (_moreFeedPosts.isNotEmpty) {
+          _moreFeedPosts.clear();
+        }
+
+        //  log("get feed posts data  request success");
         isSuccessful = true;
       } else {
-        log("get feed posts data  request failed");
+        // log("get feed posts data  request failed");
         isSuccessful = false;
       }
     } catch (e) {
       isSuccessful = false;
-      log("get feed posts data  request failed");
-      log(e.toString());
+      // log("get feed posts data  request failed");
+      // log(e.toString());
     }
 
     notifyListeners();
 
     return isSuccessful;
+  }
+
+  Future clearPost() async {
+    _profileFeedData = ProfileFeedModel();
+
+    _profileFeedPosts.clear();
+    notifyListeners();
   }
 
   Future<bool> getUserPostFromApi() async {
@@ -85,7 +132,7 @@ class FeedPostWare extends ChangeNotifier {
           .whenComplete(() => log("user posts data gotten successfully"));
       if (response == null) {
         isSuccessful = false;
-        log("get user posts data request failed");
+        //   log("get user posts data request failed");
       } else if (response.statusCode == 200) {
         var jsonData = jsonDecode(response.body);
 
@@ -93,17 +140,17 @@ class FeedPostWare extends ChangeNotifier {
 
         _profileFeedData = incomingData;
 
-        _profileFeedPosts = _feedData.data!;
-        log("get user posts data  request success");
+        _profileFeedPosts = _profileFeedData.data!;
+        //  log("get user posts data  request success");
         isSuccessful = true;
       } else {
-        log("get user posts data  request failed");
+        // log("get user posts data  request failed");
         isSuccessful = false;
       }
     } catch (e) {
       isSuccessful = false;
-      log("get user posts data  request failed");
-      log(e.toString());
+      //   log("get user posts data  request failed");
+      // log(e.toString());
     }
 
     notifyListeners();

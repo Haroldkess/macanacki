@@ -1,13 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:makanaki/presentation/constants/colors.dart';
 import 'package:makanaki/presentation/screens/onboarding/splash_screen.dart';
-
-import 'package:makanaki/presentation/uiproviders/buttons/button_state.dart';
 import 'package:makanaki/services/provider_init.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  FirebaseFirestore.instance.settings;
   runApp(const MyApp());
 }
 
@@ -17,11 +21,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
         providers: InitProvider.providerInit(),
-        child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'Makanaki',
-          theme: ThemeData(primaryColor: HexColor(primaryColor)),
-          home: const Splash(),
+        child: OverlaySupport(
+          toastTheme: ToastThemeData(alignment: Alignment.center),
+          child: MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'MacaNacki',
+            theme: ThemeData(primaryColor: HexColor(primaryColor)),
+            home: const Splash(),
+          ),
         ));
   }
 }

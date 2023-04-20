@@ -34,7 +34,7 @@ class RegisterEmailController {
     } else {
       ware.isLoading(false);
       // ignore: use_build_context_synchronously
-      showToast(context, ware.message, Colors.red);
+    showToast2(context, ware.message, isError: true);
       //print("something went wrong");
     }
   }

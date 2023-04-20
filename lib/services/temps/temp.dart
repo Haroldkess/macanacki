@@ -5,10 +5,32 @@ import 'package:shared_preferences/shared_preferences.dart';
 class Temp extends ChangeNotifier {
   SharedPreferences? _pref;
 
+  String _userName = "";
+  
+  String _dp = "";
+
+  String get userName => _userName;
+
+  String get dp => _dp;
+
   SharedPreferences get pref => _pref!;
 
   Future<void> initPref() async {
     _pref = await SharedPreferences.getInstance();
+    notifyListeners();
+  }
+
+  Future<void> addUserName(String name) async {
+    await initPref();
+    _pref!.setString(userNameKey, name);
+    _userName = name;
+    notifyListeners();
+  }
+
+    Future<void> addDp(String photo) async {
+    await initPref();
+    _pref!.setString(dpKey, photo);
+    _dp = photo;
     notifyListeners();
   }
 
@@ -38,16 +60,19 @@ class Temp extends ChangeNotifier {
     await initPref().whenComplete(() => _pref!.setString(dobKey, dob));
     notifyListeners();
   }
-   Future<void> addPhotoTemp(String pic) async {
+
+  Future<void> addPhotoTemp(String pic) async {
     await initPref().whenComplete(() => _pref!.setString(photoKey, pic));
     notifyListeners();
   }
 
-     Future<void> addFacialTemp(String facial) async {
-    await initPref().whenComplete(() => _pref!.setString(facialUploadKey, facial));
+  Future<void> addFacialTemp(String facial) async {
+    await initPref()
+        .whenComplete(() => _pref!.setString(facialUploadKey, facial));
     notifyListeners();
   }
-     Future<void> addIsLoggedInTemp(bool logged) async {
+
+  Future<void> addIsLoggedInTemp(bool logged) async {
     await initPref().whenComplete(() => _pref!.setBool(isLoggedInKey, logged));
     notifyListeners();
   }

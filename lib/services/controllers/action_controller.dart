@@ -20,6 +20,7 @@ class ActionController {
     ActionWare ware = Provider.of<ActionWare>(context, listen: false);
 
     ware.isLoading(true);
+    ware.performOfflineFollow(userId);
 
     bool isDone = await ware
         .followOrUnFollowFromApi(userName, userId)
@@ -56,6 +57,14 @@ class ActionController {
         .whenComplete(() => log("like action attempt done "));
 
     if (isDone) {
+      if (ware.message2 == "Post Liked") {
+        ware.addLikeId(postId);
+      } else if (ware.message2 == "Post Unliked") {
+        ware.removeLikeId(postId);
+        ware.addTapped(false);
+      } else {
+        ware.addTapped(false);
+      }
       ware.isLoading2(false);
     } else {
       ware.isLoading2(false);
@@ -120,12 +129,34 @@ class ActionController {
         .whenComplete(() => log("everything from api and provider is done"));
 
     if (isDone) {
-      await Future.forEach(ware.allFollowing , (element) async {
+      await Future.forEach(ware.allFollowing, (element) async {
         await ware.addFollowId(element.id!);
       });
       ware.isLoadingAllFollowing(false);
     } else {
       ware.isLoadingAllFollowing(false);
+      // ignore: use_build_context_synchronously
+      //  showToast(context, "An error occured", Colors.red);
+    }
+  }
+
+  static Future<void> retrievAllUserFollowersController(
+      BuildContext context) async {
+    ActionWare ware = Provider.of<ActionWare>(context, listen: false);
+
+    ware.isLoadingFollow(true);
+
+    bool isDone = await ware
+        .getFollowersFromApi()
+        .whenComplete(() => log("everything from api and provider is done"));
+
+    if (isDone) {
+      // await Future.forEach(ware.allFollowing, (element) async {
+      //   await ware.addFollowId(element.id!);
+      // });
+      ware.isLoadingFollow(false);
+    } else {
+      ware.isLoadingFollow(false);
       // ignore: use_build_context_synchronously
       //  showToast(context, "An error occured", Colors.red);
     }

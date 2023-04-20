@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:makanaki/presentation/widgets/text.dart';
+import 'package:makanaki/services/middleware/notification_ware..dart';
 import 'package:provider/provider.dart';
 
 import '../../../services/controllers/feed_post_controller.dart';
@@ -29,6 +31,7 @@ class _UsersProfileState extends State<UsersProfile> {
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     UserProfileWare stream = context.watch<UserProfileWare>();
+    NotificationWare notify = context.watch<NotificationWare>();
 
     return Scaffold(
       backgroundColor: HexColor("#F5F2F9"),
@@ -39,24 +42,57 @@ class _UsersProfileState extends State<UsersProfile> {
         child: CustomScrollView(
           slivers: [
             SliverAppBar(
-              automaticallyImplyLeading: false,
+              automaticallyImplyLeading: true,
+              leading: BackButton(color: Colors.black),
               title: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  myIcon("assets/icon/makanakiicon.svg", primaryColor, 16.52,
-                      70, false),
+                  // myIcon("assets/icon/makanakiicon.svg", primaryColor, 16.52,
+                  //     70, false),
                   InkWell(
                     onTap: () => PageRouting.pushToPage(
                         context, const NotificationScreen()),
-                    child: myIcon("assets/icon/notification.svg", "#828282",
-                        19.13, 17.31, true),
+                    child: Stack(
+                      children: [
+                        SvgPicture.asset(
+                          "assets/icon/notification.svg",
+                        ),
+                        Positioned(
+                          right: 0,
+                          child: Align(
+                            alignment: Alignment.topRight,
+                            child: Container(
+                              height: 15,
+                              width: 20,
+                              decoration: const BoxDecoration(
+                                  shape: BoxShape.circle, color: Colors.red),
+                              child: Padding(
+                                padding: const EdgeInsets.all(0.0),
+                                child: Center(
+                                  child: AppText(
+                                    text: notify.notifyData.length > 99
+                                        ? "99+"
+                                        : notify.notifyData.length.toString(),
+                                    size: 8,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+
+                    // myIcon("assets/icon/notification.svg", "#828282",
+                    //     19.13, 17.31, true),
                   ),
                 ],
               ),
               // floating: true,
               pinned: true,
               backgroundColor: HexColor("#F5F2F9"),
-              expandedHeight: height / 1.8,
+              expandedHeight: height * .59,
               flexibleSpace: FlexibleSpaceBar(
                 background: stream.loadStatus2
                     ? const PublicLoader()
@@ -65,6 +101,29 @@ class _UsersProfileState extends State<UsersProfile> {
                       ),
               ),
             ),
+            stream.publicUserProfileModel.aboutMe != null
+                ? SliverToBoxAdapter(
+                    child: Row(
+                      children: [
+                        Expanded(
+                            child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 20, horizontal: 20),
+                          child: AppText(
+                            text: stream.publicUserProfileModel.aboutMe!,
+                            align: TextAlign.center,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            fontWeight: FontWeight.w500,
+                            size: 12,
+                          ),
+                        )),
+                      ],
+                    ),
+                  )
+                : const SliverToBoxAdapter(
+                    child: SizedBox(height: 20),
+                  ),
             SliverToBoxAdapter(
               child: stream.loadStatus2
                   ? const ProfilePostGridLoader()

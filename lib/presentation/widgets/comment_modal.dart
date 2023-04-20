@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/parser.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:makanaki/model/feed_post_model.dart';
 import 'package:makanaki/presentation/constants/colors.dart';
 import 'package:makanaki/presentation/constants/params.dart';
 import 'package:makanaki/presentation/model/ui_model.dart';
@@ -21,7 +22,7 @@ import 'package:provider/provider.dart';
 
 import 'hexagon_avatar.dart';
 
-commentModal(BuildContext context, int id) async {
+commentModal(BuildContext context, int id, String page) async {
   var height = MediaQuery.of(context).size.height;
   var width = MediaQuery.of(context).size.width;
   var size = MediaQuery.of(context).size;
@@ -37,11 +38,16 @@ commentModal(BuildContext context, int id) async {
       builder: (context) {
         StoreComment stream = context.watch<StoreComment>();
         ActionWare action = context.watch<ActionWare>();
+        ScrollController control = ScrollController();
 
         return Scaffold(
-          // resizeToAvoidBottomInset: false,
+          resizeToAvoidBottomInset: true,
           body: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.only(
+              top: 8.0,
+              left: 8.0,
+              right: 8.0,
+            ),
             child: Container(
               // height: height,
               child: Stack(
@@ -65,117 +71,141 @@ commentModal(BuildContext context, int id) async {
                                 ),
                               )
                             : SingleChildScrollView(
-                                child: Column(
-                                children: [
-                                  Column(
-                                    // mainAxisSize: MainAxisSize.min,
-                                    children: stream.comments
-                                        .map((e) => ListTile(
-                                              leading: Padding(
-                                                padding: const EdgeInsets.only(
-                                                    bottom: 20.0),
-                                                child: Container(
-                                                    height: 33,
-                                                    width: 37,
-                                                    child: HexagonAvatar(
-                                                        url: e.profilePhoto ==
-                                                                null
-                                                            ? ""
-                                                            : e.profilePhoto!,
-                                                        w: w)),
-                                              ),
-                                              title: Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 0.0),
-                                                child:
-                                                    AppText(text: e.username!),
-                                              ),
-                                              subtitle: Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        vertical: 8.0),
-                                                child: AppText(text: e.body!),
-                                              ),
-                                              trailing: Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 5.0),
-                                                child: Column(
-                                                  children: [
-                                                    AnimatedContainer(
-                                                        duration:
-                                                            const Duration(
-                                                                milliseconds:
-                                                                    500),
-                                                        child: Container(
-                                                          child: InkWell(
-                                                            onTap: () async {
-                                                              ActionWare
-                                                                  provide =
-                                                                  Provider.of<
-                                                                          ActionWare>(
-                                                                      context,
-                                                                      listen:
-                                                                          false);
-                                                              provide
-                                                                  .addCommentId(
-                                                                      e.id!);
-                                                              await ActionController
-                                                                  .likeOrDislikeCommentController(
-                                                                      context,
-                                                                      id,
-                                                                      e.id!);
-                                                            },
-                                                            child: action
-                                                                    .commentId
-                                                                    .contains(
-                                                                        e.id)
-                                                                ? Icon(
-                                                                    Icons
-                                                                        .favorite,
-                                                                    color: HexColor(
-                                                                        primaryColor),
-                                                                    size: 20,
-                                                                  )
-                                                                : SvgPicture
-                                                                    .asset(
-                                                                    'assets/icon/heart.svg',
-                                                                    height: 15,
-                                                                    width: 15,
-                                                                    color: HexColor(
-                                                                        "#8B8B8B"),
-                                                                  ),
-                                                          ),
-                                                        )),
-                                                    const SizedBox(
-                                                      height: 5,
-                                                    ),
-                                                    AppText(
-                                                      text: action.commentId
-                                                              .contains(e.id)
-                                                          ? Numeral(
-                                                                  e.noOfLikes! +
-                                                                      1)
-                                                              .format()
-                                                          : Numeral(
-                                                                  e.noOfLikes!)
-                                                              .format(),
-                                                      size: 11,
+                                controller: control,
+                                child: Padding(
+                                  padding: EdgeInsets.only(
+                                      bottom: MediaQuery.of(context)
+                                          .viewInsets
+                                          .bottom),
+                                  child: Column(
+                                    children: [
+                                      Column(
+                                        // mainAxisSize: MainAxisSize.min,
+                                        children: stream.comments
+                                            .map((e) => ListTile(
+                                                  leading: Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            bottom: 20.0),
+                                                    child: Container(
+                                                        height: 33,
+                                                        width: 37,
+                                                        child: HexagonAvatar(
+                                                            url: e.profilePhoto ==
+                                                                    null
+                                                                ? ""
+                                                                : e.profilePhoto!,
+                                                            w: w)),
+                                                  ),
+                                                  title: Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 0.0),
+                                                    child: AppText(
+                                                      text: e.username!,
                                                       fontWeight:
-                                                          FontWeight.w400,
-                                                      color:
-                                                          HexColor("#C0C0C0"),
-                                                    )
-                                                  ],
-                                                ),
-                                              ),
-                                            ))
-                                        .toList(),
+                                                          FontWeight.w700,
+                                                      size: 15,
+                                                    ),
+                                                  ),
+                                                  subtitle: Padding(
+                                                    padding: const EdgeInsets
+                                                            .symmetric(
+                                                        vertical: 8.0),
+                                                    child: AppText(
+                                                      text: e.body!,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      size: 12,
+                                                    ),
+                                                  ),
+                                                  trailing: Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 5.0),
+                                                    child: Column(
+                                                      children: [
+                                                        AnimatedContainer(
+                                                            duration:
+                                                                const Duration(
+                                                                    milliseconds:
+                                                                        500),
+                                                            child: Container(
+                                                              child: InkWell(
+                                                                onTap:
+                                                                    () async {
+                                                                  ActionWare
+                                                                      provide =
+                                                                      Provider.of<
+                                                                              ActionWare>(
+                                                                          context,
+                                                                          listen:
+                                                                              false);
+                                                                  provide
+                                                                      .addCommentId(
+                                                                          e.id!);
+                                                                  await ActionController
+                                                                      .likeOrDislikeCommentController(
+                                                                          context,
+                                                                          id,
+                                                                          e.id!);
+                                                                },
+                                                                child: action
+                                                                        .commentId
+                                                                        .contains(e
+                                                                            .id)
+                                                                    ? Icon(
+                                                                        Icons
+                                                                            .favorite,
+                                                                        color: HexColor(
+                                                                            primaryColor),
+                                                                        size:
+                                                                            20,
+                                                                      )
+                                                                    : SvgPicture
+                                                                        .asset(
+                                                                        'assets/icon/heart.svg',
+                                                                        height:
+                                                                            15,
+                                                                        width:
+                                                                            15,
+                                                                        color: HexColor(
+                                                                            "#8B8B8B"),
+                                                                      ),
+                                                              ),
+                                                            )),
+                                                        const SizedBox(
+                                                          height: 5,
+                                                        ),
+                                                        AppText(
+                                                          text: action.commentId
+                                                                  .contains(
+                                                                      e.id)
+                                                              ? Numeral(
+                                                                      e.noOfLikes! +
+                                                                          1)
+                                                                  .format()
+                                                              : Numeral(e
+                                                                      .noOfLikes!)
+                                                                  .format(),
+                                                          size: 11,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color: HexColor(
+                                                              "#C0C0C0"),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ))
+                                            .toList(),
+                                      ),
+                                      const SizedBox(
+                                        height: 300,
+                                      )
+                                    ],
                                   ),
-                                  const SizedBox(
-                                    height: 300,
-                                  )
-                                ],
-                              )),
+                                )),
                       ),
                     ],
                   ),
@@ -184,10 +214,12 @@ commentModal(BuildContext context, int id) async {
                       child: CommentForm(
                         comment: comment,
                         id: id,
+                        page: page,
+                        control: control,
                       )),
-                  SizedBox(
-                    height: MediaQuery.of(context).viewInsets.bottom,
-                  ),
+                  // SizedBox(
+                  //   height: MediaQuery.of(context).viewInsets.bottom,
+                  // ),
                 ],
               ),
             ),
@@ -220,7 +252,14 @@ commentHeader(BuildContext context) {
 class CommentForm extends StatefulWidget {
   TextEditingController comment;
   final int id;
-  CommentForm({super.key, required this.comment, required this.id});
+  String page;
+  ScrollController control;
+  CommentForm(
+      {super.key,
+      required this.comment,
+      required this.id,
+      required this.page,
+      required this.control});
 
   @override
   State<CommentForm> createState() => _CommentFormState();
@@ -318,13 +357,20 @@ class _CommentFormState extends State<CommentForm> {
                   child: stream.loadStatus2
                       ? Loader(color: HexColor(primaryColor))
                       : InkWell(
-                          onTap: () {
+                          onTap: () async {
                             if (widget.comment.text.isEmpty) {
                               log("empty comment");
                               return;
                             } else {
                               log(widget.id.toString());
-                              _submitComment(widget.id, context);
+                              await _submitComment(
+                                  widget.id, context, widget.page);
+                              _focusNode.unfocus();
+                              widget.control.animateTo(
+                                widget.control.position.maxScrollExtent,
+                                curve: Curves.easeOut,
+                                duration: const Duration(milliseconds: 300),
+                              );
                             }
                           },
                           child: SvgPicture.asset(
@@ -354,8 +400,11 @@ class _CommentFormState extends State<CommentForm> {
     );
   }
 
-  _submitComment(int id, BuildContext context) async {
+  _submitComment(int id, BuildContext context, String page) async {
+    // Comment data =Comment(
+    //   id:
+    // );
     await CreatePostController.shareCommentController(
-        context, widget.comment, id);
+        context, widget.comment, id, page);
   }
 }

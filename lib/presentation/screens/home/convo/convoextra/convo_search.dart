@@ -24,7 +24,7 @@ class ConvoSearch extends StatelessWidget {
           hintStyle: GoogleFonts.spartan(
               color: Color.fromRGBO(0, 0, 0, 0.4), fontSize: 14),
           prefixIcon: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(12.0),
             child: SvgPicture.asset(
               "assets/icon/searchicon.svg",
               height: 5,
@@ -35,10 +35,14 @@ class ConvoSearch extends StatelessWidget {
           border: UnderlineInputBorder(
             borderRadius: BorderRadius.circular(2.0),
           ),
+          enabledBorder: UnderlineInputBorder(
+              borderRadius: BorderRadius.circular(2.0),
+              borderSide: const BorderSide(color: Colors.transparent)),
+          focusedBorder: UnderlineInputBorder(
+              borderRadius: BorderRadius.circular(2.0),
+              borderSide: const BorderSide(color: Colors.transparent)),
         ),
       ),
-    
-    
     );
   }
 }

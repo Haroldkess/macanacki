@@ -24,14 +24,14 @@ Future<http.Response?> followAndUnfollow(String username) async {
         
         );
 
-    log(response.body.toString());
+  //  log(response.body.toString());
   } catch (e) {
     response = null;
   }
   return response;
 }
 
-Future<http.Response?> getAllFollwed() async {
+Future<http.Response?> getAllFollowing() async {
   http.Response? response;
     SharedPreferences pref = await SharedPreferences.getInstance();
   String? token = pref.getString(tokenKey);
@@ -44,7 +44,28 @@ Future<http.Response?> getAllFollwed() async {
         },
       );
 
-    log(response.body.toString());
+   // log(response.body.toString());
+  } catch (e) {
+    response = null;
+
+  }
+  return response;
+}
+
+Future<http.Response?> getAllFollowers() async {
+  http.Response? response;
+    SharedPreferences pref = await SharedPreferences.getInstance();
+  String? token = pref.getString(tokenKey);
+  try {
+    response = await http.get(
+        Uri.parse('$baseUrl/public/api/user/followers'),
+        headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+           HttpHeaders.authorizationHeader: "Bearer $token",
+        },
+      );
+
+  //  log(response.body.toString());
   } catch (e) {
     response = null;
 
@@ -69,7 +90,7 @@ Future<http.Response?> likeOrDislike(int postId, ) async {
         
         );
 
-    log(response.body.toString());
+  //  log(response.body.toString());
   } catch (e) {
     response = null;
   }
@@ -89,7 +110,7 @@ Future<http.Response?> getAllLikedPost() async {
         },
       );
 
-    log(response.body.toString());
+  //  log(response.body.toString());
   } catch (e) {
     response = null;
 
@@ -113,7 +134,7 @@ Future<http.Response?> likeComment(int postId,int commentId) async {
         
         );
 
-    log(response.body.toString());
+  //  log(response.body.toString());
   } catch (e) {
     response = null;
   }
@@ -134,7 +155,7 @@ Future<http.Response?> getAllLikedComment() async {
         },
       );
 
-    log(response.body.toString());
+  //  log(response.body.toString());
   } catch (e) {
     response = null;
 

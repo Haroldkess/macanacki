@@ -20,6 +20,9 @@ class ActionWare extends ChangeNotifier {
   bool _loadStatus = false;
   bool _loadStatus2 = false;
   bool _loadStatus3 = false;
+  bool _isDoubleTapped = false;
+
+  bool _loadStatusFollower = false;
 
   bool _loadStatusAllLiked = false;
   bool _loadStatusAllComments = false;
@@ -49,47 +52,88 @@ class ActionWare extends ChangeNotifier {
   String get message2 => _message2;
 
   bool get loadStatus => _loadStatus;
+  bool get isDoubleTapped => _isDoubleTapped;
 
   bool get loadStatus2 => _loadStatus2;
   bool get loadStatus3 => _loadStatus3;
+  bool get loadStatusFollower => _loadStatusFollower;
 
   bool get loadStatusAllLiked => _loadStatusAllLiked;
 
   bool get loadStatusAllComments => _loadStatusAllComments;
   bool get loadStatusAllFollowing => _loadStatusAllFollowing;
 
-  Future<void> addLikeId(int id) async {
+  void disposeValue() async {
+    _likeIds.clear();
+    _followIds.clear();
+    _commentIds.clear();
+    _allLikedData.clear();
+    _allFollowingData.clear();
+    _allLikedCommentData.clear();
+
+    _likeIds = [];
+    _followIds = [];
+    _commentIds = [];
+    _allLikedData = [];
+    _allFollowingData = [];
+    _allLikedCommentData = [];
+    notifyListeners();
+  }
+
+  void addTapped(bool tap) {
+    _isDoubleTapped = tap;
+    notifyListeners();
+  }
+
+  Future<void> tempAddLikeId(int id) async {
     if (_likeIds.contains(id)) {
       _likeIds.removeWhere((element) => id == element);
     } else {
       _likeIds.add(id);
     }
 
-    log(_likeIds.toString());
+    notifyListeners();
+  }
+
+  Future<void> addLikeId(int id) async {
+    if (_likeIds.contains(id)) return;
+    _likeIds.add(id);
+
+    notifyListeners();
+  }
+
+  Future<void> removeLikeId(int id) async {
+    _likeIds.removeWhere((element) => id == element);
 
     notifyListeners();
   }
 
   Future<void> addFollowId(int id) async {
-    if (!_followIds.contains(id)) {
-      _followIds.add(id);
-      log("${_followIds}this i the list");
-    } else {}
+    if (_followIds.contains(id)) return;
 
-    log(_followIds.toString());
+    _followIds.add(id);
 
     notifyListeners();
   }
 
   Future<void> removeFollowId(int id) async {
-    if (_followIds.contains(id)) {
-      _followIds.removeWhere((element) => id == element);
-    } else {}
-
-    log(_followIds.toString());
+    _followIds.removeWhere((element) => id == element);
 
     notifyListeners();
   }
+
+   Future<void> performOfflineFollow(int id) async {
+    if (_followIds.contains(id)) {
+      _followIds.removeWhere((element) => id == element);
+    } else {
+      _followIds.add(id);
+    }
+
+    //  log(_commentIds.toString());
+
+    notifyListeners();
+  }
+
 
   Future<void> addCommentId(int id) async {
     if (_commentIds.contains(id)) {
@@ -98,13 +142,18 @@ class ActionWare extends ChangeNotifier {
       _commentIds.add(id);
     }
 
-    log(_commentIds.toString());
+    //  log(_commentIds.toString());
 
     notifyListeners();
   }
 
   Future<void> isLoading(bool isLoad) async {
     _loadStatus = isLoad;
+    notifyListeners();
+  }
+
+  Future<void> isLoadingFollow(bool isLoad) async {
+    _loadStatusFollower = isLoad;
     notifyListeners();
   }
 
@@ -144,22 +193,22 @@ class ActionWare extends ChangeNotifier {
       if (response == null) {
         _message = "Something went wrong";
         isSuccessful = false;
-        log("Follow request failed");
+        //   log("Follow request failed");
       } else if (response.statusCode == 200) {
         var jsonData = jsonDecode(response.body);
         _message = jsonData["message"].toString();
-        log("Follow request success");
+        //   log("Follow request success");
         isSuccessful = true;
       } else {
         var jsonData = jsonDecode(response.body);
         _message = jsonData["message"].toString();
-        log("Follow request failed");
+        //    log("Follow request failed");
         isSuccessful = false;
       }
     } catch (e) {
       isSuccessful = false;
-      log("Follow request failed");
-      log(e.toString());
+      //   log("Follow request failed");
+      //   log(e.toString());
     }
 
     notifyListeners();
@@ -179,25 +228,26 @@ class ActionWare extends ChangeNotifier {
         log("like action request failed");
       } else if (response.statusCode == 200) {
         var jsonData = jsonDecode(response.body);
-        if (jsonData["message"] == "Post Liked") {
-          log("like ooooo ${jsonData["data"][0]["post_id"]}");
-          if (!_likeIds.contains(jsonData["data"][0]["post_id"])) {
-            _likeIds.add(jsonData["data"][0]["post_id"]);
-          }
-        } else {}
+        _message2 = jsonData["message"];
+        // if (jsonData["message"] == "Post Liked") {
+        //   log("like ooooo ${jsonData["data"][0]["post_id"]}");
+        //   if (!_likeIds.contains(jsonData["data"][0]["post_id"])) {
+        //     _likeIds.add(jsonData["data"][0]["post_id"]);
+        //   }
+        // } else {}
 
-        log("like action request success");
+        //  log("like action request success");
         isSuccessful = true;
       } else {
-        log("like action request failed");
+        //   log("like action request failed");
         // ignore: use_build_context_synchronously
         //showToast(context, ain"something went wrong. pls try ag", Colors.red);
         isSuccessful = false;
       }
     } catch (e) {
       isSuccessful = false;
-      log("like action request failed");
-      log(e.toString());
+      //  log("like action request failed");
+      //  log(e.toString());
     }
 
     notifyListeners();
@@ -215,28 +265,28 @@ class ActionWare extends ChangeNotifier {
           .whenComplete(() => log("like action request done"));
       if (response == null) {
         isSuccessful = false;
-        log("like action request failed");
+        //  log("like action request failed");
       } else if (response.statusCode == 200) {
         var jsonData = jsonDecode(response.body);
         if (jsonData["message"] == "Comment Liked") {
-          log("comment ooooo ${jsonData["data"][0]["comment_id"]}");
+          //  log("comment ooooo ${jsonData["data"][0]["comment_id"]}");
           if (!_commentIds.contains(jsonData["data"][0]["comment_id"])) {
             _commentIds.add(jsonData["data"][0]["comment_id"]);
           }
         } else {}
 
-        log("like action request success");
+        // log("like action request success");
         isSuccessful = true;
       } else {
-        log("like action request failed");
+        // log("like action request failed");
         // ignore: use_build_context_synchronously
         //showToast(context, ain"something went wrong. pls try ag", Colors.red);
         isSuccessful = false;
       }
     } catch (e) {
       isSuccessful = false;
-      log("like action request failed");
-      log(e.toString());
+      //  log("like action request failed");
+      // log(e.toString());
     }
 
     notifyListeners();
@@ -253,25 +303,25 @@ class ActionWare extends ChangeNotifier {
           .whenComplete(() => log("get likes action request done"));
       if (response == null) {
         isSuccessful = false;
-        log("get likes action request failed");
+        //   log("get likes action request failed");
       } else if (response.statusCode == 200) {
         var jsonData = jsonDecode(response.body);
 
         LikededModel incommingData = LikededModel.fromJson(jsonData);
         _allLikedData = incommingData.data!;
 
-        log("get likes action request success");
+        //  log("get likes action request success");
         isSuccessful = true;
       } else {
-        log("get likes action request failed");
+        //  log("get likes action request failed");
         // ignore: use_build_context_synchronously
         //showToast(context, ain"something went wrong. pls try ag", Colors.red);
         isSuccessful = false;
       }
     } catch (e) {
       isSuccessful = false;
-      log("get likes action request failed");
-      log(e.toString());
+      //   log("get likes action request failed");
+      //  log(e.toString());
     }
 
     notifyListeners();
@@ -286,24 +336,24 @@ class ActionWare extends ChangeNotifier {
           .whenComplete(() => log("coment likes  action request done"));
       if (response == null) {
         isSuccessful = false;
-        log("coment likes action request failed");
+        //  log("coment likes action request failed");
       } else if (response.statusCode == 200) {
         var jsonData = jsonDecode(response.body);
         LikedCommentModel incommingData = LikedCommentModel.fromJson(jsonData);
         _allLikedCommentData = incommingData.data!;
 
-        log("coment likes action request success");
+        // log("coment likes action request success");
         isSuccessful = true;
       } else {
-        log("coment likes action request failed");
+        // log("coment likes action request failed");
         // ignore: use_build_context_synchronously
         //showToast(context, ain"something went wrong. pls try ag", Colors.red);
         isSuccessful = false;
       }
     } catch (e) {
       isSuccessful = false;
-      log("coment likes action request failed");
-      log(e.toString());
+      // log("coment likes action request failed");
+      // log(e.toString());
     }
 
     notifyListeners();
@@ -314,28 +364,60 @@ class ActionWare extends ChangeNotifier {
   Future<bool> getFollowingFromApi() async {
     late bool isSuccessful;
     try {
-      http.Response? response = await getAllFollwed()
+      http.Response? response = await getAllFollowing()
           .whenComplete(() => log("all following action request done"));
       if (response == null) {
         isSuccessful = false;
-        log("all following  action request failed");
+        //  log("all following  action request failed");
       } else if (response.statusCode == 200) {
         var jsonData = jsonDecode(response.body);
         FollowingModel incommingData = FollowingModel.fromJson(jsonData);
         _allFollowingData = incommingData.data!;
 
-        log("all following  action request success");
+        //  log("all following  action request success");
         isSuccessful = true;
       } else {
-        log("all following  action request failed");
+        // log("all following  action request failed");
         // ignore: use_build_context_synchronously
         //showToast(context, ain"something went wrong. pls try ag", Colors.red);
         isSuccessful = false;
       }
     } catch (e) {
       isSuccessful = false;
-      log("all following  action request failed");
-      log(e.toString());
+      //   log("all following  action request failed");
+      //  log(e.toString());
+    }
+
+    notifyListeners();
+
+    return isSuccessful;
+  }
+
+  Future<bool> getFollowersFromApi() async {
+    late bool isSuccessful;
+    try {
+      http.Response? response = await getAllFollowers()
+          .whenComplete(() => log("all followers action request done"));
+      if (response == null) {
+        isSuccessful = false;
+        //   log("all following  action request failed");
+      } else if (response.statusCode == 200) {
+        var jsonData = jsonDecode(response.body);
+        FollowingModel incommingData = FollowingModel.fromJson(jsonData);
+        _allFollowingData = incommingData.data!;
+
+        // log("all followers  action request success");
+        isSuccessful = true;
+      } else {
+        //  log("all followers  action request failed");
+        // ignore: use_build_context_synchronously
+        //showToast(context, ain"something went wrong. pls try ag", Colors.red);
+        isSuccessful = false;
+      }
+    } catch (e) {
+      isSuccessful = false;
+      //  log("all following  action request failed");
+      // log(e.toString());
     }
 
     notifyListeners();

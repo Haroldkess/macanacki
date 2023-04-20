@@ -13,7 +13,7 @@ Future<http.Response?> loginUser(SendLoginModel data) async {
         headers: {
           HttpHeaders.contentTypeHeader: "application/json",
         },
-        body: jsonEncode(data.toJson()));
+        body: jsonEncode(data.toJson())).timeout(const Duration(seconds: 30));
 
     log(response.body.toString());
   } catch (e) {

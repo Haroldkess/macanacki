@@ -22,12 +22,21 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>LSApplicationQueriesSchemes</key>
+<array>
+  <string>sms</string>
+  <string>tel</string>
+</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+<string>This app needs access to location when open.</string>
+<key>NSLocationAlwaysUsageDescription</key>
+<string>This app needs access to location when in the background.</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
@@ -50,5 +59,24 @@
 	<key>NSPhotoLibraryUsageDescription</key>
 	<key>NSCameraUsageDescription</key>
 	<key>NSMicrophoneUsageDescription</key>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<key>NSLocationTemporaryUsageDescriptionDictionary</key>
+	<key>UIBackgroundModes</key>
+<array>
+   <string>fetch</string>
+   <string>remote-notification</string>
+</array>
+<key>NSAppleMusicUsageDescription</key>
+<string>Explain why your app uses music</string>
+<key>UISupportsDocumentBrowser</key>
+<true/>
+<key>NSPhotoLibraryUsageDescription</key>
+<string>Explain why your app uses photo library</string>
+
+	
+<dict>
+  <key>YourPurposeKey</key>
+  <string>The example App requires temporary access to the device&apos;s precise location.</string>
+</dict>
 </dict>
 </plist>

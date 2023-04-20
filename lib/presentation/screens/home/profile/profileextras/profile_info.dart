@@ -41,23 +41,28 @@ class _ProfileInfoState extends State<ProfileInfo> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const SizedBox(
-            height: 50,
+            height: 70,
           ),
           stream.loadStatus
               ? Shimmer.fromColors(
                   baseColor: baseColor,
                   highlightColor: highlightColor,
-                  child: const ProfileImageAndName())
+                  child: const ProfileImageAndNameShimmer())
               : const ProfileImageAndName(),
           const SizedBox(
             height: 20,
           ),
-          const ProfileFollowersStatistics(),
+          stream.loadStatus
+              ? Shimmer.fromColors(
+                  baseColor: baseColor,
+                  highlightColor: highlightColor,
+                  child: const ProfileFollowersStatisticsShimmer())
+              : const ProfileFollowersStatistics(),
           widget.isMine
               ? AllProfileActions(
                   isMine: widget.isMine,
                 )
-              :   UserProfileActions()
+              : UserProfileActions()
         ],
       ),
     );
@@ -72,8 +77,10 @@ class _ProfileInfoState extends State<ProfileInfo> {
   Future<void> getData() async {
     UserProfileWare userData =
         Provider.of<UserProfileWare>(context, listen: false);
-    if (userData.userProfileModel.email!.isNotEmpty) {
-      return;
+    if (userData.userProfileModel.email != null) {
+      if (userData.userProfileModel.email!.isNotEmpty) {
+        return;
+      }
     }
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       await UserProfileController.retrievProfileController(context, false);

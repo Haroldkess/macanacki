@@ -20,6 +20,8 @@ class RegisterationWare extends ChangeNotifier {
   String _message2 = 'Something went wrong';
   String _token = "";
 
+  bool _verifyName = false;
+
   String get message => _message;
   String get message2 => _message2;
 
@@ -27,6 +29,7 @@ class RegisterationWare extends ChangeNotifier {
 
   bool get loadStatus2 => _loadStatus2;
   bool get loadStatus3 => _loadStatus3;
+  bool get verifyName => _verifyName;
 
   Future<void> isLoading(bool isLoad) async {
     _loadStatus = isLoad;
@@ -53,22 +56,22 @@ class RegisterationWare extends ChangeNotifier {
       if (response == null) {
         _message = "Something went wrong";
         isSuccessful = false;
-        log("register email request failed");
+     //   log("register email request failed");
       } else if (response.statusCode == 201) {
         var jsonData = jsonDecode(response.body);
         _message = jsonData["message"].toString();
-        log("register email request success");
+      //  log("register email request success");
         isSuccessful = true;
       } else {
         var jsonData = jsonDecode(response.body);
         _message = jsonData["message"].toString();
-        log("register email request failed");
+      //  log("register email request failed");
         isSuccessful = false;
       }
     } catch (e) {
       isSuccessful = false;
-      log("register email request failed");
-      log(e.toString());
+     // log("register email request failed");
+     // log(e.toString());
     }
 
     notifyListeners();
@@ -145,6 +148,38 @@ class RegisterationWare extends ChangeNotifier {
     } catch (e) {
       isSuccessful = false;
       log(e.toString());
+    }
+
+    notifyListeners();
+
+    return isSuccessful;
+  }
+
+  Future<bool> verifyUsernameFromApi(
+    String name,
+  ) async {
+    late bool isSuccessful;
+    try {
+      http.Response? response =
+          await verifyUserName(name).whenComplete(() => log(" request done"));
+      if (response == null) {
+        _verifyName = false;
+        isSuccessful = false;
+      } else if (response.statusCode == 200) {
+        var jsonData = jsonDecode(response.body);
+        _verifyName = true;
+
+        isSuccessful = true;
+      } else {
+          _verifyName = false;
+        // ignore: use_build_context_synchronously
+        //showToast(context, ain"something went wrong. pls try ag", Colors.red);
+        isSuccessful = false;
+      }
+    } catch (e) {
+      _verifyName = false;
+      isSuccessful = false;
+      
     }
 
     notifyListeners();

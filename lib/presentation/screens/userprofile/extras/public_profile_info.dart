@@ -45,7 +45,7 @@ class _PublicProfileInfoState extends State<PublicProfileInfo> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: const [
           SizedBox(
-            height: 50,
+            height: 80,
           ),
           PublicProfileImageAndName(),
           SizedBox(

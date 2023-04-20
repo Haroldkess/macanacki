@@ -7,6 +7,7 @@ class FacialWare extends ChangeNotifier {
   bool _loadStatus = false;
   File? facial;
   File? addedPhoto;
+  File? addedDp;
 
   bool get loadStatus => _loadStatus;
 
@@ -19,8 +20,14 @@ class FacialWare extends ChangeNotifier {
     facial = File(file.path);
     notifyListeners();
   }
-    void addPhoto(XFile photo) {
+
+  void addPhoto(XFile photo) {
     addedPhoto = File(photo.path);
+    notifyListeners();
+  }
+
+  void addDp(XFile photo) {
+    addedDp = File(photo.path);
     notifyListeners();
   }
 }

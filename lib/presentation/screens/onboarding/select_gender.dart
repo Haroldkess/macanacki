@@ -10,6 +10,7 @@ import 'package:makanaki/presentation/constants/params.dart';
 import 'package:makanaki/presentation/model/ui_model.dart';
 import 'package:makanaki/presentation/operations.dart';
 import 'package:makanaki/presentation/screens/kyc/kyc_notification.dart';
+import 'package:makanaki/presentation/screens/onboarding/user_name.dart';
 import 'package:makanaki/presentation/widgets/buttons.dart';
 import 'package:makanaki/presentation/widgets/loader.dart';
 import 'package:makanaki/presentation/widgets/snack_msg.dart';
@@ -168,10 +169,7 @@ class _SelectGenderState extends State<SelectGender> {
 
   Future<void> _submit(BuildContext context, GenderList data) async {
     Temp temp = Provider.of<Temp>(context, listen: false);
-    if (data.id == 3) {
-    } else {
-      temp.addGenderIdTemp(data.id!).whenComplete(
-          () =>  PageRouting.pushToPage(context, const DobScreen()));
-    }
+    temp.addGenderIdTemp(data.id!).whenComplete(
+          () =>  PageRouting.pushToPage(context,  SelectUserName(genderId: data.id!,)));
   }
 }

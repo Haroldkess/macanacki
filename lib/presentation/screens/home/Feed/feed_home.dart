@@ -10,6 +10,7 @@ import 'package:makanaki/presentation/screens/home/Feed/scanning.dart';
 import 'package:makanaki/presentation/widgets/avatar.dart';
 import 'package:makanaki/services/controllers/action_controller.dart';
 import 'package:makanaki/services/controllers/feed_post_controller.dart';
+import 'package:makanaki/services/controllers/mode_controller.dart';
 import 'package:makanaki/services/middleware/action_ware.dart';
 import 'package:makanaki/services/middleware/feed_post_ware.dart';
 import 'package:provider/provider.dart';
@@ -28,6 +29,9 @@ class _FeedHomeState extends State<FeedHome> {
   void initState() {
     super.initState();
     Operations.funcFindUser(context);
+    SchedulerBinding.instance.addPostFrameCallback((_) async  {
+       await   ModeController.handleMode("online");
+    });
     callFeedPost(false);
   }
 
@@ -56,7 +60,7 @@ class _FeedHomeState extends State<FeedHome> {
         return;
       }
       SchedulerBinding.instance.addPostFrameCallback((_) async {
-        await FeedPostController.getFeedPostController(context)
+        await FeedPostController.getFeedPostController(context, 1, false)
             .whenComplete(() async {
           await ActionController.retrievAllUserLikedController(context);
         }).whenComplete(() async {
@@ -66,7 +70,7 @@ class _FeedHomeState extends State<FeedHome> {
         });
       });
     } else {
-      await FeedPostController.getFeedPostController(context)
+      await FeedPostController.getFeedPostController(context,1, false)
           .whenComplete(() async {
         await ActionController.retrievAllUserLikedController(context);
       }).whenComplete(() async {

@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:makanaki/presentation/allNavigation.dart';
 import 'package:makanaki/presentation/constants/colors.dart';
@@ -75,8 +77,9 @@ class _DobScreenState extends State<DobScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    dayMonthYear(context, width, height, watch.month),
-                    dayMonthYear(context, width, height, watch.year),
+                    dayMonthYear(context, width, height, watch.day, watch.month,
+                        watch.year),
+                    //  dayMonthYear(context, width, height, watch.year),
                   ],
                 ),
                 AppButton(
@@ -102,13 +105,13 @@ class _DobScreenState extends State<DobScreen> {
     );
   }
 
-  InkWell dayMonthYear(
-      BuildContext context, double width, double height, String text) {
+  InkWell dayMonthYear(BuildContext context, double width, double height,
+      String d, String m, String y) {
     return InkWell(
       onTap: () async {
         DateTime? pickedDate = await showDatePicker(
             context: context,
-            initialDate: DateTime.now(), //get today's date
+            initialDate: DateTime(2005), //get today's date
             firstDate: DateTime(
                 1970), //DateTime.now() - not to allow to choose before today.
             lastDate: DateTime.now());
@@ -139,19 +142,36 @@ class _DobScreenState extends State<DobScreen> {
         }
       },
       child: Container(
-        height: 56,
-        width: width * 0.4,
+        height: 50,
+        width: MediaQuery.of(context).size.width * 0.85,
         decoration: BoxDecoration(
+            color: Colors.transparent,
             shape: BoxShape.rectangle,
-            border: Border.all(
-                color: HexColor("#C0C0C0"),
-                style: BorderStyle.solid,
-                width: 1.0),
-            borderRadius:
-                const BorderRadius.all(Radius.circular(buttonCurves * 5))),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [AppText(text: text), Icon(Icons.arrow_drop_down)],
+            border: Border.all(color: HexColor("#C0C0C0")),
+            borderRadius: const BorderRadius.all(Radius.circular(20.0))),
+        child: TextFormField(
+          enabled: false,
+          cursorColor: HexColor(primaryColor),
+          style: GoogleFonts.spartan(
+            color: HexColor(darkColor),
+            fontSize: 14,
+          ),
+          decoration: InputDecoration(
+            suffixIcon: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [SvgPicture.asset("assets/icon/calendar.svg")],
+            ),
+            contentPadding: const EdgeInsets.only(left: 20, top: 17),
+            hintText: d == "DAY" ? "Date of birth" : "$d-$m-$y",
+            hintStyle: GoogleFonts.spartan(
+                color: HexColor('#424242'),
+                fontSize: 12,
+                fontWeight: FontWeight.w600),
+            border: InputBorder.none,
+            enabledBorder: InputBorder.none,
+            focusedBorder: InputBorder.none,
+            errorBorder: InputBorder.none,
+          ),
         ),
       ),
     );

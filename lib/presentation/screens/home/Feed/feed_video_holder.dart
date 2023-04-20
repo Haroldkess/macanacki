@@ -3,11 +3,12 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
-
-import 'package:cached_video_player/cached_video_player.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hexcolor/hexcolor.dart';
+import 'package:makanaki/presentation/constants/colors.dart';
 import 'package:provider/provider.dart';
+import 'package:video_player/video_player.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -15,7 +16,8 @@ import '../../../uiproviders/screen/tab_provider.dart';
 
 class FeedVideoHolder extends StatefulWidget {
   String file;
-  CachedVideoPlayerController controller;
+  VideoPlayerController controller;
+
   bool shouldPlay;
   FeedVideoHolder(
       {super.key,
@@ -106,10 +108,14 @@ class _FeedVideoHolderState extends State<FeedVideoHolder> {
                 decoration: BoxDecoration(color: Colors.white.withOpacity(0.0)),
               ),
             )),
-        AspectRatio(
-          aspectRatio: widget.controller.value.aspectRatio,
-          // Use the VideoPlayer widget to display the video.
-          child: CachedVideoPlayer(widget.controller),
+        Container(
+          height: double.infinity,
+          width: double.infinity,
+          child: AspectRatio(
+            aspectRatio: widget.controller.value.aspectRatio,
+            // Use the VideoPlayer widget to display the video.
+            child: VideoPlayer(widget.controller),
+          ),
         ),
         InkWell(
           splashColor: Colors.transparent,
@@ -151,7 +157,18 @@ class _FeedVideoHolderState extends State<FeedVideoHolder> {
                   )
                 : const SizedBox.shrink(),
           ),
-        )
+        ),
+        Positioned(
+            bottom: 0,
+            width: MediaQuery.of(context).size.width,
+            child: VideoProgressIndicator(
+              widget.controller,
+              allowScrubbing: true,
+              colors: VideoProgressColors(
+                  backgroundColor: Colors.transparent,
+                  bufferedColor: HexColor(primaryColor).withOpacity(0.4),
+                  playedColor: HexColor(primaryColor)),
+            ))
       ],
     );
   }

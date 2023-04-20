@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 class SwipeController {
   static Future<void> retrievSwipeController(BuildContext context) async {
     SwipeWare ware = Provider.of<SwipeWare>(context, listen: false);
-    
+
     ware.isLoading(true);
 
     bool isDone = await ware
@@ -16,11 +16,12 @@ class SwipeController {
         .whenComplete(() => log("everything from api and provider is done"));
 
     if (isDone) {
-     ware.isLoading(false);
+      await Future.delayed(const Duration(seconds: 3));
+      ware.isLoading(false);
     } else {
       ware.isLoading(false);
       // ignore: use_build_context_synchronously
-      showToast(context, "An error occured", Colors.red);
+      showToast2(context, "An error occured", isError: true);
     }
   }
 }

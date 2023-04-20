@@ -1,10 +1,7 @@
-
 import 'dart:developer';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:makanaki/services/api_url.dart';
-
-
 
 
 Future<http.Response?> getGender() async {
@@ -17,7 +14,7 @@ Future<http.Response?> getGender() async {
         },
       );
 
-    log(response.body.toString());
+ //   log(response.body.toString());
   } catch (e) {
     response = null;
 

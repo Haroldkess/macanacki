@@ -48,7 +48,7 @@ class _AddPasswordScreenState extends State<AddPasswordScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-                height: height * 0.3,
+                height: height * 0.37,
                 child: Column(
                   children: [
                     const SizedBox(
@@ -113,11 +113,11 @@ class _AddPasswordScreenState extends State<AddPasswordScreen> {
                             width: width / 1.7,
                             child: AppText(
                               text: "Create Password",
-                              size: 24,
+                              size: 20,
                               maxLines: 3,
                               overflow: TextOverflow.ellipsis,
                               color: HexColor(backgroundColor),
-                              fontWeight: FontWeight.w400,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
                         ],
@@ -131,11 +131,11 @@ class _AddPasswordScreenState extends State<AddPasswordScreen> {
                             width: width / 1.7,
                             child: AppText(
                               text: "Enter your Password ",
-                              size: 14,
+                              size: 12,
                               maxLines: 3,
                               overflow: TextOverflow.ellipsis,
                               color: HexColor(backgroundColor),
-                              fontWeight: FontWeight.w400,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
                         ],
@@ -187,7 +187,7 @@ class _AddPasswordScreenState extends State<AddPasswordScreen> {
                                         hintText: "Enter your password here",
                                         hintStyle: GoogleFonts.spartan(
                                             color: HexColor('#F5F2F9'),
-                                            fontSize: 14),
+                                            fontSize: 12),
                                         border: InputBorder.none,
                                         suffixIcon: Column(
                                           mainAxisAlignment:
@@ -268,7 +268,7 @@ class _AddPasswordScreenState extends State<AddPasswordScreen> {
                                         hintText: "Confirm password",
                                         hintStyle: GoogleFonts.spartan(
                                             color: HexColor('#F5F2F9'),
-                                            fontSize: 14),
+                                            fontSize: 12),
                                         border: InputBorder.none,
                                         suffixIcon: Column(
                                           mainAxisAlignment:
@@ -341,7 +341,7 @@ class _AddPasswordScreenState extends State<AddPasswordScreen> {
   void _submit(BuildContext context) async {
     final isValid = _formKey.currentState?.validate();
     Temp temp = Provider.of<Temp>(context, listen: false);
-   
+
     if (!isValid!) {
       log("incorrect");
       return;

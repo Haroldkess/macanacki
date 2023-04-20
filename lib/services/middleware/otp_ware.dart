@@ -26,24 +26,24 @@ class OtpWare extends ChangeNotifier {
           .whenComplete(() => log("verify  email request sent"));
       if (response == null) {
         isSuccessful = false;
-        log("verify  email request failed");
+    //    log("verify  email request failed");
       } else if (response.statusCode == 200) {
         var jsonData = jsonDecode(response.body);
         message = jsonData["message"];
 
-        log("verify  email request success");
+      //  log("verify  email request success");
         isSuccessful = true;
       } else {
         var jsonData = jsonDecode(response.body);
         message = jsonData["message"];
-        log(jsonData["message"]);
-        log("verify  email request failed");
+     //   log(jsonData["message"]);
+      //  log("verify  email request failed");
         isSuccessful = false;
       }
     } catch (e) {
       isSuccessful = false;
-      log("verify  email request failed");
-      log(e.toString());
+    //  log("verify  email request failed");
+    //  log(e.toString());
     }
 
     notifyListeners();

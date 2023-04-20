@@ -14,9 +14,17 @@ class SwipeWare extends ChangeNotifier {
   SwipeData swipeData = SwipeData();
 
   List<SwipedUser> swipedUser = [];
- 
 
   bool get loadStatus => _loadStatus;
+
+  void disposeValue() async {
+    swipeData = SwipeData();
+
+    swipedUser = [];
+    message = "";
+
+    notifyListeners();
+  }
 
   void isLoading(bool isLoad) {
     _loadStatus = isLoad;
@@ -30,23 +38,22 @@ class SwipeWare extends ChangeNotifier {
           .whenComplete(() => log("swwipe users gotten successfully"));
       if (response == null) {
         isSuccessful = false;
-        log("swwipe users request failed");
+      //  log("swwipe users request failed");
       } else if (response.statusCode == 200) {
         var jsonData = jsonDecode(response.body);
 
         var incomingData = SwipeData.fromJson(jsonData["data"]);
         swipedUser = incomingData.data!;
 
-        log("swipe users request success");
+      //  log("swipe users request success");
         isSuccessful = true;
       } else {
-        log("swipe users  request failed");
+      //  log("swipe users  request failed");
         isSuccessful = false;
       }
     } catch (e) {
       isSuccessful = false;
-      log("swwipe users request failed");
-      log(e.toString());
+     // log(e.toString());
     }
 
     notifyListeners();

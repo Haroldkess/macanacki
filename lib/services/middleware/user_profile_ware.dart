@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:makanaki/services/backoffice/user_profile_office.dart';
+import 'package:makanaki/services/temps/temps_id.dart';
 
 import '../../model/user_profile_model.dart';
 
@@ -21,6 +22,23 @@ class UserProfileWare extends ChangeNotifier {
   bool get loadStatus2 => _loadStatus2;
   UserData get userProfileModel => _userProfileModel;
   PublicUserData get publicUserProfileModel => _publicUserProfileModel;
+
+  void disposeValue() async {
+    _userProfileModel = UserData();
+    _publicUserProfileModel = PublicUserData();
+
+    notifyListeners();
+  }
+
+  Future<void> addSingleComment(PublicComment comment, int id) async {
+    _publicUserProfileModel.posts!
+        .where((element) => id == element.id)
+        .single
+        .comments!
+        .add(comment);
+   // _comments.add(comment);
+    notifyListeners();
+  }
 
   void changeIndex(int fig) {
     _index = fig;
@@ -42,30 +60,33 @@ class UserProfileWare extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> getUserProfileFromApi() async {
+  Future<bool> getUserProfileFromApi(context) async {
     late bool isSuccessful;
     try {
       http.Response? response = await getUserProfile()
           .whenComplete(() => log("user profile data gotten successfully"));
       if (response == null) {
         isSuccessful = false;
-        log("get user profile data request failed");
+        // log("get user profile data request failed");
       } else if (response.statusCode == 200) {
         var jsonData = jsonDecode(response.body);
 
         var incomingData = UserProfileModel.fromJson(jsonData);
         _userProfileModel = incomingData.data!;
 
-        log("get user profile data  request success");
+        await runTask(context, _userProfileModel.username,
+            _userProfileModel.profilephoto);
+
+        // log("get user profile data  request success");
         isSuccessful = true;
       } else {
-        log("get user profile data  request failed");
+        //  log("get user profile data  request failed");
         isSuccessful = false;
       }
     } catch (e) {
       isSuccessful = false;
-      log("get user profile data  request failed");
-      log(e.toString());
+      //  log("get user profile data  request failed");
+      //  log(e.toString());
     }
 
     notifyListeners();
@@ -80,23 +101,23 @@ class UserProfileWare extends ChangeNotifier {
           .whenComplete(() => log("user profile data gotten successfully"));
       if (response == null) {
         isSuccessful = false;
-        log("get user profile data request failed");
+        // log("get user profile data request failed");
       } else if (response.statusCode == 200) {
         var jsonData = jsonDecode(response.body);
 
         var incomingData = PublicProfileModel.fromJson(jsonData);
         _publicUserProfileModel = incomingData.data!;
 
-        log("get user profile data  request success");
+        //   log("get user profile data  request success");
         isSuccessful = true;
       } else {
-        log("get user profile data  request failed");
+        //   log("get user profile data  request failed");
         isSuccessful = false;
       }
     } catch (e) {
       isSuccessful = false;
-      log("get user profile data  request failed");
-      log(e.toString());
+      // log("get user profile data  request failed");
+      //   log(e.toString());
     }
 
     notifyListeners();

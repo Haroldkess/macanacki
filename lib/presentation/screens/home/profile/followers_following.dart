@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:makanaki/presentation/constants/colors.dart';
-import 'package:makanaki/presentation/screens/userprofile/extras/follow_list.dart';
+import 'package:makanaki/presentation/screens/home/profile/profileextras/follow_list.dart';
 import 'package:makanaki/presentation/screens/userprofile/extras/follow_search.dart';
+import 'package:makanaki/presentation/widgets/loader.dart';
 import 'package:makanaki/presentation/widgets/text.dart';
+import 'package:makanaki/services/controllers/action_controller.dart';
+import 'package:makanaki/services/middleware/action_ware.dart';
+import 'package:provider/provider.dart';
 
 class FollowersAndFollowingScreen extends StatefulWidget {
   final String title;
@@ -20,7 +25,22 @@ class FollowersAndFollowingScreen extends StatefulWidget {
 class _FollowersAndFollowingScreenState
     extends State<FollowersAndFollowingScreen> {
   @override
+  void initState() {
+    super.initState();
+    if (widget.isFollowing) {
+      SchedulerBinding.instance.addPostFrameCallback((timeStamp) async {
+        await ActionController.retrievAllUserFollowingController(context);
+      });
+    } else {
+      SchedulerBinding.instance.addPostFrameCallback((timeStamp) async {
+        await ActionController.retrievAllUserFollowersController(context);
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    ActionWare stream = context.watch<ActionWare>();
     return Scaffold(
       backgroundColor: HexColor("#F5F2F9"),
       appBar: AppBar(
@@ -43,10 +63,12 @@ class _FollowersAndFollowingScreenState
           ),
         ),
         title: AppText(
-          text: widget.title,
+          text: widget.isFollowing
+              ? "Following ${widget.title}"
+              : "${widget.title} Followers",
           color: Colors.black,
-          size: 20,
-          fontWeight: FontWeight.w400,
+          size: 14,
+          fontWeight: FontWeight.w700,
         ),
         centerTitle: true,
         leading: const BackButton(color: Colors.black),
@@ -54,7 +76,12 @@ class _FollowersAndFollowingScreenState
         backgroundColor: HexColor(backgroundColor),
         toolbarHeight: 110,
       ),
-      body: const FollowFollowingList(),
+      body: stream.loadStatusAllFollowing || stream.loadStatusFollower
+          ? Center(child: Loader(color: HexColor(primaryColor)))
+          : FollowFollowingList(
+              data: stream.allFollowing,
+              what: widget.isFollowing ? "Following" : "Followers",
+            ),
     );
   }
 }

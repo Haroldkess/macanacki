@@ -27,13 +27,15 @@ Future<http.StreamedResponse?> createPost(
   request.headers.addAll(headers);
   request.fields["description"] = data.description!;
   request.fields["published"] = data.published!.toString();
+  request.fields["btn_id"] = data.btnId!.toString();
+  request.fields["btn_link"] = data.url!.toString();
   request.files.add(filePhoto);
 
   try {
     response = await request.send();
   } catch (e) {
-    log("hello");
-    log(e.toString());
+    //   log("hello");
+    //   log(e.toString());
     response = null;
   }
 
@@ -44,7 +46,7 @@ Future<http.Response?> shareComment(ShareCommentsModel data, int id) async {
   http.Response? response;
   SharedPreferences pref = await SharedPreferences.getInstance();
   String? token = pref.getString(tokenKey);
-  print("this is the id $id");
+//  print("this is the id $id");
   try {
     response = await http.post(
       Uri.parse('$baseUrl/public/api/post/$id/comment?body=${data.body}'),
@@ -55,7 +57,7 @@ Future<http.Response?> shareComment(ShareCommentsModel data, int id) async {
       // body: jsonEncode(data.toJson())
     );
 
-    log(response.body.toString());
+    // log(response.body.toString());
   } catch (e) {
     response = null;
   }

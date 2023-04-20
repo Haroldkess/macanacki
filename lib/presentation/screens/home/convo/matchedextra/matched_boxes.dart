@@ -111,8 +111,8 @@ class MatchedBox extends StatelessWidget {
                           width: 3,
                         ),
                         InkWell(
-                          onTap: () => PageRouting.pushToPage(
-                              context,  ChatScreen(user: matches,)),
+                          // onTap: () => PageRouting.pushToPage(
+                          //     context,  ChatScreen(user: matches,)),
                           child: AppText(
                             text: "Chat now",
                             size: 12,

@@ -10,21 +10,35 @@ import 'package:provider/provider.dart';
 import '../middleware/feed_post_ware.dart';
 
 class FeedPostController {
-  static Future<void> getFeedPostController(BuildContext context) async {
+  static Future<void> getFeedPostController(BuildContext context, int pageNum, bool isPaginating ) async {
     FeedPostWare ware = Provider.of<FeedPostWare>(context, listen: false);
 
-    ware.isLoading(true);
+    if(isPaginating == false){
+       ware.isLoading(true);
 
+
+    }
+
+   
     bool isDone = await ware
-        .getFeedPostFromApi()
+        .getFeedPostFromApi(pageNum)
         .whenComplete(() => log("everything from api and provider is done"));
 
     if (isDone) {
-      ware.isLoading(false);
+          if(isPaginating == false){
+       ware.isLoading(false);
+
+
+    }
+     
       log("feed post stored");
     } else {
-      ware.isLoading(false);
-      floatToast("Can't get your feed",Colors.red.shade300);
+      if(isPaginating == false){
+       ware.isLoading(false);
+
+
+    }
+      floatToast("Can't get your feed", Colors.red.shade300);
 
       // ignore: use_build_context_synchronously
       // showToast(context, "An error occured", Colors.red);
@@ -33,22 +47,22 @@ class FeedPostController {
 
   static Future<void> getUserPostController(BuildContext context) async {
     FeedPostWare ware = Provider.of<FeedPostWare>(context, listen: false);
-
+    ware.disposeValue2();
     ware.isLoading2(true);
-
+    // ignore: use_build_context_synchronously
     bool isDone = await ware
         .getUserPostFromApi()
         .whenComplete(() => log("everything from api and provider is done"));
     // ignore: use_build_context_synchronously
-    await UserProfileController.retrievProfileController(context, false);
+    //  UserProfileController.retrievProfileController(context, false);
 
     if (isDone) {
-  
       ware.isLoading2(false);
     } else {
       ware.isLoading2(false);
 
-      floatToast("Can't get your posts",Colors.red.shade300);
+      // ignore: use_build_context_synchronously
+      // showToast2(context, "Can't get your posts", isError: true);
 
       // ignore: use_build_context_synchronously
 

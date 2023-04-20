@@ -13,6 +13,8 @@ import 'package:makanaki/services/temps/temps_id.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../presentation/screens/onboarding/dob_screen.dart';
+
 class RegisterUsernameController {
   static Future<void> usernameController(
       BuildContext context, String userName) async {
@@ -31,11 +33,12 @@ class RegisterUsernameController {
     if (isDone) {
       ware.isLoading2(false);
       // ignore: use_build_context_synchronously
-      PageRouting.pushToPage(context, const SelectGender());
+      PageRouting.pushToPage(context, const DobScreen());
     } else {
       ware.isLoading2(false);
       // ignore: use_build_context_synchronously
-      showToast(context, "something went wrong. pls try again", Colors.red);
+      showToast2(context, "something went wrong. pls try again", isError: true);
+    
       //print("something went wrong");
     }
   }

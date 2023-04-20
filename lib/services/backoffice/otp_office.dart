@@ -21,7 +21,7 @@ Future<http.Response?> verifyOtp(
         },
         body: jsonEncode(data.toJson()));
 
-    log(response.body.toString());
+//    log(response.body.toString());
   } catch (e) {
     response = null;
 

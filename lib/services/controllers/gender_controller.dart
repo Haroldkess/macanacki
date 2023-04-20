@@ -19,7 +19,7 @@ class GenderController {
     } else {
       ware.isLoading(false);
       // ignore: use_build_context_synchronously
-      showToast(context, "An error occured", Colors.red);
+       showToast2(context, "An error occured", isError: true);
     }
   }
 }

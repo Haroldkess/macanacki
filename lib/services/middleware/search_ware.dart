@@ -13,6 +13,12 @@ class SearchWare extends ChangeNotifier {
 
   List<UserSearchData> get userFound => _userFound;
 
+  void disposeValue() async {
+    _userFound = [];
+
+    notifyListeners();
+  }
+
   Future<void> isLoading(bool isLoad) async {
     _loadStatus = isLoad;
     notifyListeners();
@@ -30,23 +36,23 @@ class SearchWare extends ChangeNotifier {
           .whenComplete(() => log("search finished successfully"));
       if (response == null) {
         isSuccessful = false;
-        log("search data request failed");
+     //   log("search data request failed");
       } else if (response.statusCode == 200) {
         var jsonData = jsonDecode(response.body);
 
         var incomingData = UserSearchModel.fromJson(jsonData);
         _userFound = incomingData.data!;
 
-        log("search  data  request success");
+     //   log("search  data  request success");
         isSuccessful = true;
       } else {
-        log("search data  request failed");
+      //  log("search data  request failed");
         isSuccessful = false;
       }
     } catch (e) {
       isSuccessful = false;
-      log("get user profile data  request failed");
-      log(e.toString());
+    //  log("get user profile data  request failed");
+     // log(e.toString());
     }
 
     notifyListeners();

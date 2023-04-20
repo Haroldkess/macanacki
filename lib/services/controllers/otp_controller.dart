@@ -6,11 +6,8 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:makanaki/model/otp_model.dart';
 import 'package:makanaki/model/reg_email_model.dart';
 import 'package:makanaki/presentation/allNavigation.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
-import 'package:makanaki/presentation/screens/onboarding/user_name.dart';
-import 'package:makanaki/presentation/screens/verification/otp_screen.dart';
+import 'package:makanaki/presentation/screens/onboarding/select_gender.dart';
 import 'package:makanaki/presentation/widgets/snack_msg.dart';
-import 'package:makanaki/services/middleware/registeration_ware.dart';
 import 'package:makanaki/services/temps/temp.dart';
 import 'package:makanaki/services/temps/temps_id.dart';
 import 'package:provider/provider.dart';
@@ -38,13 +35,13 @@ class VerifyEmailController {
     if (isDone) {
       ware.isLoading(false);
       // ignore: use_build_context_synchronously
-      showToast(context, ware.message, HexColor(primaryColor));
+           showToast2(context, ware.message, isError: false);
       await Future.delayed(const Duration(seconds: 2)).whenComplete(
-          () => PageRouting.pushToPage(context, const SelectUserName()));
+          () => PageRouting.pushToPage(context, const SelectGender()));
     } else {
       ware.isLoading(false);
       // ignore: use_build_context_synchronously
-      showToast(context, ware.message, Colors.red);
+          showToast2(context, ware.message, isError: true);
       //print("something went wrong");
     }
   }

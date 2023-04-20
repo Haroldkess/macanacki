@@ -2,11 +2,12 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cached_video_preview/cached_video_preview.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:makanaki/presentation/constants/colors.dart';
 import 'package:makanaki/presentation/widgets/loader.dart';
+import 'package:numeral/numeral.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 import '../../../../../model/feed_post_model.dart';
@@ -14,6 +15,7 @@ import 'package:path_provider/path_provider.dart';
 
 import '../../../../model/public_profile_model.dart';
 import '../../../allNavigation.dart';
+import '../../../widgets/text.dart';
 import '../../home/Feed/profilefeed/public_profile_feed.dart';
 
 class PublicGridViewItems extends StatefulWidget {
@@ -81,7 +83,7 @@ class _PublicGridViewItemsState extends State<PublicGridViewItems> {
       },
       child: Container(
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
+            //  borderRadius: BorderRadius.circular(12),
             image: DecorationImage(
                 fit: BoxFit.cover,
                 image: widget.data.media!.contains(".mp4")
@@ -95,7 +97,33 @@ class _PublicGridViewItemsState extends State<PublicGridViewItems> {
                     Icons.play_arrow,
                     color: Colors.grey.withOpacity(0.9),
                   )
-                : const SizedBox.shrink()
+                : const SizedBox.shrink(),
+            Positioned(
+                child: Align(
+              alignment: Alignment.bottomLeft,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    SvgPicture.asset(
+                      "assets/icon/view.svg",
+                      color: Colors.white,
+                      height: 10,
+                      //   width: 10,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 2, left: 3),
+                      child: AppText(
+                        text:  Numeral(widget.data.viewCount!).format(),
+                        fontWeight: FontWeight.w600,
+                        size: 12,
+                        color: HexColor(backgroundColor),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            )),
           ],
         ),
       ),

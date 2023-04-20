@@ -18,12 +18,31 @@ Future<http.Response?> registerEmail(SendEmailModel data) async {
         },
         body: jsonEncode(data.toJson()));
 
-    log(response.body.toString());
+ //   log(response.body.toString());
   } catch (e) {
     response = null;
   }
   return response;
 }
+
+Future<http.Response?> verifyUserName(String name) async {
+  http.Response? response;
+  try {
+    response = await http.get(
+        Uri.parse('$baseUrl/public/api/checkUsername?username=$name'),
+        headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+        },
+      );
+
+   // log(response.body.toString());
+  } catch (e) {
+    response = null;
+
+  }
+  return response;
+}
+
 
 Future<http.Response?> registerUserName(SendUserNameModel data) async {
   http.Response? response;
@@ -35,7 +54,7 @@ Future<http.Response?> registerUserName(SendUserNameModel data) async {
             },
             body: jsonEncode(data.toJson()));
 
-    log(response.body.toString());
+   // log(response.body.toString());
   } catch (e) {
     response = null;
   }
@@ -66,8 +85,8 @@ Future<http.StreamedResponse?> completeRegisteration(
   try {
     response = await request.send();
   } catch (e) {
-    log("hello");
-    log(e.toString());
+   // log("hello");
+  //  log(e.toString());
     response = null;
   }
 

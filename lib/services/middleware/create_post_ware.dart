@@ -21,6 +21,15 @@ class CreatePostWare extends ChangeNotifier {
   String get message => _message;
   String get commentMessage => _commentMessage;
 
+  void disposeValue() async {
+  
+    comments = CommentData();
+    _message = "";
+    _commentMessage = "";
+
+    notifyListeners();
+  }
+
   void isLoading(bool isLoad) {
     _loadStatus = isLoad;
     notifyListeners();
@@ -43,9 +52,9 @@ class CreatePostWare extends ChangeNotifier {
     CreatePostModel data,
   ) async {
     late bool isSuccessful;
-    log(data.media!.path);
-    log(data.description.toString());
-    log(data.published.toString());
+  //  log(data.media!.path);
+  //  log(data.description.toString());
+   // log(data.published.toString());
 
     try {
       http.StreamedResponse? response = await createPost(data);
@@ -56,17 +65,17 @@ class CreatePostWare extends ChangeNotifier {
         final res = await http.Response.fromStream(response);
         var jsonData = jsonDecode(res.body);
 
-        log(jsonData["message"]);
+    //    log(jsonData["message"]);
         _message = jsonData["message"];
         isSuccessful = true;
-        log("post created!!");
+      //  log("post created!!");
 
         //  var res = http.Response.fromStream(response);
 
       } else {
         final res = await http.Response.fromStream(response);
         var jsonData = jsonDecode(res.body);
-        log(jsonData["message"]);
+     //   log(jsonData["message"]);
         _message = jsonData["message"];
         isSuccessful = false;
       }
@@ -88,23 +97,23 @@ class CreatePostWare extends ChangeNotifier {
       if (response == null) {
         _commentMessage = "Something went wrong";
         isSuccessful = false;
-        log("share comment request failed");
+     //   log("share comment request failed");
       } else if (response.statusCode == 200) {
         var jsonData = jsonDecode(response.body);
         comments = CommentData.fromJson(jsonData["data"]);
         _commentMessage = jsonData["message"].toString();
-        log("share comment request success");
+     //   log("share comment request success");
         isSuccessful = true;
       } else {
         var jsonData = jsonDecode(response.body);
         _commentMessage = jsonData["message"].toString();
-        log("share comment request failed");
+     //   log("share comment request failed");
         isSuccessful = false;
       }
     } catch (e) {
       isSuccessful = false;
-      log("share comment request failed");
-      log(e.toString());
+   //   log("share comment request failed");
+    //  log(e.toString());
     }
 
     notifyListeners();

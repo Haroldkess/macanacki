@@ -1,8 +1,16 @@
+import 'dart:io';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexagon/hexagon.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:makanaki/presentation/constants/colors.dart';
+import 'package:makanaki/presentation/operations.dart';
+import 'package:provider/provider.dart';
 
+import '../../../../../services/middleware/facial_ware.dart';
+import '../../../../../services/middleware/user_profile_ware.dart';
 import '../../../../constants/params.dart';
 
 class ProfilePicture extends StatelessWidget {
@@ -15,6 +23,8 @@ class ProfilePicture extends StatelessWidget {
     var size = MediaQuery.of(context).size;
     var padding = 8.0;
     var w = (size.width - 4 * 1) / 3;
+    UserProfileWare user = context.watch<UserProfileWare>();
+    FacialWare facial = context.watch<FacialWare>();
     return Container(
         height: 200,
         color: HexColor(backgroundColor),
@@ -42,8 +52,22 @@ class ProfilePicture extends StatelessWidget {
                 cornerRadius: 20.0,
                 child: AspectRatio(
                     aspectRatio: HexagonType.POINTY.ratio,
-                    child: Center(child: Image.network(url))),
+                    child: Center(
+                        child: facial.addedDp == null
+                            ? CachedNetworkImage(
+                                imageUrl: user.userProfileModel.profilephoto!)
+                            : Image.file(File(facial.addedDp!.path)))),
               ),
+              Align(
+                alignment: Alignment.center,
+                child: InkWell(
+                  onTap: () => Operations.changePhotoFromGallery(context),
+                  child: SvgPicture.asset(
+                    "assets/icon/encrypt.svg",
+                    color: HexColor(backgroundColor),
+                  ),
+                ),
+              )
             ],
           ),
         ));

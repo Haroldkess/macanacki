@@ -61,7 +61,7 @@ class _AddPhotoScreenState extends State<AddPhotoScreen> {
                           text: "Add Photos",
                           color: HexColor(darkColor),
                           fontWeight: FontWeight.w700,
-                          size: 40,
+                          size: 30,
                           align: TextAlign.center,
                           maxLines: 2,
                         ),
@@ -75,10 +75,10 @@ class _AddPhotoScreenState extends State<AddPhotoScreen> {
                       child: SizedBox(
                         width: width * 0.9,
                         child: AppText(
-                          text: "Add atleast one photo to continiue",
+                          text: "Add atleast one photo to continue",
                           color: HexColor(darkColor),
-                          fontWeight: FontWeight.w400,
-                          size: 24,
+                          fontWeight: FontWeight.w600,
+                          size: 17,
                           align: TextAlign.center,
                           maxLines: 2,
                         ),

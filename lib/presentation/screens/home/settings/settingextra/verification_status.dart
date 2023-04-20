@@ -24,11 +24,15 @@ class VerificationSettings extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  AppText(
-                    text: "Verification Status",
-                    color: HexColor("#0C0C0C"),
-                    size: 16,
-                    fontWeight: FontWeight.w400,
+                  Container(
+                    constraints: BoxConstraints(
+                        maxWidth: MediaQuery.of(context).size.width * 0.4),
+                    child: AppText(
+                      text: "Verification Status",
+                      color: HexColor("#0C0C0C"),
+                      size: 16,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
                   const SizedBox(
                     height: 8,
@@ -45,6 +49,8 @@ class VerificationSettings extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
+                    constraints: BoxConstraints(
+                        maxWidth: MediaQuery.of(context).size.width * 0.5),
                     decoration: BoxDecoration(
                       shape: BoxShape.rectangle,
                       borderRadius: BorderRadius.circular(25),
@@ -68,6 +74,5 @@ class VerificationSettings extends StatelessWidget {
         ),
       ),
     );
- 
   }
 }

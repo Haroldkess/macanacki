@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:makanaki/presentation/allNavigation.dart';
 import 'package:makanaki/presentation/constants/colors.dart';
@@ -9,6 +10,10 @@ import 'package:makanaki/presentation/screens/home/convo/convoextra/matches.dart
 import 'package:makanaki/presentation/screens/home/convo/convoextra/messages.dart';
 import 'package:makanaki/presentation/screens/home/swipes/swipe_card_screen.dart';
 import 'package:makanaki/presentation/widgets/text.dart';
+import 'package:makanaki/services/controllers/chat_controller.dart';
+import 'package:makanaki/services/middleware/chat_ware.dart';
+import 'package:provider/provider.dart';
+import 'package:async/async.dart';
 
 class ConversationScreen extends StatefulWidget {
   const ConversationScreen({super.key});
@@ -18,111 +23,98 @@ class ConversationScreen extends StatefulWidget {
 }
 
 class _ConversationScreenState extends State<ConversationScreen> {
+  final AsyncMemoizer _memoizer = AsyncMemoizer();
   @override
   Widget build(BuildContext context) {
+    ChatWare stream = context.watch<ChatWare>();
     return Scaffold(
-      backgroundColor: HexColor(backgroundColor),
-      appBar: AppBar(
         backgroundColor: HexColor(backgroundColor),
-        automaticallyImplyLeading: false,
-        elevation: 0,
-        title: AppText(
-          text: "Conversations",
-          color: HexColor(darkColor),
-          size: 24,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: Column(
-                children: [
-                  const ConvoSearch(),
-                  const SizedBox(
-                    height: 25,
-                  ),
-                  InkWell(
-                      onTap: () => PageRouting.pushToPage(
-                          context, const SwipeCardScreen()),
-                      child: const ConvoTab()),
-                  const SizedBox(
-                    height: 24,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      AppText(
-                        text: "Matches",
-                        fontWeight: FontWeight.w400,
-                        color: HexColor(darkColor),
-                        size: 24,
-                      ),
-                      InkWell(
-                        onTap: () => PageRouting.pushToPage(
-                            context, const MatchedWithYouScreen()),
-                        child: AppText(
-                            text: "See All",
-                            color: HexColor(primaryColor),
-                            size: 14,
-                            fontWeight: FontWeight.w400),
-                      )
-                    ],
-                  ),
-                ],
-              ),
-            ),
+        appBar: AppBar(
+          backgroundColor: HexColor(backgroundColor),
+          automaticallyImplyLeading: false,
+          elevation: 0,
+          title: AppText(
+            text: "Conversations",
+            color: HexColor(darkColor),
+            size: 24,
+            fontWeight: FontWeight.w700,
+          ),
+          actions: [
+            SvgPicture.asset("assets/icon/new.svg"),
             const SizedBox(
-              height: 24,
-            ),
-            const Padding(
-              padding: EdgeInsets.only(left: 5),
-              child: Matches(),
-            ),
-            const SizedBox(
-              height: 30,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      AppText(
-                        text: "Messages",
-                        fontWeight: FontWeight.w400,
-                        color: HexColor(darkColor),
-                        size: 24,
-                      ),
-                      const SizedBox(
-                        width: 3,
-                      ),
-                      Container(
-                        decoration: const BoxDecoration(
-                            color: Colors.red, shape: BoxShape.circle),
-                        child: Padding(
-                          padding: const EdgeInsets.all(5.0),
-                          child: AppText(
-                            text: "2",
-                            color: HexColor(backgroundColor),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 15),
-              child: MessageList(),
+              width: 15,
             )
           ],
         ),
-      ),
-    );
+        body: RefreshIndicator(
+          onRefresh: () => ChatController.retrievChatController(context, false),
+          backgroundColor: HexColor(primaryColor),
+          color: HexColor(backgroundColor),
+          child: FutureBuilder(
+            future: Future.delayed(const Duration(minutes: 1))
+                .whenComplete(() => stream.getChatFromApi()),
+            builder: (context, snapshot) {
+              return SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: Column(
+                        children: const [
+                          ConvoSearch(),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              AppText(
+                                text: "Messages",
+                                fontWeight: FontWeight.w600,
+                                color: HexColor(darkColor),
+                                size: 17,
+                              ),
+                              const SizedBox(
+                                width: 3,
+                              ),
+                              // Container(
+                              //   decoration: const BoxDecoration(
+                              //       color: Colors.red, shape: BoxShape.circle),
+                              //   child: Padding(
+                              //     padding: const EdgeInsets.all(6.0),
+                              //     child: AppText(
+                              //       size: 12,
+                              //       text: stream
+                              //           .chatList.where((element) => element.userTwo != "kelt").si
+                              //           .toString(),
+                              //       color: HexColor(backgroundColor),
+                              //     ),
+                              //   ),
+                              // )
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: MessageList(
+                        peopleChats: stream.chatList,
+                      ),
+                    )
+                  ],
+                ),
+              );
+            },
+          ),
+        ));
   }
 }

@@ -6,11 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:makanaki/presentation/allNavigation.dart';
 import 'package:makanaki/presentation/constants/colors.dart';
 import 'package:makanaki/presentation/constants/params.dart';
+import 'package:makanaki/presentation/screens/userprofile/user_profile_screen.dart';
 import 'package:makanaki/presentation/widgets/text.dart';
 import 'package:makanaki/services/middleware/swipe_ware.dart';
 import 'package:makanaki/services/temps/temps_id.dart';
+import 'package:numeral/numeral.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:swipe_cards/draggable_card.dart';
@@ -21,6 +24,7 @@ import '../../../../../services/controllers/action_controller.dart';
 import '../../../../../services/controllers/swipe_users_controller.dart';
 import '../../../../../services/middleware/action_ware.dart';
 import '../../../../uiproviders/screen/card_provider.dart';
+import '../../../../widgets/snack_msg.dart';
 import '../../profile/profileextras/not_mine_buttons.dart';
 
 class TinderCard extends StatefulWidget {
@@ -34,6 +38,7 @@ class TinderCard extends StatefulWidget {
 class _TinderCardState extends State<TinderCard> {
   List<SwipeItem> _swipeItems = <SwipeItem>[];
   MatchEngine? _matchEngine;
+  bool show = false;
 
   // List<String> _urlImages = [
   //   "https://images.pexels.com/photos/3992656/pexels-photo-3992656.png?cs=srgb&dl=pexels-kebs-visuals-3992656.jpg&fm=jpg"
@@ -44,7 +49,7 @@ class _TinderCardState extends State<TinderCard> {
   //   "https://guardian.ng/wp-content/uploads/2016/12/adi.jpg",
   //   "https://media.istockphoto.com/id/1347431090/photo/fit-woman-standing-outdoors-after-a-late-afternoon-trail-run.jpg?b=1&s=170667a&w=0&k=20&c=6g2hGmKckPzapXNLHWGRMCpPMJidJVsutxU-XrsIjBU="
   // ];
-
+  int indexer = 0;
   @override
   void initState() {
     super.initState();
@@ -52,13 +57,38 @@ class _TinderCardState extends State<TinderCard> {
         widget.users,
         (element) => _swipeItems.add(SwipeItem(
             content: Content(
-              text: element.username!,
+              text: element.username == null ? "" : element.username!,
             ),
-            likeAction: () {
-              // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              //   content: Text("Liked"),
-              //   duration: Duration(milliseconds: 500),
-              // ));
+            likeAction: () async {
+              //  print(widget.users[indexer].id!.toString());
+              // print(widget.users[indexer].username!.toString());
+              ActionWare action =
+                  Provider.of<ActionWare>(context, listen: false);
+
+              final int newIndex = indexer;
+
+              SharedPreferences pref = await SharedPreferences.getInstance();
+              if (!action.followIds.contains(widget.users[newIndex].id)) {
+                if (widget.users[newIndex].username ==
+                    pref.getString(userNameKey)) {
+                  //  print("cant follow yoou");
+                } else {
+                  // ignore: use_build_context_synchronously
+                  followAction(
+                    context,
+                    widget.users[newIndex].id!,
+                    widget.users[newIndex].username!,
+                  );
+                  // ignore: use_build_context_synchronously
+
+                  // ignore: use_build_context_synchronously
+                  // showToast2(context,
+                  //     "You just followed ${widget.users[newIndex].username}",
+                  //     isError: false);
+                }
+              } else {
+                ///print("can not follow your self");
+              }
             },
             nopeAction: () {
               // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -73,19 +103,32 @@ class _TinderCardState extends State<TinderCard> {
               // ));
             },
             onSlideUpdate: (SlideRegion? region) async {
-              // print("Region $region");
+              if (region != null) {
+                if (region.index == 1) {
+                  setState(() {
+                    show = true;
+                  });
+                } else {
+                  setState(() {
+                    show = false;
+                  });
+                }
+              } else {
+                setState(() {
+                  show = false;
+                });
+              }
             })));
 
     _matchEngine = MatchEngine(swipeItems: _swipeItems);
   }
-
-  int index = 0;
 
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
     ActionWare stream = context.watch<ActionWare>();
+    ActionWare action = Provider.of<ActionWare>(context, listen: false);
 
     return Column(
       children: [
@@ -97,9 +140,11 @@ class _TinderCardState extends State<TinderCard> {
               return buildCard(
                   context,
                   widget.users[index].profilephoto == null
-                      ? url
+                      ? "https://t4.ftcdn.net/jpg/04/00/24/31/360_F_400243185_BOxON3h9avMUX10RsDkt3pJ8iQx72kS3.jpg"
                       : widget.users[index].profilephoto!,
-                  widget.users[index].username!,
+                  widget.users[index].username == null
+                      ? ""
+                      : widget.users[index].username!,
                   widget.users[index].id!);
             },
             onStackFinished: () async {
@@ -111,32 +156,81 @@ class _TinderCardState extends State<TinderCard> {
                         content: Content(
                           text: element.username!,
                         ),
-                        likeAction: () {
+                        likeAction: () async {
+                          //   print(widget.users[indexer].id!.toString());
+                          //  print(widget.users[indexer].username!.toString());
+                          ActionWare action =
+                              Provider.of<ActionWare>(context, listen: false);
+
+                          final int newIndex = indexer;
+
+                          SharedPreferences pref =
+                              await SharedPreferences.getInstance();
+                          if (!action.followIds
+                              .contains(widget.users[newIndex].id)) {
+                            if (widget.users[newIndex].username ==
+                                pref.getString(userNameKey)) {
+                              //   print("cant follow yoou");
+                            } else {
+                              // ignore: use_build_context_synchronously
+                              followAction(
+                                context,
+                                widget.users[newIndex].id!,
+                                widget.users[newIndex].username!,
+                              );
+                              // ignore: use_build_context_synchronously
+
+                              // ignore: use_build_context_synchronously
+                              showToast2(context,
+                                  "You just followed ${widget.users[newIndex].username}",
+                                  isError: false);
+                            }
+                          } else {
+                            //   print("can not follow your self");
+                          }
+
                           // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           //   content: Text("Liked"),
                           //   duration: Duration(milliseconds: 500),
                           // ));
                         },
                         nopeAction: () {
+                          //  print("nopr");
                           // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           //   content: Text("Nope"),
                           //   duration: Duration(milliseconds: 500),
                           // ));
                         },
                         superlikeAction: () {
+                          //  print("super");
                           // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           //   content: Text("Superliked "),
                           //   duration: Duration(milliseconds: 500),
                           // ));
                         },
                         onSlideUpdate: (SlideRegion? region) async {
-                          // print("Region $region");
+                          //  if(region.name)
+                          if (region != null) {
+                            if (region.index == 1) {
+                              setState(() {
+                                show = true;
+                              });
+                            } else {
+                              setState(() {
+                                show = false;
+                              });
+                            }
+                          } else {
+                            setState(() {
+                              show = false;
+                            });
+                          }
                         })));
 
                 _matchEngine = MatchEngine(swipeItems: _swipeItems);
               });
               setState(() {
-                index = 0;
+                indexer = 0;
               });
               await SwipeController.retrievSwipeController(context);
 
@@ -149,7 +243,7 @@ class _TinderCardState extends State<TinderCard> {
             },
             itemChanged: (SwipeItem item, int index) {
               setState(() {
-                this.index = index;
+                indexer = index;
               });
               // print("item: ${item.content.text}, index: ${this.index}");
             },
@@ -168,32 +262,51 @@ class _TinderCardState extends State<TinderCard> {
                 const SizedBox(
                   height: 15,
                 ),
-                Row(
-                  children: [
-                    RichText(
-                        text: TextSpan(
-                            text: "${widget.users[index].username}, ",
-                            style: GoogleFonts.spartan(
-                              color: HexColor(darkColor),
-                              fontSize: 25,
-                              fontWeight: FontWeight.w700,
-                            ),
-                            children: [
-                          TextSpan(
-                            text: "32",
-                            style: GoogleFonts.spartan(
-                                color: HexColor("#C0C0C0"), fontSize: 20),
-                          )
-                        ])),
-                    Image.asset(
-                      "assets/pic/verified.png",
-                      height: 27,
-                      width: 27,
-                    )
-                  ],
+                GestureDetector(
+                  onTap: () async {
+                    SharedPreferences pref =
+                        await SharedPreferences.getInstance();
+                    if (pref.getString(userNameKey) ==
+                        widget.users[indexer].username!) {
+                      // ignore: use_build_context_synchronously
+                      showToast2(context, "This is your page", isError: true);
+                    } else {
+                      // ignore: use_build_context_synchronously
+                      PageRouting.pushToPage(
+                          context,
+                          UsersProfile(
+                              username: widget.users[indexer].username!));
+                    }
+                  },
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: RichText(
+                            text: TextSpan(
+                                text: "${widget.users[indexer].username}",
+                                style: GoogleFonts.spartan(
+                                  color: HexColor(darkColor),
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                                children: [
+                              TextSpan(
+                                text: "",
+                                style: GoogleFonts.spartan(
+                                    color: HexColor("#C0C0C0"), fontSize: 20),
+                              )
+                            ])),
+                      ),
+                      // Image.asset(
+                      //   "assets/pic/verified.png",
+                      //   height: 27,
+                      //   width: 27,
+                      // )
+                    ],
+                  ),
                 ),
                 const SizedBox(
-                  height: 15,
+                  height: 10,
                 ),
                 Column(
                   children: [
@@ -201,28 +314,40 @@ class _TinderCardState extends State<TinderCard> {
                       children: [
                         CircleAvatar(
                           radius: 5,
-                          backgroundColor: HexColor("#00B074"),
+                          backgroundColor: widget.users[indexer].mode == null ||
+                                  widget.users[indexer].mode == "offline"
+                              ? Colors.red
+                              : HexColor("#00B074"),
                         ),
                         const SizedBox(
                           width: 5,
                         ),
                         AppText(
-                          text: "Online Now",
-                          size: 14,
+                          text: "${widget.users[indexer].mode ?? "offline"}",
+                          size: 12,
+                          fontWeight: FontWeight.w500,
                         )
                       ],
                     ),
-                    Row(
-                      children: [
-                        SvgPicture.asset("assets/icon/location.svg"),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        AppText(
-                          text: "Some km away",
-                          size: 14,
-                        )
-                      ],
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5),
+                      child: Row(
+                        children: [
+                          SvgPicture.asset("assets/icon/location.svg"),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          AppText(
+                            text:
+                                "${Numeral(widget.users[indexer].distance == null ? 0 : widget.users[indexer].distance!)} km away",
+                            size: 12,
+                            fontWeight: FontWeight.w500,
+                          )
+                        ],
+                      ),
                     )
                   ],
                 )
@@ -237,6 +362,7 @@ class _TinderCardState extends State<TinderCard> {
   Widget buildCard(
       BuildContext context, String image, String username, int id) {
     ActionWare stream = context.watch<ActionWare>();
+    ActionWare action = Provider.of<ActionWare>(context, listen: false);
     return ClipRRect(
       borderRadius: BorderRadius.circular(30),
       child: Stack(
@@ -264,6 +390,13 @@ class _TinderCardState extends State<TinderCard> {
                         image: NetworkImage(image),
                         fit: BoxFit.cover)),
               ),
+              show && username == widget.users[indexer].username
+                  ? Align(
+                      alignment: Alignment.topCenter,
+                      child:
+                          SvgPicture.asset("assets/icon/slide_following.svg"),
+                    )
+                  : const SizedBox.shrink()
             ],
           ),
           Padding(
@@ -294,9 +427,7 @@ class _TinderCardState extends State<TinderCard> {
                         );
                       }
                     },
-                    color: !stream.followIds.contains(id)
-                        ? "#C0C0C0"
-                        : primaryColor,
+                    color: primaryColor,
                   ),
                 ),
               ),

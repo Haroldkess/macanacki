@@ -1,4 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:hexcolor/hexcolor.dart';
+import 'package:makanaki/presentation/constants/colors.dart';
 
 class Avatar extends StatelessWidget {
   final String image;
@@ -9,7 +12,8 @@ class Avatar extends StatelessWidget {
   Widget build(BuildContext context) {
     return CircleAvatar(
       radius: radius,
-      backgroundImage: NetworkImage(image),
+      backgroundColor: HexColor(primaryColor),
+      backgroundImage: CachedNetworkImageProvider(image),
     );
   }
 }

@@ -113,12 +113,14 @@ class FeedPost {
     this.published,
     this.createdAt,
     this.updatedAt,
+    this.btnLink,
     this.creator,
     this.media,
-     this.comments,
+    this.comments,
     this.noOfLikes,
+    this.viewCount,
+    this.button,
     this.user,
-   
   });
 
   int? id;
@@ -126,10 +128,13 @@ class FeedPost {
   int? published;
   DateTime? createdAt;
   DateTime? updatedAt;
+  String? btnLink;
   String? creator;
   String? media;
   List<Comment>? comments;
   int? noOfLikes;
+  int? viewCount;
+  String? button;
   User? user;
 
   factory FeedPost.fromJson(Map<String, dynamic> json) => FeedPost(
@@ -142,13 +147,15 @@ class FeedPost {
         updatedAt: json["updated_at"] == null
             ? null
             : DateTime.parse(json["updated_at"]),
+        btnLink: json["btn_link"],
         creator: json["creator"]!,
         media: json["media"],
         comments: json["comments"] == null
             ? []
             : List<Comment>.from(
                 json["comments"]!.map((x) => Comment.fromJson(x))),
-                noOfLikes: json["no_of_likes"],
+        noOfLikes: json["no_of_likes"],
+        button: json["button"],
         user: json["user"] == null ? null : User.fromJson(json["user"]),
       );
 
@@ -158,12 +165,15 @@ class FeedPost {
         "published": published,
         "created_at": createdAt?.toIso8601String(),
         "updated_at": updatedAt?.toIso8601String(),
+        "btn_link": btnLink,
         "creator": creator,
         "media": media,
         "comments": comments == null
             ? []
             : List<dynamic>.from(comments!.map((x) => x.toJson())),
-             "no_of_likes": noOfLikes,
+        "no_of_likes": noOfLikes,
+        "view_count": viewCount,
+        "button": button,
         "user": user?.toJson(),
       };
 }
@@ -175,8 +185,9 @@ class Comment {
     this.createdAt,
     this.updatedAt,
     this.username,
-     this.profilePhoto,
-     this.noOfLikes,
+    this.profilePhoto,
+    this.noOfLikes,
+    this.postId,
   });
 
   int? id;
@@ -184,8 +195,9 @@ class Comment {
   DateTime? createdAt;
   DateTime? updatedAt;
   String? username;
-      String? profilePhoto;
-       int? noOfLikes;
+  String? profilePhoto;
+  int? noOfLikes;
+  int? postId;
 
   factory Comment.fromJson(Map<String, dynamic> json) => Comment(
         id: json["id"],
@@ -198,7 +210,8 @@ class Comment {
             : DateTime.parse(json["updated_at"]),
         username: json["username"],
         profilePhoto: json["profile_photo"],
-         noOfLikes: json["no_of_likes"],
+        noOfLikes: json["no_of_likes"],
+        postId: json["post_id"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -208,7 +221,8 @@ class Comment {
         "updated_at": updatedAt?.toIso8601String(),
         "username": username,
         "profile_photo": profilePhoto,
-         "no_of_likes": noOfLikes,
+        "no_of_likes": noOfLikes,
+        "post_id": postId,
       };
 }
 
@@ -224,10 +238,27 @@ class User {
     this.emailVerifiedAt,
     this.createdAt,
     this.updatedAt,
+    this.firebaseId,
+    this.longitude,
+    this.latitude,
+    this.mode,
+    this.ageLowerBound,
+    this.ageUpperBound,
+    this.useCurrentLocation,
+    this.useGlobalLocationSearch,
+    this.enablePushNotification,
+    this.enableEmailNotification,
+    this.setMaxDistSearch,
+    this.twitter,
+    this.facebook,
+    this.instagram,
+    this.linkedin,
+    this.telegram,
     this.gender,
     this.profilephoto,
     this.noOfFollowers,
     this.noOfFollowing,
+    this.activePlan,
   });
 
   int? id;
@@ -240,10 +271,27 @@ class User {
   DateTime? emailVerifiedAt;
   DateTime? createdAt;
   DateTime? updatedAt;
+  String? firebaseId;
+  String? longitude;
+  String? latitude;
+  String? mode;
+  String? ageLowerBound;
+  String? ageUpperBound;
+  int? useCurrentLocation;
+  int? useGlobalLocationSearch;
+  int? enablePushNotification;
+  int? enableEmailNotification;
+  String? setMaxDistSearch;
+  String? twitter;
+  String? facebook;
+  String? instagram;
+  String? linkedin;
+  String? telegram;
   String? gender;
   String? profilephoto;
   int? noOfFollowers;
   int? noOfFollowing;
+  dynamic activePlan;
 
   factory User.fromJson(Map<String, dynamic> json) => User(
         id: json["id"],
@@ -262,10 +310,27 @@ class User {
         updatedAt: json["updated_at"] == null
             ? null
             : DateTime.parse(json["updated_at"]),
+        firebaseId: json["firebase_id"],
+        longitude: json["longitude"],
+        latitude: json["latitude"],
+        mode: json["mode"]!,
+        ageLowerBound: json["age_lower_bound"],
+        ageUpperBound: json["age_upper_bound"],
+        useCurrentLocation: json["use_current_location"],
+        useGlobalLocationSearch: json["use_global_location_search"],
+        enablePushNotification: json["enable_push_notification"],
+        enableEmailNotification: json["enable_email_notification"],
+        setMaxDistSearch: json["set_max_dist_search"],
+        twitter: json["twitter"],
+        facebook: json["facebook"],
+        instagram: json["instagram"],
+        linkedin: json["linkedin"],
+        telegram: json["telegram"],
         gender: json["gender"]!,
         profilephoto: json["profilephoto"],
         noOfFollowers: json["no_of_followers"],
         noOfFollowing: json["no_of_following"],
+        activePlan: json["active_plan"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -279,10 +344,27 @@ class User {
         "email_verified_at": emailVerifiedAt?.toIso8601String(),
         "created_at": createdAt?.toIso8601String(),
         "updated_at": updatedAt?.toIso8601String(),
+        "firebase_id": firebaseId,
+        "longitude": longitude,
+        "latitude": latitude,
+        "mode": mode,
+        "age_lower_bound": ageLowerBound,
+        "age_upper_bound": ageUpperBound,
+        "use_current_location": useCurrentLocation,
+        "use_global_location_search": useGlobalLocationSearch,
+        "enable_push_notification": enablePushNotification,
+        "enable_email_notification": enableEmailNotification,
+        "set_max_dist_search": setMaxDistSearch,
+        "twitter": twitter,
+        "facebook": facebook,
+        "instagram": instagram,
+        "linkedin": linkedin,
+        "telegram": telegram,
         "gender": gender,
         "profilephoto": profilephoto,
         "no_of_followers": noOfFollowers,
         "no_of_following": noOfFollowing,
+        "active_plan": activePlan,
       };
 }
 
