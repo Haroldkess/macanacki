@@ -159,45 +159,61 @@ class _FollowSectionState extends State<FollowSection> {
                     //  color: Colors.amber,
                     //   width: width * 0.5,
                     constraints: BoxConstraints(maxWidth: width * 0.49),
-                    child: RichText(
-                        textAlign: TextAlign.start,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: showMore ? 50 : 2,
-                        text: TextSpan(
-                            text: widget.data.description!.length >= 50 &&
-                                    showMore == false
-                                ? widget.data.description!.substring(0, 47)
-                                : widget.data.description!,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 12,
-                              color: HexColor(backgroundColor).withOpacity(0.9),
-                            ),
-                            children: [
-                              widget.data.description!.length < 50
-                                  ? const TextSpan(text: "")
-                                  : TextSpan(
-                                      text: showMore ? " less" : " see more",
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: HexColor(backgroundColor),
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                      recognizer: tapGestureRecognizer
-                                        ..onTap = () async {
-                                          //    print("object");
-                                          if (showMore) {
-                                            setState(() {
-                                              showMore = false;
-                                            });
-                                          } else {
-                                            setState(() {
-                                              showMore = true;
-                                            });
-                                          }
-                                        },
-                                    )
-                            ])),
+                    child: SingleChildScrollView(
+                      child: RichText(
+                          textAlign: TextAlign.start,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: showMore ? 50 : 2,
+                          text: TextSpan(
+                              text: widget.data.description!.length >= 50 &&
+                                      showMore == false
+                                  ? widget.data.description!.substring(0, 47)
+                                  : widget.data.description!,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 12,
+                                color:
+                                    HexColor(backgroundColor).withOpacity(0.9),
+                              ),
+                              recognizer: tapGestureRecognizer
+                                ..onTap = () async {
+                                  //    print("object");
+                                  if (showMore) {
+                                    setState(() {
+                                      showMore = false;
+                                    });
+                                  } else {
+                                    setState(() {
+                                      showMore = true;
+                                    });
+                                  }
+                                },
+                              children: [
+                                widget.data.description!.length < 50
+                                    ? const TextSpan(text: "")
+                                    : TextSpan(
+                                        text: showMore ? " less" : " see more",
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: HexColor(backgroundColor),
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                        recognizer: tapGestureRecognizer
+                                          ..onTap = () async {
+                                            //    print("object");
+                                            if (showMore) {
+                                              setState(() {
+                                                showMore = false;
+                                              });
+                                            } else {
+                                              setState(() {
+                                                showMore = true;
+                                              });
+                                            }
+                                          },
+                                      )
+                              ])),
+                    ),
                   ),
                 ],
               ),

@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_paystack/flutter_paystack.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -16,7 +17,7 @@ import 'package:makanaki/presentation/widgets/snack_msg.dart';
 import 'package:makanaki/services/middleware/user_profile_ware.dart';
 import 'package:provider/provider.dart';
 
-String sk = "sk_test_1a9e1524621e4c91e3489926ef37db7337b4c68f";
+String sk = dotenv.get('SECRET_KEY').toString();
 final plugin = PaystackPlugin();
 
 class PaymentController {
@@ -32,6 +33,7 @@ class PaymentController {
   }
 
   static Future chargeCard(BuildContext context, int amount) async {
+    log(sk);
     UserProfileWare user = Provider.of<UserProfileWare>(context, listen: false);
     final String ref = await getReference();
     // ignore: use_build_context_synchronously

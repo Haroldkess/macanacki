@@ -15,6 +15,7 @@ class EditProfileController {
       BuildContext context, String description, String phone) async {
     EditProfileWare pic = Provider.of<EditProfileWare>(context, listen: false);
     FacialWare img = Provider.of<FacialWare>(context, listen: false);
+    print(img.addedDp);
 
     EditProfileModel data = EditProfileModel(
       description: description,
@@ -42,7 +43,7 @@ class EditProfileController {
 
     if (isDone) {
       // ignore: use_build_context_synchronously
-    await  UserProfileController.retrievProfileController(context, false);
+      await UserProfileController.retrievProfileController(context, false);
       ware.isLoading(false);
       // ignore: use_build_context_synchronously
       showToast2(context, ware.message, isError: false);

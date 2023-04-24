@@ -51,6 +51,7 @@ class EditProfileWare extends ChangeNotifier {
       } else if (response.statusCode == 200) {
         final res = await http.Response.fromStream(response);
         var jsonData = jsonDecode(res.body);
+        log(res.body);
 
         _message = jsonData["message"];
         isSuccessful = true;

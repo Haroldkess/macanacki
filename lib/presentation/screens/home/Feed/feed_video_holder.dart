@@ -58,27 +58,12 @@ class _FeedVideoHolderState extends State<FeedVideoHolder> {
   void initState() {
     super.initState();
     getThumbnail();
-
-    // Initialize the controller and store the Future for later use.
-    // _initializeVideoPlayerFuture =
-    //     widget.controller.initialize().whenComplete(() {
-    //   if (widget.shouldPlay) {
-    //     widget.controller.play();
-    //     setState(() {});
-    //   }
-    // });
-
-    // // Use the controller to loop the video.
-    // if (widget.shouldPlay) {
-    //   widget.controller.setLooping(true);
-    // }
   }
 
   Future<void> innit() async {}
 
   @override
   void dispose() {
-    // Ensure disposing of the VideoPlayerController to free up resources.
     widget.controller.dispose();
 
     super.dispose();
@@ -108,14 +93,10 @@ class _FeedVideoHolderState extends State<FeedVideoHolder> {
                 decoration: BoxDecoration(color: Colors.white.withOpacity(0.0)),
               ),
             )),
-        Container(
-          height: double.infinity,
-          width: double.infinity,
-          child: AspectRatio(
-            aspectRatio: widget.controller.value.aspectRatio,
-            // Use the VideoPlayer widget to display the video.
-            child: VideoPlayer(widget.controller),
-          ),
+        AspectRatio(
+          aspectRatio: widget.controller.value.aspectRatio,
+          // Use the VideoPlayer widget to display the video.
+          child: VideoPlayer(widget.controller),
         ),
         InkWell(
           splashColor: Colors.transparent,

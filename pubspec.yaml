@@ -65,6 +65,7 @@ dependencies:
   country_code_picker: ^3.0.0
   expansion_tile_card: ^2.0.0
   url_launcher: ^6.1.10
+  flutter_dotenv: ^5.0.2
  
 
 
@@ -100,5 +101,6 @@ flutter:
   assets:
     - assets/pic/
     - assets/icon/
+    - secret.env
 
 

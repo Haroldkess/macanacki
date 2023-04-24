@@ -25,6 +25,7 @@ import 'package:flutter_paystack/flutter_paystack.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class SubscriptionPlans extends StatefulWidget {
   const SubscriptionPlans({super.key});
@@ -39,7 +40,7 @@ class _SubscriptionPlansState extends State<SubscriptionPlans> {
   @override
   void initState() {
     super.initState();
-    plugin.initialize(publicKey: publicKey);
+    plugin.initialize(publicKey: dotenv.get('PUBLIC_KEY').toString());
   }
 
   @override
@@ -123,7 +124,7 @@ class _SubscriptionPlansState extends State<SubscriptionPlans> {
                           ),
                           Padding(
                             padding:
-                                const EdgeInsets.only(bottom: buttonCurves ),
+                                const EdgeInsets.only(bottom: buttonCurves),
                             child: CircleAvatar(
                               radius: 25,
                               backgroundColor: Colors.white,
@@ -149,21 +150,21 @@ class _SubscriptionPlansState extends State<SubscriptionPlans> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const SizedBox(
-                          height: 70.0,
+                          height: 50.0,
                         ),
-                        SizedBox(
-                          width: width * 0.7,
-                          child: AppText(
-                            text: "Subscribe to Premium. Cancel Anytime",
-                            color: HexColor(darkColor),
-                            size: 17,
-                            fontWeight: FontWeight.w700,
-                            align: TextAlign.center,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 15.0,
-                        ),
+                        // SizedBox(
+                        //   width: width * 0.7,
+                        //   child: AppText(
+                        //     text: "Subscribe to Premium. Cancel Anytime",
+                        //     color: HexColor(darkColor),
+                        //     size: 17,
+                        //     fontWeight: FontWeight.w700,
+                        //     align: TextAlign.center,
+                        //   ),
+                        // ),
+                        // const SizedBox(
+                        //   height: 15.0,
+                        // ),
                         Container(
                           width: width * 0.8,
                           alignment: Alignment.center,
