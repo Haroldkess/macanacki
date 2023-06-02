@@ -6,6 +6,8 @@ import 'package:http/http.dart' as http;
 import 'package:makanaki/model/reg_email_model.dart';
 import 'package:makanaki/services/api_url.dart';
 
+import '../../presentation/widgets/debug_emitter.dart';
+
 Future<http.Response?> loginUser(SendLoginModel data) async {
   http.Response? response;
   try {
@@ -15,7 +17,7 @@ Future<http.Response?> loginUser(SendLoginModel data) async {
         },
         body: jsonEncode(data.toJson())).timeout(const Duration(seconds: 30));
 
-    log(response.body.toString());
+    emitter(response.body.toString());
   } catch (e) {
     response = null;
   }

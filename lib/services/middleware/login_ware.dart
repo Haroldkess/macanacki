@@ -8,6 +8,8 @@ import 'package:http/http.dart' as http;
 import 'package:makanaki/services/temps/temps_id.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../presentation/widgets/debug_emitter.dart';
+
 class LoginWare extends ChangeNotifier {
   bool _loadStatus = false;
   String _message = 'Something went wrong';
@@ -31,7 +33,7 @@ class LoginWare extends ChangeNotifier {
    // log("hello");
     try {
       http.Response? response = await loginUser(body)
-          .whenComplete(() => log("login user request done"));
+          .whenComplete(() => emitter("login user request done"));
       if (response == null) {
         _message = "Something went wrong";
         isSuccessful = false;

@@ -23,7 +23,7 @@ Future<http.Response?> viewPost(int postId) async {
       },
     ).timeout(const Duration(seconds: 20));
 
-    log(response.body);
+  //  log(response.body);
   } catch (e) {
     response = null;
   }

@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:developer';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -11,14 +13,23 @@ import 'package:makanaki/presentation/screens/home/tab_screen.dart';
 import 'package:makanaki/presentation/screens/onboarding/login_screen.dart';
 import 'package:makanaki/presentation/widgets/snack_msg.dart';
 import 'package:makanaki/presentation/widgets/text.dart';
+import 'package:makanaki/services/controllers/action_controller.dart';
+import 'package:makanaki/services/controllers/chat_controller.dart';
+import 'package:makanaki/services/controllers/feed_post_controller.dart';
 import 'package:makanaki/services/controllers/mode_controller.dart';
+import 'package:makanaki/services/controllers/plan_controller.dart';
 import 'package:makanaki/services/controllers/user_profile_controller.dart';
+import 'package:makanaki/services/controllers/verify_controller.dart';
 import 'package:makanaki/services/middleware/login_ware.dart';
 import 'package:makanaki/services/temps/temp.dart';
 import 'package:makanaki/services/temps/temps_id.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../presentation/screens/onboarding/business/sub_plan.dart';
+import '../../presentation/widgets/debug_emitter.dart';
+import '../middleware/user_profile_ware.dart';
 
 class LoginController {
   static Future<void> loginUserController(BuildContext context, String email,
@@ -38,9 +49,9 @@ class LoginController {
       longitude: pref.getDouble(longitudeKey).toString(),
       latitude: pref.getDouble(latitudeKey).toString(),
     );
-    // ignore: use_build_context_synchronously
+
     LoginWare ware = Provider.of<LoginWare>(context, listen: false);
-    // ignore: use_build_context_synchronously
+
     Temp temp = Provider.of<Temp>(context, listen: false);
 
     ware.isLoading(true);
@@ -48,31 +59,50 @@ class LoginController {
     bool isDone = await ware
         .loginUserFromApi(data)
         .whenComplete(() => log("can now navigate to home"));
+    if (isSplash != true) {
+      await VerifyController.business(context);
+    }
 
     if (isDone) {
-      ware.isLoading(false);
       await temp.addEmailTemp(email);
       await temp.addPasswordTemp(password);
       await temp.addIsLoggedInTemp(true);
-      // ignore: use_build_context_synchronously
+
+      await UserProfileController.retrievProfileController(context, true);
+      ModeController.handleMode("online");
+
       await runTask(
         context,
       );
-      // ignore: use_build_context_synchronously
-      await UserProfileController.retrievProfileController(context, true);
-      log("removing all previous screens");
-      await ModeController.handleMode("online");
-      // ignore: use_build_context_synchronously
-      PageRouting.removeAllToPage(context, const TabScreen());
+      UserProfileWare user =
+          Provider.of<UserProfileWare>(context, listen: false);
+
+      if (user.userProfileModel.gender == "Business" &&
+          user.userProfileModel.activePlan == "inactive subscription") {
+        callFeedPost(context);
+        await PlanController.retrievPlanController(context, true);
+        PageRouting.pushToPage(context, const SubscriptionPlansBusiness());
+      } else {
+      await callFeedPost(context);
+        emitter("removing all previous screens");
+        PageRouting.removeAllToPage(context, const TabScreen());
+      }
+      ware.isLoading(false);
     } else {
       ware.isLoading(false);
-      // ignore: use_build_context_synchronously
       showToast2(context, ware.message, isError: true);
       if (isSplash) {
-        // ignore: use_build_context_synchronously
         PageRouting.pushToPage(context, const LoginScreen());
       }
     }
+    ware.isLoading(false);
+  }
+
+  static Future callFeedPost(BuildContext context) async {
+    await FeedPostController.getFeedPostController(context, 1, false);
+     ChatController.retrievChatController(context, false);
+    // ActionController.retrievAllUserFollowingController(context);
+    // ActionController.retrievAllUserLikedCommentsController(context);
   }
 
   static Future requestPermission() async {
@@ -88,7 +118,7 @@ class LoginController {
         sound: true);
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      print("access granted");
+      emitter("access granted");
       await getToken();
       await FirebaseMessaging.instance.setAutoInitEnabled(true);
       await Firebase.initializeApp();
@@ -129,9 +159,9 @@ class LoginController {
       });
     } else if (settings.authorizationStatus ==
         AuthorizationStatus.provisional) {
-      print("user granteed provitional access");
+      emitter("user granteed provitional access");
     } else {
-      print("user denied access");
+      emitter("user denied access");
     }
   }
 
@@ -151,7 +181,7 @@ class LoginController {
   }
 
   static Future saveToken(String token) async {
-    log("the token is $token");
+    emitter("the token is $token");
     SharedPreferences pref = await SharedPreferences.getInstance();
 
     await pref.setString(deviceTokenKey, token);
@@ -159,6 +189,6 @@ class LoginController {
 
   static Future _firebaseMessagingBackgroundHandler(
       RemoteMessage message) async {
-    print("Handling a background message: ${message.messageId}");
+    emitter("Handling a background message: ${message.messageId}");
   }
 }

@@ -5,6 +5,8 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
 
+import '../../presentation/widgets/debug_emitter.dart';
+
 class genderWare extends ChangeNotifier {
   bool _loadStatus = false;
   String message = "Cant get gender at the moment";
@@ -43,7 +45,7 @@ class genderWare extends ChangeNotifier {
     late bool isSuccessful;
     try {
       http.Response? response = await getGender()
-          .whenComplete(() => log("gender gotten successfully"));
+          .whenComplete(() => emitter("gender gotten successfully"));
       if (response == null) {
         isSuccessful = false;
       //  log("get gender request failed");

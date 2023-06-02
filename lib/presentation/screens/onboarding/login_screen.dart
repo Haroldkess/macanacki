@@ -17,6 +17,7 @@ import '../../constants/params.dart';
 import '../../widgets/buttons.dart';
 import '../../widgets/loader.dart';
 import '../../widgets/text.dart';
+import 'business/business_info.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -377,7 +378,7 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     } else {
       LoginController.loginUserController(
-          context, email.text, password.text, false);
+          context, email.text, password.text, true);
       //  RegisterEmailController.registerationController(context, email.text);
     }
     _formKey.currentState?.save();

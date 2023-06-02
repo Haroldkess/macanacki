@@ -160,6 +160,8 @@ class _EmailOtpState extends State<EmailOtp> {
                               color: HexColor("#FF94B7"),
                             ),
                             InkWell(
+                              onTap: () => PageRouting.removeAllToPage(
+                                  context, const LoginScreen()),
                               child: AppText(
                                 text: "Switch Account",
                                 color: HexColor(backgroundColor),

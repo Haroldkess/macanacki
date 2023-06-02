@@ -21,6 +21,7 @@ import 'package:provider/provider.dart';
 
 import '../../uiproviders/screen/gender_provider.dart';
 import '../../widgets/text.dart';
+import 'business/business_info.dart';
 import 'dob_screen.dart';
 
 class SelectGender extends StatefulWidget {
@@ -169,7 +170,19 @@ class _SelectGenderState extends State<SelectGender> {
 
   Future<void> _submit(BuildContext context, GenderList data) async {
     Temp temp = Provider.of<Temp>(context, listen: false);
-    temp.addGenderIdTemp(data.id!).whenComplete(
-          () =>  PageRouting.pushToPage(context,  SelectUserName(genderId: data.id!,)));
+    print(data.name);
+    if (data.name == "Business") {
+      temp.addGenderIdTemp(data.id!).whenComplete(() => PageRouting.pushToPage(
+          context,
+          BusinessInfo(
+            data: data,
+          )));
+    } else {
+      temp.addGenderIdTemp(data.id!).whenComplete(() => PageRouting.pushToPage(
+          context,
+          SelectUserName(
+            genderId: data.id!,
+          )));
+    }
   }
 }

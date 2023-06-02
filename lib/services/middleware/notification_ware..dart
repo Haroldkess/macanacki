@@ -7,6 +7,8 @@ import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:makanaki/services/backoffice/notification_office.dart';
 
+import '../../presentation/widgets/debug_emitter.dart';
+
 class NotificationWare extends ChangeNotifier {
   bool _loadStatus = false;
   String message = "Cant get gender at the moment";
@@ -24,7 +26,7 @@ class NotificationWare extends ChangeNotifier {
     late bool isSuccessful;
     try {
       http.Response? response = await getNotification()
-          .whenComplete(() => log("notificationi gotten successfully"));
+          .whenComplete(() => emitter("notificationi gotten successfully"));
       if (response == null) {
         isSuccessful = false;
      //   log("get gender request failed");

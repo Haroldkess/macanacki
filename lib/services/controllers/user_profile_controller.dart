@@ -36,6 +36,9 @@ class UserProfileController {
       // ignore: use_build_context_synchronously
       showToast2(context, "An error occured", isError: true);
     }
+     if (isFirstLoad == false) {
+        ware.isLoading(false);
+      }
   }
 
   static Future<void> retrievPublicProfileController(
@@ -57,5 +60,6 @@ class UserProfileController {
       // ignore: use_build_context_synchronously
       showToast2(context, "An error occured", isError: true);
     }
+      ware.isLoading2(false);
   }
 }

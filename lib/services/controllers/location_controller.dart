@@ -15,6 +15,8 @@ import 'package:location/location.dart' hide LocationAccuracy;
 import 'package:app_settings/app_settings.dart';
 import 'package:async/async.dart';
 
+import '../../presentation/widgets/debug_emitter.dart';
+
 final AsyncMemoizer _memoizer = AsyncMemoizer();
 final AsyncMemoizer _memoizer2 = AsyncMemoizer();
 
@@ -75,8 +77,8 @@ class LocationController {
 
       // PageRouting.removePreviousToPage(context, const Splash());
     } else {
-      print(currentPosition.latitude.toString());
-      print(currentPosition.longitude.toString());
+      emitter(currentPosition.latitude.toString());
+      emitter(currentPosition.longitude.toString());
 
       await pref.setDouble(latitudeKey, currentPosition.latitude);
       await pref.setDouble(longitudeKey, currentPosition.longitude);

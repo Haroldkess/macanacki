@@ -17,12 +17,14 @@ import '../../../uiproviders/screen/tab_provider.dart';
 class FeedVideoHolder extends StatefulWidget {
   String file;
   VideoPlayerController controller;
+  bool isHome;
 
   bool shouldPlay;
   FeedVideoHolder(
       {super.key,
       required this.file,
       required this.controller,
+      required this.isHome,
       required this.shouldPlay});
 
   @override
@@ -37,7 +39,7 @@ class _FeedVideoHolderState extends State<FeedVideoHolder> {
   getThumbnail() async {
     try {
       final fileName = await VideoThumbnail.thumbnailFile(
-        video: widget.file,
+        video: widget.file.replaceAll('\\', '/'),
         thumbnailPath: (await getTemporaryDirectory()).path,
         imageFormat: ImageFormat.JPEG,
         maxHeight:
@@ -76,28 +78,45 @@ class _FeedVideoHolderState extends State<FeedVideoHolder> {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     TabProvider tabs = context.watch<TabProvider>();
+    log("hey there");
+    log(" tHE ASPECT RATIO IS ${widget.controller.value.aspectRatio.toString()}");
     return Stack(
       alignment: Alignment.center,
       children: [
         Container(
-            width: width,
-            height: height,
-            decoration: BoxDecoration(
-                image: DecorationImage(
-              image: FileImage(File(thumbnail!)),
-              fit: BoxFit.fill,
-            )),
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0),
-              child: Container(
-                decoration: BoxDecoration(color: Colors.white.withOpacity(0.0)),
+          width: width,
+          height: height,
+          decoration: BoxDecoration(color: Colors.black
+              //     image: DecorationImage(
+              //   image: FileImage(File(thumbnail!)),
+              //   fit: BoxFit.fill,
+              // )
               ),
-            )),
-        AspectRatio(
-          aspectRatio: widget.controller.value.aspectRatio,
-          // Use the VideoPlayer widget to display the video.
-          child: VideoPlayer(widget.controller),
+          // child: BackdropFilter(
+          //   filter: ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0),
+          //   child: Container(
+          //     decoration: BoxDecoration(color: Colors.white.withOpacity(0.0)),
+          //   ),
+          // )
         ),
+        widget.isHome
+            ? Container(
+                width: width,
+                height: widget.controller.value.aspectRatio < 1 ? height : null,
+                child: AspectRatio(
+                  aspectRatio: widget.controller.value.aspectRatio,
+                  // Use the VideoPlayer widget to display the video.
+                  child: VideoPlayer(widget.controller),
+                ),
+              )
+            : Container(
+                width: double.infinity,
+                child: AspectRatio(
+                  aspectRatio: widget.controller.value.aspectRatio,
+                  // Use the VideoPlayer widget to display the video.
+                  child: VideoPlayer(widget.controller),
+                ),
+              ),
         InkWell(
           splashColor: Colors.transparent,
           hoverColor: Colors.transparent,

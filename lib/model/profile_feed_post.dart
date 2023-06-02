@@ -64,7 +64,7 @@ class ProfileFeedDatum {
   DateTime? updatedAt;
   String? btnLink;
   String? creator;
-  String? media;
+  List<String>? media;
   List<ProfileComment>? comments;
   int? noOfLikes;
   int? viewCount;
@@ -84,7 +84,7 @@ class ProfileFeedDatum {
             : DateTime.parse(json["updated_at"]),
         btnLink: json["btn_link"],
         creator: json["creator"],
-        media: json["media"],
+               media: json["media"] == null ? [] : List<String>.from(json["media"]!.map((x) => x)),
         comments: json["comments"] == null
             ? []
             : List<ProfileComment>.from(
@@ -103,7 +103,7 @@ class ProfileFeedDatum {
         "updated_at": updatedAt?.toIso8601String(),
         "btn_link": btnLink,
         "creator": creator,
-        "media": media,
+        "media": media == null ? [] : List<dynamic>.from(media!.map((x) => x)),
         "comments": comments == null
             ? []
             : List<dynamic>.from(comments!.map((x) => x.toJson())),

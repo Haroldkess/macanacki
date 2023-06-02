@@ -17,9 +17,10 @@ import '../text.dart';
 class LikeSection extends StatefulWidget {
   final FeedPost data;
   String page;
-  final String media;
+  final List<String> media;
+    final List<String> urls;
   LikeSection(
-      {super.key, required this.data, required this.page, required this.media});
+      {super.key, required this.data, required this.page, required this.media, required this.urls});
 
   @override
   State<LikeSection> createState() => _LikeSectionState();
@@ -66,7 +67,7 @@ class _LikeSectionState extends State<LikeSection> {
               ),
             ),
             InkWell(
-                onTap: () => optionModal(context, widget.media),
+                onTap: () => optionModal(context, widget.urls, widget.data.user!.id, widget.data.id),
                 child: myIcon(
                   "assets/icon/more.svg",
                   backgroundColor,

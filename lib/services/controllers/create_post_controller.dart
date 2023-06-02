@@ -39,7 +39,7 @@ class CreatePostController {
     CreatePostModel data = CreatePostModel(
         description: caption,
         published: 1,
-        media: pic.file,
+        media: pic.file!,
         btnId: button.index,
         url: button.url);
     return data;
@@ -79,6 +79,7 @@ class CreatePostController {
       showToast2(context, ware.message, isError: true);
       //print("something went wrong");
     }
+    ware.isLoading(false);
   }
 
   static Future<ShareCommentsModel> regComment(String comments) async {
@@ -148,7 +149,7 @@ class CreatePostController {
         profile.addSingleComment(userData, id);
       }
       comment.clear();
-      log("omo!!!");
+    
       ware.isLoading2(false);
       // ignore: use_build_context_synchronously
       //  await ActionController.retrievAllUserLikedCommentsController(context);
@@ -165,5 +166,53 @@ class CreatePostController {
       showToast2(context, ware.commentMessage, isError: true);
       //print("something went wrong");
     }
+    ware.isLoading2(false);
+  }
+
+  static Future deletePost(BuildContext context, id) async {
+    CreatePostWare ware = Provider.of<CreatePostWare>(context, listen: false);
+    UserProfileWare user = Provider.of<UserProfileWare>(context, listen: false);
+    FeedPostWare profile = Provider.of<FeedPostWare>(context, listen: false);
+
+    bool isDone = await ware.deletePostFromApi(id);
+
+    if (isDone) {
+      profile.remove(id);
+      // ignore: use_build_context_synchronously
+      showToast2(
+        context,
+        "Deleted successfully",
+      );
+    } else {
+      // ignore: use_build_context_synchronously
+      showToast2(context, "Failed to delete post", isError: true);
+    }
+  }
+
+  static Future editPost(context, id, String caption) async {
+    CreatePostWare ware = Provider.of<CreatePostWare>(context, listen: false);
+    UserProfileWare user = Provider.of<UserProfileWare>(context, listen: false);
+    FeedPostWare profile = Provider.of<FeedPostWare>(context, listen: false);
+
+    EditPost data = EditPost(body: caption);
+    ware.isLoadingEdit(true);
+
+    bool isDone = await ware.editPostFromApi(
+      data,
+      id,
+    );
+
+    if (isDone) {
+      showToast2(context, 'Successful', isError: false);
+      await Future.delayed(const Duration(seconds: 2));
+      // ignore: use_build_context_synchronously
+      PageRouting.popToPage(context);
+      PageRouting.popToPage(context);
+      ware.isLoadingEdit(false);
+    } else {
+      ware.isLoadingEdit(false);
+      showToast2(context, "Failed to edit post", isError: true);
+    }
+    ware.isLoadingEdit(false);
   }
 }

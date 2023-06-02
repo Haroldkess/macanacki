@@ -24,10 +24,9 @@ Future<http.StreamedResponse?> editProfile(
   late var filePhoto;
 
   if (data.media!.isNotEmpty) {
-    filePhoto = await http.MultipartFile.fromPath('selfie', data.media!,
+    filePhoto = await http.MultipartFile.fromPath('profile', data.media!,
         filename: filePhotoName);
   }
- 
 
   request.headers.addAll(headers);
   request.fields["about_me"] = data.description!;

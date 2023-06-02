@@ -14,6 +14,8 @@ import 'package:makanaki/services/temps/temps_id.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../presentation/widgets/debug_emitter.dart';
+
 class ActionController {
   static Future<void> followOrUnFollowController(
       BuildContext context, String userName, int userId) async {
@@ -29,12 +31,12 @@ class ActionController {
     if (isDone) {
       if (ware.message == "Follow successfully") {
         ware.addFollowId(userId);
-        log("");
+      
       } else if (ware.message == "Unfollow successfully") {
         ware.removeFollowId(userId);
-        log("");
+    
       } else {
-        log("");
+     
       }
 
       ware.isLoading(false);
@@ -44,6 +46,7 @@ class ActionController {
       //showToast(context, "something went wrong. pls try again", Colors.red);
       //print("something went wrong");
     }
+    ware.isLoading(false);
   }
 
   static Future<void> likeOrDislikeController(
@@ -72,6 +75,7 @@ class ActionController {
       //showToast(context, "something went wrong. pls try again", Colors.red);
       //print("something went wrong");
     }
+    ware.isLoading2(false);
   }
 
   static Future<void> likeOrDislikeCommentController(
@@ -92,6 +96,7 @@ class ActionController {
       //showToast(context, "something went wrong. pls try again", Colors.red);
       //print("something went wrong");
     }
+    ware.isLoading3(false);
   }
 
   static Future<void> retrievAllUserLikedController(
@@ -106,7 +111,13 @@ class ActionController {
 
     if (isDone) {
       await Future.forEach(ware.allLiked, (element) async {
-        await ware.addLikeId(element.id!);
+        if(element.id == null){
+
+        }else{
+           await ware.addLikeId(element.id!);
+          
+        }
+        
       });
       //log(ware.likeIds.toString());
 
@@ -116,6 +127,7 @@ class ActionController {
       // ignore: use_build_context_synchronously
       //  showToast(context, "An error occured", Colors.red);
     }
+    ware.isLoadingAllLikes(false);
   }
 
   static Future<void> retrievAllUserFollowingController(
@@ -138,6 +150,7 @@ class ActionController {
       // ignore: use_build_context_synchronously
       //  showToast(context, "An error occured", Colors.red);
     }
+    ware.isLoadingAllFollowing(false);
   }
 
   static Future<void> retrievAllUserFollowersController(
@@ -160,6 +173,7 @@ class ActionController {
       // ignore: use_build_context_synchronously
       //  showToast(context, "An error occured", Colors.red);
     }
+    ware.isLoadingFollow(false);
   }
 
   static Future<void> retrievAllUserLikedCommentsController(
@@ -183,5 +197,6 @@ class ActionController {
       // ignore: use_build_context_synchronously
       //showToast(context, "An error occured", Colors.red);
     }
+    ware.isLoadingAllComments(false);
   }
 }

@@ -30,4 +30,26 @@ class RegisterUserModel {
       };
 }
 
+class VerifyUserModel {
+  File? photo;
+  String? name;
+  String? idType;
+  String? idNumb;
+  String? address;
 
+  VerifyUserModel({
+    this.name,
+    this.idNumb,
+    this.idType,
+    this.photo,
+    this.address,
+  });
+
+  Future<Map<String, dynamic>> toJson() async => {
+        "name": name,
+        "id_type": idType,
+        "id_no": idNumb,
+        "photo": await MultipartFile.fromPath('photo', photo!.path,
+            filename: basename(photo!.path)),
+      };
+}

@@ -10,6 +10,7 @@ import 'package:makanaki/model/feed_post_model.dart';
 import 'package:makanaki/presentation/constants/colors.dart';
 import 'package:makanaki/presentation/constants/params.dart';
 import 'package:makanaki/presentation/model/ui_model.dart';
+import 'package:makanaki/presentation/operations.dart';
 import 'package:makanaki/presentation/uiproviders/screen/comment_provider.dart';
 import 'package:makanaki/presentation/widgets/loader.dart';
 import 'package:makanaki/presentation/widgets/text.dart';
@@ -29,6 +30,7 @@ commentModal(BuildContext context, int id, String page) async {
   var padding = 8.0;
   var w = (size.width - 4 * 1) / 10;
   TextEditingController comment = TextEditingController();
+  Operations.stopCommentLoad(context);
 
   return showModalBottomSheet(
       context: context,

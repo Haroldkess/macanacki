@@ -10,6 +10,8 @@ import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:makanaki/services/backoffice/edit_profile_office.dart';
 
+import '../../presentation/widgets/debug_emitter.dart';
+
 class EditProfileWare extends ChangeNotifier {
   bool _loadStatus = false;
 
@@ -63,7 +65,7 @@ class EditProfileWare extends ChangeNotifier {
       }
     } catch (e) {
       isSuccessful = false;
-      log(e.toString());
+      emitter(e.toString());
     }
 
     notifyListeners();

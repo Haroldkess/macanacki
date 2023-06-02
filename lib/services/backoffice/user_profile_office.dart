@@ -41,7 +41,7 @@ Future<http.Response?> getUserPublicProfile(String username) async {
         HttpHeaders.contentTypeHeader: "application/json",
         HttpHeaders.authorizationHeader: "Bearer $token",
       },
-    );
+    ).timeout(Duration(seconds: 30));
 
   //  log(response.body.toString());
   } catch (e) {

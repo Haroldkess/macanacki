@@ -17,6 +17,9 @@ import 'package:makanaki/presentation/widgets/snack_msg.dart';
 import 'package:makanaki/services/middleware/user_profile_ware.dart';
 import 'package:provider/provider.dart';
 
+import '../../presentation/screens/onboarding/business/success.dart';
+import '../../presentation/widgets/debug_emitter.dart';
+
 String sk = dotenv.get('SECRET_KEY').toString();
 final plugin = PaystackPlugin();
 
@@ -32,8 +35,9 @@ class PaymentController {
     );
   }
 
-  static Future chargeCard(BuildContext context, int amount) async {
-    log(sk);
+  static Future chargeCard(BuildContext context, int amount,
+      [bool? isFirst]) async {
+  //  log(sk);
     UserProfileWare user = Provider.of<UserProfileWare>(context, listen: false);
     final String ref = await getReference();
     // ignore: use_build_context_synchronously
@@ -65,13 +69,13 @@ class PaymentController {
 
       if (response.status == true) {
         // ignore: use_build_context_synchronously
-        verifyOnServer(response.reference!, context);
+        verifyOnServer(response.reference!, context, isFirst!);
       } else {
-        print('Response = $response');
+        emitter('Response = $response');
         //  showToast2(context, message)
       }
     } catch (e) {
-      print("Check console for error");
+      emitter("Check console for error");
       return;
       //'rethrow;
     }
@@ -105,7 +109,7 @@ class PaymentController {
     return accessCode;
   }
 
-  static void verifyOnServer(String reference, context) async {
+  static void verifyOnServer(String reference, context, bool isFirst) async {
     try {
       Map<String, String> headers = {
         'Content-Type': 'application/json',
@@ -122,7 +126,12 @@ class PaymentController {
       if (body['data']['status'] == 'success') {
         // log("paid");
         PageRouting.popToPage(context);
-        PageRouting.pushToPage(context, const SubSuccessfull());
+        if (isFirst == true) {
+          PageRouting.pushToPage(context, const SubSuccessfullBusinessSignUp());
+        } else {
+          PageRouting.pushToPage(context, const SubSuccessfull());
+        }
+
         //do something with the response. show success}
         //show error prompt}
         return;

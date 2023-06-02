@@ -15,7 +15,7 @@ class EditProfileController {
       BuildContext context, String description, String phone) async {
     EditProfileWare pic = Provider.of<EditProfileWare>(context, listen: false);
     FacialWare img = Provider.of<FacialWare>(context, listen: false);
-    print(img.addedDp);
+ 
 
     EditProfileModel data = EditProfileModel(
       description: description,

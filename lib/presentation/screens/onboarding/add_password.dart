@@ -347,7 +347,7 @@ class _AddPasswordScreenState extends State<AddPasswordScreen> {
       return;
     } else {
       await temp.addPasswordTemp(password.text).whenComplete(() async {
-        await CompleteRegisterationController.registerationController(context);
+        await CompleteRegisterationController.registerationController(context, false);
       });
     }
     _formKey.currentState?.save();

@@ -5,16 +5,22 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:makanaki/presentation/constants/colors.dart';
 import 'package:makanaki/presentation/model/ui_model.dart';
 import 'package:makanaki/presentation/widgets/text.dart';
+import 'package:makanaki/services/controllers/chat_controller.dart';
 
 import '../../../../../../model/conversation_model.dart';
 import '../../../../../operations.dart';
 
 class SenderBubble extends StatelessWidget {
   final Conversation chat;
-  const SenderBubble({super.key, required this.chat});
+  final bool isHome;
+  const SenderBubble({super.key, required this.chat, required this.isHome});
 
   @override
   Widget build(BuildContext context) {
+    //   if(isHome == false){
+    // ChatController.retrievChatController(context, false);
+    //   }
+
     return Padding(
       padding: EdgeInsets.only(bottom: 5.0, left: 35.0, right: 0.0, top: 0),
       child: Column(

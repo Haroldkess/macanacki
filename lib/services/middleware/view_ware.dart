@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
 
+import '../../presentation/widgets/debug_emitter.dart';
 import '../backoffice/view_office.dart';
 
 
@@ -23,7 +24,7 @@ class ViewWare extends ChangeNotifier {
     late bool isSuccessful;
     try {
       http.Response? response = await viewPost(postId)
-          .whenComplete(() => log("view request sent"));
+          .whenComplete(() => emitter("view request sent"));
       if (response == null) {
         isSuccessful = false;
      //   log("mode  request failed");

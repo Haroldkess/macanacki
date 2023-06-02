@@ -13,7 +13,7 @@ class SearchController {
     ActionWare action = Provider.of<ActionWare>(context, listen: false);
 
     ware.isLoading(true);
-    log("true");
+
 
     bool isDone = await ware
         .getSearchedUserFromApi(x)
@@ -35,5 +35,7 @@ class SearchController {
       // ignore: use_build_context_synchronously
       ///  showToast(context, "An error occured", Colors.red);
     }
+        ware.isLoading(false);
+
   }
 }

@@ -10,6 +10,8 @@ import 'package:makanaki/presentation/uiproviders/dob/dob_provider.dart';
 import 'package:makanaki/presentation/uiproviders/screen/comment_provider.dart';
 import 'package:makanaki/presentation/uiproviders/screen/find_people_provider.dart';
 import 'package:makanaki/presentation/uiproviders/screen/gender_provider.dart';
+import 'package:makanaki/presentation/widgets/debug_emitter.dart';
+import 'package:makanaki/presentation/widgets/snack_msg.dart';
 import 'package:makanaki/presentation/widgets/text.dart';
 import 'package:makanaki/services/controllers/login_controller.dart';
 import 'package:makanaki/services/controllers/mode_controller.dart';
@@ -118,12 +120,12 @@ class Operations {
 
       if (file != null) {
         imageFile = file;
-        log(imageFile.path);
+        emitter(imageFile.path);
         facial.addFacialFile(imageFile);
         // facial.isLoading(true);
       }
     } catch (e) {
-      log(e.toString());
+      emitter(e.toString());
     }
   }
 
@@ -138,12 +140,12 @@ class Operations {
 
       if (file != null) {
         imageFile = file;
-        log(imageFile.path);
+        emitter(imageFile.path);
         facial.addPhoto(imageFile);
         // facial.isLoading(true);
       }
     } catch (e) {
-      log(e.toString());
+      emitter(e.toString());
     }
   }
 
@@ -158,12 +160,12 @@ class Operations {
 
       if (file != null) {
         imageFile = file;
-        log(imageFile.path);
+        emitter(imageFile.path);
         facial.addDp(imageFile);
         // facial.isLoading(true);
       }
     } catch (e) {
-      log(e.toString());
+      emitter(e.toString());
     }
   }
 
@@ -171,13 +173,20 @@ class Operations {
     CreatePostWare picked = Provider.of<CreatePostWare>(context, listen: false);
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['jpg', 'mp4'],
-      );
+          type: FileType.media,
+          // allowedExtensions: ['jpg', 'mp4'],
+          allowMultiple: true);
 
       if (result != null) {
-        File file = File(result.files.single.path!);
-        log(file.path.toString());
+        List<File> file = result.paths.map((path) => File(path!)).toList();
+        if (file.length > 10) {
+          // ignore: use_build_context_synchronously
+          showToast2(context, "You can only select maximum of 10 files",
+              isError: true);
+          return;
+        }
+
+        emitter(file.first.path.toString());
         picked.addFile(file);
         // ignore: use_build_context_synchronously
         PageRouting.pushToPage(context, const CreatePostScreen());
@@ -185,7 +194,7 @@ class Operations {
         // User canceled the picker
       }
     } catch (e) {
-      log(e.toString());
+      emitter(e.toString());
     }
   }
 
@@ -220,6 +229,12 @@ class Operations {
       realTime = "$value ${time.hour}:${time.minute} $timeOfDay";
     } else {
       realTime = value;
+    }
+
+    if (realTime.contains("about")) {
+      var val = realTime.split("about");
+
+      realTime = val.last;
     }
 
     return realTime;
@@ -263,5 +278,41 @@ class Operations {
     });
 
     return isClolsing;
+  }
+
+  static Future pickId(BuildContext context, bool isUser) async {
+    CreatePostWare picked = Provider.of<CreatePostWare>(context, listen: false);
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+          type: FileType.custom,
+          allowedExtensions: ['jpg', 'pdf'],
+          allowMultiple: false);
+
+      if (result != null) {
+        List<File> file = result.paths.map((path) => File(path!)).toList();
+        if (file.length > 1) {
+          // ignore: use_build_context_synchronously
+          showToast2(context, "You can only select maximum of 1 files",
+              isError: true);
+          return;
+        }
+
+        emitter(file.first.path.toString());
+        if (isUser) {
+          picked.addIdUser(file.first);
+        } else {
+          picked.addIdBusiness(file.first);
+        }
+      } else {
+        // User canceled the picker
+      }
+    } catch (e) {
+      emitter(e.toString());
+    }
+  }
+
+  static Future stopCommentLoad(context) async {
+    CreatePostWare ware = Provider.of<CreatePostWare>(context, listen: false);
+    ware.isLoading2(false);
   }
 }

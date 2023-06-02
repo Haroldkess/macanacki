@@ -29,7 +29,8 @@ class ProfileScreen extends StatefulWidget {
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _ProfileScreenState extends State<ProfileScreen>
+    with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -82,8 +83,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 padding: const EdgeInsets.all(0.0),
                                 child: Center(
                                   child: AppText(
-                                    text: notify.notifyData.length > 99
-                                        ? "99+"
+                                    text: notify.notifyData.length > 9
+                                        ? "9+"
                                         : notify.notifyData.length.toString(),
                                     size: 8,
                                     fontWeight: FontWeight.bold,
@@ -104,7 +105,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               // floating: true,
               pinned: true,
               backgroundColor: HexColor("#F5F2F9"),
-              expandedHeight: height * .6,
+              expandedHeight: 370,
               // foregroundColor: Colors.amber,
               flexibleSpace: const FlexibleSpaceBar(
                 background: ProfileInfo(
@@ -190,7 +191,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     SharedPreferences pref = await SharedPreferences.getInstance();
     bool isFirstTime = pref.getBool(isFirstTimeKey)!;
 
-    if (isRefreshed == false && isFirstTime == false) {
+    if (isRefreshed == false) {
       if (ware.profileFeedPosts.isNotEmpty) {
         return;
       }
@@ -201,4 +202,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       await FeedPostController.getUserPostController(context);
     }
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

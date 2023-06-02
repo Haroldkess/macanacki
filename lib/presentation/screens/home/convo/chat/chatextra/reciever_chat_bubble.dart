@@ -15,6 +15,7 @@ class ReceivingBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     return Padding(
       padding:
           const EdgeInsets.only(bottom: 5.0, left: 0.0, right: 35.0, top: 0),

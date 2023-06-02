@@ -16,13 +16,14 @@ import '../../allNavigation.dart';
 import '../../constants/colors.dart';
 import '../../screens/home/profile/profile_screen.dart';
 import '../../screens/userprofile/user_profile_screen.dart';
+import '../../uiproviders/screen/tab_provider.dart';
 import '../hexagon_avatar.dart';
 import '../text.dart';
 
 class FollowSection extends StatefulWidget {
   final FeedPost data;
   String page;
-  final String media;
+  final List<String> media;
   VideoPlayerController? controller;
   FollowSection(
       {super.key,
@@ -89,8 +90,23 @@ class _FollowSectionState extends State<FollowSection> {
                     url: widget.data.user!.profilephoto!,
                     w: w + 5,
                     onTap: () async {
-                      if (widget.data.media!.contains(".mp4")) {
-                        widget.controller!.pause();
+                      TabProvider action =
+                          Provider.of<TabProvider>(context, listen: false);
+                      if (widget.data.media!.length > 1) {
+                        for (var i = 0; i < widget.data.media!.length; i++) {
+                          if (widget.data.media![i].contains(".mp4")) {
+                            if (action.controller != null) {
+                              if (action.controller!.value.isInitialized) {
+                                action.controller!.pause();
+                              }
+                            }
+                            // widget.controller!.pause();
+                          }
+                        }
+                      } else {
+                        if (widget.data.media!.first.contains(".mp4")) {
+                          widget.controller!.pause();
+                        }
                       }
 
                       if (widget.data.user!.username! ==
@@ -108,16 +124,24 @@ class _FollowSectionState extends State<FollowSection> {
                   const SizedBox(
                     width: 5.5,
                   ),
-                  Container(
-                    constraints: const BoxConstraints(maxWidth: 130),
-                    child: AppText(
-                      text: widget.data.user!.username!,
-                      size: 15,
-                      fontWeight: FontWeight.w600,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      color: HexColor(backgroundColor),
-                    ),
+                  Row(
+                    children: [
+                      Container(
+                        constraints: const BoxConstraints(maxWidth: 100),
+                        child: AppText(
+                          text: widget.data.user!.username!,
+                          size: 15,
+                          fontWeight: FontWeight.w600,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          color: HexColor(backgroundColor),
+                        ),
+                      ),
+                      widget.data.user!.verification == null
+                          ? const SizedBox.shrink()
+                          : SvgPicture.asset("assets/icon/badge.svg",
+                              height: 13, width: 13)
+                    ],
                   ),
                   const SizedBox(
                     width: 5.5,
@@ -221,65 +245,12 @@ class _FollowSectionState extends State<FollowSection> {
             SizedBox(
               height: widget.data.user!.gender == "Business" ? 10 : 0,
             ),
-            widget.data.user!.gender == "Business" &&
-                    widget.data.btnLink != null &&
-                    widget.data.button != null
-                ? Padding(
-                    padding: const EdgeInsets.only(left: 5),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: InkWell(
-                            onTap: () async {
-                              if (widget.data.button == "Call Now") {
-                                await UrlLaunchController.makePhoneCall(
-                                    widget.data.btnLink!);
-                              }
-                              if (widget.data.button == "Whatsapp") {
-                                print(widget.data.btnLink!);
-                                await UrlLaunchController.launchWebViewOrVC(
-                                    Uri.parse(widget.data.btnLink!));
-                              } else {
-                                await UrlLaunchController.launchInWebViewOrVC(
-                                    Uri.parse(widget.data.btnLink!));
-                              }
-                            },
-                            child: Container(
-                              height: 27,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  color: HexColor("#00B074")),
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 10),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    AppText(
-                                      text: widget.data.button!,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w800,
-                                      size: 13,
-                                    ),
-                                    SvgPicture.asset(
-                                      "assets/icon/Send.svg",
-                                      color: Colors.white,
-                                      height: 15,
-                                      width: 12,
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                : const SizedBox.shrink(),
-            const SizedBox(
-              height: 15,
+            SizedBox(
+              height: widget.data.user!.gender == "Business" &&
+                      widget.data.btnLink != null &&
+                      widget.data.button != null
+                  ? 40
+                  : 10,
             )
           ],
         ),
@@ -291,9 +262,10 @@ class _FollowSectionState extends State<FollowSection> {
     //  ActionWare stream = context.watch<ActionWare>();
     return InkWell(
       onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 500),
+      child: Container(
+        //  duration: const Duration(milliseconds: 500),
         height: 21,
+
         width: title == "Follow" ? null : null,
         constraints: BoxConstraints(
           maxWidth: title == "Follow" ? 54 : 75,

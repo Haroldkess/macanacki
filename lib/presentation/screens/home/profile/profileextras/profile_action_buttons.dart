@@ -34,7 +34,7 @@ class ProfileActionButton extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(shape: BoxShape.circle),
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: EdgeInsets.all(icon == "assets/icon/post.svg" ? 11 : 8.0),
             child: SvgPicture.asset(
               icon,
               color: HexColor(color),
@@ -56,9 +56,9 @@ class AllProfileActions extends StatelessWidget {
     var height = MediaQuery.of(context).size.width;
     UserProfileWare stream = context.watch<UserProfileWare>();
     return Container(
-      width: width * 0.7,
-      height: height * 0.25,
-      //  color: Colors.amber,
+      width: 220,
+      height: 80,
+      //color: Colors.amber,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -70,7 +70,7 @@ class AllProfileActions extends StatelessWidget {
                   phone: stream.userProfileModel.phone,
                 )),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 ProfileActionButton(
                   icon: "assets/icon/edit.svg",
@@ -86,13 +86,13 @@ class AllProfileActions extends StatelessWidget {
                   height: 5,
                 ),
                 Container(
-                  width: 70,
+                  width: 50,
                   alignment: Alignment.center,
                   //color: Colors.amber,
                   child: AppText(
                     text: "Edit",
                     fontWeight: FontWeight.w400,
-                    size: 12,
+                    size: 10,
                     color: HexColor("#797979"),
                   ),
                 ),
@@ -115,13 +115,13 @@ class AllProfileActions extends StatelessWidget {
                   height: 5,
                 ),
                 Container(
-                  width: 70,
+                  width: 50,
                   alignment: Alignment.center,
                   //color: Colors.amber,
                   child: AppText(
                     text: "Post",
                     fontWeight: FontWeight.w400,
-                    size: 12,
+                    size: 10,
                     color: HexColor("#797979"),
                   ),
                 ),
@@ -133,7 +133,7 @@ class AllProfileActions extends StatelessWidget {
               // PageRouting.pushToPage(context, const SettingsScreen());
             },
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 ProfileActionButton(
                   icon: "assets/icon/setting.svg",
@@ -146,13 +146,13 @@ class AllProfileActions extends StatelessWidget {
                   height: 5,
                 ),
                 Container(
-                  width: 70,
+                  width: 50,
                   alignment: Alignment.center,
                   //color: Colors.amber,
                   child: AppText(
                     text: "Settings",
                     fontWeight: FontWeight.w400,
-                    size: 12,
+                    size: 10,
                     color: HexColor("#797979"),
                   ),
                 ),

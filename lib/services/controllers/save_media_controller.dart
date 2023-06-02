@@ -18,12 +18,12 @@ class SaveMediaController {
       // ignore: use_build_context_synchronously
       showToast2(context, "Video downloaded succsessfully", isError: false);
       // ignore: use_build_context_synchronously
-      PageRouting.popToPage(context);
+     // PageRouting.popToPage(context);
     } else {
       // ignore: use_build_context_synchronously
       showToast2(context, "Could not download video", isError: true);
       // ignore: use_build_context_synchronously
-      PageRouting.popToPage(context);
+   //   PageRouting.popToPage(context);
     }
   }
 
@@ -39,12 +39,13 @@ class SaveMediaController {
       // ignore: use_build_context_synchronously
       showToast2(context, "Image downloaded succsessfully", isError: false);
       // ignore: use_build_context_synchronously
-      PageRouting.popToPage(context);
+     // PageRouting.popToPage(context);
     } else {
       // ignore: use_build_context_synchronously
       showToast2(context, "Could not download Image", isError: true);
       // ignore: use_build_context_synchronously
-      PageRouting.popToPage(context);
+     // PageRouting.popToPage(context);
     }
   }
 }
+

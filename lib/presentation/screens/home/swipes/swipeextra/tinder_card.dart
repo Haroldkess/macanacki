@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:math' as math;
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -154,7 +155,7 @@ class _TinderCardState extends State<TinderCard> {
                     widget.users,
                     (element) => _swipeItems.add(SwipeItem(
                         content: Content(
-                          text: element.username!,
+                          text: element.username ?? "",
                         ),
                         likeAction: () async {
                           //   print(widget.users[indexer].id!.toString());
@@ -271,6 +272,9 @@ class _TinderCardState extends State<TinderCard> {
                       // ignore: use_build_context_synchronously
                       showToast2(context, "This is your page", isError: true);
                     } else {
+                      if (widget.users[indexer].username == null) {
+                        return;
+                      }
                       // ignore: use_build_context_synchronously
                       PageRouting.pushToPage(
                           context,
@@ -280,8 +284,11 @@ class _TinderCardState extends State<TinderCard> {
                   },
                   child: Row(
                     children: [
-                      Expanded(
+                      Container(
+                        constraints: BoxConstraints(maxWidth: 200),
                         child: RichText(
+                            maxLines: 1,
+                            overflow: TextOverflow.visible,
                             text: TextSpan(
                                 text: "${widget.users[indexer].username}",
                                 style: GoogleFonts.spartan(
@@ -290,13 +297,21 @@ class _TinderCardState extends State<TinderCard> {
                                   fontWeight: FontWeight.w700,
                                 ),
                                 children: [
-                              TextSpan(
-                                text: "",
-                                style: GoogleFonts.spartan(
-                                    color: HexColor("#C0C0C0"), fontSize: 20),
-                              )
-                            ])),
+                                  TextSpan(
+                                    text: "",
+                                    style: GoogleFonts.spartan(
+                                        color: HexColor("#C0C0C0"),
+                                        fontSize: 20),
+                                  )
+                                ])),
                       ),
+                      widget.users[indexer].verification == null
+                          ? const SizedBox.shrink()
+                          : SvgPicture.asset(
+                              "assets/icon/badge.svg",
+                              height: 15,
+                              width: 15,
+                            )
                       // Image.asset(
                       //   "assets/pic/verified.png",
                       //   height: 27,
@@ -373,7 +388,7 @@ class _TinderCardState extends State<TinderCard> {
                 decoration: BoxDecoration(
                     image: DecorationImage(
                         alignment: const Alignment(-0.3, 0),
-                        image: NetworkImage(image),
+                        image: CachedNetworkImageProvider(image),
                         fit: BoxFit.cover)),
                 child: BackdropFilter(
                   filter: ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0),
@@ -387,7 +402,7 @@ class _TinderCardState extends State<TinderCard> {
                 decoration: BoxDecoration(
                     image: DecorationImage(
                         alignment: const Alignment(-0.3, 0),
-                        image: NetworkImage(image),
+                        image: CachedNetworkImageProvider(image),
                         fit: BoxFit.cover)),
               ),
               show && username == widget.users[indexer].username

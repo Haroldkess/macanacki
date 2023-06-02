@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
 import '../../model/search_user_model.dart';
+import '../../presentation/widgets/debug_emitter.dart';
 import '../backoffice/search_office.dart';
 
 class SearchWare extends ChangeNotifier {
@@ -33,7 +34,7 @@ class SearchWare extends ChangeNotifier {
     late bool isSuccessful;
     try {
       http.Response? response = await getSearchByUser(x)
-          .whenComplete(() => log("search finished successfully"));
+          .whenComplete(() => emitter("search finished successfully"));
       if (response == null) {
         isSuccessful = false;
      //   log("search data request failed");

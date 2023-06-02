@@ -12,6 +12,7 @@ import 'package:makanaki/services/temps/temp.dart';
 import 'package:makanaki/services/temps/temps_id.dart';
 import 'package:provider/provider.dart';
 
+import '../../presentation/widgets/debug_emitter.dart';
 import '../middleware/otp_ware.dart';
 
 class VerifyEmailController {
@@ -24,7 +25,7 @@ class VerifyEmailController {
     await temp
         .initPref()
         .whenComplete(() => myEmail = temp.pref.getString(emailKey)!);
-    log(myEmail + otp);
+    emitter(myEmail + otp);
 
     ware.isLoading(true);
     OtpModel data = OtpModel(email: myEmail, otp: otp);

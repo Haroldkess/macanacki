@@ -49,9 +49,11 @@ class ChatData {
     this.createdAt,
     this.updatedAt,
     this.userOne,
+    this.userOneId,
     this.userOneMode,
     this.userOneProfilePhoto,
     this.userTwo,
+    this.userTwoId,
     this.userTwoMode,
     this.userTwoProfilePhoto,
     this.conversations,
@@ -63,10 +65,12 @@ class ChatData {
   DateTime? createdAt;
   DateTime? updatedAt;
   String? userOne;
+   int? userOneId;
   String? userOneMode;
   String? userOneProfilePhoto;
   String? userTwo;
   String? userTwoMode;
+   int? userTwoId;
   String? userTwoProfilePhoto;
   List<Conversation>? conversations;
 
@@ -81,9 +85,13 @@ class ChatData {
             ? null
             : DateTime.parse(json["updated_at"]),
         userOne: json["user_one"],
+        userOneId: json["user_one_id"],
              userOneMode: json["user_one_mode"],
+             
+             
         userOneProfilePhoto: json["user_one_profile_photo"],
         userTwo: json["user_two"],
+           userTwoId: json["user_two_id"],
          userTwoMode: json["user_two_mode"],
         userTwoProfilePhoto: json["user_two_profile_photo"],
         conversations: json["conversations"] == null
@@ -99,9 +107,11 @@ class ChatData {
         "created_at": createdAt?.toIso8601String(),
         "updated_at": updatedAt?.toIso8601String(),
         "user_one": userOne,
+          "user_one_id": userOneId,
          "user_one_mode": userOneMode,
         "user_one_profile_photo": userOneProfilePhoto,
         "user_two": userTwo,
+          "user_two_id": userTwoId,
            "user_two_mode": userTwoMode,
         "user_two_profile_photo": userTwoProfilePhoto,
         "conversations": conversations == null

@@ -48,12 +48,12 @@ class _PublicGridViewItemsState extends State<PublicGridViewItems> {
 
 //}
   getThumbnail() async {
-    if (!widget.data.media!.contains(".mp4")) {
+    if (!widget.data.media!.first.contains(".mp4")) {
       return;
     }
     try {
       final fileName = await VideoThumbnail.thumbnailFile(
-        video: widget.data.media!,
+        video: widget.data.media!.first,
         thumbnailPath: (await getTemporaryDirectory()).path,
         imageFormat: ImageFormat.WEBP,
         maxHeight:
@@ -86,13 +86,13 @@ class _PublicGridViewItemsState extends State<PublicGridViewItems> {
             //  borderRadius: BorderRadius.circular(12),
             image: DecorationImage(
                 fit: BoxFit.cover,
-                image: widget.data.media!.contains(".mp4")
+                image: widget.data.media!.first.contains(".mp4")
                     ? FileImage(File(thumbnail!))
-                    : NetworkImage(widget.data.media!) as ImageProvider)),
+                    : NetworkImage(widget.data.media!.first) as ImageProvider)),
         child: Stack(
           alignment: Alignment.center,
           children: [
-            widget.data.media!.contains(".mp4")
+            widget.data.media!.first.contains(".mp4")
                 ? Icon(
                     Icons.play_arrow,
                     color: Colors.grey.withOpacity(0.9),
@@ -114,7 +114,7 @@ class _PublicGridViewItemsState extends State<PublicGridViewItems> {
                     Padding(
                       padding: const EdgeInsets.only(top: 2, left: 3),
                       child: AppText(
-                        text:  Numeral(widget.data.viewCount!).format(),
+                        text: Numeral(widget.data.viewCount!).format(),
                         fontWeight: FontWeight.w600,
                         size: 12,
                         color: HexColor(backgroundColor),

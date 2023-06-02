@@ -12,6 +12,8 @@ import 'package:makanaki/services/middleware/action_ware.dart';
 import 'package:makanaki/services/middleware/user_profile_ware.dart';
 import 'package:provider/provider.dart';
 
+import '../../uiproviders/screen/find_people_provider.dart';
+
 class PublicUserFollowerFollowingScreen extends StatefulWidget {
   final String title;
   final bool isFollowing;
@@ -26,13 +28,16 @@ class PublicUserFollowerFollowingScreen extends StatefulWidget {
 
 class _PublicUserFollowerFollowingScreenState
     extends State<PublicUserFollowerFollowingScreen> {
+  TextEditingController controller = TextEditingController();
   @override
   void initState() {
     super.initState();
     // if (widget.isFollowing) {
-    //   SchedulerBinding.instance.addPostFrameCallback((timeStamp) async {
-    //     await ActionController.retrievAllUserFollowingController(context);
-    //   });
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) async {
+      FindPeopleProvider search =
+          Provider.of<FindPeopleProvider>(context, listen: false);
+      search.search("");
+    });
     // } else {
     //   SchedulerBinding.instance.addPostFrameCallback((timeStamp) async {
     //     await ActionController.retrievAllUserFollowersController(context);
@@ -44,7 +49,7 @@ class _PublicUserFollowerFollowingScreenState
   Widget build(BuildContext context) {
     ActionWare stream = context.watch<ActionWare>();
     UserProfileWare user = context.watch<UserProfileWare>();
-    
+
     return Scaffold(
       backgroundColor: HexColor("#F5F2F9"),
       appBar: AppBar(
@@ -56,11 +61,11 @@ class _PublicUserFollowerFollowingScreenState
               padding: const EdgeInsets.only(left: 15.0, bottom: 15, right: 15),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
-                children: const [
-                  SizedBox(
+                children: [
+                  const SizedBox(
                     height: 20,
                   ),
-                  FollowSearch(),
+                  FollowSearch(controller: controller),
                 ],
               ),
             ),

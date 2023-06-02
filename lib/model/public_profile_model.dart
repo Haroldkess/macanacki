@@ -60,7 +60,7 @@ class PublicUserPost {
   DateTime? updatedAt;
   String? btnLink;
   String? creator;
-  String? media;
+  List<String>? media;
   List<PublicComment>? comments;
   int? noOfLikes;
   int? viewCount;
@@ -79,7 +79,9 @@ class PublicUserPost {
             : DateTime.parse(json["updated_at"]),
         btnLink: json["btn_link"],
         creator: json["creator"],
-        media: json["media"],
+        media: json["media"] == null
+            ? []
+            : List<String>.from(json["media"]!.map((x) => x)),
         comments: json["comments"] == null
             ? []
             : List<PublicComment>.from(
@@ -99,7 +101,7 @@ class PublicUserPost {
         "updated_at": updatedAt?.toIso8601String(),
         "btn_link": btnLink,
         "creator": creator,
-        "media": media,
+        "media": media == null ? [] : List<dynamic>.from(media!.map((x) => x)),
         "comments": comments == null
             ? []
             : List<dynamic>.from(comments!.map((x) => x.toJson())),
@@ -152,6 +154,7 @@ class PublicUserData {
     this.profilephoto,
     this.noOfFollowers,
     this.noOfFollowing,
+    this.verification,
   });
 
   int? id;
@@ -194,6 +197,7 @@ class PublicUserData {
   String? profilephoto;
   int? noOfFollowers;
   int? noOfFollowing;
+  Verification? verification;
 
   factory PublicUserData.fromJson(Map<String, dynamic> json) => PublicUserData(
         id: json["id"],
@@ -251,6 +255,9 @@ class PublicUserData {
         profilephoto: json["profilephoto"],
         noOfFollowers: json["no_of_followers"],
         noOfFollowing: json["no_of_following"],
+        verification: json["verification"] == null
+            ? null
+            : Verification.fromJson(json["verification"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -300,6 +307,99 @@ class PublicUserData {
         "profilephoto": profilephoto,
         "no_of_followers": noOfFollowers,
         "no_of_following": noOfFollowing,
+        "verification": verification?.toJson(),
+      };
+}
+
+class Verification {
+  int? id;
+  dynamic userId;
+  String? name;
+  String? businessName;
+  String? businessEmail;
+  String? phone;
+  String? description;
+  String? isRegistered;
+  String? country;
+  String? registrationNo;
+  String? address;
+  String? idType;
+  String? idNo;
+  dynamic verified;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+  String? businessAddress;
+  String? photo;
+  String? evidence;
+
+  Verification({
+    this.id,
+    this.userId,
+    this.name,
+    this.businessName,
+    this.businessEmail,
+    this.phone,
+    this.description,
+    this.isRegistered,
+    this.country,
+    this.registrationNo,
+    this.address,
+    this.idType,
+    this.idNo,
+    this.verified,
+    this.createdAt,
+    this.updatedAt,
+    this.businessAddress,
+    this.photo,
+    this.evidence,
+  });
+
+  factory Verification.fromJson(Map<String, dynamic> json) => Verification(
+        id: json["id"],
+        userId: json["user_id"],
+        name: json["name"],
+        businessName: json["business_name"],
+        businessEmail: json["business_email"],
+        phone: json["phone"],
+        description: json["description"],
+        isRegistered: json["is_registered"],
+        country: json["country"],
+        registrationNo: json["registration_no"],
+        address: json["address"],
+        idType: json["id_type"],
+        idNo: json["id_no"],
+        verified: json["verified"],
+        createdAt: json["created_at"] == null
+            ? null
+            : DateTime.parse(json["created_at"]),
+        updatedAt: json["updated_at"] == null
+            ? null
+            : DateTime.parse(json["updated_at"]),
+        businessAddress: json["business_address"],
+        photo: json["photo"],
+        evidence: json["evidence"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "user_id": userId,
+        "name": name,
+        "business_name": businessName,
+        "business_email": businessEmail,
+        "phone": phone,
+        "description": description,
+        "is_registered": isRegistered,
+        "country": country,
+        "registration_no": registrationNo,
+        "address": address,
+        "id_type": idType,
+        "id_no": idNo,
+        "verified": verified,
+        "created_at": createdAt?.toIso8601String(),
+        "updated_at": updatedAt?.toIso8601String(),
+        "business_address": businessAddress,
+        "photo": photo,
+        "evidence": evidence,
       };
 }
 

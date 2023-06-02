@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:makanaki/model/feed_post_model.dart';
 import 'package:makanaki/model/gender_model.dart';
 import 'package:makanaki/services/backoffice/feed_post_office.dart';
@@ -7,9 +10,14 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:makanaki/services/backoffice/user_profile_office.dart';
+import 'package:makanaki/services/controllers/feed_post_controller.dart';
+import 'package:path/path.dart';
+import 'package:provider/provider.dart';
 
 import '../../model/profile_feed_post.dart';
 import '../../model/user_profile_model.dart';
+import '../../presentation/widgets/debug_emitter.dart';
+import '../backoffice/db.dart';
 
 class FeedPostWare extends ChangeNotifier {
   bool _loadStatus = false;
@@ -17,6 +25,8 @@ class FeedPostWare extends ChangeNotifier {
   int _index = 0;
   FeedData _feedData = FeedData();
   List<FeedPost> _feedPosts = [];
+  List<File> cachedFilePosts = [];
+  List<FeedPost> cachedPosts = [];
 
   ProfileFeedModel _profileFeedData = ProfileFeedModel();
   List<ProfileFeedDatum> _profileFeedPosts = [];
@@ -28,6 +38,39 @@ class FeedPostWare extends ChangeNotifier {
 
   ProfileFeedModel get profileFeedData => _profileFeedData;
   List<ProfileFeedDatum> get profileFeedPosts => _profileFeedPosts;
+
+  Future<void> addCached(FeedPost post) async {
+    List<FeedPost> check =
+        cachedPosts.where((element) => element.id == post.id).toList();
+
+    //  if (check.isEmpty) {
+    cachedPosts.add(post);
+    emitter("000000000000000000   ----------  ADDED ${cachedPosts.length} ------- 0000000000000");
+    // } else {
+    //  log("   ---------- DID NOT  ADD ------- ");
+    //  }
+
+    //   FeedData feedData = FeedData(data: cachedPosts);
+
+    //  try {
+    // var incomingData = jsonDecode(jsonEncode(feedData.toJson()));
+
+    // Database.create(Database.videoKey, incomingData);
+    // var data = await Database.read(Database.videoKey);
+    // var decode = await jsonDecode(jsonEncode(data));
+    // var existingData = FeedData.fromJson(decode);
+    // cachedPosts.addAll(existingData.data!);
+    //  } catch (e) {
+    //   log(e.toString());
+    // }
+
+    notifyListeners();
+  }
+
+  Future addCachedFromDb(FeedData data) async {
+    cachedPosts.addAll(data.data!);
+    notifyListeners();
+  }
 
   void disposeValue() async {
     _feedData = FeedData();
@@ -78,7 +121,7 @@ class FeedPostWare extends ChangeNotifier {
 
     try {
       http.Response? response = await getFeedPost(pageNum)
-          .whenComplete(() => log("user feed posts data gotten successfully"));
+          .whenComplete(() => emitter("user feed posts data gotten successfully"));
       if (response == null) {
         isSuccessful = false;
         //   log("get feed posts data request failed");
@@ -87,13 +130,12 @@ class FeedPostWare extends ChangeNotifier {
 
         var incomingData = FeedData.fromJson(jsonData["data"]);
         _feedData = incomingData;
+        _feedData.data!.shuffle();
+        emitter(pageNum.toString());
 
         if (pageNum == 1) {
-          _feedData.data!.shuffle();
-
           _feedPosts = _feedData.data!;
         } else {
-          _feedData.data!.shuffle();
           _moreFeedPosts = incomingData.data!;
           _feedPosts.addAll(_moreFeedPosts);
         }
@@ -118,6 +160,12 @@ class FeedPostWare extends ChangeNotifier {
     return isSuccessful;
   }
 
+  void remove(id) {
+    _feedPosts.removeWhere((element) => element.id == id);
+    _profileFeedPosts.removeWhere((element) => element.id == id);
+    notifyListeners();
+  }
+
   Future clearPost() async {
     _profileFeedData = ProfileFeedModel();
 
@@ -129,7 +177,7 @@ class FeedPostWare extends ChangeNotifier {
     late bool isSuccessful;
     try {
       http.Response? response = await getUserFeedPost()
-          .whenComplete(() => log("user posts data gotten successfully"));
+          .whenComplete(() => emitter("user posts data gotten successfully"));
       if (response == null) {
         isSuccessful = false;
         //   log("get user posts data request failed");
@@ -157,4 +205,22 @@ class FeedPostWare extends ChangeNotifier {
 
     return isSuccessful;
   }
+}
+
+class VideosController {
+  static Future addVideosOffline(BuildContext context) async {
+    FeedPostWare vid = Provider.of(context, listen: false);
+    var data = await Database.read(Database.videoKey);
+
+    if (data == null) {
+      return;
+    }
+    log(data.toString());
+    var decode = await jsonDecode(jsonEncode(data));
+    var existingData = FeedData.fromJson(decode);
+    vid.addCachedFromDb(existingData);
+    log(existingData.toString());
+  }
+
+  static Future makeRequest(context, token) async {}
 }

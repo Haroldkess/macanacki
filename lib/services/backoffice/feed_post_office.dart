@@ -19,9 +19,11 @@ Future<http.Response?> getFeedPost(int pageNum) async {
         HttpHeaders.contentTypeHeader: "application/json",
         HttpHeaders.authorizationHeader: "Bearer $token",
       },
-    );
+    ).timeout(Duration(minutes: 1));
 
-    log(response.body.toString());
+    
+
+   // log(response.body.toString());
   } catch (e) {
     response = null;
   }

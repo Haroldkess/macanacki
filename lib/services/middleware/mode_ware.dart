@@ -4,6 +4,8 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
 
+import '../../presentation/widgets/debug_emitter.dart';
+
 
 
 class ModeWare extends ChangeNotifier {
@@ -21,7 +23,7 @@ class ModeWare extends ChangeNotifier {
     late bool isSuccessful;
     try {
       http.Response? response = await mode(body)
-          .whenComplete(() => log("mode request sent"));
+          .whenComplete(() => emitter("mode request sent"));
       if (response == null) {
         isSuccessful = false;
      //   log("mode  request failed");

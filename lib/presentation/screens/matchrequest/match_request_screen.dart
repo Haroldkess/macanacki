@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 
 import '../../../services/middleware/action_ware.dart';
 import '../../widgets/text.dart';
+import '../userprofile/user_profile_screen.dart';
 
 class MatchRequestScreen extends StatelessWidget {
   final String userName;
@@ -47,22 +48,28 @@ class MatchRequestScreen extends StatelessWidget {
                       Row(
                         children: [
                           Expanded(
-                            child: RichText(
-                                text: TextSpan(
-                                    text: userName,
-                                    style: GoogleFonts.spartan(
-                                      color: HexColor(darkColor),
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                    children: [
-                                  TextSpan(
-                                    text: "",
-                                    style: GoogleFonts.spartan(
-                                        color: HexColor("#C0C0C0"),
-                                        fontSize: 20),
-                                  )
-                                ])),
+                            child: InkWell(
+                              onTap: () {
+                                PageRouting.pushToPage(
+                                    context, UsersProfile(username: userName));
+                              },
+                              child: RichText(
+                                  text: TextSpan(
+                                      text: userName,
+                                      style: GoogleFonts.spartan(
+                                        color: HexColor(darkColor),
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                      children: [
+                                    TextSpan(
+                                      text: "",
+                                      style: GoogleFonts.spartan(
+                                          color: HexColor("#C0C0C0"),
+                                          fontSize: 20),
+                                    )
+                                  ])),
+                            ),
                           ),
                           // Image.asset(
                           //   "assets/pic/verified.png",

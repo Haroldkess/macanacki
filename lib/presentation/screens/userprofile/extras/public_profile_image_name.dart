@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexagon/hexagon.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -18,7 +19,7 @@ class PublicProfileImageAndName extends StatelessWidget {
     var width = MediaQuery.of(context).size.width;
     var size = MediaQuery.of(context).size;
     var padding = 8.0;
-    var w = (size.width - 4 * 1) / 3.5;
+    var w = 100.0;
     UserProfileWare stream = context.watch<UserProfileWare>();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -68,11 +69,12 @@ class PublicProfileImageAndName extends StatelessWidget {
               : Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Expanded(
+                    Container(
+                      constraints: BoxConstraints(maxWidth: 150),
                       child: AppText(
                         text: stream.publicUserProfileModel.username == null
                             ? ""
-                            : "${stream.publicUserProfileModel.username} ",
+                            : "${stream.publicUserProfileModel.username}",
                         color: HexColor(darkColor),
                         size: 18,
                         letterSpacing: 0.0,
@@ -81,31 +83,14 @@ class PublicProfileImageAndName extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
-                    )
-                    // RichText(
-                    //     overflow: TextOverflow.ellipsis,
-                    //     text: TextSpan(
-                    //         text: stream.publicUserProfileModel.username == null
-                    //             ? ""
-                    //             : "${stream.publicUserProfileModel.username} ",
-                    //         style: GoogleFonts.spartan(
-                    //           color: HexColor(darkColor),
-                    //           fontSize: 24,
-                    //           letterSpacing: 0.0,
-                    //           fontWeight: FontWeight.w400,
-                    //         ),
-                    //         children: [
-                    //           TextSpan(
-                    //             text: '',
-                    //             style: GoogleFonts.spartan(
-                    //                 color: HexColor("#C0C0C0"), fontSize: 24),
-                    //           )
-                    //         ])),
-                    // Image.asset(
-                    //   "assets/pic/verified.png",
-                    //   height: 27,
-                    //   width: 27,
-                    // )
+                    ),
+                    stream.publicUserProfileModel.verification == null
+                        ? const SizedBox.shrink()
+                        : SvgPicture.asset(
+                            "assets/icon/badge.svg",
+                            height: 15,
+                            width: 15,
+                          )
                   ],
                 ),
         )

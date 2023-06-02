@@ -16,6 +16,7 @@ import 'package:shimmer/shimmer.dart';
 
 import '../../../../../services/controllers/user_profile_controller.dart';
 import '../../../../../services/middleware/user_profile_ware.dart';
+import '../../../../services/controllers/chat_controller.dart';
 
 class PublicProfileInfo extends StatefulWidget {
   final bool isMine;
@@ -43,16 +44,17 @@ class _PublicProfileInfoState extends State<PublicProfileInfo> {
               bottomRight: Radius.elliptical(250, 200))),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: const [
           SizedBox(
-            height: 80,
+            height: 50,
           ),
           PublicProfileImageAndName(),
-          SizedBox(
-            height: 20,
-          ),
           PublicProfileFollowersStatistics(),
-          UserProfileActions()
+          Padding(
+            padding: EdgeInsets.only(bottom: 20.0),
+            child: UserProfileActions(),
+          )
         ],
       ),
     );
@@ -61,6 +63,9 @@ class _PublicProfileInfoState extends State<PublicProfileInfo> {
   @override
   void initState() {
     super.initState();
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //   ChatController.retrievChatController(context, false);
+    // });
   }
 }
 

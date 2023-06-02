@@ -3,6 +3,7 @@
 //     final feedPostModel = feedPostModelFromJson(jsonString);
 
 import 'dart:convert';
+import 'dart:io';
 
 FeedPostModel feedPostModelFromJson(String str) =>
     FeedPostModel.fromJson(json.decode(str));
@@ -107,21 +108,21 @@ class FeedData {
 }
 
 class FeedPost {
-  FeedPost({
-    this.id,
-    this.description,
-    this.published,
-    this.createdAt,
-    this.updatedAt,
-    this.btnLink,
-    this.creator,
-    this.media,
-    this.comments,
-    this.noOfLikes,
-    this.viewCount,
-    this.button,
-    this.user,
-  });
+  FeedPost(
+      {this.id,
+      this.description,
+      this.published,
+      this.createdAt,
+      this.updatedAt,
+      this.btnLink,
+      this.creator,
+      this.media,
+      this.comments,
+      this.noOfLikes,
+      this.viewCount,
+      this.button,
+      this.user,
+      this.media2});
 
   int? id;
   String? description;
@@ -130,12 +131,46 @@ class FeedPost {
   DateTime? updatedAt;
   String? btnLink;
   String? creator;
-  String? media;
+  List<String>? media;
+  List<String>? media2;
   List<Comment>? comments;
   int? noOfLikes;
   int? viewCount;
   String? button;
   User? user;
+
+  FeedPost copyWith({
+    int? id,
+    String? description,
+    int? published,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? btnLink,
+    String? creator,
+    List<String>? media,
+    List<String>? media2,
+    List<Comment>? comments,
+    int? noOfLikes,
+    int? viewCount,
+    String? button,
+    User? user,
+  }) =>
+      FeedPost(
+        id: id ?? this.id,
+        description: description ?? this.description,
+        published: published ?? this.published,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        btnLink: btnLink ?? this.btnLink,
+        creator: creator ?? this.creator,
+        media: media ?? this.media,
+        media2: media2 ?? this.media2,
+        comments: comments ?? this.comments,
+        noOfLikes:  noOfLikes ?? this.noOfLikes,
+        viewCount: viewCount ?? this.viewCount,
+        button: button ?? this.button,
+        user: user ?? this.user
+      );
 
   factory FeedPost.fromJson(Map<String, dynamic> json) => FeedPost(
         id: json["id"],
@@ -149,7 +184,12 @@ class FeedPost {
             : DateTime.parse(json["updated_at"]),
         btnLink: json["btn_link"],
         creator: json["creator"]!,
-        media: json["media"],
+        media: json["media"] == null
+            ? []
+            : List<String>.from(json["media"]!.map((x) => x)),
+        media2: json["media2"] == null
+            ? []
+            : List<String>.from(json["media2"]!.map((x) => x)),
         comments: json["comments"] == null
             ? []
             : List<Comment>.from(
@@ -167,7 +207,9 @@ class FeedPost {
         "updated_at": updatedAt?.toIso8601String(),
         "btn_link": btnLink,
         "creator": creator,
-        "media": media,
+        "media": media == null ? [] : List<dynamic>.from(media!.map((x) => x)),
+        "media2":
+            media2 == null ? [] : List<dynamic>.from(media2!.map((x) => x)),
         "comments": comments == null
             ? []
             : List<dynamic>.from(comments!.map((x) => x.toJson())),
@@ -259,6 +301,7 @@ class User {
     this.noOfFollowers,
     this.noOfFollowing,
     this.activePlan,
+      this.verification,
   });
 
   int? id;
@@ -292,6 +335,7 @@ class User {
   int? noOfFollowers;
   int? noOfFollowing;
   dynamic activePlan;
+     Verification? verification;
 
   factory User.fromJson(Map<String, dynamic> json) => User(
         id: json["id"],
@@ -331,6 +375,9 @@ class User {
         noOfFollowers: json["no_of_followers"],
         noOfFollowing: json["no_of_following"],
         activePlan: json["active_plan"],
+          verification: json["verification"] == null
+            ? null
+            : Verification.fromJson(json["verification"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -365,6 +412,98 @@ class User {
         "no_of_followers": noOfFollowers,
         "no_of_following": noOfFollowing,
         "active_plan": activePlan,
+               "verification": verification?.toJson(),
+      };
+}
+class Verification {
+  int? id;
+  dynamic userId;
+  String? name;
+  String? businessName;
+  String? businessEmail;
+  String? phone;
+  String? description;
+  String? isRegistered;
+  String? country;
+  String? registrationNo;
+  String? address;
+  String? idType;
+  String? idNo;
+  dynamic verified;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+  String? businessAddress;
+  String? photo;
+  String? evidence;
+
+  Verification({
+    this.id,
+    this.userId,
+    this.name,
+    this.businessName,
+    this.businessEmail,
+    this.phone,
+    this.description,
+    this.isRegistered,
+    this.country,
+    this.registrationNo,
+    this.address,
+    this.idType,
+    this.idNo,
+    this.verified,
+    this.createdAt,
+    this.updatedAt,
+    this.businessAddress,
+    this.photo,
+    this.evidence,
+  });
+
+  factory Verification.fromJson(Map<String, dynamic> json) => Verification(
+        id: json["id"],
+        userId: json["user_id"],
+        name: json["name"],
+        businessName: json["business_name"],
+        businessEmail: json["business_email"],
+        phone: json["phone"],
+        description: json["description"],
+        isRegistered: json["is_registered"],
+        country: json["country"],
+        registrationNo: json["registration_no"],
+        address: json["address"],
+        idType: json["id_type"],
+        idNo: json["id_no"],
+        verified: json["verified"],
+        createdAt: json["created_at"] == null
+            ? null
+            : DateTime.parse(json["created_at"]),
+        updatedAt: json["updated_at"] == null
+            ? null
+            : DateTime.parse(json["updated_at"]),
+        businessAddress: json["business_address"],
+        photo: json["photo"],
+        evidence: json["evidence"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "user_id": userId,
+        "name": name,
+        "business_name": businessName,
+        "business_email": businessEmail,
+        "phone": phone,
+        "description": description,
+        "is_registered": isRegistered,
+        "country": country,
+        "registration_no": registrationNo,
+        "address": address,
+        "id_type": idType,
+        "id_no": idNo,
+        "verified": verified,
+        "created_at": createdAt?.toIso8601String(),
+        "updated_at": updatedAt?.toIso8601String(),
+        "business_address": businessAddress,
+        "photo": photo,
+        "evidence": evidence,
       };
 }
 

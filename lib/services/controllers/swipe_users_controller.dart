@@ -23,5 +23,6 @@ class SwipeController {
       // ignore: use_build_context_synchronously
       showToast2(context, "An error occured", isError: true);
     }
+     ware.isLoading(false);
   }
 }

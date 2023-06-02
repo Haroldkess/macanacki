@@ -52,9 +52,7 @@ class _SelectUserNameState extends State<SelectUserName> {
                       SizedBox(
                           width: width / 1.2,
                           child: AppText(
-                            text: widget.genderId == 3
-                                ? "What is your business name?"
-                                : "How would You like to be addressed?",
+                            text: "How would You like to be addressed?",
                             align: TextAlign.start,
                             size: 30,
                             fontWeight: FontWeight.w700,
@@ -68,9 +66,7 @@ class _SelectUserNameState extends State<SelectUserName> {
                   Row(
                     children: [
                       AppText(
-                        text: widget.genderId == 3
-                            ? "Business Name"
-                            : "User Name",
+                        text: "User Name",
                         size: 14,
                         color: HexColor(darkColor),
                         fontWeight: FontWeight.w400,
@@ -128,9 +124,7 @@ class _SelectUserNameState extends State<SelectUserName> {
                           ),
                           contentPadding:
                               const EdgeInsets.only(left: 20, top: 17),
-                          hintText: widget.genderId == 3
-                              ? "Enter your Business name here"
-                              : "Enter your User name here",
+                          hintText: "Enter your User name here",
                           hintStyle: GoogleFonts.spartan(
                               color: HexColor('#C0C0C0'), fontSize: 12),
                           border: InputBorder.none,
@@ -139,10 +133,8 @@ class _SelectUserNameState extends State<SelectUserName> {
                           errorBorder: InputBorder.none,
                         ),
                       ),
-                 
                     ),
                   ),
-              
                   Padding(
                     padding: const EdgeInsets.only(top: 5),
                     child: Row(
@@ -178,7 +170,7 @@ class _SelectUserNameState extends State<SelectUserName> {
                         width: width * 0.7,
                         child: RichText(
                           text: TextSpan(
-                              text: "I consent to the The MacaNacki ",
+                              text: "I consent to the use of MacaNacki ",
                               style: GoogleFonts.spartan(
                                   textStyle: TextStyle(
                                       fontWeight: FontWeight.w400,
@@ -269,7 +261,7 @@ class _SelectUserNameState extends State<SelectUserName> {
     if (!isValid! || userName.text.isEmpty && typing == false) {
       return;
     } else {
-    //  print(userName.text);
+      //  print(userName.text);
       saveUsername.addUserNameTemp(userName.text).whenComplete(() =>
           RegisterUsernameController.usernameController(
               context, userName.text));

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexagon/hexagon.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -61,44 +62,51 @@ class UserResultTile extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Container(
-                        //  color: Colors.red,
-                        constraints: BoxConstraints(maxWidth: 120),
-                        child: RichText(
-                            maxLines: 2,
-                            text: TextSpan(
-                                text: "${data.username}",
-                                style: GoogleFonts.spartan(
-                                    textStyle: const TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        color: Colors.black,
-                                        decorationStyle:
-                                            TextDecorationStyle.solid,
-                                        fontSize: 13)),
-                                children: [
-                                  TextSpan(
-                                    text: "",
+                      Row(
+                        children: [
+                          Container(
+                            //  color: Colors.red,
+                            constraints: BoxConstraints(maxWidth: 120),
+                            child: RichText(
+                                maxLines: 1,
+                                text: TextSpan(
+                                    text: "${data.username}",
                                     style: GoogleFonts.spartan(
                                         textStyle: const TextStyle(
-                                            fontWeight: FontWeight.w400,
+                                            fontWeight: FontWeight.w700,
                                             color: Colors.black,
                                             decorationStyle:
                                                 TextDecorationStyle.solid,
-                                            fontSize: 14)),
-                                  ),
-                                  // TextSpan(
+                                            fontSize: 13)),
+                                    children: [
+                                      TextSpan(
+                                        text: "",
+                                        style: GoogleFonts.spartan(
+                                            textStyle: const TextStyle(
+                                                fontWeight: FontWeight.w400,
+                                                color: Colors.black,
+                                                decorationStyle:
+                                                    TextDecorationStyle.solid,
+                                                fontSize: 14)),
+                                      ),
+                                      // TextSpan(
 
-                                  //   text: data.isMatched ? "Matched" : " ",
-                                  //   style: GoogleFonts.spartan(
-                                  //       textStyle: TextStyle(
-                                  //           fontWeight: FontWeight.w400,
-                                  //           color: HexColor("#0597FF"),
-                                  //           decorationStyle: TextDecorationStyle.solid,
-                                  //           fontSize: 10)),
-                                  // )
-                                ])),
+                                      //   text: data.isMatched ? "Matched" : " ",
+                                      //   style: GoogleFonts.spartan(
+                                      //       textStyle: TextStyle(
+                                      //           fontWeight: FontWeight.w400,
+                                      //           color: HexColor("#0597FF"),
+                                      //           decorationStyle: TextDecorationStyle.solid,
+                                      //           fontSize: 10)),
+                                      // )
+                                    ])),
+                          ),
+                          data.verification == null
+                              ? const SizedBox.shrink()
+                              : SvgPicture.asset("assets/icon/badge.svg",
+                                  height: 15, width: 15)
+                        ],
                       ),
-                   
                       const SizedBox(
                         height: 10,
                       ),

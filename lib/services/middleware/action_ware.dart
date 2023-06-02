@@ -4,6 +4,7 @@ import 'package:makanaki/model/all_liked_model.dart';
 import 'package:makanaki/model/comments_model.dart';
 import 'package:makanaki/model/following_model.dart';
 import 'package:makanaki/model/reg_email_model.dart';
+import 'package:makanaki/presentation/widgets/debug_emitter.dart';
 import 'package:makanaki/services/backoffice/actions_office.dart';
 import 'package:makanaki/services/backoffice/registeration_office.dart';
 import 'dart:convert';
@@ -222,10 +223,10 @@ class ActionWare extends ChangeNotifier {
     late bool isSuccessful;
     try {
       http.Response? response = await likeOrDislike(postId)
-          .whenComplete(() => log("like action request done"));
+          .whenComplete(() => emitter("like action request done"));
       if (response == null) {
         isSuccessful = false;
-        log("like action request failed");
+        emitter("like action request failed");
       } else if (response.statusCode == 200) {
         var jsonData = jsonDecode(response.body);
         _message2 = jsonData["message"];
@@ -262,7 +263,7 @@ class ActionWare extends ChangeNotifier {
     late bool isSuccessful;
     try {
       http.Response? response = await likeComment(postId, commentId)
-          .whenComplete(() => log("like action request done"));
+          .whenComplete(() => emitter("like action request done"));
       if (response == null) {
         isSuccessful = false;
         //  log("like action request failed");
@@ -300,7 +301,7 @@ class ActionWare extends ChangeNotifier {
     late bool isSuccessful;
     try {
       http.Response? response = await getAllLikedPost()
-          .whenComplete(() => log("get likes action request done"));
+          .whenComplete(() => emitter("get likes action request done"));
       if (response == null) {
         isSuccessful = false;
         //   log("get likes action request failed");
@@ -333,7 +334,7 @@ class ActionWare extends ChangeNotifier {
     late bool isSuccessful;
     try {
       http.Response? response = await getAllLikedComment()
-          .whenComplete(() => log("coment likes  action request done"));
+          .whenComplete(() => emitter("coment likes  action request done"));
       if (response == null) {
         isSuccessful = false;
         //  log("coment likes action request failed");
@@ -365,10 +366,10 @@ class ActionWare extends ChangeNotifier {
     late bool isSuccessful;
     try {
       http.Response? response = await getAllFollowing()
-          .whenComplete(() => log("all following action request done"));
+          .whenComplete(() => emitter("all following action request done"));
       if (response == null) {
         isSuccessful = false;
-        //  log("all following  action request failed");
+          emitter("all following  action request failed");
       } else if (response.statusCode == 200) {
         var jsonData = jsonDecode(response.body);
         FollowingModel incommingData = FollowingModel.fromJson(jsonData);
@@ -377,7 +378,7 @@ class ActionWare extends ChangeNotifier {
         //  log("all following  action request success");
         isSuccessful = true;
       } else {
-        // log("all following  action request failed");
+         emitter("all following  action request failed");
         // ignore: use_build_context_synchronously
         //showToast(context, ain"something went wrong. pls try ag", Colors.red);
         isSuccessful = false;
@@ -385,7 +386,7 @@ class ActionWare extends ChangeNotifier {
     } catch (e) {
       isSuccessful = false;
       //   log("all following  action request failed");
-      //  log(e.toString());
+        emitter(e.toString());
     }
 
     notifyListeners();
@@ -397,7 +398,7 @@ class ActionWare extends ChangeNotifier {
     late bool isSuccessful;
     try {
       http.Response? response = await getAllFollowers()
-          .whenComplete(() => log("all followers action request done"));
+          .whenComplete(() => emitter("all followers action request done"));
       if (response == null) {
         isSuccessful = false;
         //   log("all following  action request failed");

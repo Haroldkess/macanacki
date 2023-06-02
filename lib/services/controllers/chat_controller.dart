@@ -10,8 +10,37 @@ import 'package:makanaki/services/middleware/user_profile_ware.dart';
 import 'package:makanaki/services/temps/temps_id.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class ChatController {
+  static Future<void> retrievChatCompare(
+      BuildContext context, bool isForm) async {
+    ChatWare ware = Provider.of<ChatWare>(context, listen: false);
+
+    bool isDone = await ware
+        .getChatFromApi2()
+        .whenComplete(() => log("everything from api and provider is done"));
+
+    if (isDone) {
+      // if (isForm) {
+      //   ware.isLoading(false);
+      // }
+      debugPrint("we  have fetched all Chat");
+
+      // if (isForm) {
+      //   ware.isLoading(false);
+      // }
+      // ignore: use_build_context_synchronously
+      //  showToast2(context, ware.message, isError: false);
+    } else {
+      debugPrint("we  have fetched all Chat");
+    }
+
+    // if (isForm) {
+    //   ware.isLoading(true);
+    // }
+  }
+
   static Future<void> retrievChatController(
       BuildContext context, bool isForm) async {
     ChatWare ware = Provider.of<ChatWare>(context, listen: false);
@@ -28,17 +57,23 @@ class ChatController {
       if (isForm) {
         ware.isLoading(false);
       }
+      debugPrint("we  have fetched all Chat");
     } else {
       if (isForm) {
         ware.isLoading(false);
+        // ignore: use_build_context_synchronously
+        showToast2(context, "User unavailable at the moment", isError: false);
       }
       // ignore: use_build_context_synchronously
       //  showToast2(context, ware.message, isError: false);
     }
+    if (isForm) {
+      ware.isLoading(false);
+    }
   }
 
-  static Future<void> sendChatController(BuildContext context,
-      TextEditingController msg, String to, ChatData chat) async {
+  static Future<void> sendChatController(
+      BuildContext context, String msg, String to, ChatData chat) async {
     ChatWare ware = Provider.of<ChatWare>(context, listen: false);
     UserProfileWare user = Provider.of<UserProfileWare>(context, listen: false);
 
@@ -53,23 +88,13 @@ class ChatController {
     //   sender: user.userProfileModel.username,
     //   media: null,
     // );
-    if (chat.conversations!.isNotEmpty) {
-      // ware.addTempMsg(chat.id!, converse);
-    } else {
-     if(user.userProfileModel.activePlan == "inactive subscription")
-     {}else{
-      ware.addTempFakeMsg(msg.text);
-
-     }
-      
-    }
 
     SendMsgModel data = SendMsgModel(
-      body: msg.text,
+      body: msg,
       username: to,
     );
 
-    ware.isLoading(true);
+    // ware.isLoading(true);
 
     bool isDone = await ware
         .sendMsgUserFromApi(data)
@@ -80,7 +105,7 @@ class ChatController {
       //   ware.removeTempMsg(chat.id!);
       // }
 
-      msg.clear();
+      //   msg.clear();
       // if (ware.message == "user must be followed before you can send message") {
       //   if (user.userProfileModel.activePlan == "inactive subscription") {
       //     // ignore: use_build_context_synchronously
@@ -97,18 +122,32 @@ class ChatController {
       //   //msg.clear();
       // }
       // ignore: use_build_context_synchronously
-      await retrievChatController(context, true);
-      ware.isLoading(false);
-    } else {
-      if (user.userProfileModel.activePlan == "inactive subscription") {
-        // ignore: use_build_context_synchronously
-        await PlanController.retrievPlanController(context);
+      bool isDone2 = await ware
+          .getChatFromApi()
+          .whenComplete(() => log("everything from api and provider is done"));
+      if (isDone2) {
+        // if (isForm) {
+        //   ware.isLoading(false);
+        // }
+        debugPrint("we  have fetched all Chat");
       } else {
+        // if (isForm) {
+        //   ware.isLoading(false);
+        // }
         // ignore: use_build_context_synchronously
-        showToast2(context, ware.message, isError: true);
+        //  showToast2(context, ware.message, isError: false);
       }
+      //  ware.isLoading(false);
+    } else {
+      // if (user.userProfileModel.activePlan == "inactive subscription") {
+      //   // ignore: use_build_context_synchronously
+      //   await PlanController.retrievPlanController(context);
+      // } else {
+      //   // ignore: use_build_context_synchronously
+      //   showToast2(context, ware.message, isError: true);
+      // }
 
-      ware.isLoading(false);
+      //  ware.isLoading(false);
       // ignore: use_build_context_synchronously
       // msg.clear();
       // showToast2(context, ware.message, isError: true);

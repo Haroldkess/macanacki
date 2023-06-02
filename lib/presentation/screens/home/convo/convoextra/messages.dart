@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:hexagon/hexagon.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:makanaki/presentation/allNavigation.dart';
@@ -59,9 +60,9 @@ class MessageWidget extends StatelessWidget {
     var w = (size.width - 4 * 1) / 8;
     Temp temp = context.watch<Temp>();
     if (people.conversations!.last.sender == temp.userName) {
-      isOnline = people.userTwoMode!;
+      isOnline = people.userTwoMode ?? "";
     } else {
-      isOnline = people.userOneMode!;
+      isOnline = people.userOneMode ?? "";
     }
 
     print(isOnline.toString());
@@ -72,8 +73,9 @@ class MessageWidget extends StatelessWidget {
             user: people,
             chat: people.conversations!,
             mode: people.conversations!.last.sender == temp.userName
-                ? people.userTwoMode!
-                : people.userOneMode!,
+                ? people.userTwoMode ?? "offline"
+                : people.userOneMode ?? "offline",
+            isHome: true,
           )),
       child: Container(
         height: 80,
@@ -140,21 +142,32 @@ class MessageWidget extends StatelessWidget {
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(bottom: 6),
-                          child: SizedBox(
-                              width: width * 0.4,
-                              child: AppText(
-                                text: people.conversations!.last.sender ==
-                                        temp.userName
-                                    ? people.userTwo!
-                                    : people.userOne!,
-                                color: people.conversations!.isNotEmpty
-                                    ? HexColor(darkColor)
-                                    : HexColor("#8B8B8B"),
-                                size: 17,
-                                fontWeight: FontWeight.w700,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              )),
+                          child: Row(
+                            children: [
+                              Container(
+                                  constraints: BoxConstraints(
+                                    maxWidth: width * 0.4,
+                                  ),
+                                  child: AppText(
+                                    text: people.conversations!.last.sender ==
+                                            temp.userName
+                                        ? people.userTwo!
+                                        : people.userOne!,
+                                    color: people.conversations!.isNotEmpty
+                                        ? HexColor(darkColor)
+                                        : HexColor("#8B8B8B"),
+                                    size: 17,
+                                    fontWeight: FontWeight.w700,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  )),
+                              // SvgPicture.asset(
+                              //   "assets/icon/verifypink.svg",
+                              //   height: 10,
+                              //   width: 10,
+                              // )
+                            ],
+                          ),
                         ),
                         SizedBox(
                             // color: Colors.amber,

@@ -28,29 +28,25 @@ class _FeedHomeState extends State<FeedHome> {
   @override
   void initState() {
     super.initState();
-    Operations.funcFindUser(context);
-    SchedulerBinding.instance.addPostFrameCallback((_) async  {
-       await   ModeController.handleMode("online");
-    });
-    callFeedPost(false);
+    //Operations.funcFindUser(context);
+
+     callFeedPost(false);
   }
 
   @override
   Widget build(BuildContext context) {
-    FindPeopleProvider listen = context.watch<FindPeopleProvider>();
+    // FindPeopleProvider listen = context.watch<FindPeopleProvider>();
     FeedPostWare stream = context.watch<FeedPostWare>();
-    ActionWare actionStream = context.watch<ActionWare>();
+    // ActionWare actionStream = context.watch<ActionWare>();
 
     return RefreshIndicator(
-        onRefresh: () => callFeedPost(true),
-        backgroundColor: HexColor(primaryColor),
-        color: HexColor(backgroundColor),
-        child: stream.loadStatus ||
-                actionStream.loadStatusAllLiked ||
-                actionStream.loadStatusAllFollowing ||
-                actionStream.loadStatusAllComments
-            ? const Center(child: ScanningPerimeter())
-            : const PeopleHome());
+      onRefresh: () => callFeedPost(true),
+      backgroundColor: HexColor(primaryColor),
+      color: HexColor(backgroundColor),
+      child: const PeopleHome(),
+
+      //  stream.loadStatus ?const Center(child:  ScanningPerimeter()) : const PeopleHome()
+    );
   }
 
   callFeedPost(bool isRefreshed) async {
@@ -60,23 +56,27 @@ class _FeedHomeState extends State<FeedHome> {
         return;
       }
       SchedulerBinding.instance.addPostFrameCallback((_) async {
-        await FeedPostController.getFeedPostController(context, 1, false)
-            .whenComplete(() async {
-          await ActionController.retrievAllUserLikedController(context);
-        }).whenComplete(() async {
-          await ActionController.retrievAllUserFollowingController(context);
-        }).whenComplete(() async {
-          await ActionController.retrievAllUserLikedCommentsController(context);
-        });
+        await FeedPostController.getFeedPostController(context, 1, false);
+      });
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        ActionController.retrievAllUserLikedController(context);
+      });
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        ActionController.retrievAllUserFollowingController(context);
+      });
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        ActionController.retrievAllUserLikedCommentsController(context);
       });
     } else {
-      await FeedPostController.getFeedPostController(context,1, false)
-          .whenComplete(() async {
-        await ActionController.retrievAllUserLikedController(context);
-      }).whenComplete(() async {
-        await ActionController.retrievAllUserFollowingController(context);
-      }).whenComplete(() async {
-        await ActionController.retrievAllUserLikedCommentsController(context);
+      await FeedPostController.getFeedPostController(context, 1, false);
+       SchedulerBinding.instance.addPostFrameCallback((_) {
+        ActionController.retrievAllUserLikedController(context);
+      });
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        ActionController.retrievAllUserFollowingController(context);
+      });
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        ActionController.retrievAllUserLikedCommentsController(context);
       });
     }
   }

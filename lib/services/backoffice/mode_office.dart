@@ -22,7 +22,7 @@ Future<http.Response?> mode(String mode) async {
         HttpHeaders.authorizationHeader: "Bearer $token",
       },
     );
-    log(response.body);
+  //  log(response.body);
   } catch (e) {
     response = null;
   }

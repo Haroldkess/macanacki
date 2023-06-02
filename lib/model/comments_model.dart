@@ -52,7 +52,7 @@ class CommentData {
   DateTime? createdAt;
   DateTime? updatedAt;
   String? creator;
-  String? media;
+  List<String>? media;
   List<CommentInfo>? comments;
   User? user;
 
@@ -67,7 +67,7 @@ class CommentData {
             ? null
             : DateTime.parse(json["updated_at"]),
         creator: json["creator"],
-        media: json["media"],
+             media: json["media"] == null ? [] : List<String>.from(json["media"]!.map((x) => x)),
         comments: json["comments"] == null
             ? []
             : List<CommentInfo>.from(
@@ -82,7 +82,7 @@ class CommentData {
         "created_at": createdAt?.toIso8601String(),
         "updated_at": updatedAt?.toIso8601String(),
         "creator": creator,
-        "media": media,
+         "media": media == null ? [] : List<dynamic>.from(media!.map((x) => x)),
         "comments": comments == null
             ? []
             : List<dynamic>.from(comments!.map((x) => x.toJson())),

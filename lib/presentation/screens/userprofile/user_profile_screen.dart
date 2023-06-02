@@ -6,8 +6,10 @@ import 'package:makanaki/presentation/widgets/text.dart';
 import 'package:makanaki/services/middleware/notification_ware..dart';
 import 'package:provider/provider.dart';
 
+import '../../../services/controllers/chat_controller.dart';
 import '../../../services/controllers/feed_post_controller.dart';
 import '../../../services/controllers/user_profile_controller.dart';
+import '../../../services/middleware/chat_ware.dart';
 import '../../../services/middleware/feed_post_ware.dart';
 import '../../../services/middleware/user_profile_ware.dart';
 import '../../allNavigation.dart';
@@ -26,7 +28,8 @@ class UsersProfile extends StatefulWidget {
   State<UsersProfile> createState() => _UsersProfileState();
 }
 
-class _UsersProfileState extends State<UsersProfile> {
+class _UsersProfileState extends State<UsersProfile>
+    with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -36,7 +39,7 @@ class _UsersProfileState extends State<UsersProfile> {
     return Scaffold(
       backgroundColor: HexColor("#F5F2F9"),
       body: RefreshIndicator(
-        onRefresh: () => getData(),
+        onRefresh: () => getData(true),
         backgroundColor: HexColor(primaryColor),
         color: Colors.white,
         child: CustomScrollView(
@@ -70,8 +73,8 @@ class _UsersProfileState extends State<UsersProfile> {
                                 padding: const EdgeInsets.all(0.0),
                                 child: Center(
                                   child: AppText(
-                                    text: notify.notifyData.length > 99
-                                        ? "99+"
+                                    text: notify.notifyData.length > 9
+                                        ? "9+"
                                         : notify.notifyData.length.toString(),
                                     size: 8,
                                     fontWeight: FontWeight.bold,
@@ -92,7 +95,7 @@ class _UsersProfileState extends State<UsersProfile> {
               // floating: true,
               pinned: true,
               backgroundColor: HexColor("#F5F2F9"),
-              expandedHeight: height * .59,
+              expandedHeight: 370,
               flexibleSpace: FlexibleSpaceBar(
                 background: stream.loadStatus2
                     ? const PublicLoader()
@@ -133,28 +136,6 @@ class _UsersProfileState extends State<UsersProfile> {
         ),
       ),
     );
-
-    // Scaffold(
-    //   appBar: AppHeader(color: HexColor(backgroundColor)),
-    //   backgroundColor: HexColor("#F5F2F9"),
-    //   body: SizedBox(
-    //     height: height,
-    //     child: SingleChildScrollView(
-    //       child: Column(
-    //         children: [
-    //           const ProfileInfo(
-    //             isMine: false,
-    //           ),
-    //           const SizedBox(
-    //             height: 20,
-    //           ),
-    //           SizedBox(
-    //               height: height * 200, child: const ProfilePostGridLoader())
-    //         ],
-    //       ),
-    //     ),
-    //   ),
-    // );
   }
 
   Widget myIcon(String svgPath, String hexString, double height, double width,
@@ -183,13 +164,39 @@ class _UsersProfileState extends State<UsersProfile> {
   @override
   void initState() {
     super.initState();
-    getData();
-  }
-
-  Future<void> getData() async {
-    SchedulerBinding.instance.addPostFrameCallback((_) async {
-      await UserProfileController.retrievPublicProfileController(
-          context, widget.username);
+    getData(false);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ChatWare chatWare = Provider.of<ChatWare>(context, listen: false);
+      chatWare.isLoading(false);
     });
   }
+
+  Future<void> getData(bool isRef) async {
+    if (isRef) {
+      SchedulerBinding.instance.addPostFrameCallback((_) async {
+        UserProfileWare user = Provider.of(context, listen: false);
+        await UserProfileController.retrievPublicProfileController(
+            context, widget.username);
+      });
+    } else {
+      SchedulerBinding.instance.addPostFrameCallback((_) async {
+        UserProfileWare user = Provider.of(context, listen: false);
+        if (user.publicUserProfileModel.username == null) {
+          await UserProfileController.retrievPublicProfileController(
+              context, widget.username);
+        } else {
+          if (user.publicUserProfileModel.username == widget.username) {
+            return;
+          } else {
+            await UserProfileController.retrievPublicProfileController(
+                context, widget.username);
+          }
+        }
+      });
+    }
+  }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

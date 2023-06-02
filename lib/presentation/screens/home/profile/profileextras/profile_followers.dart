@@ -43,7 +43,7 @@ class ProfileFollowersStatistics extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
-                    width: 95,
+                    width: 85,
                     // color: Colors.amber,
                     alignment: Alignment.center,
                     child: AppText(
@@ -82,7 +82,7 @@ class ProfileFollowersStatistics extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
-                    width: 95,
+                    width: 85,
                     alignment: Alignment.center,
                     // color: Colors.amber,
                     child: AppText(

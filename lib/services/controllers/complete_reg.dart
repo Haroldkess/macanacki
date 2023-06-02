@@ -31,6 +31,7 @@ class CompleteRegisterationController {
 
   static Future<void> registerationController(
     BuildContext context,
+    bool isSplash
   ) async {
     RegisterationWare ware =
         Provider.of<RegisterationWare>(context, listen: false);
@@ -53,7 +54,7 @@ class CompleteRegisterationController {
 
       // ignore: use_build_context_synchronously
       await LoginController.loginUserController(context,
-          pref.getString(emailKey)!, pref.getString(passwordKey)!, true);
+          pref.getString(emailKey)!, pref.getString(passwordKey)!, isSplash);
       ware.isLoading3(false);
 
       // ignore: use_build_context_synchronously
@@ -64,5 +65,6 @@ class CompleteRegisterationController {
       showToast2(context, ware.message2, isError: true);
       //print("something went wrong");
     }
+    await ware.isLoading3(false);
   }
 }

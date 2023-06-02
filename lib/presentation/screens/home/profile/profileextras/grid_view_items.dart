@@ -51,7 +51,7 @@ class _GridViewItemsState extends State<GridViewItems> {
     }
     try {
       final fileName = await VideoThumbnail.thumbnailFile(
-        video: widget.data.media!,
+        video: widget.data.media!.first,
         thumbnailPath: (await getTemporaryDirectory()).path,
         imageFormat: ImageFormat.WEBP,
         maxHeight:
@@ -89,7 +89,7 @@ class _GridViewItemsState extends State<GridViewItems> {
                 fit: BoxFit.cover,
                 image: widget.data.media!.contains(".mp4")
                     ? FileImage(File(thumbnail!))
-                    : NetworkImage(widget.data.media!) as ImageProvider)),
+                    : NetworkImage(widget.data.media!.first) as ImageProvider)),
         child: Stack(
           alignment: Alignment.center,
           children: [
@@ -147,12 +147,12 @@ class _MyGridViewItemsState extends State<MyGridViewItems> {
 
 //}
   getThumbnail() async {
-    if (!widget.data.media!.contains(".mp4")) {
+    if (!widget.data.media!.first.contains(".mp4")) {
       return;
     }
     try {
       final fileName = await VideoThumbnail.thumbnailFile(
-        video: widget.data.media!,
+        video: widget.data.media!.first,
         thumbnailPath: (await getTemporaryDirectory()).path,
         imageFormat: ImageFormat.WEBP,
         maxHeight:
@@ -188,13 +188,13 @@ class _MyGridViewItemsState extends State<MyGridViewItems> {
             borderRadius: BorderRadius.circular(0),
             image: DecorationImage(
                 fit: BoxFit.cover,
-                image: widget.data.media!.contains(".mp4")
+                image: widget.data.media!.first.contains(".mp4")
                     ? FileImage(File(thumbnail!))
-                    : NetworkImage(widget.data.media!) as ImageProvider)),
+                    : NetworkImage(widget.data.media!.first) as ImageProvider)),
         child: Stack(
           alignment: Alignment.center,
           children: [
-            widget.data.media!.contains(".mp4")
+            widget.data.media!.first.contains(".mp4")
                 ? Icon(
                     Icons.play_arrow,
                     color: Colors.grey.withOpacity(0.9),

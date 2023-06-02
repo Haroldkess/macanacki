@@ -11,6 +11,7 @@ import 'package:makanaki/presentation/screens/home/convo/chat/chatextra/reciever
 import 'package:makanaki/presentation/screens/home/convo/chat/chatextra/sender_chat_bubble.dart';
 import 'package:makanaki/presentation/widgets/loader.dart';
 import 'package:makanaki/presentation/widgets/text.dart';
+
 import 'package:makanaki/services/controllers/chat_controller.dart';
 import 'package:makanaki/services/temps/temp.dart';
 import 'package:makanaki/services/temps/temps_id.dart';
@@ -25,12 +26,17 @@ class ChatList extends StatefulWidget {
   String me;
   String? to;
   ScrollController controller;
+  String? myUserId;
+  String? toUserId;
+  bool isHome;
   ChatList(
       {super.key,
       required this.chat,
       required this.me,
       this.to,
-      required this.controller});
+      required this.controller,
+      required this.myUserId,
+      this.toUserId, required this.isHome});
 
   @override
   State<ChatList> createState() => _ChatListState();
@@ -44,29 +50,13 @@ class _ChatListState extends State<ChatList> {
   @override
   void initState() {
     super.initState();
-    timing = Timer.periodic(const Duration(seconds: 1), (timer) {
-      ChatController.retrievChatController(context, false);
-    });
+    // timing = Timer.periodic(const Duration(seconds: 1), (timer) {
+    //   ChatController.retrievChatController(context, false);
+    // });
     //  initPref();
-  }
 
-  @override
-  void dispose() {
-    if (timing!.isActive) {
-      timing!.cancel();
-    }
-
-    print("timer cancelled");
-    // TODO: implement dispose
-    super.dispose();
-  }
-
-  Future initPref() async {
-    pref = await SharedPreferences.getInstance();
-
-    setState(() {
-      myName = pref!.getString(userNameKey)!;
-    });
+    print(widget.myUserId ?? "Me");
+    print(widget.toUserId ?? "Friend ");
   }
 
   bool show = true;
@@ -98,45 +88,59 @@ class _ChatListState extends State<ChatList> {
             }
             return true;
           },
-          child: ListView.builder(
-            itemCount: widget.chat.last.sender != temp.userName
-                ? stream.chatList
-                    .where((element) => element.userOne == widget.to)
-                    .single
-                    .conversations!
-                    .length
-                : stream.chatList
-                    .where((element) => element.userTwo == widget.to)
-                    .single
-                    .conversations!
-                    .length,
-            controller: widget.controller,
-            scrollDirection: Axis.vertical,
-            reverse: true,
-            padding: const EdgeInsets.only(top: 100, bottom: 100),
-            itemBuilder: (context, index) {
-              Conversation chats = widget.chat.last.sender != temp.userName
-                  ? stream.chatList
-                      .where((element) => element.userOne == widget.to)
-                      .single
-                      .conversations![index]
-                  : stream.chatList
-                      .where((element) => element.userTwo == widget.to)
-                      .single
-                      .conversations![index];
-              // widget.controller.animateTo(
-              //   widget.controller.position.maxScrollExtent,
-              //   curve: Curves.easeOut,
-              //   duration: const Duration(milliseconds: 300),
-              // );
+          child: StreamBuilder(
+              stream: null,
+              builder: (context, AsyncSnapshot<String> snapshot) {
+                if (!snapshot.hasData) {
+                  print("nodata");
+                } else if (snapshot.hasData) {
+                  print(snapshot.data);
+                }
+                return ListView.builder(
+                  itemCount: stream.justChat.length,
+                  // itemCount: widget.chat.last.sender != temp.userName
+                  //     ? stream.chatList
+                  //         .where((element) => element.userOne == widget.to)
+                  //         .single
+                  //         .conversations!
+                  //         .length
+                  //     : stream.chatList
+                  //         .where((element) => element.userTwo == widget.to)
+                  //         .single
+                  //         .conversations!
+                  //         .length,
+                  controller: widget.controller,
+                  scrollDirection: Axis.vertical,
+                  reverse: true,
+                  padding: const EdgeInsets.only(top: 100, bottom: 100),
+                  itemBuilder: (context, index) {
+                    // Conversation chats = widget.chat.last.sender !=
+                    //         temp.userName
+                    //     ? stream.chatList
+                    //         .where((element) => element.userOne == widget.to)
+                    //         .single
+                    //         .conversations![index]
+                    //     : stream.chatList
+                    //         .where((element) => element.userTwo == widget.to)
+                    //         .single
+                    //         .conversations![index];
+                    Conversation chats = stream.justChat[index];
 
-              return widget.me == chats.sender
-                  ? SenderBubble(chat: chats)
-                  : ReceivingBubble(
-                      chat: chats,
-                    );
-            },
-          ),
+                    //not here before
+                    // widget.controller.animateTo(
+                    //   widget.controller.position.maxScrollExtent,
+                    //   curve: Curves.easeOut,
+                    //   duration: const Duration(milliseconds: 300),
+                    // );
+
+                    return widget.me == chats.sender
+                        ? SenderBubble(chat: chats, isHome: widget.isHome)
+                        : ReceivingBubble(
+                            chat: chats,
+                          );
+                  },
+                );
+              }),
         ),
         show
             ? Padding(

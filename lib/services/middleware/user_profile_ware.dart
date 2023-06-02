@@ -6,7 +6,11 @@ import 'package:http/http.dart' as http;
 import 'package:makanaki/services/backoffice/user_profile_office.dart';
 import 'package:makanaki/services/temps/temps_id.dart';
 
+import '../../model/gender_model.dart';
+import '../../model/register_model.dart';
 import '../../model/user_profile_model.dart';
+import '../../presentation/screens/onboarding/business/business_modal.dart';
+import '../../presentation/widgets/debug_emitter.dart';
 
 class UserProfileWare extends ChangeNotifier {
   bool _loadStatus = false;
@@ -22,6 +26,27 @@ class UserProfileWare extends ChangeNotifier {
   bool get loadStatus2 => _loadStatus2;
   UserData get userProfileModel => _userProfileModel;
   PublicUserData get publicUserProfileModel => _publicUserProfileModel;
+  String id = "";
+  VerifyUserModel verifyUserModel = VerifyUserModel();
+  GenderList genderData = GenderList();
+  RegisterBusinessModel registerBusinessModel = RegisterBusinessModel();
+
+  void addId(String myId) {
+    id = myId;
+    notifyListeners();
+  }
+
+  Future<void> saveBusinessInfo(
+    VerifyUserModel v,
+    GenderList g,
+    RegisterBusinessModel r,
+  ) async {
+    verifyUserModel = v;
+    genderData = g;
+    registerBusinessModel = r;
+
+    notifyListeners();
+  }
 
   void disposeValue() async {
     _userProfileModel = UserData();
@@ -36,7 +61,7 @@ class UserProfileWare extends ChangeNotifier {
         .single
         .comments!
         .add(comment);
-   // _comments.add(comment);
+    // _comments.add(comment);
     notifyListeners();
   }
 
@@ -64,7 +89,7 @@ class UserProfileWare extends ChangeNotifier {
     late bool isSuccessful;
     try {
       http.Response? response = await getUserProfile()
-          .whenComplete(() => log("user profile data gotten successfully"));
+          .whenComplete(() => emitter("user profile data gotten successfully"));
       if (response == null) {
         isSuccessful = false;
         // log("get user profile data request failed");
@@ -98,7 +123,7 @@ class UserProfileWare extends ChangeNotifier {
     late bool isSuccessful;
     try {
       http.Response? response = await getUserPublicProfile(username)
-          .whenComplete(() => log("user profile data gotten successfully"));
+          .whenComplete(() => emitter("user profile data gotten successfully"));
       if (response == null) {
         isSuccessful = false;
         // log("get user profile data request failed");

@@ -7,6 +7,8 @@ import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:makanaki/services/backoffice/swiped_users_office.dart';
 
+import '../../presentation/widgets/debug_emitter.dart';
+
 class SwipeWare extends ChangeNotifier {
   bool _loadStatus = false;
   String message = "Cant get people at the moment";
@@ -35,7 +37,7 @@ class SwipeWare extends ChangeNotifier {
     late bool isSuccessful;
     try {
       http.Response? response = await getSwipedUsers()
-          .whenComplete(() => log("swwipe users gotten successfully"));
+          .whenComplete(() => emitter("swwipe users gotten successfully"));
       if (response == null) {
         isSuccessful = false;
       //  log("swwipe users request failed");

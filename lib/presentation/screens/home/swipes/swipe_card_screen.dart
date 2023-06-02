@@ -32,10 +32,6 @@ class _SwipeCardScreenState extends State<SwipeCardScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       SwipeController.retrievSwipeController(context);
     });
-
-    SchedulerBinding.instance.addPostFrameCallback((_) async {
-      await ModeController.handleMode("online");
-    });
   }
 
   @override
@@ -74,8 +70,8 @@ class _SwipeCardScreenState extends State<SwipeCardScreen> {
                             padding: const EdgeInsets.all(2.0),
                             child: Center(
                               child: AppText(
-                                text: notify.notifyData.length > 99
-                                    ? "99+"
+                                text: notify.notifyData.length > 9
+                                    ? "9+"
                                     : notify.notifyData.length.toString(),
                                 size: 8,
                                 fontWeight: FontWeight.bold,

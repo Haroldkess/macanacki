@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
 
+import '../../presentation/widgets/debug_emitter.dart';
 import '../backoffice/plan_office.dart';
 
 class PlanWare extends ChangeNotifier {
@@ -45,7 +46,7 @@ class PlanWare extends ChangeNotifier {
     late bool isSuccessful;
     try {
       http.Response? response =
-          await getPlan().whenComplete(() => log("plans gotten successfully"));
+          await getPlan().whenComplete(() => emitter("plans gotten successfully"));
       if (response == null) {
         isSuccessful = false;
   //      log("get gender request failed");

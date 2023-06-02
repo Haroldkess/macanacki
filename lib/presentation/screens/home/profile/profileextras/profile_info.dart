@@ -39,9 +39,10 @@ class _ProfileInfoState extends State<ProfileInfo> {
               bottomRight: Radius.elliptical(250, 200))),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           const SizedBox(
-            height: 70,
+            height: 50,
           ),
           stream.loadStatus
               ? Shimmer.fromColors(
@@ -49,9 +50,6 @@ class _ProfileInfoState extends State<ProfileInfo> {
                   highlightColor: highlightColor,
                   child: const ProfileImageAndNameShimmer())
               : const ProfileImageAndName(),
-          const SizedBox(
-            height: 20,
-          ),
           stream.loadStatus
               ? Shimmer.fromColors(
                   baseColor: baseColor,
@@ -59,8 +57,11 @@ class _ProfileInfoState extends State<ProfileInfo> {
                   child: const ProfileFollowersStatisticsShimmer())
               : const ProfileFollowersStatistics(),
           widget.isMine
-              ? AllProfileActions(
-                  isMine: widget.isMine,
+              ? Padding(
+                  padding: EdgeInsets.only(bottom: 20.0),
+                  child: AllProfileActions(
+                    isMine: widget.isMine,
+                  ),
                 )
               : UserProfileActions()
         ],

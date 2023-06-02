@@ -18,7 +18,7 @@ class ProfileImageAndName extends StatelessWidget {
     var width = MediaQuery.of(context).size.width;
     var size = MediaQuery.of(context).size;
     var padding = 8.0;
-    var w = (size.width - 4 * 1) / 3.5;
+    var w = 100.0;
     UserProfileWare stream = context.watch<UserProfileWare>();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,

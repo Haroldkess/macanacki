@@ -327,7 +327,7 @@ payModal(BuildContext context) async {
                               color: HexColor("#C0C0C0"),
                               width: 1.0,
                               style: BorderStyle.solid)),
-                      onPressed: () {},
+                      onPressed: () { showToast2(context, "Coming soon");},
                       child: Platform.isAndroid
                           ? SvgPicture.asset("assets/icon/G.svg")
                           : SvgPicture.asset("assets/icon/A.svg")),

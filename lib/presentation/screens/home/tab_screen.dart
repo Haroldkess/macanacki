@@ -22,8 +22,10 @@ import 'package:makanaki/services/controllers/swipe_users_controller.dart';
 import 'package:makanaki/services/controllers/user_profile_controller.dart';
 import 'package:provider/provider.dart';
 
+import '../../../services/controllers/action_controller.dart';
 import '../../uiproviders/screen/find_people_provider.dart';
 import '../../widgets/app_bar.dart';
+import '../../widgets/debug_emitter.dart';
 
 class TabScreen extends StatefulWidget {
   const TabScreen({super.key});
@@ -57,7 +59,7 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
           backgroundColor: tabs.index == 4 || tabs.index == 2
               ? HexColor(backgroundColor)
               : HexColor("#F5F2F9"),
-          appBar: listen.isFound && tabs.index == 0 ||
+          appBar: tabs.index == 0 ||
                   tabs.index == 3 ||
                   tabs.index == 4 ||
                   tabs.index == 1 ||
@@ -135,14 +137,10 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
     super.initState();
     //  = PageController(initialPage:  )
     WidgetsBinding.instance.addObserver(this);
-    ModeController.handleMode("online");
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ModeController.handleMode("online");
-    });
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_)  {
       SwipeController.retrievSwipeController(context);
+   
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ChatController.retrievChatController(context, false);
@@ -154,8 +152,12 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       NotificationController.retrievNotificationController(context);
     });
-
     UserProfileController.retrievProfileController(context, true);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+    await  ActionController.retrievAllUserLikedController(context);
+    await  ActionController.retrievAllUserFollowingController(context);
+    await  ActionController.retrievAllUserLikedCommentsController(context);
+    });
   }
 
   @override
@@ -177,17 +179,17 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
     final isInactive = state == AppLifecycleState.inactive;
 
     if (isBackground) {
-      print("background");
+      emitter("background");
       ModeController.handleMode("offline");
     } else if (isClosed) {
-      print("closed");
+      emitter("closed");
       ModeController.handleMode("offline");
     } else if (isResumed) {
-      print("resumed");
+      emitter("resumed");
       ModeController.handleMode("online");
     } else if (isInactive) {
-      print("inactive");
-        ModeController.handleMode("offline");
+      emitter("inactive");
+      ModeController.handleMode("offline");
     }
 
     /* if (isBackground) {

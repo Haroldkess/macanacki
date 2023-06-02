@@ -75,6 +75,7 @@ class CheckConnect {
             duration: const Duration(seconds: 5),
           );
         }
+         ModeController.handleMode("online");
       } else {
         isOnce = true;
         showSimpleNotification(

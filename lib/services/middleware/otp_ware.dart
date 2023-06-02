@@ -5,6 +5,7 @@ import 'dart:developer';
 import 'package:http/http.dart' as http;
 
 import '../../model/otp_model.dart';
+import '../../presentation/widgets/debug_emitter.dart';
 
 class OtpWare extends ChangeNotifier {
   bool _loadStatus = false;
@@ -23,7 +24,7 @@ class OtpWare extends ChangeNotifier {
     late bool isSuccessful;
     try {
       http.Response? response = await verifyOtp(body)
-          .whenComplete(() => log("verify  email request sent"));
+          .whenComplete(() => emitter("verify  email request sent"));
       if (response == null) {
         isSuccessful = false;
     //    log("verify  email request failed");
