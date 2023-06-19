@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:makanaki/model/common/data.dart';
 import 'package:makanaki/model/feed_post_model.dart';
 import 'package:makanaki/model/gender_model.dart';
 import 'package:makanaki/services/backoffice/feed_post_office.dart';
@@ -14,19 +15,24 @@ import 'package:makanaki/services/controllers/feed_post_controller.dart';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 
+import '../../model/asset_data.dart';
 import '../../model/profile_feed_post.dart';
 import '../../model/user_profile_model.dart';
 import '../../presentation/widgets/debug_emitter.dart';
 import '../backoffice/db.dart';
+import '../backoffice/mux_client.dart';
 
 class FeedPostWare extends ChangeNotifier {
+  MUXClient muxClient = MUXClient();
   bool _loadStatus = false;
   bool _loadStatus2 = false;
   int _index = 0;
   FeedData _feedData = FeedData();
   List<FeedPost> _feedPosts = [];
+  List<Data?> _feedStreamPosts = [];
   List<File> cachedFilePosts = [];
   List<FeedPost> cachedPosts = [];
+  List<String> thumbs = [];
 
   ProfileFeedModel _profileFeedData = ProfileFeedModel();
   List<ProfileFeedDatum> _profileFeedPosts = [];
@@ -35,6 +41,7 @@ class FeedPostWare extends ChangeNotifier {
   bool get loadStatus2 => _loadStatus2;
   FeedData get feedData => _feedData;
   List<FeedPost> get feedPosts => _feedPosts;
+  List<Data?> get feedStreamPosts => _feedStreamPosts;
 
   ProfileFeedModel get profileFeedData => _profileFeedData;
   List<ProfileFeedDatum> get profileFeedPosts => _profileFeedPosts;
@@ -45,7 +52,8 @@ class FeedPostWare extends ChangeNotifier {
 
     //  if (check.isEmpty) {
     cachedPosts.add(post);
-    emitter("000000000000000000   ----------  ADDED ${cachedPosts.length} ------- 0000000000000");
+    emitter(
+        "000000000000000000   ----------  ADDED ${cachedPosts.length} ------- 0000000000000");
     // } else {
     //  log("   ---------- DID NOT  ADD ------- ");
     //  }
@@ -69,6 +77,11 @@ class FeedPostWare extends ChangeNotifier {
 
   Future addCachedFromDb(FeedData data) async {
     cachedPosts.addAll(data.data!);
+    notifyListeners();
+  }
+
+  Future addThumbs(List<String> thum) async {
+    thumbs.addAll(thum);
     notifyListeners();
   }
 
@@ -120,8 +133,8 @@ class FeedPostWare extends ChangeNotifier {
     List<FeedPost> _moreFeedPosts = [];
 
     try {
-      http.Response? response = await getFeedPost(pageNum)
-          .whenComplete(() => emitter("user feed posts data gotten successfully"));
+      http.Response? response = await getFeedPost(pageNum).whenComplete(
+          () => emitter("user feed posts data gotten successfully"));
       if (response == null) {
         isSuccessful = false;
         //   log("get feed posts data request failed");
@@ -137,11 +150,20 @@ class FeedPostWare extends ChangeNotifier {
           _feedPosts = _feedData.data!;
         } else {
           _moreFeedPosts = incomingData.data!;
-          _feedPosts.addAll(_moreFeedPosts);
+          if(_moreFeedPosts.length > 5){
+             _moreFeedPosts.shuffle();
+              _feedPosts.addAll(_moreFeedPosts);
+          }else{
+             _feedPosts.addAll(_moreFeedPosts);
+
+          }
+         
         }
         if (_moreFeedPosts.isNotEmpty) {
           _moreFeedPosts.clear();
         }
+
+        //   await downloadThumbs(_feedPosts);
 
         //  log("get feed posts data  request success");
         isSuccessful = true;
@@ -160,9 +182,17 @@ class FeedPostWare extends ChangeNotifier {
     return isSuccessful;
   }
 
-  void remove(id) {
-    _feedPosts.removeWhere((element) => element.id == id);
-    _profileFeedPosts.removeWhere((element) => element.id == id);
+  Future<void> remove(id) async {
+    final data1 = _feedPosts.where((element) => element.id == id).toList();
+    final data2 =
+        _profileFeedPosts.where((element) => element.id == id).toList();
+    if (data1.isNotEmpty) {
+      _feedPosts.removeWhere((element) => element.id == id);
+    }
+    if (data2.isNotEmpty) {
+      _profileFeedPosts.removeWhere((element) => element.id == id);
+    }
+
     notifyListeners();
   }
 

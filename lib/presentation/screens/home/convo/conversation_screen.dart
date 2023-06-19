@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:lottie/lottie.dart';
 import 'package:makanaki/presentation/allNavigation.dart';
 import 'package:makanaki/presentation/constants/colors.dart';
 import 'package:makanaki/presentation/screens/home/convo/all_matched_screen.dart';
@@ -17,6 +18,9 @@ import 'package:makanaki/services/controllers/chat_controller.dart';
 import 'package:makanaki/services/middleware/chat_ware.dart';
 import 'package:provider/provider.dart';
 import 'package:async/async.dart';
+
+import '../../../constants/params.dart';
+import '../../../widgets/buttons.dart';
 
 class ConversationScreen extends StatefulWidget {
   const ConversationScreen({super.key});
@@ -33,11 +37,11 @@ class _ConversationScreenState extends State<ConversationScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ChatController.retrievChatController(context, false)
-          .whenComplete(() => reloadChat(context));
+          .whenComplete(() => emitter("chat gotten at init"));
     });
   }
 
-  Future reloadChat(context) async {
+  Future reloadChat(BuildContext context) async {
     emitter("W have started the reload");
     reloadTime = Timer.periodic(const Duration(minutes: 1), (timer) async {
       await ChatController.retrievChatController(context, false);
@@ -47,15 +51,16 @@ class _ConversationScreenState extends State<ConversationScreen> {
   @override
   void dispose() {
     super.dispose();
-    if (mounted) {
-      reloadTime.cancel();
-    //  emitter("close reload chat");
-    }
+    // if (mounted) {
+    //   reloadTime.cancel();
+    //   //  emitter("close reload chat");
+    // }
   }
 
   @override
   Widget build(BuildContext context) {
     ChatWare stream = context.watch<ChatWare>();
+    // _memoizer.runOnce(() => reloadChat(context));
     return Scaffold(
         backgroundColor: HexColor(backgroundColor),
         appBar: AppBar(
@@ -130,11 +135,37 @@ class _ConversationScreenState extends State<ConversationScreen> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: MessageList(
-                    peopleChats: stream.chatList,
-                  ),
-                ),
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: stream.chatList.isEmpty ?  Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Center(
+                          child: Column(
+                            children: [
+                              LottieBuilder.asset("assets/icon/nodata.json"),
+                              AppButton(
+                                  width: 0.5,
+                                  height: 0.06,
+                                  color: backgroundColor,
+                                  text: "Start a conversation",
+                                  backColor: primaryColor,
+                                  curves: buttonCurves * 5,
+                                  textColor: backgroundColor,
+                                  onTap: () async {
+                                    // await FeedPostController.getFeedPostController(
+                                    //     context, 1, false);
+                                    //  PageRouting.pushToPage(context, const BusinessVerification());
+                                  }),
+                            ],
+                          ),
+                        )
+                      ],
+                    ) :
+                     MessageList(
+                              peopleChats: stream.chatList,
+                            ),
+                    ),
               ],
             ),
           ),

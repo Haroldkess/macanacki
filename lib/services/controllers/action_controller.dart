@@ -14,7 +14,10 @@ import 'package:makanaki/services/temps/temps_id.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../presentation/uiproviders/screen/comment_provider.dart';
 import '../../presentation/widgets/debug_emitter.dart';
+import '../middleware/create_post_ware.dart';
+import '../middleware/feed_post_ware.dart';
 
 class ActionController {
   static Future<void> followOrUnFollowController(
@@ -188,7 +191,10 @@ class ActionController {
 
     if (isDone) {
       await Future.forEach(ware.allLikedComments, (element) async {
-        await ware.addCommentId(element.id!);
+        if(element.id != null){
+           await ware.addCommentId(element.id!);
+        }
+       
       });
 
       ware.isLoadingAllComments(false);
@@ -199,4 +205,25 @@ class ActionController {
     }
     ware.isLoadingAllComments(false);
   }
+
+     static Future deleteComment(BuildContext context, id, commentId) async {
+    CreatePostWare ware = Provider.of<CreatePostWare>(context, listen: false);
+ StoreComment comment = Provider.of<StoreComment>(context, listen: false);
+    FeedPostWare profile = Provider.of<FeedPostWare>(context, listen: false);
+
+    bool isDone = await ware.deleteCommentFromApi(id,commentId);
+
+    if (isDone) {
+   //   await profile.remove(id);
+      // ignore: use_build_context_synchronously
+      showToast2(
+        context,
+        "Deleted successfully",
+      );
+    } else {
+      // ignore: use_build_context_synchronously
+      showToast2(context, "Failed to delete post", isError: true);
+    }
+  }
+
 }

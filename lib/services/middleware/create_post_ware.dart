@@ -172,6 +172,25 @@ class CreatePostWare extends ChangeNotifier {
     return isSuccessful;
   }
 
+    Future<bool> deleteCommentFromApi(int id, int commentId) async {
+    late bool isSuccessful;
+    try {
+      http.Response? response =
+          await deleteComment(id,commentId).whenComplete(() => emitter("delete comment request done"));
+      if (response == null) {
+        isSuccessful = false;
+      } else if (response.statusCode == 200) {
+        isSuccessful = true;
+      } else {
+        isSuccessful = false;
+      }
+    } catch (e) {
+      isSuccessful = false;
+    }
+    notifyListeners();
+    return isSuccessful;
+  }
+
   Future<bool> editPostFromApi(EditPost data, int id) async {
     late bool isSuccessful;
     try {

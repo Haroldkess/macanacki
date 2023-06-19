@@ -147,6 +147,7 @@ class User {
     this.createdAt,
     this.updatedAt,
     this.gender,
+    this.verified,
     this.profilephoto,
     this.noOfFollowers,
     this.noOfFollowing,
@@ -163,6 +164,7 @@ class User {
   DateTime? createdAt;
   DateTime? updatedAt;
   String? gender;
+    dynamic verified;
   String? profilephoto;
   int? noOfFollowers;
   int? noOfFollowing;
@@ -185,6 +187,7 @@ class User {
             ? null
             : DateTime.parse(json["updated_at"]),
         gender: json["gender"],
+            verified: json["verified"],
         profilephoto: json["profilephoto"],
         noOfFollowers: json["no_of_followers"],
         noOfFollowing: json["no_of_following"],
@@ -202,6 +205,7 @@ class User {
         "created_at": createdAt?.toIso8601String(),
         "updated_at": updatedAt?.toIso8601String(),
         "gender": gender,
+          "verified": verified,
         "profilephoto": profilephoto,
         "no_of_followers": noOfFollowers,
         "no_of_following": noOfFollowing,

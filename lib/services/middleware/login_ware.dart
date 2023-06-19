@@ -30,6 +30,7 @@ class LoginWare extends ChangeNotifier {
   ) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     late bool isSuccessful;
+        emitter("attempting the  Login call");
    // log("hello");
     try {
       http.Response? response = await loginUser(body)

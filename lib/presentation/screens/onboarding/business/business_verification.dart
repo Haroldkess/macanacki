@@ -1,4 +1,5 @@
 import 'package:dotted_border/dotted_border.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -13,7 +14,9 @@ import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../model/gender_model.dart';
+import '../../../../services/api_url.dart';
 import '../../../../services/controllers/plan_controller.dart';
+import '../../../../services/controllers/url_launch_controller.dart';
 import '../../../../services/middleware/create_post_ware.dart';
 import '../../../allNavigation.dart';
 import '../../../constants/colors.dart';
@@ -35,6 +38,7 @@ class BusinessVerification extends StatefulWidget {
 }
 
 class _BusinessVerificationState extends State<BusinessVerification> {
+  TapGestureRecognizer tapGestureRecognizer = TapGestureRecognizer();
   TextEditingController name = TextEditingController();
   TextEditingController address = TextEditingController();
   TextEditingController id = TextEditingController();
@@ -42,7 +46,7 @@ class _BusinessVerificationState extends State<BusinessVerification> {
   @override
   Widget build(BuildContext context) {
     CreatePostWare picked = context.watch<CreatePostWare>();
-      UserProfileWare user = context.watch<UserProfileWare>();
+    UserProfileWare user = context.watch<UserProfileWare>();
     var width = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Colors.white,
@@ -123,7 +127,7 @@ class _BusinessVerificationState extends State<BusinessVerification> {
                               height: 5,
                             ),
                             AppText(
-                              text: user.id.isEmpty ?  "select" : user.id ,
+                              text: user.id.isEmpty ? "select" : user.id,
                               size: 10,
                               color: HexColor("#818181"),
                               fontWeight: FontWeight.w400,
@@ -207,6 +211,11 @@ class _BusinessVerificationState extends State<BusinessVerification> {
                                     color: HexColor(primaryColor),
                                     decorationStyle: TextDecorationStyle.solid,
                                     fontSize: 10)),
+                            recognizer: tapGestureRecognizer
+                              ..onTap = () async {
+                                await UrlLaunchController.launchInWebViewOrVC(
+                                    Uri.parse(terms));
+                              },
                           ),
                           TextSpan(
                             text: " and ",
@@ -225,6 +234,11 @@ class _BusinessVerificationState extends State<BusinessVerification> {
                                     color: HexColor(primaryColor),
                                     decorationStyle: TextDecorationStyle.solid,
                                     fontSize: 10)),
+                            recognizer: tapGestureRecognizer
+                              ..onTap = () async {
+                                await UrlLaunchController.launchInWebViewOrVC(
+                                    Uri.parse(terms));
+                              },
                           )
                         ]),
                   ),
@@ -270,12 +284,11 @@ class _BusinessVerificationState extends State<BusinessVerification> {
       return;
     } else {
       VerifyUserModel verify = VerifyUserModel(
-        name: name.text,
-        idType: user.id,
-        idNumb: id.text,
-        photo: picked.idUser,
-        address: address.text
-      );
+          name: name.text,
+          idType: user.id,
+          idNumb: id.text,
+          photo: picked.idUser,
+          address: address.text);
       user
           .saveBusinessInfo(verify, widget.gender, widget.data)
           .whenComplete(() => PageRouting.pushToPage(

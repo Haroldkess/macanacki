@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:makanaki/model/conversation_model.dart';
+import 'package:makanaki/presentation/widgets/debug_emitter.dart';
 import 'package:makanaki/presentation/widgets/snack_msg.dart';
 import 'package:makanaki/services/controllers/plan_controller.dart';
 import 'package:makanaki/services/middleware/chat_ware.dart';
@@ -17,9 +18,8 @@ class ChatController {
       BuildContext context, bool isForm) async {
     ChatWare ware = Provider.of<ChatWare>(context, listen: false);
 
-    bool isDone = await ware
-        .getChatFromApi2()
-        .whenComplete(() => log("everything from api and provider is done"));
+    bool isDone = await ware.getChatFromApi2().whenComplete(
+        () => emitter("everything from api and provider is done"));
 
     if (isDone) {
       // if (isForm) {
@@ -43,15 +43,14 @@ class ChatController {
 
   static Future<void> retrievChatController(
       BuildContext context, bool isForm) async {
-    ChatWare ware = Provider.of<ChatWare>(context, listen: false);
+    ChatWare ware = Provider.of(context, listen: false);
 
     if (isForm) {
       ware.isLoading(true);
     }
 
-    bool isDone = await ware
-        .getChatFromApi()
-        .whenComplete(() => log("everything from api and provider is done"));
+    bool isDone = await ware.getChatFromApi().whenComplete(
+        () => emitter("everything from api and provider is done"));
 
     if (isDone) {
       if (isForm) {
@@ -69,6 +68,43 @@ class ChatController {
     }
     if (isForm) {
       ware.isLoading(false);
+    }
+  }
+
+  static Future<void> retreiveUnread(BuildContext context) async {
+    ChatWare ware = Provider.of(context, listen: false);
+
+    bool isDone = await ware.getAllUnreadFromApi().whenComplete(
+        () => emitter("everything from api and provider is done"));
+
+    if (isDone) {
+      emitter("we gotten all unread messages ");
+    } else {
+      // ignore: use_build_context_synchronously
+      // showToast2(context, "something went wrong", isError: false);
+
+      // ignore: use_build_context_synchronously
+      //  showToast2(context, ware.message, isError: false);
+    }
+  }
+
+  static Future<void> readAll(BuildContext context, int userId) async {
+    ChatWare ware = Provider.of(context, listen: false);
+
+    bool isDone = await ware.readAllFromApi(userId).whenComplete(
+        () => emitter("everything from api and provider is done"));
+
+    if (isDone) {
+      // ignore: use_build_context_synchronously
+    //  await retreiveUnread(context);
+      emitter("we read all unread messages");
+    } else {
+      emitter(" read all unread messages FAILED");
+      // ignore: use_build_context_synchronously
+      // showToast2(context, "something went wrong", isError: false);
+
+      // ignore: use_build_context_synchronously
+      //  showToast2(context, ware.message, isError: false);
     }
   }
 
@@ -96,9 +132,8 @@ class ChatController {
 
     // ware.isLoading(true);
 
-    bool isDone = await ware
-        .sendMsgUserFromApi(data)
-        .whenComplete(() => log("everything from api and provider is done"));
+    bool isDone = await ware.sendMsgUserFromApi(data).whenComplete(
+        () => emitter("everything from api and provider is done"));
 
     if (isDone) {
       // if (chat.conversations!.isNotEmpty) {
@@ -122,9 +157,8 @@ class ChatController {
       //   //msg.clear();
       // }
       // ignore: use_build_context_synchronously
-      bool isDone2 = await ware
-          .getChatFromApi()
-          .whenComplete(() => log("everything from api and provider is done"));
+      bool isDone2 = await ware.getChatFromApi().whenComplete(
+          () => emitter("everything from api and provider is done"));
       if (isDone2) {
         // if (isForm) {
         //   ware.isLoading(false);

@@ -23,7 +23,7 @@ import '../../../../constants/colors.dart';
 import '../../../../widgets/hexagon_avatar.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:socket_io_client/socket_io_client.dart';
-
+import 'package:makanaki/services/api_url.dart';
 import '../../../userprofile/user_profile_screen.dart';
 import '../../profile/profile_screen.dart';
 
@@ -33,11 +33,13 @@ class ChatScreen extends StatefulWidget {
   String? dp;
   String? mode;
   bool isHome;
+  int verified;
   ChatScreen(
       {super.key,
       required this.user,
       required this.chat,
       this.dp,
+      required this.verified,
       required this.isHome,
       required this.mode});
 
@@ -49,12 +51,27 @@ class _ChatScreenState extends State<ChatScreen> {
   ScrollController? controiller = ScrollController();
   TextEditingController msgController = TextEditingController();
   IO.Socket? socket;
-
+  int? verify = 0;
   bool showForm = false;
   String? toId;
   @override
   void initState() {
     super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      UserProfileWare ware =
+          Provider.of<UserProfileWare>(context, listen: false);
+      Temp temp = Provider.of<Temp>(context, listen: false);
+
+      widget.user.conversations!.isEmpty
+          ? ChatController.readAll(context, ware.publicUserProfileModel.id!)
+          : ChatController.readAll(
+              context,
+              widget.user.conversations!.last.sender == temp.userName
+                  ? widget.user.userTwoId!
+                  : widget.user.userOneId!);
+    });
+
     ModeController.handleMode("online");
 
     SchedulerBinding.instance.addPostFrameCallback((_) async {
@@ -65,10 +82,12 @@ class _ChatScreenState extends State<ChatScreen> {
             user.userProfileModel.username) {
           setState(() {
             toId = widget.user.userTwoId.toString();
+            verify = widget.user.userTwoId;
           });
         } else {
           setState(() {
             toId = widget.user.userOneId.toString();
+            verify = widget.user.userOneVerify;
           });
         }
       } else {
@@ -79,6 +98,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
       initSocket(toId!);
     });
+
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       UserProfileWare user =
           Provider.of<UserProfileWare>(context, listen: false);
@@ -118,15 +138,11 @@ class _ChatScreenState extends State<ChatScreen> {
     setState(() {
       showForm = false;
     });
-    var messageMap = {
-      "from": user.userProfileModel.id,
-      "to": toId,
-      "message": "Hey guy",
-    };
+
     SharedPreferences pref = await SharedPreferences.getInstance();
     String? token = pref.getString(tokenKey);
     socket = IO.io(
-        "https://chat.macanacki.com/socket-chat-message",
+        chatUrl,
         OptionBuilder().setTransports(['websocket']).setExtraHeaders(
             {"Authorization": "$token"}).build());
     socket!.connect();
@@ -161,7 +177,6 @@ class _ChatScreenState extends State<ChatScreen> {
       showForm = true;
     });
     // ignore: use_build_context_synchronously
-    //  ChatController.retrievChatController(context, false);
   }
 
   @override
@@ -295,11 +310,16 @@ class _ChatScreenState extends State<ChatScreen> {
                                 // ]
                               )),
                         ),
-                        // SvgPicture.asset(
-                        //   "assets/icon/verifypink.svg",
-                        //   height: 15,
-                        //   width: 15,
-                        // )
+                        widget.verified == 0
+                            ? const SizedBox.shrink()
+                            : Padding(
+                                padding: const EdgeInsets.only(left: 3),
+                                child: SvgPicture.asset(
+                                  "assets/icon/badge.svg",
+                                  height: 13,
+                                  width: 13,
+                                ),
+                              )
                       ],
                     )
                   : Row(
@@ -326,11 +346,16 @@ class _ChatScreenState extends State<ChatScreen> {
                                 // ]
                               )),
                         ),
-                        // SvgPicture.asset(
-                        //   "assets/icon/verifypink.svg",
-                        //   height: 15,
-                        //   width: 15,
-                        // )
+                        widget.verified == 0
+                            ? const SizedBox.shrink()
+                            : Padding(
+                                padding: const EdgeInsets.only(left: 3),
+                                child: SvgPicture.asset(
+                                  "assets/icon/badge.svg",
+                                  height: 13,
+                                  width: 13,
+                                ),
+                              )
                       ],
                     ),
             ],

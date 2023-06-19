@@ -233,7 +233,15 @@ class _TinderCardState extends State<TinderCard> {
               setState(() {
                 indexer = 0;
               });
-              await SwipeController.retrievSwipeController(context);
+              SwipeWare swipe = Provider.of<SwipeWare>(context, listen: false);
+              if (swipe.filterName == "Women") {
+                await SwipeController.retrievSwipeController(context, "female");
+              } else if (swipe.filterName == "Men") {
+                await SwipeController.retrievSwipeController(context, "male");
+              } else {
+                await SwipeController.retrievSwipeController(
+                    context, swipe.filterName.toLowerCase());
+              }
 
               // _matchEngine!.currentItem!.resetMatch();
               //    _matchEngine!.cycleMatch();
@@ -305,7 +313,8 @@ class _TinderCardState extends State<TinderCard> {
                                   )
                                 ])),
                       ),
-                      widget.users[indexer].verification == null
+                      widget.users[indexer].verified == 0 ||
+                              widget.users[indexer].verified == null
                           ? const SizedBox.shrink()
                           : SvgPicture.asset(
                               "assets/icon/badge.svg",

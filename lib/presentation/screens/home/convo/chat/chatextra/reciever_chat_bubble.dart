@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -15,7 +17,11 @@ class ReceivingBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
+    String utf8convert(String text) {
+      List<int> bytes = text.toString().codeUnits;
+      return utf8.decode(bytes);
+    }
+
     return Padding(
       padding:
           const EdgeInsets.only(bottom: 5.0, left: 0.0, right: 35.0, top: 0),

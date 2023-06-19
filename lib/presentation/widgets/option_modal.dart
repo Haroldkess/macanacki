@@ -15,11 +15,10 @@ import 'package:provider/provider.dart';
 
 import '../screens/home/profile/createpost/edit_post.dart';
 
-optionModal(BuildContext context, List<String> url,
-    [int? id, int? postId]) async {
+optionModal(BuildContext cont, List<String> url, [int? id, int? postId]) async {
   bool pay = true;
   return showModalBottomSheet(
-      context: context,
+      context: cont,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
@@ -95,47 +94,48 @@ optionModal(BuildContext context, List<String> url,
                                                   id: postId!));
                                         } else if (e.id == 4) {
                                           print(postId);
-                                          await CreatePostController.deletePost(
-                                              context, postId);
-
                                           PageRouting.popToPage(context);
-                                          // ScaffoldMessenger.of(context)
-                                          //     .showSnackBar(SnackBar(
-                                          //   behavior: SnackBarBehavior.floating,
-                                          //   duration:
-                                          //       const Duration(seconds: 5),
-                                          //   shape: RoundedRectangleBorder(
-                                          //       borderRadius:
-                                          //           BorderRadius.circular(5)),
-                                          //   elevation: 10.0,
-                                          //   padding: const EdgeInsets.only(
-                                          //       top: 10,
-                                          //       bottom: 10,
-                                          //       left: 15,
-                                          //       right: 3),
-                                          //   content: Row(
-                                          //     children: [
-                                          //       AppText(
-                                          //         text:
-                                          //             "Sure you want to delete?",
-                                          //         color: Colors.white,
-                                          //         size: 15,
-                                          //         fontWeight: FontWeight.w600,
-                                          //       )
-                                          //     ],
-                                          //   ),
-                                          //   backgroundColor:
-                                          //       HexColor(primaryColor)
-                                          //           .withOpacity(.9),
-                                          //   action: SnackBarAction(
-                                          //       label: "Yes",
-                                          //       textColor: Colors.white,
-                                          //       onPressed: () async {
-                                          //         print(id);
 
-                                          //       }),
-                                          // ));
+                                          ScaffoldMessenger.of(cont)
+                                              .showSnackBar(SnackBar(
+                                            behavior: SnackBarBehavior.floating,
+                                            duration:
+                                                const Duration(seconds: 5),
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(5)),
+                                            elevation: 10.0,
+                                            padding: const EdgeInsets.only(
+                                                top: 10,
+                                                bottom: 10,
+                                                left: 15,
+                                                right: 3),
+                                            content: Row(
+                                              children: [
+                                                AppText(
+                                                  text:
+                                                      "Sure you want to delete?",
+                                                  color: Colors.white,
+                                                  size: 15,
+                                                  fontWeight: FontWeight.w600,
+                                                )
+                                              ],
+                                            ),
+                                            backgroundColor:
+                                                HexColor(primaryColor)
+                                                    .withOpacity(.9),
+                                            action: SnackBarAction(
+                                                label: "Yes",
+                                                textColor: Colors.white,
+                                                onPressed: () async {
+                                                  print(id);
+                                                        await CreatePostController.deletePost(
+                                                  cont, postId);
 
+                                                  // PageRouting.popToPage(
+                                                  //     cont);
+                                                }),
+                                          ));
                                         }
                                       },
                                       title: Padding(

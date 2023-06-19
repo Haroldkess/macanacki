@@ -1,18 +1,24 @@
 import 'dart:developer';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:lottie/lottie.dart';
+import 'package:makanaki/model/common/data.dart';
 import 'package:makanaki/model/feed_post_model.dart';
 import 'package:makanaki/presentation/constants/params.dart';
 import 'package:makanaki/presentation/widgets/loader.dart';
 import 'package:makanaki/presentation/widgets/tik_tok_view.dart';
+import 'package:path/path.dart';
 import 'package:provider/provider.dart';
+import 'package:video_player/video_player.dart';
 
+import '../../../../services/backoffice/mux_client.dart';
 import '../../../../services/controllers/feed_post_controller.dart';
 import '../../../../services/middleware/feed_post_ware.dart';
 import '../../../constants/colors.dart';
+import '../../../constants/string.dart';
 import '../../../uiproviders/screen/find_people_provider.dart';
 import '../../../widgets/buttons.dart';
 import '../../../widgets/debug_emitter.dart';
@@ -32,6 +38,7 @@ class _PeopleHomeState extends State<PeopleHome>
   Widget build(BuildContext context) {
     FeedPostWare stream = context.watch<FeedPostWare>();
     FeedPostWare provide = Provider.of<FeedPostWare>(context, listen: false);
+    controller = PageController(initialPage: stream.index, keepPage: true);
 
     return stream.feedPosts.isEmpty
         ? Column(
@@ -70,86 +77,62 @@ class _PeopleHomeState extends State<PeopleHome>
             itemBuilder: ((context, index) {
               FeedPost post = stream.feedPosts[index];
 
-              return FutureBuilder(
-                  future: Future.delayed(Duration(seconds: 1)),
-                  builder: (context, snapshot) {
-                    FeedPostWare _provide =
-                        Provider.of<FeedPostWare>(context, listen: false);
-                    // var splitStrings = post.media.split(
-                    //     "https:macarn.s3.eu-west-2.amazonaws.com/post/medias/");
-                    // var rep = splitStrings.last.replaceAll("/", "");
-                    // var finalPath = '/data/user/0/com.example.makanaki/app_flutter/$rep';
-                    List<FeedPost> finalData =
-                        stream.cachedPosts.where((element) {
-                      return element.id == stream.feedPosts[index].id;
-                    }).toList();
-
-                    //     log("snapshot ${stream.feedPosts[index].id}${finalData.length}");
-                    return TikTokView(
-                      media: finalData.isEmpty
-                          ? post.media!
-                          : finalData.first.media2 == null
-                              ? post.media!
-                              : finalData.first.media2!,
-                      data: post,
-                      page: "feed",
-                      feedPosts: stream.feedPosts,
-                      index1: index,
-                      index2: index + 1,
-                      urls: post.media!,
-                      isHome: true,
-                    );
-                  });
+              return TikTokView(
+                media: post.mux!,
+                data: post,
+                page: "feed",
+                feedPosts: stream.feedPosts,
+                index1: index,
+                index2: index + 1,
+                urls: post.media!,
+                isHome: true,
+              );
             }),
             onPageChanged: (index) async {
               FeedPostWare postLenght =
                   Provider.of<FeedPostWare>(context, listen: false);
-              provide.indexChange(index);
               if (index % 2 == 0) {
                 List<FeedPost> toSend = [];
 
-                for (var i = index + 1; i < (index + 3); i++) {
+                for (var i = index; i < (index + (postLenght.feedPosts.length - index)); i++) {   
                   toSend.add(postLenght.feedPosts[i]);
                 }
-                FeedPostController.downloadVideos(toSend, context);
+                FeedPostController.downloadThumbs(
+                    toSend, context, MediaQuery.of(context).size.height);
                 emitter('caching next ${toSend.length} sent');
-              } else {
-                emitter('Will not initiate cache');
               }
-              int checkNum = stream.feedPosts.length - 5;
-              int pageNum = stream.feedData.currentPage! + 1;
-              if (index >= checkNum &&
-                  pageNum <= postLenght.feedData.lastPage!) {
-                await FeedPostController.getFeedPostController(
-                        context, pageNum, true)
-                    .whenComplete(() => emitter("paginated"));
-              }
+              await paginateFeed(context, index);
             },
           );
+  }
+
+  Future paginateFeed(BuildContext context, int index) async {
+    FeedPostWare provide = Provider.of<FeedPostWare>(context, listen: false);
+
+    provide.indexChange(index);
+
+    int checkNum = provide.feedPosts.length - 3; // lenght of posts
+    int pageNum = provide.feedData.currentPage!; // api current  page num
+    int maxPages = provide.feedData.lastPage!; // api last page num
+
+    if (pageNum >= maxPages) {
+      emitter("cannot paginate");
+      return;
+    } else {
+      if (index > checkNum && index < provide.feedPosts.length - 2) {
+        await FeedPostController.getFeedPostController(
+                context, pageNum + 1, true)
+            .whenComplete(() => emitter("paginated"));
+      } else {
+        emitter("cannot paginate");
+        return;
+      }
+    }
   }
 
   @override
   void initState() {
     super.initState();
-    SchedulerBinding.instance.addPostFrameCallback((timeStamp) async {
-      FeedPostWare provide = Provider.of<FeedPostWare>(context, listen: false);
-      controller = PageController(initialPage: provide.index, keepPage: true);
-    });
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      FeedPostWare provide = Provider.of<FeedPostWare>(context, listen: false);
-      List<FeedPost> toSend = [];
-      if (provide.index == 0) {
-        for (var i = 0; i < 2; i++) {
-          toSend.add(provide.feedPosts[i]);
-        }
-        emitter('caching first ${toSend.length} sent');
-        emitter('caching first ${toSend.length} sent');
-        FeedPostController.downloadVideos(toSend, context);
-        emitter('caching first ${toSend.length} sent');
-      }
-
-      //FeedPostController.downloadVideos(provide.feedPosts, context);
-    });
   }
 
   @override

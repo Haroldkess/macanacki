@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -14,6 +15,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../../model/search_user_model.dart';
 import '../../../../../services/controllers/action_controller.dart';
 import '../../../../../services/middleware/action_ware.dart';
+import '../../../../widgets/loader.dart';
 import '../../../userprofile/user_profile_screen.dart';
 import '../../profile/profile_screen.dart';
 
@@ -33,6 +35,9 @@ class UserResultTile extends StatelessWidget {
           // ignore: use_build_context_synchronously
           PageRouting.pushToPage(context, const ProfileScreen());
         } else {
+          if (data.username == null) {
+            return;
+          }
           // ignore: use_build_context_synchronously
           PageRouting.pushToPage(
               context,
@@ -70,7 +75,7 @@ class UserResultTile extends StatelessWidget {
                             child: RichText(
                                 maxLines: 1,
                                 text: TextSpan(
-                                    text: "${data.username}",
+                                    text: data.username ?? "...",
                                     style: GoogleFonts.spartan(
                                         textStyle: const TextStyle(
                                             fontWeight: FontWeight.w700,
@@ -101,7 +106,7 @@ class UserResultTile extends StatelessWidget {
                                       // )
                                     ])),
                           ),
-                          data.verification == null
+                          data.verified == 0 ||  data.verified == null
                               ? const SizedBox.shrink()
                               : SvgPicture.asset("assets/icon/badge.svg",
                                   height: 15, width: 15)
@@ -154,7 +159,7 @@ class UserResultTile extends StatelessWidget {
     var width = MediaQuery.of(context).size.width;
     var size = MediaQuery.of(context).size;
     var padding = 8.0;
-    var w = (size.width - 4 * 1) / 6;
+    var w = 59.0;
     return Stack(
       children: [
         HexagonWidget.pointy(
@@ -178,7 +183,20 @@ class UserResultTile extends StatelessWidget {
           cornerRadius: 20.0,
           child: AspectRatio(
               aspectRatio: HexagonType.POINTY.ratio,
-              child: Center(child: Image.network(url))),
+              child: Center(
+                child: CachedNetworkImage(
+                  imageUrl: url,
+                  progressIndicatorBuilder: (context, url, downloadProgress) =>
+                      Center(
+                          child: Loader(
+                    color: HexColor(primaryColor),
+                  )),
+                  errorWidget: (context, url, error) => Icon(
+                    Icons.error,
+                    color: HexColor(primaryColor),
+                  ),
+                ),
+              )),
         ),
       ],
     );
@@ -196,7 +214,7 @@ class UserResultTile extends StatelessWidget {
         child: AppText(
           text: title,
           color: HexColor(backgroundColor),
-          size: 13,
+          size: 12,
           fontWeight: FontWeight.w500,
         ),
       ),
@@ -215,7 +233,7 @@ class UserResultTile extends StatelessWidget {
         child: AppText(
           text: title,
           color: HexColor(backgroundColor),
-          size: 13,
+          size: 12,
           fontWeight: FontWeight.w500,
         ),
       ),

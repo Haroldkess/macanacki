@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -13,6 +14,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../allNavigation.dart';
 
+import '../../../../widgets/loader.dart';
 import '../../../userprofile/user_profile_screen.dart';
 
 class FollowTile extends StatelessWidget {
@@ -88,7 +90,7 @@ class FollowTile extends StatelessWidget {
                                       // )
                                     ])),
                           ),
-                          data.verification == null
+                          data.verified == 0
                               ? const SizedBox.shrink()
                               : SvgPicture.asset(
                                   "assets/icon/badge.svg",
@@ -147,7 +149,7 @@ class FollowTile extends StatelessWidget {
     var width = MediaQuery.of(context).size.width;
     var size = MediaQuery.of(context).size;
     var padding = 8.0;
-    var w = (size.width - 4 * 1) / 6;
+    var w = 58.0;
     return Stack(
       children: [
         HexagonWidget.pointy(
@@ -171,7 +173,20 @@ class FollowTile extends StatelessWidget {
           cornerRadius: 20.0,
           child: AspectRatio(
               aspectRatio: HexagonType.POINTY.ratio,
-              child: Center(child: Image.network(url))),
+              child: Center(
+                child: CachedNetworkImage(
+                  imageUrl: url,
+                  progressIndicatorBuilder: (context, url, downloadProgress) =>
+                      Center(
+                          child: Loader(
+                    color: HexColor(primaryColor),
+                  )),
+                  errorWidget: (context, url, error) => Icon(
+                    Icons.error,
+                    color: HexColor(primaryColor),
+                  ),
+                ),
+              )),
         ),
       ],
     );

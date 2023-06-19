@@ -62,6 +62,7 @@ class LocationController {
 
   static Future<void> getAndSaveLatLong(context) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
+   
     Position? currentPosition = await determinePosition(context);
     //   late bool isDone;
 
@@ -71,7 +72,7 @@ class LocationController {
       await Future.delayed(const Duration(seconds: 3));
 
       //   isDone = false;
-     await AppSettings.openLocationSettings();
+      await AppSettings.openLocationSettings();
       await Future.delayed(const Duration(seconds: 19));
       sendPage(context);
 

@@ -201,6 +201,7 @@ class Operations {
   static Future commentOperation(BuildContext context, bool isAdd,
       [List<dynamic>? commentList, Comment? data]) async {
     StoreComment comment = Provider.of<StoreComment>(context, listen: false);
+ 
     if (isAdd == false) {
       comment.addAllComments(commentList!);
     } else {

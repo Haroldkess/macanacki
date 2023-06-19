@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexagon/hexagon.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -8,6 +10,7 @@ import 'package:makanaki/services/middleware/user_profile_ware.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../constants/colors.dart';
+import '../../../../widgets/loader.dart';
 
 class ProfileImageAndName extends StatelessWidget {
   const ProfileImageAndName({super.key});
@@ -47,8 +50,22 @@ class ProfileImageAndName extends StatelessWidget {
               child: AspectRatio(
                   aspectRatio: HexagonType.POINTY.ratio,
                   child: Center(
-                      child: Image.network(
-                          stream.userProfileModel.profilephoto ?? ""))),
+                    child: CachedNetworkImage(
+                      imageUrl: stream.userProfileModel.profilephoto ?? "",
+                      progressIndicatorBuilder:
+                          (context, url, downloadProgress) => Center(
+                              child: Loader(
+                        color: HexColor(primaryColor),
+                      )),
+                      errorWidget: (context, url, error) => Icon(
+                        Icons.error,
+                        color: HexColor(primaryColor),
+                      ),
+                    ),
+
+                    // Image.network(
+                    //     stream.userProfileModel.profilephoto ?? "")
+                  )),
             ),
           ],
         ),
@@ -65,7 +82,8 @@ class ProfileImageAndName extends StatelessWidget {
               : Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Expanded(
+                    Container(
+                      constraints: BoxConstraints(maxWidth: 150),
                       child: AppText(
                         text: "${stream.userProfileModel.username}",
                         color: HexColor(darkColor),
@@ -76,12 +94,15 @@ class ProfileImageAndName extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
-                    )
-                    // Image.asset(
-                    //   "assets/pic/verified.png",
-                    //   height: 27,
-                    //   width: 27,
-                    // )
+                    ),
+                    stream.userProfileModel.verified == 0 ||
+                            stream.userProfileModel.verified == null
+                        ? const SizedBox.shrink()
+                        : SvgPicture.asset(
+                            "assets/icon/badge.svg",
+                            height: 15,
+                            width: 15,
+                          )
                   ],
                 ),
         )

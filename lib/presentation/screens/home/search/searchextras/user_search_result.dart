@@ -24,13 +24,10 @@ class UserGlobalResult extends StatelessWidget {
               UserSearchData searchData = stream.userFound[index];
               return Padding(
                 padding:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                    const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                 child: stream.loadStatus
                     ? const SearchLoader()
-                    : UserResultTile(
-                        data: searchData,
-                        username: userName
-                      ),
+                    : UserResultTile(data: searchData, username: userName),
               );
             },
           );

@@ -50,6 +50,7 @@ class ProfileFeedDatum {
     this.btnLink,
     this.creator,
     this.media,
+    this.mux,
     this.comments,
     this.noOfLikes,
     this.viewCount,
@@ -65,6 +66,7 @@ class ProfileFeedDatum {
   String? btnLink;
   String? creator;
   List<String>? media;
+   List<String>? mux;
   List<ProfileComment>? comments;
   int? noOfLikes;
   int? viewCount;
@@ -85,6 +87,7 @@ class ProfileFeedDatum {
         btnLink: json["btn_link"],
         creator: json["creator"],
                media: json["media"] == null ? [] : List<String>.from(json["media"]!.map((x) => x)),
+                      mux: json["mux"] == null ? [] : List<String>.from(json["mux"]!.map((x) => x)),
         comments: json["comments"] == null
             ? []
             : List<ProfileComment>.from(
@@ -104,6 +107,7 @@ class ProfileFeedDatum {
         "btn_link": btnLink,
         "creator": creator,
         "media": media == null ? [] : List<dynamic>.from(media!.map((x) => x)),
+         "mux": mux == null ? [] : List<dynamic>.from(mux!.map((x) => x)),
         "comments": comments == null
             ? []
             : List<dynamic>.from(comments!.map((x) => x.toJson())),
@@ -175,6 +179,7 @@ class ProfileUser {
     this.createdAt,
     this.updatedAt,
     this.gender,
+    this.verified,
     this.profilephoto,
     this.noOfFollowers,
     this.noOfFollowing,
@@ -191,6 +196,7 @@ class ProfileUser {
   DateTime? createdAt;
   DateTime? updatedAt;
   String? gender;
+   int? verified;
   String? profilephoto;
   int? noOfFollowers;
   int? noOfFollowing;
@@ -213,6 +219,7 @@ class ProfileUser {
             ? null
             : DateTime.parse(json["updated_at"]),
         gender: json["gender"],
+          verified: json["verified"],
         profilephoto: json["profilephoto"],
         noOfFollowers: json["no_of_followers"],
         noOfFollowing: json["no_of_following"],
@@ -230,6 +237,7 @@ class ProfileUser {
         "created_at": createdAt?.toIso8601String(),
         "updated_at": updatedAt?.toIso8601String(),
         "gender": gender,
+         "verified": verified,
         "profilephoto": profilephoto,
         "no_of_followers": noOfFollowers,
         "no_of_following": noOfFollowing,

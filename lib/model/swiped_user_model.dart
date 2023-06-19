@@ -20,7 +20,7 @@ String swipeUserModelToJson(SwipeUserModel data) => json.encode(data.toJson());
 class SwipeUserModel {
     bool? status;
     String? message;
-    SwipeData? data;
+   List<SwipedUser>? data;
 
     SwipeUserModel({
         this.status,
@@ -31,13 +31,14 @@ class SwipeUserModel {
     factory SwipeUserModel.fromJson(Map<String, dynamic> json) => SwipeUserModel(
         status: json["status"],
         message: json["message"],
-        data: json["data"] == null ? null : SwipeData.fromJson(json["data"]),
+        data: json["data"] == null ? [] : List<SwipedUser>.from(json["data"]!.map((x) => SwipedUser.fromJson(x))),
     );
 
     Map<String, dynamic> toJson() => {
         "status": status,
         "message": message,
-        "data": data?.toJson(),
+               "data": data == null ? [] : List<dynamic>.from(data!.map((x) => x.toJson())),
+
     };
 }
 

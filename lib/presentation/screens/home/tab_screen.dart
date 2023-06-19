@@ -1,5 +1,11 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'dart:async';
+
+import 'package:async/async.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:makanaki/presentation/allNavigation.dart';
@@ -22,7 +28,11 @@ import 'package:makanaki/services/controllers/swipe_users_controller.dart';
 import 'package:makanaki/services/controllers/user_profile_controller.dart';
 import 'package:provider/provider.dart';
 
+import '../../../model/feed_post_model.dart';
 import '../../../services/controllers/action_controller.dart';
+import '../../../services/middleware/chat_ware.dart';
+import '../../../services/middleware/feed_post_ware.dart';
+import '../../../services/middleware/swipe_ware.dart';
 import '../../uiproviders/screen/find_people_provider.dart';
 import '../../widgets/app_bar.dart';
 import '../../widgets/debug_emitter.dart';
@@ -36,12 +46,24 @@ class TabScreen extends StatefulWidget {
 
 class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
   final GlobalKey<ScaffoldState> key = GlobalKey();
+  late Timer reloadTime;
+  final AsyncMemoizer _memoizer = AsyncMemoizer();
+
   @override
   Widget build(BuildContext context) {
     TabProvider provide = Provider.of<TabProvider>(context, listen: false);
+
     TabProvider tabs = context.watch<TabProvider>();
     FindPeopleProvider listen = context.watch<FindPeopleProvider>();
-    PageController pageController = PageController(initialPage: tabs.index);
+
+    _memoizer.runOnce(() => reloadChat(context));
+    final List<Widget> _children = [
+      const FeedHome(),
+      const GlobalSearch(),
+      const SwipeCardScreen(),
+      const ConversationScreen(),
+      const ProfileScreen(),
+    ];
     return WillPopScope(
       onWillPop: () async {
         // print("back button pressed");
@@ -52,10 +74,6 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
       child: SafeArea(
         top: false,
         child: Scaffold(
-          key: key,
-          drawer: DrawerSide(
-            scafKey: key,
-          ),
           backgroundColor: tabs.index == 4 || tabs.index == 2
               ? HexColor(backgroundColor)
               : HexColor("#F5F2F9"),
@@ -73,16 +91,8 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
                 ),
           body: PageView(
             physics: const NeverScrollableScrollPhysics(),
-            controller: pageController,
-            children: [
-              const FeedHome(),
-              const GlobalSearch(),
-              const SwipeCardScreen(),
-              const ConversationScreen(),
-              ProfileScreen(
-                scafKey: key,
-              ),
-            ],
+            controller: tabs.pageController,
+            children: _children,
             onPageChanged: (index) {
               provide.changeIndex(index);
             },
@@ -91,26 +101,42 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
             currentIndex: context.watch<TabProvider>().index,
             onTap: (index) async {
               provide.changeIndex(index);
-              if (provide.index == 1) {
-                //    PageRouting.pushToPage(context, const SubscriptionPlans());
-                pageController.animateToPage(
+
+              if (provide.index == 0) {
+                tabs.pageController!.animateToPage(
                   index,
                   duration: const Duration(milliseconds: 1),
                   curve: Curves.easeIn,
                 );
+                if (provide.isTapped) {
+                  provide.tap(false);
+                }
               } else {
-                pageController.animateToPage(
+                tabs.pageController!.animateToPage(
                   index,
                   duration: const Duration(milliseconds: 1),
                   curve: Curves.easeIn,
                 );
+
+                if (provide.controller != null) {
+                  if (provide.controller!.value.isInitialized) {
+                    if (provide.controller!.value.isBuffering ||
+                        provide.controller!.value.isPlaying) {
+                      provide.pauseControl();
+                      provide.tap(true);
+                    } else {
+                      return;
+                    }
+                  }
+                }
               }
             },
             items: [
               barItem('assets/icon/home.svg', tabs.index == 0 ? true : false),
               barItem('assets/icon/search.svg', tabs.index == 1 ? true : false),
               barItem('assets/icon/crown.svg', tabs.index == 2 ? true : false),
-              barItem('assets/icon/chat.svg', tabs.index == 3 ? true : false),
+              barItem(
+                  'assets/icon/chat.svg', tabs.index == 3 ? true : false, true),
               barItem(
                   'assets/icon/profile.svg', tabs.index == 4 ? true : false),
             ],
@@ -121,15 +147,68 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
     );
   }
 
-  BottomNavigationBarItem barItem(String svgPath, bool isActive) {
+  BottomNavigationBarItem barItem(String svgPath, bool isActive,
+      [bool? isChat]) {
+    ChatWare streams = context.watch<ChatWare>();
+    int unread = 0;
+
+    streams.unreadMsgs.forEach((element) {
+      unread += element.totalUnread!;
+    });
+
     return BottomNavigationBarItem(
-      icon: SvgPicture.asset(
-        svgPath,
-        height: 26,
-        width: 26,
-        color: isActive ? HexColor(primaryColor) : HexColor("#C0C0C0"),
-      ),
+      icon: isChat == true
+          ? Stack(
+              alignment: Alignment.center,
+              children: [
+                SvgPicture.asset(
+                  svgPath,
+                  height: 26,
+                  width: 26,
+                  color:
+                      isActive ? HexColor(primaryColor) : HexColor("#C0C0C0"),
+                ),
+                unread < 1
+                    ? const SizedBox.shrink()
+                    : Positioned(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 20.0),
+                          child: Align(
+                            alignment: Alignment.topCenter,
+                            //top: -2,
+                            child: Container(
+                              constraints:
+                                  BoxConstraints(maxHeight: 19, maxWidth: 25),
+                              decoration: const BoxDecoration(
+                                  color: Colors.red, shape: BoxShape.circle),
+                              child: Center(
+                                child: AppText(
+                                  size: 8,
+                                  text: unread > 99 ? "99+" : unread.toString(),
+                                  color: HexColor(backgroundColor),
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+              ],
+            )
+          : SvgPicture.asset(
+              svgPath,
+              height: 26,
+              width: 26,
+              color: isActive ? HexColor(primaryColor) : HexColor("#C0C0C0"),
+            ),
     );
+  }
+
+  Future reloadChat(BuildContext context) async {
+    emitter("W have started the reload");
+    reloadTime = Timer.periodic(const Duration(minutes: 1), (timer) async {
+      await ChatController.retrievChatController(context, false);
+    });
   }
 
   @override
@@ -137,10 +216,26 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
     super.initState();
     //  = PageController(initialPage:  )
     WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      TabProvider provide = Provider.of<TabProvider>(context, listen: false);
+      PageController pageController =
+          PageController(initialPage: provide.index);
+      provide.addPageControl(pageController);
+    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ChatController.retreiveUnread(context);
+    });
 
-    WidgetsBinding.instance.addPostFrameCallback((_)  {
-      SwipeController.retrievSwipeController(context);
-   
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      SwipeWare swipe = Provider.of<SwipeWare>(context, listen: false);
+      if (swipe.filterName == "Women") {
+        SwipeController.retrievSwipeController(context, "female");
+      } else if (swipe.filterName == "Men") {
+        SwipeController.retrievSwipeController(context, "male");
+      } else {
+        SwipeController.retrievSwipeController(
+            context, swipe.filterName.toLowerCase());
+      }
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ChatController.retrievChatController(context, false);
@@ -154,9 +249,21 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
     });
     UserProfileController.retrievProfileController(context, true);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-    await  ActionController.retrievAllUserLikedController(context);
-    await  ActionController.retrievAllUserFollowingController(context);
-    await  ActionController.retrievAllUserLikedCommentsController(context);
+      await ActionController.retrievAllUserLikedController(context);
+      await ActionController.retrievAllUserFollowingController(context);
+      await ActionController.retrievAllUserLikedCommentsController(context);
+    });
+
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      FeedPostWare post = Provider.of<FeedPostWare>(context, listen: false);
+      List<FeedPost> data = [];
+      for (var i = 0; i < 5; i++) {
+        data.add(post.feedPosts[i]);
+      }
+
+      FeedPostController.downloadThumbs(
+          data, context, MediaQuery.of(context).size.height);
+      emitter('caching first ${data.length} sent');
     });
   }
 
@@ -165,6 +272,10 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
     WidgetsBinding.instance.removeObserver(this);
 
     super.dispose();
+    if (mounted) {
+      reloadTime.cancel();
+      //  emitter("close reload chat");
+    }
   }
 
   @override

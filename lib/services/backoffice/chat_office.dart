@@ -64,121 +64,47 @@ Future<http.Response?> getAllConversation() async {
         HttpHeaders.authorizationHeader: "Bearer $token",
       },
     );
-
-    //
-    // log(response.body.toString());
   } catch (e) {
     response = null;
-    log(e.toString());
   }
   return response;
 }
 
-late IO.Socket socket;
-StreamSocket streamSocket = StreamSocket();
+Future<http.Response?> getUnreadChat() async {
+  http.Response? response;
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  String? token = pref.getString(tokenKey);
 
-class chatSocket {
-  static Future<void> initSocket() async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    String? token = pref.getString(tokenKey);
-    socket = IO.io(
-        "https://chat.macanacki.com/socket-chat-message?addUserId=16",
-        OptionBuilder()
-            .setTransports(['websocket'])
-            .setExtraHeaders({"Authorization": "$token"})
-            .enableAutoConnect()
-            .build());
-    socket.connect();
-    socket.onConnect((_) {
-      // socket.emit("addUserId", {'addUserId': '16'});
-      print('Connection established');
-    });
-
-    socket.onConnectError((err) => print(err));
-    socket.onError((err) => print(err));
-    socket.onDisconnect((_) => print('Connection Disconnection'));
+  try {
+    response = await http.get(
+      Uri.parse('$baseUrl/public/api/chat/unread/notifications'),
+      headers: {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $token",
+      },
+    );
+  } catch (e) {
+    response = null;
   }
-
-  static Future<void> addUserId(
-    String userId,
-  ) async {
-    try {
-      socket.emit("addUserId", userId);
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  static void send(String userId, String friendId, String message) async {
-    Map messageMap = {
-      'from': userId,
-      'to': friendId,
-      'message': message,
-    };
-    try {
-      print("sending");
-      socket.emitWithAck("sendMesage", messageMap, ack: (data) {
-        print("ack");
-        if (data != null) {
-          print('from server $data');
-        } else {
-          print("Null");
-        }
-      });
-    } catch (e) {
-      emitter(e.toString());
-    }
-  }
-
-  static sendTyping(String friendId, bool action) async {
-    socket.emit("typing", {"to": friendId, 'action': action});
-  }
-
-  static Future<void> getMsgs() async {
-    try {
-      socket.on('getMessages', (response) {
-        //streamSocket.addResponse(response);
-        emitter(response.toString());
-        //messageList.add(MessageModel.fromJson(data));
-      });
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  static getNotification() async {
-    socket.on('getNotification', (response) {
-      emitter(response.toString());
-    });
-  }
-
-  static getTyping() async {
-    socket.on('typingResponse', (response) {
-      emitter(response.toString());
-    });
-  }
-
-  static getUser() async {
-    socket.on('getUsers', (response) {
-      emitter(response.toString());
-    });
-  }
-
-  static getNoNetwork() async {
-    socket.on('noNetwork', (response) {
-      emitter(response.toString());
-    });
-  }
+  return response;
 }
 
-class StreamSocket {
-  static final socketResponse = StreamController<String>();
 
-  void Function(String) get addResponse => socketResponse.sink.add;
+Future<http.Response?> readAllChats(int userId) async {
+  http.Response? response;
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  String? token = pref.getString(tokenKey);
 
-  Stream<String> get getResponse => socketResponse.stream;
-
-  void dispose() {
-    socketResponse.close();
+  try {
+    response = await http.get(
+      Uri.parse('$baseUrl/public/api/chat/markall/chats/$userId'),
+      headers: {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $token",
+      },
+    );
+  } catch (e) {
+    response = null;
   }
+  return response;
 }

@@ -48,6 +48,9 @@ class _PublicGridViewItemsState extends State<PublicGridViewItems> {
 
 //}
   getThumbnail() async {
+    if (widget.data.media!.isEmpty) {
+      return;
+    }
     if (!widget.data.media!.first.contains(".mp4")) {
       return;
     }
@@ -88,7 +91,8 @@ class _PublicGridViewItemsState extends State<PublicGridViewItems> {
                 fit: BoxFit.cover,
                 image: widget.data.media!.first.contains(".mp4")
                     ? FileImage(File(thumbnail!))
-                    : NetworkImage(widget.data.media!.first) as ImageProvider)),
+                    : CachedNetworkImageProvider(widget.data.media!.first)
+                        as ImageProvider)),
         child: Stack(
           alignment: Alignment.center,
           children: [

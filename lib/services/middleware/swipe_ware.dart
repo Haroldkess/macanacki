@@ -14,10 +14,16 @@ class SwipeWare extends ChangeNotifier {
   String message = "Cant get people at the moment";
 
   SwipeData swipeData = SwipeData();
+  String filterName = "All";
 
   List<SwipedUser> swipedUser = [];
 
   bool get loadStatus => _loadStatus;
+
+  void changeFilter(String filter) {
+    filterName = filter;
+    notifyListeners();
+  }
 
   void disposeValue() async {
     swipeData = SwipeData();
@@ -33,29 +39,31 @@ class SwipeWare extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> getSwipeFromApi() async {
+  Future<bool> getSwipeFromApi(String type) async {
     late bool isSuccessful;
     try {
-      http.Response? response = await getSwipedUsers()
+      http.Response? response = await getSwipedUsers(type)
           .whenComplete(() => emitter("swwipe users gotten successfully"));
       if (response == null) {
         isSuccessful = false;
-      //  log("swwipe users request failed");
+        //  log("swwipe users request failed");
       } else if (response.statusCode == 200) {
+        emitter("200");
         var jsonData = jsonDecode(response.body);
 
-        var incomingData = SwipeData.fromJson(jsonData["data"]);
+        var incomingData = SwipeUserModel.fromJson(jsonData);
         swipedUser = incomingData.data!;
 
-      //  log("swipe users request success");
+        //  log("swipe users request success");
         isSuccessful = true;
       } else {
-      //  log("swipe users  request failed");
+        //  log("swipe users  request failed");
         isSuccessful = false;
       }
     } catch (e) {
+      emitter(e.toString());
       isSuccessful = false;
-     // log(e.toString());
+      // log(e.toString());
     }
 
     notifyListeners();

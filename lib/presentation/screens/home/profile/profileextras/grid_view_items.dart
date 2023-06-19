@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -190,7 +191,8 @@ class _MyGridViewItemsState extends State<MyGridViewItems> {
                 fit: BoxFit.cover,
                 image: widget.data.media!.first.contains(".mp4")
                     ? FileImage(File(thumbnail!))
-                    : NetworkImage(widget.data.media!.first) as ImageProvider)),
+                    : CachedNetworkImageProvider(widget.data.media!.first)
+                        as ImageProvider)),
         child: Stack(
           alignment: Alignment.center,
           children: [

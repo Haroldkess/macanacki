@@ -45,6 +45,7 @@ class FollowingData {
         this.createdAt,
         this.updatedAt,
         this.gender,
+        this.verified,
         this.profilephoto,
         this.noOfFollowers,
         this.noOfFollowing,
@@ -62,6 +63,7 @@ class FollowingData {
     DateTime? createdAt;
     DateTime? updatedAt;
     String? gender;
+      dynamic verified;
     String? profilephoto;
     int? noOfFollowers;
     int? noOfFollowing;
@@ -79,6 +81,7 @@ class FollowingData {
         createdAt: json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
         updatedAt: json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
         gender: json["gender"],
+         verified: json["verified"],
         profilephoto: json["profilephoto"],
         noOfFollowers: json["no_of_followers"],
         noOfFollowing: json["no_of_following"],
@@ -99,6 +102,7 @@ class FollowingData {
         "created_at": createdAt?.toIso8601String(),
         "updated_at": updatedAt?.toIso8601String(),
         "gender": gender,
+          "verified": verified,
         "profilephoto": profilephoto,
         "no_of_followers": noOfFollowers,
         "no_of_following": noOfFollowing,

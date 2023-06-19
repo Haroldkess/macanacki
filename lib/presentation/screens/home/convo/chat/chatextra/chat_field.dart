@@ -9,6 +9,7 @@ import 'package:makanaki/services/middleware/chat_ware.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../../../model/conversation_model.dart';
+import '../../../../../../services/controllers/mode_controller.dart';
 import '../../../../../../services/middleware/user_profile_ware.dart';
 import '../../../../../constants/colors.dart';
 import '../../../../../uiproviders/screen/card_provider.dart';
@@ -50,6 +51,8 @@ class ChatForm extends StatelessWidget {
         if (data2 != null) {
           print(data2);
           listenWare.addMsg(data3);
+         ChatController.readAll(context, int.tryParse(toId!)!);
+         ChatController.retrievChatController(context, false);
         } else {
           print("null");
         }
@@ -153,6 +156,7 @@ class ChatForm extends StatelessWidget {
                           sendTo,
                           chat,
                         );
+                        ModeController.handleMode("online");
                       },
                       child: SvgPicture.asset(
                         "assets/icon/Send.svg",

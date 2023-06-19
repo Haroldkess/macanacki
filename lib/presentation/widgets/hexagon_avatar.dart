@@ -4,6 +4,8 @@ import 'package:hexagon/hexagon.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:makanaki/presentation/constants/colors.dart';
 
+import 'loader.dart';
+
 class HexagonAvatar extends StatelessWidget {
   final double w;
   final String url;
@@ -25,6 +27,15 @@ class HexagonAvatar extends StatelessWidget {
           child: CachedNetworkImage(
             imageUrl: url,
             fit: BoxFit.cover,
+            progressIndicatorBuilder: (context, url, downloadProgress) =>
+                Center(
+                    child: Loader(
+              color: HexColor(primaryColor),
+            )),
+            errorWidget: (context, url, error) => Icon(
+              Icons.error,
+              color: HexColor(primaryColor),
+            ),
           ),
         ),
       ),

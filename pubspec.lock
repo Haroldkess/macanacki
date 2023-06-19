@@ -155,6 +155,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.2"
+  cached_video_preview:
+    dependency: "direct main"
+    description:
+      name: cached_video_preview
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.6"
   characters:
     dependency: transitive
     description:
@@ -309,6 +316,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0+3"
+  drift:
+    dependency: transitive
+    description:
+      name: drift
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.7.1"
   email_validator:
     dependency: "direct main"
     description:
@@ -805,6 +819,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.0"
+  metadata_fetch:
+    dependency: transitive
+    description:
+      name: metadata_fetch
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.4.1"
   mime:
     dependency: transitive
     description:
@@ -812,6 +833,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.4"
+  moor:
+    dependency: transitive
+    description:
+      name: moor
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.6.1+1"
+  moor_flutter:
+    dependency: transitive
+    description:
+      name: moor_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.1.0"
   nested:
     dependency: transitive
     description:
@@ -1015,6 +1050,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.8"
+  pull_to_refresh:
+    dependency: "direct main"
+    description:
+      name: pull_to_refresh
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
   restart_app:
     dependency: "direct main"
     description:
@@ -1139,6 +1181,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.4.2+2"
+  sqlite3:
+    dependency: transitive
+    description:
+      name: sqlite3
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.11.2"
+  sqlite3_flutter_libs:
+    dependency: transitive
+    description:
+      name: sqlite3_flutter_libs
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.5.15"
   stack_trace:
     dependency: transitive
     description:
@@ -1167,6 +1223,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.1"
+  string_validator:
+    dependency: transitive
+    description:
+      name: string_validator
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.0"
   swipe_cards:
     dependency: "direct main"
     description:
@@ -1292,7 +1355,7 @@ packages:
       name: video_player
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.5.3"
+    version: "2.6.1"
   video_player_android:
     dependency: transitive
     description:
@@ -1313,7 +1376,7 @@ packages:
       name: video_player_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.1.4"
+    version: "6.1.0"
   video_player_web:
     dependency: transitive
     description:

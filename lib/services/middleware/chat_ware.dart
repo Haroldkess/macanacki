@@ -18,6 +18,7 @@ class ChatWare extends ChangeNotifier {
   List<String> fakeMsg = [];
   Timer? _timing;
   List<Conversation> justChat = [];
+  List<UnreadData> unreadMsgs = [];
 
   List<ChatData> _chatList = [];
   List<ChatData> chatList2 = [];
@@ -151,6 +152,72 @@ class ChatWare extends ChangeNotifier {
         var incomingData = AllConversationModel.fromJson(jsonData);
         _chatList = incomingData.data!;
         message = jsonData["message"];
+
+        //  log("chats  request success");
+        isSuccessful = true;
+      } else {
+        //  log("chats  request failed");
+        isSuccessful = false;
+      }
+    } catch (e) {
+      isSuccessful = false;
+      // log("chats  request failed");
+      // log(e.toString());
+    }
+
+    notifyListeners();
+
+    return isSuccessful;
+  }
+
+  Future<bool> getAllUnreadFromApi() async {
+    late bool isSuccessful;
+    try {
+      http.Response? response = await getUnreadChat()
+          .whenComplete(() => emitter("unread gotten successfully"));
+      if (response == null) {
+        isSuccessful = false;
+        // log("chats request failed");
+      } else if (response.statusCode == 200) {
+        var jsonData = jsonDecode(response.body);
+
+        var incomingData = UnreadChatModel.fromJson(jsonData);
+        unreadMsgs = incomingData.data!;
+        message = jsonData["message"];
+
+        //  log("chats  request success");
+        isSuccessful = true;
+      } else {
+        //  log("chats  request failed");
+        isSuccessful = false;
+      }
+    } catch (e) {
+      isSuccessful = false;
+      // log("chats  request failed");
+      // log(e.toString());
+    }
+
+    notifyListeners();
+
+    return isSuccessful;
+  }
+
+  Future<bool> readAllFromApi(int userId) async {
+    late bool isSuccessful;
+    try {
+      http.Response? response = await readAllChats(userId)
+          .whenComplete(() => emitter("read all successfully"));
+      if (response == null) {
+        isSuccessful = false;
+        // log("chats request failed");
+      } else if (response.statusCode == 200) {
+        getAllUnreadFromApi();
+
+        var jsonData = jsonDecode(response.body);
+
+        // var incomingData = UnreadChatModel.fromJson(jsonData);
+        // unreadMsgs = incomingData.data!;
+        // message = jsonData["message"];
 
         //  log("chats  request success");
         isSuccessful = true;

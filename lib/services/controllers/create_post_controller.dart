@@ -116,7 +116,7 @@ class CreatePostController {
         updatedAt: sendCom.updatedAt,
         body: sendCom.body,
         profilePhoto: sendCom.profilePhoto,
-        noOfLikes: sendCom.noOfLikes);
+        noOfLikes: sendCom.noOfLikes, postId: id);
 
     PublicComment publicData = PublicComment(
         id: sendCom.id,
@@ -125,7 +125,7 @@ class CreatePostController {
         updatedAt: sendCom.updatedAt,
         body: sendCom.body,
         profilePhoto: sendCom.profilePhoto,
-        noOfLikes: sendCom.noOfLikes);
+        noOfLikes: sendCom.noOfLikes, postId: id);
 
     ProfileComment userData = ProfileComment(
         id: sendCom.id,
@@ -134,7 +134,7 @@ class CreatePostController {
         updatedAt: sendCom.updatedAt,
         body: sendCom.body,
         profilePhoto: sendCom.profilePhoto,
-        noOfLikes: sendCom.noOfLikes);
+        noOfLikes: sendCom.noOfLikes, postId: id);
 
     // ignore: use_build_context_synchronously
     //await FeedPostController.getUserPostController(context);
@@ -149,7 +149,7 @@ class CreatePostController {
         profile.addSingleComment(userData, id);
       }
       comment.clear();
-    
+
       ware.isLoading2(false);
       // ignore: use_build_context_synchronously
       //  await ActionController.retrievAllUserLikedCommentsController(context);
@@ -177,7 +177,7 @@ class CreatePostController {
     bool isDone = await ware.deletePostFromApi(id);
 
     if (isDone) {
-      profile.remove(id);
+      await profile.remove(id);
       // ignore: use_build_context_synchronously
       showToast2(
         context,
@@ -188,6 +188,8 @@ class CreatePostController {
       showToast2(context, "Failed to delete post", isError: true);
     }
   }
+
+  
 
   static Future editPost(context, id, String caption) async {
     CreatePostWare ware = Provider.of<CreatePostWare>(context, listen: false);

@@ -19,11 +19,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../services/middleware/feed_post_ware.dart';
 import '../../../allNavigation.dart';
 import '../../../uiproviders/screen/tab_provider.dart';
+import '../../../widgets/drawer.dart';
 import '../../notification/notification_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
-  final GlobalKey<ScaffoldState>? scafKey;
-  const ProfileScreen({super.key, this.scafKey});
+  
+  const ProfileScreen({super.key,});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -31,6 +32,7 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen>
     with AutomaticKeepAliveClientMixin {
+       final GlobalKey<ScaffoldState> key = GlobalKey();
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -40,7 +42,11 @@ class _ProfileScreenState extends State<ProfileScreen>
     UserProfileWare user = context.watch<UserProfileWare>();
 
     return Scaffold(
+      key: key,
       backgroundColor: HexColor("#F5F2F9"),
+         drawer: DrawerSide(
+            scafKey: key,
+          ),
       body: RefreshIndicator(
         onRefresh: () => _getUserPost(true),
         backgroundColor: HexColor(primaryColor),
@@ -54,7 +60,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   InkWell(
-                      onTap: () => widget.scafKey!.currentState!.openDrawer(),
+                      onTap: () => key.currentState!.openDrawer(),
                       child: SvgPicture.asset(
                         "assets/icon/drawer.svg",
                         height: 15,

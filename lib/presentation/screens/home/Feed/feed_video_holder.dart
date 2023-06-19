@@ -7,25 +7,30 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:makanaki/presentation/constants/colors.dart';
+import 'package:makanaki/presentation/widgets/debug_emitter.dart';
+import 'package:makanaki/services/middleware/feed_post_ware.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 import 'package:path_provider/path_provider.dart';
-
+import '../../../../services/controllers/feed_post_controller.dart';
+import '../../../constants/string.dart';
 import '../../../uiproviders/screen/tab_provider.dart';
 
 class FeedVideoHolder extends StatefulWidget {
   String file;
   VideoPlayerController controller;
   bool isHome;
-
   bool shouldPlay;
+  String thumbLink;
+
   FeedVideoHolder(
       {super.key,
       required this.file,
       required this.controller,
       required this.isHome,
-      required this.shouldPlay});
+      required this.shouldPlay,
+      required this.thumbLink});
 
   @override
   State<FeedVideoHolder> createState() => _FeedVideoHolderState();
@@ -39,27 +44,39 @@ class _FeedVideoHolderState extends State<FeedVideoHolder> {
   getThumbnail() async {
     try {
       final fileName = await VideoThumbnail.thumbnailFile(
-        video: widget.file.replaceAll('\\', '/'),
+        video: "$muxStreamBaseUrl/${widget.file}.$videoExtension",
         thumbnailPath: (await getTemporaryDirectory()).path,
         imageFormat: ImageFormat.JPEG,
         maxHeight:
             64, // specify the height of the thumbnail, let the width auto-scaled to keep the source aspect ratio
         quality: 75,
-      ).whenComplete(() => log(" thumbnail generated"));
+      ).whenComplete(() => emitter(" thumbnail generated"));
 
-      log(fileName.toString());
+      emitter(fileName.toString());
       setState(() {
         thumbnail = fileName;
       });
     } catch (e) {
-      log(e.toString());
+      emitter(e.toString());
     }
   }
 
   @override
   void initState() {
     super.initState();
-    getThumbnail();
+    //   getThumbnail();
+    if (widget.isHome) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        TabProvider tabs = Provider.of<TabProvider>(context, listen: false);
+
+        tabs.addControl(widget.controller);
+        //tabs.tap(false);
+      });
+    }
+    emitter(widget.isHome.toString());
+
+    emitter(
+        " tHE ASPECT RATIO IS ${widget.controller.value.aspectRatio.toString()}");
   }
 
   Future<void> innit() async {}
@@ -78,99 +95,400 @@ class _FeedVideoHolderState extends State<FeedVideoHolder> {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     TabProvider tabs = context.watch<TabProvider>();
-    log("hey there");
-    log(" tHE ASPECT RATIO IS ${widget.controller.value.aspectRatio.toString()}");
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        Container(
-          width: width,
-          height: height,
-          decoration: BoxDecoration(color: Colors.black
-              //     image: DecorationImage(
-              //   image: FileImage(File(thumbnail!)),
-              //   fit: BoxFit.fill,
-              // )
-              ),
-          // child: BackdropFilter(
-          //   filter: ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0),
-          //   child: Container(
-          //     decoration: BoxDecoration(color: Colors.white.withOpacity(0.0)),
-          //   ),
-          // )
-        ),
-        widget.isHome
-            ? Container(
-                width: width,
-                height: widget.controller.value.aspectRatio < 1 ? height : null,
-                child: AspectRatio(
-                  aspectRatio: widget.controller.value.aspectRatio,
-                  // Use the VideoPlayer widget to display the video.
-                  child: VideoPlayer(widget.controller),
-                ),
-              )
-            : Container(
-                width: double.infinity,
-                child: AspectRatio(
-                  aspectRatio: widget.controller.value.aspectRatio,
-                  // Use the VideoPlayer widget to display the video.
-                  child: VideoPlayer(widget.controller),
-                ),
-              ),
-        InkWell(
-          splashColor: Colors.transparent,
-          hoverColor: Colors.transparent,
-          highlightColor: Colors.transparent,
-          onTap: () {
-            if (widget.controller.value.isInitialized == false) {
-              return;
-            }
-            if (isTapped) {
-              setState(() {
-                isTapped = false;
-              });
-            } else {
-              setState(() {
-                isTapped = true;
-              });
-            }
-            if (widget.controller.value.isPlaying) {
-              widget.controller.pause();
+    FeedPostWare stream = context.watch<FeedPostWare>();
 
-              //   isPaused = true;
-            } else {
-              widget.controller.play();
+    return widget.isHome
+        ? Stack(
+            alignment: Alignment.center,
+            children: [
+              StreamBuilder<Object>(
+                  stream: null,
+                  builder: (context, snapshot) {
+                    List<String> data = stream.thumbs.where((val) {
+                      return val.contains(widget.thumbLink);
+                    }).toList();
+                    if (data.isEmpty) {
+                      emitter("nothing found");
+                    } else {
+                      var val = data.first.split(widget.thumbLink);
 
-              // isPaused = false;
-            }
-          },
-          child: Container(
-            color: Colors.transparent,
-            width: width,
-            height: height,
-            //  color: Colors.amber,
-            child: !widget.controller.value.isPlaying
-                ? Icon(
-                    Icons.play_arrow,
-                    size: 50,
-                    color: Colors.white.withOpacity(0.6),
-                  )
-                : const SizedBox.shrink(),
-          ),
-        ),
-        Positioned(
-            bottom: 0,
-            width: MediaQuery.of(context).size.width,
-            child: VideoProgressIndicator(
-              widget.controller,
-              allowScrubbing: true,
-              colors: VideoProgressColors(
-                  backgroundColor: Colors.transparent,
-                  bufferedColor: HexColor(primaryColor).withOpacity(0.4),
-                  playedColor: HexColor(primaryColor)),
-            ))
-      ],
-    );
+                      // emitter(val.first + "  Second" + val.last);
+                    }
+                    if (widget.controller.value.isInitialized ||
+                        widget.controller.value.duration <
+                            const Duration(milliseconds: 500)) {
+                      if (!widget.controller.value.isPlaying &&
+                          tabs.isTapped == false) {
+                        if (mounted) {
+                          emitter("played");
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            widget.controller.play();
+                          });
+                        }
+                      }
+                    }
+                    return data.isEmpty
+                        ? Container(
+                            width: width,
+                            height: height,
+                            color: Colors.black,
+                          )
+                        : Container(
+                            width: width,
+                            height: height,
+                            decoration: BoxDecoration(
+                                color: Colors.black,
+                                image: DecorationImage(
+                                  image: FileImage(File(data.first
+                                      .split(widget.thumbLink)
+                                      .first)),
+                                  fit: BoxFit.contain,
+                                )),
+                            child: widget.controller.value.duration <
+                                    Duration(milliseconds: 500)
+                                ? null
+                                : Container(
+                                    width: width,
+                                    height: height,
+                                    color: Colors.black,
+                                  ));
+                  }),
+
+              // FutureBuilder<String?>(
+              //     future: FeedPostController.genThumbnail(widget.thumbLink,height),
+              //     builder: (context, AsyncSnapshot<String?> snapshot) {
+              //       if (!snapshot.hasData) {
+              //         return Container(
+              //           width: width,
+              //           height: height,
+              //           color: Colors.black,
+              //         );
+              //       }
+              //       return Container(
+              //         width: width,
+              //         height: height,
+              //         decoration: BoxDecoration(
+              //             color: Colors.black,
+              //             image: DecorationImage(
+              //               image: FileImage(File(snapshot.data!)),
+              //               fit: BoxFit.fill,
+              //             )),
+              //         // child: BackdropFilter(
+              //         //   filter: ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0),
+              //         //   child: Container(
+              //         //     decoration: BoxDecoration(color: Colors.white.withOpacity(0.0)),
+              //         //   ),
+              //         // )
+              //       );
+
+              //     }),
+              widget.isHome
+                  ? widget.controller.value.aspectRatio == null ||
+                          widget.controller.value.isInitialized == false ||
+                          widget.controller.value.duration <
+                              Duration(milliseconds: 500)
+                      ? Container(
+                          width: width,
+                          height: height,
+                          decoration: BoxDecoration(
+                              //  color: Colors.amber,
+                              gradient: LinearGradient(colors: [
+                            HexColor(primaryColor).withOpacity(0.2),
+                            Colors.transparent,
+                            Colors.transparent,
+                            Colors.transparent,
+                            Colors.transparent,
+                          ])),
+                        )
+                      : Container(
+                          width: width,
+                          height: widget.controller.value.aspectRatio < 1
+                              ? height
+                              : null,
+                          child: AspectRatio(
+                            aspectRatio: widget.controller.value.aspectRatio,
+                            // Use the VideoPlayer widget to display the video.
+                            child: VideoPlayer(widget.controller),
+                          ),
+                        )
+                  : widget.controller.value.aspectRatio == null ||
+                          widget.controller.value.isInitialized == false ||
+                          widget.controller.value.duration <
+                              Duration(milliseconds: 500)
+                      ? Container(
+                          width: width,
+                          height: height,
+                          decoration: BoxDecoration(
+                              //  color: Colors.amber,
+                              gradient: LinearGradient(colors: [
+                            HexColor(primaryColor).withOpacity(0.2),
+                            Colors.transparent,
+                            Colors.transparent,
+                            Colors.transparent,
+                            Colors.transparent,
+                          ])),
+                        )
+                      : Container(
+                          width: double.infinity,
+                          height: widget.controller.value.aspectRatio < 1
+                              ? height
+                              : null,
+                          child: AspectRatio(
+                            aspectRatio: widget.controller.value.aspectRatio,
+                            // Use the VideoPlayer widget to display the video.
+                            child: VideoPlayer(widget.controller),
+                          ),
+                        ),
+              widget.controller.value.duration <
+                          const Duration(milliseconds: 500) &&
+                      tabs.isTapped == false
+                  ? const SizedBox.shrink()
+                  : InkWell(
+                      splashColor: Colors.transparent,
+                      hoverColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      onTap: () {
+                        if (widget.controller.value.isInitialized == false) {
+                          return;
+                        }
+                        if (tabs.isTapped) {
+                          tabs.tap(false);
+                          // setState(() {
+                          //   isTapped = false;
+                          // });
+                        } else {
+                          tabs.tap(true);
+                          // setState(() {
+                          //   isTapped = true;
+                          // });
+                        }
+                        if (widget.controller.value.isPlaying) {
+                          widget.controller.pause();
+
+                          //   isPaused = true;
+                        } else {
+                          widget.controller.play();
+
+                          // isPaused = false;
+                        }
+                      },
+                      child: Container(
+                        color: Colors.transparent,
+                        width: width,
+                        height: height,
+                        //  color: Colors.amber,
+                        child:
+                            !widget.controller.value.isPlaying && tabs.isTapped
+                                ? Icon(
+                                    Icons.play_arrow,
+                                    size: 50,
+                                    color: Colors.white.withOpacity(0.6),
+                                  )
+                                : const SizedBox.shrink(),
+                      ),
+                    ),
+              Positioned(
+                  bottom: 0,
+                  width: MediaQuery.of(context).size.width,
+                  height: 6,
+                  child: VideoProgressIndicator(
+                    widget.controller,
+                    allowScrubbing: true,
+                    colors: VideoProgressColors(
+                        backgroundColor: Colors.transparent,
+                        bufferedColor: HexColor(headings).withOpacity(0.4),
+                        playedColor: baseColor),
+                  ))
+            ],
+          )
+        : Stack(
+            alignment: Alignment.center,
+            children: [
+              StreamBuilder<Object>(
+                  stream: null,
+                  builder: (context, snapshot) {
+                    List<String> data = stream.thumbs.where((val) {
+                      return val.contains(widget.thumbLink);
+                    }).toList();
+                    if (data.isEmpty) {
+                      emitter("nothing found");
+                    } else {
+                      var val = data.first.split(widget.thumbLink);
+
+                      // emitter(val.first + "  Second" + val.last);
+                    }
+
+                    return data.isEmpty
+                        ? Container(
+                            width: width,
+                            height: height,
+                            color: Colors.black,
+                          )
+                        : Container(
+                            width: width,
+                            height: height,
+                            decoration: BoxDecoration(
+                                color: Colors.black,
+                                image: DecorationImage(
+                                  image: FileImage(File(data.first
+                                      .split(widget.thumbLink)
+                                      .first)),
+                                  fit: BoxFit.contain,
+                                )),
+                            child: widget.controller.value.duration <
+                                    Duration(milliseconds: 500)
+                                ? null
+                                : Container(
+                                    width: width,
+                                    height: height,
+                                    color: Colors.black,
+                                  ));
+                  }),
+
+              // FutureBuilder<String?>(
+              //     future: FeedPostController.genThumbnail(widget.thumbLink,height),
+              //     builder: (context, AsyncSnapshot<String?> snapshot) {
+              //       if (!snapshot.hasData) {
+              //         return Container(
+              //           width: width,
+              //           height: height,
+              //           color: Colors.black,
+              //         );
+              //       }
+              //       return Container(
+              //         width: width,
+              //         height: height,
+              //         decoration: BoxDecoration(
+              //             color: Colors.black,
+              //             image: DecorationImage(
+              //               image: FileImage(File(snapshot.data!)),
+              //               fit: BoxFit.fill,
+              //             )),
+              //         // child: BackdropFilter(
+              //         //   filter: ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0),
+              //         //   child: Container(
+              //         //     decoration: BoxDecoration(color: Colors.white.withOpacity(0.0)),
+              //         //   ),
+              //         // )
+              //       );
+
+              //     }),
+              widget.isHome
+                  ? widget.controller.value.aspectRatio == null ||
+                          widget.controller.value.isInitialized == false ||
+                          widget.controller.value.duration <
+                              Duration(milliseconds: 500)
+                      ? Container(
+                          width: width,
+                          height: height,
+                          decoration: BoxDecoration(
+                              //  color: Colors.amber,
+                              gradient: LinearGradient(colors: [
+                            HexColor(primaryColor).withOpacity(0.2),
+                            Colors.transparent,
+                            Colors.transparent,
+                            Colors.transparent,
+                            Colors.transparent,
+                          ])),
+                        )
+                      : Container(
+                          width: width,
+                          height: widget.controller.value.aspectRatio < 1
+                              ? height
+                              : null,
+                          child: AspectRatio(
+                            aspectRatio: widget.controller.value.aspectRatio,
+                            // Use the VideoPlayer widget to display the video.
+                            child: VideoPlayer(widget.controller),
+                          ),
+                        )
+                  : widget.controller.value.aspectRatio == null ||
+                          widget.controller.value.isInitialized == false ||
+                          widget.controller.value.duration <
+                              Duration(milliseconds: 500)
+                      ? Container(
+                          width: width,
+                          height: height,
+                          decoration: BoxDecoration(
+                              //  color: Colors.amber,
+                              gradient: LinearGradient(colors: [
+                            HexColor(primaryColor).withOpacity(0.2),
+                            Colors.transparent,
+                            Colors.transparent,
+                            Colors.transparent,
+                            Colors.transparent,
+                          ])),
+                        )
+                      : Container(
+                          width: double.infinity,
+                          height: widget.controller.value.aspectRatio < 1
+                              ? height
+                              : null,
+                          child: AspectRatio(
+                            aspectRatio: widget.controller.value.aspectRatio,
+                            // Use the VideoPlayer widget to display the video.
+                            child: VideoPlayer(widget.controller),
+                          ),
+                        ),
+              widget.controller.value.duration <
+                          const Duration(milliseconds: 500) &&
+                      isTapped == false
+                  ? const SizedBox.shrink()
+                  : InkWell(
+                      splashColor: Colors.transparent,
+                      hoverColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      onTap: () {
+                        if (widget.controller.value.isInitialized == false) {
+                          return;
+                        }
+                        if (isTapped) {
+                          setState(() {
+                            isTapped = false;
+                          });
+                        } else {
+                          setState(() {
+                            isTapped = true;
+                          });
+                        }
+                        if (widget.controller.value.isPlaying) {
+                          widget.controller.pause();
+
+                          //   isPaused = true;
+                        } else {
+                          widget.controller.play();
+
+                          // isPaused = false;
+                        }
+                      },
+                      child: Container(
+                        color: Colors.transparent,
+                        width: width,
+                        height: height,
+                        //  color: Colors.amber,
+                        child: !widget.controller.value.isPlaying && isTapped
+                            ? Icon(
+                                Icons.play_arrow,
+                                size: 50,
+                                color: Colors.white.withOpacity(0.6),
+                              )
+                            : const SizedBox.shrink(),
+                      ),
+                    ),
+              Positioned(
+                  bottom: 0,
+                  width: MediaQuery.of(context).size.width,
+                  height: 6,
+                  child: VideoProgressIndicator(
+                    widget.controller,
+                    allowScrubbing: true,
+                    colors: VideoProgressColors(
+                        backgroundColor: Colors.transparent,
+                        bufferedColor: HexColor(headings).withOpacity(0.4),
+                        playedColor: baseColor),
+                  ))
+            ],
+          );
   }
 
   @override

@@ -1,13 +1,11 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hexagon/hexagon.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/services/controllers/url_launch_controller.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
-
 import '../../../model/feed_post_model.dart';
 import '../../../services/controllers/action_controller.dart';
 import '../../../services/middleware/action_ware.dart';
@@ -62,7 +60,7 @@ class _FollowSectionState extends State<FollowSection> {
     var size = MediaQuery.of(context).size;
     var padding = 8.0;
     //_checkIfLikedBefore();
-    var w = (size.width - 4 * 1) / 14;
+    var w = 30.0;
     ActionWare stream = context.watch<ActionWare>();
     ActionWare action = Provider.of<ActionWare>(context, listen: false);
     return Padding(
@@ -74,21 +72,14 @@ class _FollowSectionState extends State<FollowSection> {
                 ? 119
                 : 90,
         width: width * 0.77,
-        // color: Colors.red,
-        //  color: Colors.amber,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Container(
-              // width: width * 0.7,
               constraints: BoxConstraints(maxWidth: width * 0.7),
-              //  color: Colors.black,
               child: Row(
-                // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  HexagonAvatar(
-                    url: widget.data.user!.profilephoto!,
-                    w: w + 5,
+                  InkWell(
                     onTap: () async {
                       TabProvider action =
                           Provider.of<TabProvider>(context, listen: false);
@@ -120,56 +111,80 @@ class _FollowSectionState extends State<FollowSection> {
                             ));
                       }
                     },
+                    child: Row(
+                      children: [
+                        Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            HexagonWidget.pointy(
+                              width: w,
+                              elevation: 2.0,
+                              color: Colors.white,
+                              cornerRadius: 2.0,
+                              child: AspectRatio(
+                                aspectRatio: HexagonType.POINTY.ratio,
+                                // child: Image.asset(
+                                //   'assets/tram.jpg',
+                                //   fit: BoxFit.fitWidth,
+                                // ),
+                              ),
+                            ),
+                            HexagonAvatar(
+                              url: widget.data.user!.profilephoto!,
+                              w: w,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          width: 5.5,
+                        ),
+                        Row(
+                          children: [
+                            Container(
+                              constraints: const BoxConstraints(maxWidth: 100),
+                              child: AppText(
+                                text: widget.data.user!.username!,
+                                size: 15,
+                                fontWeight: FontWeight.w700,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                color: HexColor(backgroundColor),
+                              ),
+                            ),
+                            widget.data.user!.verified == 0 ||
+                                    widget.data.user!.verified == null
+                                ? const SizedBox.shrink()
+                                : SvgPicture.asset("assets/icon/badge.svg",
+                                    height: 13, width: 13)
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                   const SizedBox(
                     width: 5.5,
                   ),
-                  Row(
-                    children: [
-                      Container(
-                        constraints: const BoxConstraints(maxWidth: 100),
-                        child: AppText(
-                          text: widget.data.user!.username!,
-                          size: 15,
-                          fontWeight: FontWeight.w600,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          color: HexColor(backgroundColor),
-                        ),
-                      ),
-                      widget.data.user!.verification == null
-                          ? const SizedBox.shrink()
-                          : SvgPicture.asset("assets/icon/badge.svg",
-                              height: 13, width: 13)
-                    ],
-                  ),
-                  const SizedBox(
-                    width: 5.5,
-                  ),
-                  // Image.asset("assets/pic/verified.png"),
-                  // const SizedBox(
-                  //   width: 5.5,
-                  // ),
-                  myUsername == widget.data.user!.username!
-                      ? const SizedBox.shrink()
-                      : Expanded(
-                          child: Row(
-                            children: [
-                              followButton(() async {
-                                followAction(
-                                  context,
-                                );
-                              },
-                                  stream.followIds
-                                          .contains(widget.data.user!.id!)
-                                      ? "Following"
-                                      : "Follow"),
-                            ],
-                          ),
-                        ),
-                  // const SizedBox(
-                  //   width: 15.5,
-                  // ),
+              
+                  // myUsername == widget.data.user!.username!
+                  //     ? const SizedBox.shrink()
+                  //     : Expanded(
+                  //         child: Row(
+                  //           children: [
+                  //             followButton(() async {
+                  //               followAction(
+                  //                 context,
+                  //               );
+                  //             },
+                  //                 stream.followIds
+                  //                         .contains(widget.data.user!.id!)
+                  //                     ? "Following"
+                  //                     : "Follow"),
+                  //           ],
+                  //         ),
+                  //       ),
+               
+               
+                
                 ],
               ),
             ),
@@ -258,44 +273,6 @@ class _FollowSectionState extends State<FollowSection> {
     );
   }
 
-  Widget followButton(VoidCallback onTap, String title) {
-    //  ActionWare stream = context.watch<ActionWare>();
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        //  duration: const Duration(milliseconds: 500),
-        height: 21,
 
-        width: title == "Follow" ? null : null,
-        constraints: BoxConstraints(
-          maxWidth: title == "Follow" ? 54 : 75,
-        ),
-        decoration: BoxDecoration(
-            shape: BoxShape.rectangle,
-            border: Border.all(
-                style: BorderStyle.solid,
-                width: 1,
-                color: title == "Follow"
-                    ? HexColor("#8B8B8B").withOpacity(.9)
-                    : HexColor("#8B8B8B").withOpacity(.9)),
-            borderRadius: BorderRadius.circular(5)),
-        child: Center(
-          child: AppText(
-            text: title,
-            color: HexColor(backgroundColor),
-            size: 12,
-            fontWeight: FontWeight.w800,
-          ),
-        ),
-      ),
-    );
-  }
 
-  Future<void> followAction(BuildContext context) async {
-    ActionWare provide = Provider.of<ActionWare>(context, listen: false);
-
-    //  provide.addFollowId(widget.data.id!);
-    await ActionController.followOrUnFollowController(
-        context, widget.data.user!.username!, widget.data.user!.id!);
-  }
 }

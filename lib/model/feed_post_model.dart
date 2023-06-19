@@ -117,6 +117,7 @@ class FeedPost {
       this.btnLink,
       this.creator,
       this.media,
+      this.mux,
       this.comments,
       this.noOfLikes,
       this.viewCount,
@@ -133,6 +134,7 @@ class FeedPost {
   String? creator;
   List<String>? media;
   List<String>? media2;
+  List<String>? mux;
   List<Comment>? comments;
   int? noOfLikes;
   int? viewCount;
@@ -149,6 +151,7 @@ class FeedPost {
     String? creator,
     List<String>? media,
     List<String>? media2,
+    List<String>? mux,
     List<Comment>? comments,
     int? noOfLikes,
     int? viewCount,
@@ -156,21 +159,21 @@ class FeedPost {
     User? user,
   }) =>
       FeedPost(
-        id: id ?? this.id,
-        description: description ?? this.description,
-        published: published ?? this.published,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-        btnLink: btnLink ?? this.btnLink,
-        creator: creator ?? this.creator,
-        media: media ?? this.media,
-        media2: media2 ?? this.media2,
-        comments: comments ?? this.comments,
-        noOfLikes:  noOfLikes ?? this.noOfLikes,
-        viewCount: viewCount ?? this.viewCount,
-        button: button ?? this.button,
-        user: user ?? this.user
-      );
+          id: id ?? this.id,
+          description: description ?? this.description,
+          published: published ?? this.published,
+          createdAt: createdAt ?? this.createdAt,
+          updatedAt: updatedAt ?? this.updatedAt,
+          btnLink: btnLink ?? this.btnLink,
+          creator: creator ?? this.creator,
+          media: media ?? this.media,
+          media2: media2 ?? this.media2,
+          mux: mux ?? this.mux,
+          comments: comments ?? this.comments,
+          noOfLikes: noOfLikes ?? this.noOfLikes,
+          viewCount: viewCount ?? this.viewCount,
+          button: button ?? this.button,
+          user: user ?? this.user);
 
   factory FeedPost.fromJson(Map<String, dynamic> json) => FeedPost(
         id: json["id"],
@@ -190,6 +193,9 @@ class FeedPost {
         media2: json["media2"] == null
             ? []
             : List<String>.from(json["media2"]!.map((x) => x)),
+        mux: json["mux"] == null
+            ? []
+            : List<String>.from(json["mux"]!.map((x) => x)),
         comments: json["comments"] == null
             ? []
             : List<Comment>.from(
@@ -210,6 +216,7 @@ class FeedPost {
         "media": media == null ? [] : List<dynamic>.from(media!.map((x) => x)),
         "media2":
             media2 == null ? [] : List<dynamic>.from(media2!.map((x) => x)),
+        "mux": mux == null ? [] : List<dynamic>.from(mux!.map((x) => x)),
         "comments": comments == null
             ? []
             : List<dynamic>.from(comments!.map((x) => x.toJson())),
@@ -300,8 +307,9 @@ class User {
     this.profilephoto,
     this.noOfFollowers,
     this.noOfFollowing,
+    this.verified,
     this.activePlan,
-      this.verification,
+    this.verification,
   });
 
   int? id;
@@ -334,8 +342,9 @@ class User {
   String? profilephoto;
   int? noOfFollowers;
   int? noOfFollowing;
+  int? verified;
   dynamic activePlan;
-     Verification? verification;
+  Verification? verification;
 
   factory User.fromJson(Map<String, dynamic> json) => User(
         id: json["id"],
@@ -374,8 +383,9 @@ class User {
         profilephoto: json["profilephoto"],
         noOfFollowers: json["no_of_followers"],
         noOfFollowing: json["no_of_following"],
+        verified: json["verified"],
         activePlan: json["active_plan"],
-          verification: json["verification"] == null
+        verification: json["verification"] == null
             ? null
             : Verification.fromJson(json["verification"]),
       );
@@ -411,10 +421,12 @@ class User {
         "profilephoto": profilephoto,
         "no_of_followers": noOfFollowers,
         "no_of_following": noOfFollowing,
+        "verified": verified,
         "active_plan": activePlan,
-               "verification": verification?.toJson(),
+        "verification": verification?.toJson(),
       };
 }
+
 class Verification {
   int? id;
   dynamic userId;

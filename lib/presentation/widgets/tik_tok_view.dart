@@ -1,56 +1,41 @@
-import 'dart:developer';
 import 'dart:io';
-import 'dart:ui';
-
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:like_button/like_button.dart';
-import 'package:makanaki/presentation/allNavigation.dart';
 import 'package:makanaki/presentation/constants/colors.dart';
-import 'package:makanaki/presentation/constants/params.dart';
 import 'package:makanaki/presentation/operations.dart';
-import 'package:makanaki/presentation/screens/home/Feed/feed_video_holder.dart';
-import 'package:makanaki/presentation/screens/userprofile/user_profile_screen.dart';
-import 'package:makanaki/presentation/uiproviders/screen/comment_provider.dart';
-import 'package:makanaki/presentation/widgets/comment_modal.dart';
+import 'package:makanaki/presentation/widgets/debug_emitter.dart';
 import 'package:makanaki/presentation/widgets/feed_views/follow_section.dart';
 import 'package:makanaki/presentation/widgets/feed_views/like_section.dart';
 import 'package:makanaki/presentation/widgets/feed_views/multiple_post.dart';
 import 'package:makanaki/presentation/widgets/feed_views/single_posts.dart';
-import 'package:makanaki/presentation/widgets/hexagon_avatar.dart';
-import 'package:makanaki/presentation/widgets/option_modal.dart';
 import 'package:makanaki/presentation/widgets/text.dart';
 import 'package:makanaki/services/controllers/action_controller.dart';
 import 'package:makanaki/services/controllers/view_controller.dart';
 import 'package:makanaki/services/middleware/action_ware.dart';
-import 'package:makanaki/services/temps/temps_id.dart';
-import 'package:numeral/numeral.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 import '../../model/feed_post_model.dart';
-import '../../services/controllers/feed_post_controller.dart';
 import '../../services/controllers/url_launch_controller.dart';
-import '../screens/home/profile/profile_screen.dart';
+import '../../services/temps/temps_id.dart';
+import '../constants/string.dart';
+import '../uiproviders/screen/comment_provider.dart';
 import '../uiproviders/screen/tab_provider.dart';
+import 'feed_views/new_action_design.dart';
+import 'option_modal.dart';
 
 class TikTokView extends StatefulWidget {
   final List<String> media;
-    final List<String> urls;
+  final List<String> urls;
   final FeedPost data;
   int? index1;
   int? index2;
   String page;
   List<FeedPost>? feedPosts;
-    final bool isHome;
-
+  final bool isHome;
+  VideoPlayerController? controller;
   TikTokView(
       {super.key,
       required this.media,
@@ -58,8 +43,10 @@ class TikTokView extends StatefulWidget {
       required this.page,
       this.index1,
       this.index2,
+      this.controller,
       required this.isHome,
-      this.feedPosts, required this.urls});
+      this.feedPosts,
+      required this.urls});
 
   @override
   State<TikTokView> createState() => _TikTokViewState();
@@ -72,19 +59,19 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
   bool flag = false;
   late AnimationController controller;
   late Animation animation;
-
-  bool _hasCallSupport = false;
-  Future<void>? _launched;
-
-  List<String> photos = [url, url, url];
-
+  //  MUXClient muxClient = MUXClient();
+  late SharedPreferences pref;
+  String myUsername = "";
   @override
   void initState() {
     super.initState();
-   
-    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-      Operations.commentOperation(context, false, widget.data.comments!);
-    });
+    initPref();
+
+//  muxClient.initializeDio();
+
+    // SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+    //   Operations.commentOperation(context, false, widget.data.comments!);
+    // });
 
     controller = AnimationController(
       duration: const Duration(milliseconds: 500), //controll animation duration
@@ -101,72 +88,79 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
     if (widget.media.length < 2) {
       debugPrint("This is the url ${widget.data.media!.first}");
       if (widget.media == null || widget.media.isEmpty) return;
-      if (widget.media.first.contains(".mp4")) {
-        debugPrint("This is the url ${widget.media.first}");
-        if (widget.media.first
-            .contains("/data/user/0/com.example.makanaki/app_flutter/")) {
-          debugPrint("++++++++++++++++++++++++++++++");
-          _controller = VideoPlayerController.file(
-            File(widget.media.first),
-          )
-            
-            ..setLooping(true)
-            ..initialize().then((_) => _controller!.play()).then((value) => {
+      if (!widget.media.first.contains("https")) {
+        debugPrint(
+            "This is the url ${"$muxStreamBaseUrl/${widget.media.first}.$videoExtension"}");
+        _controller = VideoPlayerController.network(
+            "$muxStreamBaseUrl/${widget.media.first}.$videoExtension"
+
+            //   videoPlayerOptions: VideoPlayerOptions()
+            );
+
+        _controller!.initialize().whenComplete(() {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            TabProvider provide =
+                Provider.of<TabProvider>(context, listen: false);
+            if (provide.index == 0) {
+              _controller!.play();
+            } else {
+              _controller!.pause();
+            }
+          });
+
+          setState(() {});
+        }).then((value) => {
               _controller!.addListener(() {
-              setState(() {});
-              if (_controller!.value.position.inSeconds > 7 &&
-                  _controller!.value.position.inSeconds < 10) {
-                ViewController.handleView(widget.data.id!);
-                //log("Watched more than 10 seconds");
-              }
-            })
+                if (_controller!.value.position.inSeconds > 7 &&
+                    _controller!.value.position.inSeconds < 10) {
+                  ViewController.handleView(widget.data.id!);
+                  //log("Watched more than 10 seconds");
+                }
+              })
             });
 
-          // _controller!.initialize().whenComplete(() {
-          //   _controller!.play();
-          //   setState(() {});
-          // }).then((value) => {
-          //       _controller!.addListener(() {
-          //         if (_controller!.value.position.inSeconds > 7 &&
-          //             _controller!.value.position.inSeconds < 10) {
-          //           ViewController.handleView(widget.data.id!);
-          //           //log("Watched more than 10 seconds");
-          //         }
-          //       })
-          //     });
+        // Use the controller to loop the video.
 
-          // // Use the controller to loop the video.
-
-          // _controller!.setLooping(true);
-        } else {
-          _controller = VideoPlayerController.network(
-            widget.media.first.replaceAll('\\', '/'),
-            //   videoPlayerOptions: VideoPlayerOptions()
-          );
-
-          _controller!.initialize().whenComplete(() {
-            _controller!.play();
-            setState(() {});
-          }).then((value) => {
-                _controller!.addListener(() {
-                  if (_controller!.value.position.inSeconds > 7 &&
-                      _controller!.value.position.inSeconds < 10) {
-                    ViewController.handleView(widget.data.id!);
-                    //log("Watched more than 10 seconds");
-                  }
-                })
-              });
-
-          // Use the controller to loop the video.
-
-          _controller!.setLooping(true);
-        }
+        _controller!.setLooping(true);
       } else {
         Future.delayed(const Duration(seconds: 2))
             .whenComplete(() => ViewController.handleView(widget.data.id!));
       }
     }
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      StoreComment comment = Provider.of<StoreComment>(context, listen: false);
+      List checkCom = comment.comments
+          .where((element) => element.postId == widget.data.id)
+          .toList();
+
+      if (checkCom.isEmpty) {
+        if (widget.data.comments!.isEmpty) {
+          return;
+        } else {
+          Operations.commentOperation(context, false, widget.data.comments!);
+        }
+      } else {
+        return;
+      }
+    });
   }
+
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   emitter("changed oooo");
+  //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+  //     TabProvider tabs = Provider.of<TabProvider>(context, listen: false);
+  //     if (_controller!.value.isInitialized) {
+  //       tabs.tap(true);
+  //       setState(() {
+  //         _controller!.pause();
+  //       });
+  //       _controller!.pause();
+  //     }
+  //   });
+  // }
 
   @override
   void dispose() {
@@ -174,12 +168,20 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
     controller.dispose();
   }
 
+  initPref() async {
+    pref = await SharedPreferences.getInstance();
+    setState(() {
+      myUsername = pref.getString(userNameKey)!;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
-    // print("This is the url ${widget.media.first}");
     ActionWare action = Provider.of<ActionWare>(context, listen: false);
+    ActionWare stream = context.watch<ActionWare>();
+
     return GestureDetector(
       onDoubleTap: () async {
         if (controller.value == 1) {
@@ -216,7 +218,7 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
       child: Stack(
         children: [
           Container(
-            width: width,
+            width: double.infinity,
             height: height,
             child: Flex(
               mainAxisSize: MainAxisSize.max,
@@ -233,30 +235,70 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
                                 shouldPlay: true,
                                 constraints: constraints,
                                 isHome: widget.isHome,
+                                thumbLink: widget.urls.first,
                               )
                             : MultiplePost(
                                 media: widget.media,
                                 constraints: constraints,
                                 data: widget.data,
                                 isHome: widget.isHome,
+                                thumbLinks: widget.urls,
                               )))
               ],
             ),
           ),
+          // Align(
+          //     alignment: Alignment.bottomRight,
+          //     child: LikeSection(
+          //       data: widget.data,
+          //       page: widget.page,
+          //       media: widget.media,
+          //       urls: widget.urls,
+          //     )),
           Align(
-              alignment: Alignment.bottomRight,
-              child: LikeSection(
-                data: widget.data,
-                page: widget.page,
-                media: widget.media,
-                urls: widget.urls,
-              )),
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 30),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  // myUsername == widget.data.user!.username!
+                  //     ? const SizedBox.shrink()
+                  //     : Expanded(
+                  //         child: Row(
+                  //           children: [
+                  //             followButton(() async {
+                  //               followAction(
+                  //                 context,
+                  //               );
+                  //             },
+                  //                 stream.followIds
+                  //                         .contains(widget.data.user!.id!)
+                  //                     ? "Following"
+                  //                     : "Follow"),
+                  //           ],
+                  //         ),
+                  //       ),
+
+                  InkWell(
+                      onTap: () => optionModal(context, widget.urls,
+                          widget.data.user!.id, widget.data.id),
+                      child: SvgPicture.asset(
+                        "assets/icon/new_option.svg",
+                        height: 15,
+                        width: 20,
+                        color: HexColor(backgroundColor),
+                      )),
+                ],
+              ),
+            ),
+          ),
           Align(
               alignment: Alignment.bottomLeft,
-              child: FollowSection(
+              child: NewDesignTest(
                 data: widget.data,
                 page: widget.page,
-                media: widget.media,
+                media: widget.urls,
                 controller: _controller,
               )
               // : FollowSection(
@@ -266,6 +308,7 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
               //     controller: _controller,
               //   ),
               ),
+
           flag
               ? Align(
                   alignment: Alignment.center,
@@ -305,7 +348,7 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
                                   widget.data.btnLink!);
                             }
                             if (widget.data.button == "Whatsapp") {
-                              print(widget.data.btnLink!);
+                              //   print(widget.data.btnLink!);
 
                               if (widget.data.btnLink!
                                   .contains("https://wa.me/https://")) {
@@ -315,8 +358,8 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
                                 String newVal =
                                     "https://${start.last}".toString();
                                 print(newVal);
-                                await UrlLaunchController.launchWebViewOrVC(
-                                    Uri.parse(newVal));
+                                // await UrlLaunchController.launchWebViewOrVC(
+                                //     Uri.parse(newVal));
                               } else {
                                 await UrlLaunchController.launchWebViewOrVC(
                                     Uri.parse(widget.data.btnLink!));
@@ -328,8 +371,9 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
                           },
                           child: Container(
                             height: 35,
+                            width: double.infinity,
                             decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
+                                borderRadius: BorderRadius.zero,
                                 color: HexColor("#00B074")),
                             child: Padding(
                               padding:
@@ -340,8 +384,8 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
                                   AppText(
                                     text: widget.data.button!,
                                     color: Colors.white,
-                                    fontWeight: FontWeight.w800,
-                                    size: 13,
+                                    fontWeight: FontWeight.w500,
+                                    size: 12,
                                   ),
                                   // SvgPicture.asset(
                                   //   "assets/icon/Send.svg",
@@ -362,6 +406,47 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
         ],
       ),
     );
+  }
+
+  Widget followButton(VoidCallback onTap, String title) {
+    //  ActionWare stream = context.watch<ActionWare>();
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        //  duration: const Duration(milliseconds: 500),
+        height: 28,
+
+        width: title == "Follow" ? null : null,
+        constraints: BoxConstraints(
+          maxWidth: title == "Follow" ? 54 : 75,
+        ),
+        decoration: BoxDecoration(
+            shape: BoxShape.rectangle,
+            border: Border.all(
+                style: BorderStyle.solid,
+                width: 1,
+                color: title == "Follow"
+                    ? HexColor("#8B8B8B").withOpacity(.9)
+                    : HexColor("#8B8B8B").withOpacity(.9)),
+            borderRadius: BorderRadius.circular(7)),
+        child: Center(
+          child: AppText(
+            text: title,
+            color: HexColor(backgroundColor),
+            size: 12,
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> followAction(BuildContext context) async {
+    ActionWare provide = Provider.of<ActionWare>(context, listen: false);
+
+    //  provide.addFollowId(widget.data.id!);
+    await ActionController.followOrUnFollowController(
+        context, widget.data.user!.username!, widget.data.user!.id!);
   }
 
   Future<void> likeAction(BuildContext context, bool like) async {

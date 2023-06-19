@@ -101,6 +101,28 @@ Future<http.Response?> deletePost(int id) async {
   return response;
 }
 
+Future<http.Response?> deleteComment(int postId, int commentId) async {
+  http.Response? response;
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  String? token = pref.getString(tokenKey);
+//  print("this is the id $id");
+  try {
+    response = await http.post(
+      Uri.parse('$baseUrl/public/api/post/$postId/comment/$commentId/delete'),
+      headers: {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $token",
+      },
+      // body: jsonEncode(data.toJson())
+    );
+
+  //  log(response.body.toString());
+  } catch (e) {
+    response = null;
+  }
+  return response;
+}
+
 Future<http.Response?> editPost(EditPost data, int id) async {
   http.Response? response;
   SharedPreferences pref = await SharedPreferences.getInstance();

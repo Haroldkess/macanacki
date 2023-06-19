@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/parser.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hexagon/hexagon.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:makanaki/model/feed_post_model.dart';
 import 'package:makanaki/presentation/constants/colors.dart';
@@ -31,7 +32,7 @@ commentModal(BuildContext context, int id, String page) async {
   var w = (size.width - 4 * 1) / 10;
   TextEditingController comment = TextEditingController();
   Operations.stopCommentLoad(context);
-
+  ScrollController control = ScrollController();
   return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -40,10 +41,9 @@ commentModal(BuildContext context, int id, String page) async {
       builder: (context) {
         StoreComment stream = context.watch<StoreComment>();
         ActionWare action = context.watch<ActionWare>();
-        ScrollController control = ScrollController();
 
         return Scaffold(
-          resizeToAvoidBottomInset: true,
+          //    resizeToAvoidBottomInset: true,
           body: Padding(
             padding: const EdgeInsets.only(
               top: 8.0,
@@ -63,151 +63,59 @@ commentModal(BuildContext context, int id, String page) async {
                       commentHeader(context),
                       Expanded(
                         //height: height / 2,
-                        child: stream.comments.isEmpty
+                        child: stream.comments
+                                .where((element) => element.postId == id)
+                                .toList()
+                                .isEmpty
                             ? Center(
                                 child: AppText(
-                                  text: "No comments found!",
+                                  text: "Be the first to comment!",
                                   size: 16,
                                   fontWeight: FontWeight.w400,
                                   color: HexColor(primaryColor),
                                 ),
                               )
-                            : SingleChildScrollView(
-                                controller: control,
-                                child: Padding(
-                                  padding: EdgeInsets.only(
-                                      bottom: MediaQuery.of(context)
-                                          .viewInsets
-                                          .bottom),
-                                  child: Column(
-                                    children: [
-                                      Column(
-                                        // mainAxisSize: MainAxisSize.min,
-                                        children: stream.comments
-                                            .map((e) => ListTile(
-                                                  leading: Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            bottom: 20.0),
-                                                    child: Container(
-                                                        height: 33,
-                                                        width: 37,
-                                                        child: HexagonAvatar(
-                                                            url: e.profilePhoto ==
-                                                                    null
-                                                                ? ""
-                                                                : e.profilePhoto!,
-                                                            w: w)),
-                                                  ),
-                                                  title: Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            top: 0.0),
-                                                    child: AppText(
-                                                      text: e.username!,
-                                                      fontWeight:
-                                                          FontWeight.w700,
-                                                      size: 15,
-                                                    ),
-                                                  ),
-                                                  subtitle: Padding(
-                                                    padding: const EdgeInsets
-                                                            .symmetric(
-                                                        vertical: 8.0),
-                                                    child: AppText(
-                                                      text: e.body!,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      size: 12,
-                                                    ),
-                                                  ),
-                                                  trailing: Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            top: 5.0),
-                                                    child: Column(
-                                                      children: [
-                                                        AnimatedContainer(
-                                                            duration:
-                                                                const Duration(
-                                                                    milliseconds:
-                                                                        500),
-                                                            child: Container(
-                                                              child: InkWell(
-                                                                onTap:
-                                                                    () async {
-                                                                  ActionWare
-                                                                      provide =
-                                                                      Provider.of<
-                                                                              ActionWare>(
-                                                                          context,
-                                                                          listen:
-                                                                              false);
-                                                                  provide
-                                                                      .addCommentId(
-                                                                          e.id!);
-                                                                  await ActionController
-                                                                      .likeOrDislikeCommentController(
-                                                                          context,
-                                                                          id,
-                                                                          e.id!);
-                                                                },
-                                                                child: action
-                                                                        .commentId
-                                                                        .contains(e
-                                                                            .id)
-                                                                    ? Icon(
-                                                                        Icons
-                                                                            .favorite,
-                                                                        color: HexColor(
-                                                                            primaryColor),
-                                                                        size:
-                                                                            20,
-                                                                      )
-                                                                    : SvgPicture
-                                                                        .asset(
-                                                                        'assets/icon/heart.svg',
-                                                                        height:
-                                                                            15,
-                                                                        width:
-                                                                            15,
-                                                                        color: HexColor(
-                                                                            "#8B8B8B"),
-                                                                      ),
-                                                              ),
-                                                            )),
-                                                        const SizedBox(
-                                                          height: 5,
-                                                        ),
-                                                        AppText(
-                                                          text: action.commentId
-                                                                  .contains(
-                                                                      e.id)
-                                                              ? Numeral(
-                                                                      e.noOfLikes! +
-                                                                          1)
-                                                                  .format()
-                                                              : Numeral(e
-                                                                      .noOfLikes!)
-                                                                  .format(),
-                                                          size: 11,
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                          color: HexColor(
-                                                              "#C0C0C0"),
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ))
-                                            .toList(),
-                                      ),
-                                      const SizedBox(
-                                        height: 300,
-                                      )
-                                    ],
-                                  ),
-                                )),
+                            : Column(
+                                children: [
+                                  Expanded(
+                                      child: ListView.builder(
+                                          controller: control,
+                                          itemCount: stream.comments
+                                              .where((element) =>
+                                                  element.postId == id)
+                                              .toList()
+                                              .length,
+                                          reverse: stream.comments
+                                                      .where((element) =>
+                                                          element.postId == id)
+                                                      .toList()
+                                                      .length >
+                                                  10
+                                              ? true
+                                              : false,
+                                          itemBuilder: (context, index) {
+                                            return CommentTile(
+                                              e: stream.comments
+                                                  .where((element) =>
+                                                      element.postId == id)
+                                                  .toList()[index],
+                                              id: id,
+                                            );
+                                          })),
+                                  // Column(
+                                  //   // mainAxisSize: MainAxisSize.min,
+                                  //   children: stream.comments
+                                  //       .map((e) => CommentTile(
+                                  //             e: e,
+                                  //             id: id,
+                                  //           ))
+                                  //       .toList(),
+                                  // ),
+                                  const SizedBox(
+                                    height: 77,
+                                  )
+                                ],
+                              ),
                       ),
                     ],
                   ),
@@ -368,11 +276,11 @@ class _CommentFormState extends State<CommentForm> {
                               await _submitComment(
                                   widget.id, context, widget.page);
                               _focusNode.unfocus();
-                              widget.control.animateTo(
-                                widget.control.position.maxScrollExtent,
-                                curve: Curves.easeOut,
-                                duration: const Duration(milliseconds: 300),
-                              );
+                              // widget.control.animateTo(
+                              //   widget.control.position.maxScrollExtent,
+                              //   curve: Curves.easeOut,
+                              //   duration: const Duration(milliseconds: 300),
+                              // );
                             }
                           },
                           child: SvgPicture.asset(
@@ -409,4 +317,261 @@ class _CommentFormState extends State<CommentForm> {
     await CreatePostController.shareCommentController(
         context, widget.comment, id, page);
   }
+}
+
+class CommentTile extends StatelessWidget {
+  dynamic e;
+  int id;
+  CommentTile({super.key, required this.e, required this.id});
+
+  @override
+  Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
+    ActionWare action = context.watch<ActionWare>();
+    var w = (size.width - 4 * 1) / 6;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Container(
+                      height: 43,
+                      width: 47,
+                      // color: Colors.amber,
+                      child: Stack(
+                        children: [
+                          HexagonWidget.pointy(
+                            width: w,
+                            elevation: 2.0,
+                            color: Colors.white,
+                            cornerRadius: 20.0,
+                            child: AspectRatio(
+                              aspectRatio: HexagonType.POINTY.ratio,
+                              // child: Image.asset(
+                              //   'assets/tram.jpg',
+                              //   fit: BoxFit.fitWidth,
+                              // ),
+                            ),
+                          ),
+                          HexagonAvatar(
+                              url:
+                                  e.profilePhoto == null ? "" : e.profilePhoto!,
+                              w: w),
+                        ],
+                      )),
+                ],
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 0.0),
+                      child: Row(
+                        children: [
+                          Container(
+                            constraints: BoxConstraints(maxWidth: 100),
+                            child: AppText(
+                              text: e.username!,
+                              fontWeight: FontWeight.w700,
+                              size: 12,
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          AppText(
+                            text: Operations.times(e.createdAt),
+                            fontWeight: FontWeight.w400,
+                            size: 10,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Container(
+                        constraints: BoxConstraints(maxWidth: 200),
+                        // color: Colors.amber,
+                        child: AppText(
+                          text: e.body!,
+                          fontWeight: FontWeight.w500,
+                          size: 10,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 10, top: 10),
+            child: Column(
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    AnimatedContainer(
+                        duration: const Duration(milliseconds: 500),
+                        child: Container(
+                          child: InkWell(
+                            onTap: () async {
+                              ActionWare provide = Provider.of<ActionWare>(
+                                  context,
+                                  listen: false);
+                              provide.addCommentId(e.id!);
+                              await ActionController
+                                  .likeOrDislikeCommentController(
+                                      context, id, e.id!);
+                            },
+                            child: action.commentId.contains(e.id)
+                                ? Icon(
+                                    Icons.favorite,
+                                    color: HexColor(primaryColor),
+                                    size: 20,
+                                  )
+                                : SvgPicture.asset(
+                                    'assets/icon/heart.svg',
+                                    height: 15,
+                                    width: 15,
+                                    color: HexColor("#8B8B8B"),
+                                  ),
+                          ),
+                        )),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    AppText(
+                      text: action.commentId.contains(e.id)
+                          ? Numeral(e.noOfLikes! + 1).format()
+                          : Numeral(e.noOfLikes!).format(),
+                      size: 11,
+                      fontWeight: FontWeight.w400,
+                      color: HexColor("#C0C0C0"),
+                    )
+                  ],
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+  // ListTile(
+  //     leading: Padding(
+  //       padding: const EdgeInsets.only(bottom: 0.0),
+  //       child: Container(
+  //           height: 43,
+  //           width: 47,
+  //           // color: Colors.amber,
+  //           child: Stack(
+  //             children: [
+  //               HexagonWidget.pointy(
+  //                 width: w,
+  //                 elevation: 2.0,
+  //                 color: Colors.white,
+  //                 cornerRadius: 20.0,
+  //                 child: AspectRatio(
+  //                   aspectRatio: HexagonType.POINTY.ratio,
+  //                   // child: Image.asset(
+  //                   //   'assets/tram.jpg',
+  //                   //   fit: BoxFit.fitWidth,
+  //                   // ),
+  //                 ),
+  //               ),
+  //               HexagonAvatar(
+  //                   url: e.profilePhoto == null ? "" : e.profilePhoto!, w: w),
+  //             ],
+  //           )),
+  //     ),
+  //     title: Padding(
+  //       padding: const EdgeInsets.only(top: 0.0),
+  //       child: Row(
+  //         children: [
+  //           Container(
+  //             constraints: BoxConstraints(maxWidth: 100),
+  //             child: AppText(
+  //               text: e.username!,
+  //               fontWeight: FontWeight.w700,
+  //               size: 12,
+  //             ),
+  //           ),
+  //           const SizedBox(
+  //             width: 5,
+  //           ),
+  //           AppText(
+  //             text: Operations.times(e.createdAt),
+  //             fontWeight: FontWeight.w400,
+  //             size: 10,
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //     subtitle: Padding(
+  //       padding: const EdgeInsets.symmetric(vertical: 8.0),
+  //       child: AppText(
+  //         text: e.body!,
+  //         fontWeight: FontWeight.w600,
+  //         size: 10,
+  //       ),
+  //     ),
+  //     trailing: Padding(
+  //       padding: const EdgeInsets.only(bottom: 5.0),
+  //       child: Column(
+  //         mainAxisAlignment: MainAxisAlignment.end,
+  //         children: [
+  //           AnimatedContainer(
+  //               duration: const Duration(milliseconds: 500),
+  //               child: Container(
+  //                 child: InkWell(
+  //                   onTap: () async {
+  //                     ActionWare provide =
+  //                         Provider.of<ActionWare>(context, listen: false);
+  //                     provide.addCommentId(e.id!);
+  //                     await ActionController.likeOrDislikeCommentController(
+  //                         context, id, e.id!);
+  //                   },
+  //                   child: action.commentId.contains(e.id)
+  //                       ? Icon(
+  //                           Icons.favorite,
+  //                           color: HexColor(primaryColor),
+  //                           size: 20,
+  //                         )
+  //                       : SvgPicture.asset(
+  //                           'assets/icon/heart.svg',
+  //                           height: 15,
+  //                           width: 15,
+  //                           color: HexColor("#8B8B8B"),
+  //                         ),
+  //                 ),
+  //               )),
+  //           const SizedBox(
+  //             height: 5,
+  //           ),
+  //           AppText(
+  //             text: action.commentId.contains(e.id)
+  //                 ? Numeral(e.noOfLikes! + 1).format()
+  //                 : Numeral(e.noOfLikes!).format(),
+  //             size: 11,
+  //             fontWeight: FontWeight.w400,
+  //             color: HexColor("#C0C0C0"),
+  //           )
+  //         ],
+  //       ),
+  //     ),
+  //   );
+
 }

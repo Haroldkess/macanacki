@@ -11,6 +11,8 @@ import 'package:provider/provider.dart';
 import '../../../../../model/public_profile_model.dart';
 import '../../../../../services/middleware/feed_post_ware.dart';
 import '../../../../../services/middleware/user_profile_ware.dart';
+import '../../../../widgets/comment_modal.dart';
+import '../../../../widgets/text.dart';
 
 // class PublicUserProfileFeed extends StatefulWidget {
 //   final int index;
@@ -60,18 +62,71 @@ import '../../../../../services/middleware/user_profile_ware.dart';
 
 // }
 
-class PublicUserProfileFeed extends StatelessWidget {
+class PublicUserProfileFeed extends StatefulWidget {
   final int index;
   const PublicUserProfileFeed({super.key, required this.index});
 
   @override
+  State<PublicUserProfileFeed> createState() => _PublicUserProfileFeedState();
+}
+
+class _PublicUserProfileFeedState extends State<PublicUserProfileFeed> {
+    @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      UserProfileWare provide =
+          Provider.of<UserProfileWare>(context, listen: false);
+      print("hey");
+      provide.changePublicIndex(widget.index);
+    });
+  }
+
+
+  @override
   Widget build(BuildContext context) {
-    PageController? controller = PageController(initialPage: index);
+    PageController? controller = PageController(initialPage: widget.index);
     UserProfileWare stream = context.watch<UserProfileWare>();
 
     UserProfileWare provide =
         Provider.of<UserProfileWare>(context, listen: false);
+        UserProfileWare userStream = context.watch<UserProfileWare>();
     return Scaffold(
+          backgroundColor: Colors.black,
+      persistentFooterButtons: [
+        InkWell(
+          onTap: () {
+            commentModal(context,
+                stream.publicUserProfileModel.posts![userStream.publicIndex].id!, "public");
+          },
+          child: Container(
+            height: 30,
+            width: double.infinity,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  AppText(
+                    text: "Add comment...",
+                    color: Colors.grey,
+                  ),
+                  Row(
+                    children: const [
+                      Icon(
+                        Icons.emoji_emotions_outlined,
+                        color: Colors.grey,
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ),
+        )
+      ],
+   
+   
       body: Stack(
         children: [
           PageView.builder(
@@ -123,16 +178,18 @@ class PublicUserProfileFeed extends StatelessWidget {
                 updatedAt: post.updatedAt,
                 creator: post.creator,
                 media: post.media,
+                mux: post.mux,
                 comments: talks,
                 noOfLikes: post.noOfLikes,
                 btnLink: post.btnLink,
                 button: post.button,
                 viewCount: post.viewCount,
                 user: user,
+                
               );
 
               return TikTokView(
-                media: post.media!,
+                media: post.mux!,
                 data: data,
                 page: "public",
                 urls: post.media!,
@@ -141,7 +198,7 @@ class PublicUserProfileFeed extends StatelessWidget {
               );
             }),
             onPageChanged: (index) {
-              // provide.changeIndex(index);
+             provide.changePublicIndex(index);
             },
           ),
           Padding(

@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -7,10 +8,12 @@ import 'package:makanaki/presentation/constants/params.dart';
 import 'package:makanaki/presentation/screens/onboarding/select_gender.dart';
 import 'package:makanaki/presentation/widgets/snack_msg.dart';
 import 'package:makanaki/presentation/widgets/text.dart';
+import 'package:makanaki/services/api_url.dart';
 import 'package:makanaki/services/controllers/register_username_controller.dart';
 import 'package:makanaki/services/temps/temp.dart';
 import 'package:provider/provider.dart';
 
+import '../../../services/controllers/url_launch_controller.dart';
 import '../../../services/middleware/registeration_ware.dart';
 import '../../allNavigation.dart';
 import '../../widgets/buttons.dart';
@@ -27,6 +30,7 @@ class SelectUserName extends StatefulWidget {
 class _SelectUserNameState extends State<SelectUserName> {
   TextEditingController userName = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  TapGestureRecognizer tapGestureRecognizer = TapGestureRecognizer();
   bool iAgree = true;
   bool typing = false;
   @override
@@ -188,6 +192,12 @@ class _SelectUserNameState extends State<SelectUserName> {
                                           decorationStyle:
                                               TextDecorationStyle.solid,
                                           fontSize: 12)),
+                                  recognizer: tapGestureRecognizer
+                                    ..onTap = () async {
+                                      await UrlLaunchController
+                                          .launchInWebViewOrVC(
+                                              Uri.parse(terms));
+                                    },
                                 ),
                                 TextSpan(
                                   text: " and ",
@@ -208,6 +218,12 @@ class _SelectUserNameState extends State<SelectUserName> {
                                           decorationStyle:
                                               TextDecorationStyle.solid,
                                           fontSize: 12)),
+                                  recognizer: tapGestureRecognizer
+                                    ..onTap = () async {
+                                      await UrlLaunchController
+                                          .launchInWebViewOrVC(
+                                              Uri.parse(terms));
+                                    },
                                 )
                               ]),
                         ),

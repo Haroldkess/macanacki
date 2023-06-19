@@ -265,6 +265,8 @@ class UserProfileActions extends StatelessWidget {
                                           mode:
                                               data.publicUserProfileModel.mode,
                                           isHome: false,
+                                          verified: data
+                                              .publicUserProfileModel.verified!,
                                         ));
                                     return;
                                   } else if (element.userOne ==
@@ -281,6 +283,8 @@ class UserProfileActions extends StatelessWidget {
                                           mode: data.publicUserProfileModel
                                               .profilephoto,
                                           isHome: false,
+                                          verified: data
+                                              .publicUserProfileModel.verified!,
                                         ));
                                     return;
                                   } else {
@@ -318,6 +322,8 @@ class UserProfileActions extends StatelessWidget {
                                           mode:
                                               data.publicUserProfileModel.mode,
                                           isHome: false,
+                                          verified: data
+                                              .publicUserProfileModel.verified!,
                                         ));
                                   } else if (checker.isEmpty &&
                                       checker2.isNotEmpty) {
@@ -332,6 +338,8 @@ class UserProfileActions extends StatelessWidget {
                                           mode:
                                               data.publicUserProfileModel.mode,
                                           isHome: false,
+                                          verified: data
+                                              .publicUserProfileModel.verified!,
                                         ));
                                   } else {
                                     print(
@@ -349,6 +357,8 @@ class UserProfileActions extends StatelessWidget {
                                           mode:
                                               data.publicUserProfileModel.mode,
                                           isHome: false,
+                                          verified: data
+                                              .publicUserProfileModel.verified!,
                                         ));
                                   }
 
@@ -557,6 +567,8 @@ class UserProfileActions extends StatelessWidget {
                                           mode:
                                               data.publicUserProfileModel.mode,
                                           isHome: false,
+                                          verified: data
+                                              .publicUserProfileModel.verified!,
                                         ));
                                     return;
                                   } else if (element.userOne ==
@@ -573,6 +585,8 @@ class UserProfileActions extends StatelessWidget {
                                           mode: data.publicUserProfileModel
                                               .profilephoto,
                                           isHome: false,
+                                          verified: data
+                                              .publicUserProfileModel.verified!,
                                         ));
                                     return;
                                   } else {
@@ -610,6 +624,8 @@ class UserProfileActions extends StatelessWidget {
                                           mode:
                                               data.publicUserProfileModel.mode,
                                           isHome: false,
+                                          verified: data
+                                              .publicUserProfileModel.verified!,
                                         ));
                                   } else if (checker.isEmpty &&
                                       checker2.isNotEmpty) {
@@ -624,6 +640,8 @@ class UserProfileActions extends StatelessWidget {
                                           mode:
                                               data.publicUserProfileModel.mode,
                                           isHome: false,
+                                          verified: data
+                                              .publicUserProfileModel.verified!,
                                         ));
                                   } else {
                                     print(
@@ -641,6 +659,8 @@ class UserProfileActions extends StatelessWidget {
                                           mode:
                                               data.publicUserProfileModel.mode,
                                           isHome: false,
+                                          verified: data
+                                              .publicUserProfileModel.verified!,
                                         ));
                                   }
 

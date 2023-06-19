@@ -64,6 +64,7 @@ class LoginController {
     }
 
     if (isDone) {
+      emitter("Done with Login");
       await temp.addEmailTemp(email);
       await temp.addPasswordTemp(password);
       await temp.addIsLoggedInTemp(true);
@@ -83,7 +84,7 @@ class LoginController {
         await PlanController.retrievPlanController(context, true);
         PageRouting.pushToPage(context, const SubscriptionPlansBusiness());
       } else {
-      await callFeedPost(context);
+        await callFeedPost(context);
         emitter("removing all previous screens");
         PageRouting.removeAllToPage(context, const TabScreen());
       }
@@ -100,7 +101,7 @@ class LoginController {
 
   static Future callFeedPost(BuildContext context) async {
     await FeedPostController.getFeedPostController(context, 1, false);
-     ChatController.retrievChatController(context, false);
+    ChatController.retrievChatController(context, false);
     // ActionController.retrievAllUserFollowingController(context);
     // ActionController.retrievAllUserLikedCommentsController(context);
   }

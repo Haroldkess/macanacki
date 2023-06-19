@@ -54,6 +54,7 @@ class UserSearchData {
       this.updatedAt,
       this.followingStatus,
       this.gender,
+      this.verified,
       this.profilephoto,
       this.noOfFollowers,
       this.noOfFollowing,
@@ -71,6 +72,7 @@ class UserSearchData {
   DateTime? updatedAt;
   int? followingStatus;
   String? gender;
+    dynamic verified;
   String? profilephoto;
   int? noOfFollowers;
   int? noOfFollowing;
@@ -95,6 +97,7 @@ class UserSearchData {
             : DateTime.parse(json["updated_at"]),
         followingStatus: json["following_status"],
         gender: json["gender"],
+          verified: json["verified"],
         profilephoto: json["profilephoto"],
         noOfFollowers: json["no_of_followers"],
         noOfFollowing: json["no_of_following"],
@@ -116,6 +119,7 @@ class UserSearchData {
         "updated_at": updatedAt?.toIso8601String(),
         "following_status": followingStatus,
         "gender": gender,
+          "verified": verified,
         "profilephoto": profilephoto,
         "no_of_followers": noOfFollowers,
         "no_of_following": noOfFollowing,

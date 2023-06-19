@@ -19,8 +19,16 @@ class UserProfileWare extends ChangeNotifier {
   PublicUserData _publicUserProfileModel = PublicUserData();
 
   int _index = 0;
+  
+  int _userindex = 0;
+  
+  int _publicindex = 0;
 
   int get index => _index;
+
+    int get userIndex => _userindex;
+
+      int get publicIndex => _publicindex;
 
   bool get loadStatus => _loadStatus;
   bool get loadStatus2 => _loadStatus2;
@@ -69,7 +77,14 @@ class UserProfileWare extends ChangeNotifier {
     _index = fig;
     notifyListeners();
   }
-
+  void changeUserIndex(int fig) {
+    _userindex = fig;
+    notifyListeners();
+  }
+  void changePublicIndex(int fig) {
+    _publicindex = fig;
+    notifyListeners();
+  }
   Future<void> isLoading(bool isLoad) async {
     _loadStatus = isLoad;
     notifyListeners();

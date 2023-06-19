@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -9,6 +10,7 @@ import 'package:makanaki/services/middleware/user_profile_ware.dart';
 import 'package:provider/provider.dart';
 
 import '../../../constants/colors.dart';
+import '../../../widgets/loader.dart';
 
 class PublicProfileImageAndName extends StatelessWidget {
   const PublicProfileImageAndName({super.key});
@@ -48,10 +50,25 @@ class PublicProfileImageAndName extends StatelessWidget {
               child: AspectRatio(
                   aspectRatio: HexagonType.POINTY.ratio,
                   child: Center(
-                      child: Image.network(
-                          stream.publicUserProfileModel.profilephoto == null
-                              ? url
-                              : stream.publicUserProfileModel.profilephoto!))),
+                    child: CachedNetworkImage(
+                      imageUrl:
+                          stream.publicUserProfileModel.profilephoto ?? "",
+                      progressIndicatorBuilder:
+                          (context, url, downloadProgress) => Center(
+                              child: Loader(
+                        color: HexColor(primaryColor),
+                      )),
+                      errorWidget: (context, url, error) => Icon(
+                        Icons.error,
+                        color: HexColor(primaryColor),
+                      ),
+                    ),
+
+                    //  Image.network(
+                    //     stream.publicUserProfileModel.profilephoto == null
+                    //         ? url
+                    //         : stream.publicUserProfileModel.profilephoto!)
+                  )),
             ),
           ],
         ),
@@ -84,7 +101,7 @@ class PublicProfileImageAndName extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    stream.publicUserProfileModel.verification == null
+                    stream.publicUserProfileModel.verified == 0
                         ? const SizedBox.shrink()
                         : SvgPicture.asset(
                             "assets/icon/badge.svg",

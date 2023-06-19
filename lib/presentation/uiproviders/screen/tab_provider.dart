@@ -7,16 +7,46 @@ class TabProvider extends ChangeNotifier {
   int multipleImageIndex = 1;
   String image = "";
   VideoPlayerController? controller;
+  VideoPlayerController? controllerHolder;
+  bool isTapped = false;
+  PageController? pageController = PageController();
+
+  void addPageControl(PageController page) {
+    pageController = page;
+    notifyListeners();
+  }
+
+  void tap(bool val) {
+    isTapped = val;
+    notifyListeners();
+  }
 
   void changeMultipleIndex(int page) {
     multipleImageIndex = page;
     notifyListeners();
   }
-    Future addControl(VideoPlayerController control) async {
+
+  Future addControl(VideoPlayerController control) async {
     controller = control;
     notifyListeners();
   }
-    Future disControl() async {
+
+  Future addHoldControl(VideoPlayerController control) async {
+    controllerHolder = control;
+    notifyListeners();
+  }
+
+  Future pauseControl() async {
+    controller!.pause();
+    notifyListeners();
+  }
+
+  Future playControl() async {
+    controller!.play();
+    notifyListeners();
+  }
+
+  Future disControl() async {
     controller!.dispose();
     notifyListeners();
   }

@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hexagon/hexagon.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:makanaki/presentation/allNavigation.dart';
@@ -9,11 +11,13 @@ import 'package:makanaki/presentation/model/ui_model.dart';
 import 'package:makanaki/presentation/screens/home/convo/chat/chat_screen.dart';
 import 'package:makanaki/presentation/widgets/hexagon_avatar.dart';
 import 'package:makanaki/presentation/widgets/text.dart';
+import 'package:makanaki/services/middleware/chat_ware.dart';
 import 'package:makanaki/services/temps/temp.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../../model/conversation_model.dart';
 import '../../../../operations.dart';
+import '../../../../widgets/loader.dart';
 
 class MessageList extends StatelessWidget {
   List<ChatData> peopleChats;
@@ -28,7 +32,7 @@ class MessageList extends StatelessWidget {
       //  reverse:  true,
       children: peopleChat
           .map((e) => Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                padding: const EdgeInsets.symmetric(vertical: 5.0),
                 child: MessageWidget(people: e),
               ))
           .toList(),
@@ -53,7 +57,9 @@ class MessageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ChatWare streams = context.watch<ChatWare>();
     String isOnline;
+    int verify;
     var width = MediaQuery.of(context).size.width;
     var size = MediaQuery.of(context).size;
     var padding = 8.0;
@@ -61,11 +67,12 @@ class MessageWidget extends StatelessWidget {
     Temp temp = context.watch<Temp>();
     if (people.conversations!.last.sender == temp.userName) {
       isOnline = people.userTwoMode ?? "";
+      verify = people.userTwoVerify!;
     } else {
       isOnline = people.userOneMode ?? "";
+      verify = people.userOneVerify!;
     }
 
-    print(isOnline.toString());
     return InkWell(
       onTap: () => PageRouting.pushToPage(
           context,
@@ -76,6 +83,7 @@ class MessageWidget extends StatelessWidget {
                 ? people.userTwoMode ?? "offline"
                 : people.userOneMode ?? "offline",
             isHome: true,
+            verified: verify,
           )),
       child: Container(
         height: 80,
@@ -94,34 +102,14 @@ class MessageWidget extends StatelessWidget {
                 children: [
                   Stack(
                     children: [
-                      Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          HexagonWidget.pointy(
-                            width: w + 4.0 - 15,
-                            elevation: 7.0,
-                            color: Colors.white,
-                            cornerRadius: 10.0,
-                            //  padding: 10,
-                            child: AspectRatio(
-                              aspectRatio: HexagonType.POINTY.ratio,
-                              // child: Image.asset(
-                              //   'assets/tram.jpg',
-                              //   fit: BoxFit.fitWidth,
-                              // ),
-                            ),
-                          ),
-                          HexagonAvatar(
-                              url: people.conversations!.last.sender ==
-                                      temp.userName
-                                  ? people.userTwoProfilePhoto!
-                                  : people.userOneProfilePhoto!,
-                              w: w + 4.0 - 15),
-                        ],
-                      ),
+                      dp(
+                          context,
+                          people.conversations!.last.sender == temp.userName
+                              ? people.userTwoProfilePhoto!
+                              : people.userOneProfilePhoto!),
                       Positioned(
-                        right: 3.1,
-                        top: 20.0,
+                        right: 10.1,
+                        top: 13.0,
                         child: Padding(
                           padding: const EdgeInsets.only(right: 0, bottom: 0),
                           child: CircleAvatar(
@@ -148,30 +136,41 @@ class MessageWidget extends StatelessWidget {
                                   constraints: BoxConstraints(
                                     maxWidth: width * 0.4,
                                   ),
-                                  child: AppText(
-                                    text: people.conversations!.last.sender ==
+                                  //  color: Colors.amber,
+                                  child: Text(
+                                    people.conversations!.last.sender ==
                                             temp.userName
                                         ? people.userTwo!
                                         : people.userOne!,
-                                    color: people.conversations!.isNotEmpty
-                                        ? HexColor(darkColor)
-                                        : HexColor("#8B8B8B"),
-                                    size: 17,
-                                    fontWeight: FontWeight.w700,
+                                    style: GoogleFonts.spartan(
+                                        textStyle: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            color:
+                                                people.conversations!.isNotEmpty
+                                                    ? HexColor(darkColor)
+                                                    : HexColor("#8B8B8B"),
+                                            decorationStyle:
+                                                TextDecorationStyle.solid,
+                                            fontSize: 13)),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                   )),
-                              // SvgPicture.asset(
-                              //   "assets/icon/verifypink.svg",
-                              //   height: 10,
-                              //   width: 10,
-                              // )
+                              verify == 0 || verify == null
+                                  ? const SizedBox.shrink()
+                                  : Padding(
+                                      padding: const EdgeInsets.only(left: 3),
+                                      child: SvgPicture.asset(
+                                        "assets/icon/badge.svg",
+                                        height: 10,
+                                        width: 10,
+                                      ),
+                                    )
                             ],
                           ),
                         ),
                         SizedBox(
                             // color: Colors.amber,
-                            width: width * 0.55,
+                            width: width * 0.4,
                             child: AppText(
                               text: people.conversations!.first.body!,
                               color: people.conversations!.isNotEmpty
@@ -192,27 +191,70 @@ class MessageWidget extends StatelessWidget {
                   padding: const EdgeInsets.only(right: 5),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(bottom: 8),
                         child: Container(
+                            constraints: BoxConstraints(maxWidth: 70),
 
                             //  color: Colors.amber,
                             child: AppText(
-                          text: Operations.times(
-                                  people.conversations!.first.createdAt!)
-                              .toString(),
-                          color: people.conversations!.isNotEmpty
-                              ? HexColor(darkColor)
-                              : HexColor("#8B8B8B"),
-                          size: 12,
-                          fontWeight: FontWeight.w400,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          align: TextAlign.right,
-                        )),
+                              text: Operations.times(
+                                      people.conversations!.first.createdAt!)
+                                  .toString(),
+                              color: people.conversations!.isNotEmpty
+                                  ? HexColor(darkColor)
+                                  : HexColor("#8B8B8B"),
+                              size: 10,
+                              fontWeight: FontWeight.w400,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              align: TextAlign.right,
+                            )),
                       ),
+
+                      people.conversations!.first.sender != temp.userName &&
+                              streams.unreadMsgs
+                                  .where((element) =>
+                                      element.senderId ==
+                                      people.conversations!.first.senderId)
+                                  .toList()
+                                  .isNotEmpty
+                          ? Container(
+                              width: 25,
+                              height: 19,
+                              decoration: const BoxDecoration(
+                                  color: Colors.red, shape: BoxShape.circle),
+                              child: Center(
+                                child: AppText(
+                                  size: 8,
+                                  text: streams.unreadMsgs
+                                              .where((element) =>
+                                                  element.senderId ==
+                                                  people.conversations!.first
+                                                      .senderId)
+                                              .first
+                                              .totalUnread! >
+                                          99
+                                      ? "99+"
+                                      : streams.unreadMsgs
+                                          .where((element) =>
+                                              element.senderId ==
+                                              people.conversations!.first
+                                                  .senderId)
+                                          .first
+                                          .totalUnread!
+                                          .toString(),
+                                  color: HexColor(backgroundColor),
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            )
+                          
+                          
+                          : const SizedBox.shrink()
+
                       // people.conversations!.isEmpty
                       //     ? Container(
                       //         decoration: const BoxDecoration(
@@ -266,6 +308,54 @@ class MessageWidget extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Widget dp(BuildContext context, String url) {
+    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
+    var size = MediaQuery.of(context).size;
+    var padding = 8.0;
+    var w = 55.0;
+    return Stack(
+      children: [
+        HexagonWidget.pointy(
+          width: w,
+          elevation: 2.0,
+          color: Colors.white,
+          cornerRadius: 20.0,
+          child: AspectRatio(
+            aspectRatio: HexagonType.POINTY.ratio,
+            // child: Image.asset(
+            //   'assets/tram.jpg',
+            //   fit: BoxFit.fitWidth,
+            // ),
+          ),
+        ),
+        HexagonWidget.pointy(
+          width: w,
+          elevation: 0.0,
+          color: HexColor("#5F5F5F"),
+          padding: 2,
+          cornerRadius: 20.0,
+          child: AspectRatio(
+              aspectRatio: HexagonType.POINTY.ratio,
+              child: Center(
+                child: CachedNetworkImage(
+                  imageUrl: url,
+                  progressIndicatorBuilder: (context, url, downloadProgress) =>
+                      Center(
+                          child: Loader(
+                    color: HexColor(primaryColor),
+                  )),
+                  errorWidget: (context, url, error) => Icon(
+                    Icons.error,
+                    color: HexColor(primaryColor),
+                  ),
+                ),
+              )),
+        ),
+      ],
     );
   }
 }

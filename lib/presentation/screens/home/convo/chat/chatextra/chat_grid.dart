@@ -55,8 +55,8 @@ class _ChatListState extends State<ChatList> {
     // });
     //  initPref();
 
-    print(widget.myUserId ?? "Me");
-    print(widget.toUserId ?? "Friend ");
+ //   print(widget.myUserId ?? "Me");
+  //  print(widget.toUserId ?? "Friend ");
   }
 
   bool show = true;
@@ -75,13 +75,13 @@ class _ChatListState extends State<ChatList> {
             //List scroll position
 
             if (notification.metrics.pixels == 0) {
-              print(notification.scrollDelta);
-              log(notification.metrics.maxScrollExtent.toString());
+           //   print(notification.scrollDelta);
+             // log(notification.metrics.maxScrollExtent.toString());
               setState(() {
                 show = false;
               });
             } else {
-              log(notification.metrics.maxScrollExtent.toString());
+           //   log(notification.metrics.maxScrollExtent.toString());
               setState(() {
                 show = true;
               });
@@ -92,9 +92,9 @@ class _ChatListState extends State<ChatList> {
               stream: null,
               builder: (context, AsyncSnapshot<String> snapshot) {
                 if (!snapshot.hasData) {
-                  print("nodata");
+              //    print("nodata");
                 } else if (snapshot.hasData) {
-                  print(snapshot.data);
+               //   print(snapshot.data);
                 }
                 return ListView.builder(
                   itemCount: stream.justChat.length,
@@ -175,7 +175,7 @@ class _ChatListState extends State<ChatList> {
                               color: HexColor("#8B8B8B"),
                               fontWeight: FontWeight.w400,
                               text:
-                                  "Messsages here are end-end encrypted. No one outside of this chat, not even the developers can read them. "),
+                                  "Messsages here are end-to-end encrypted. No one outside of this chat, not even the developers can read them. "),
                         ),
                       ),
                     ],
@@ -213,13 +213,13 @@ class _FakeChatListState extends State<FakeChatList> {
                   //List scroll position
 
                   if (notification.metrics.pixels == 0) {
-                    print(notification.scrollDelta);
-                    log(notification.metrics.maxScrollExtent.toString());
+                 //   print(notification.scrollDelta);
+                 //   log(notification.metrics.maxScrollExtent.toString());
                     setState(() {
                       show = false;
                     });
                   } else {
-                    log(notification.metrics.maxScrollExtent.toString());
+                  //  log(notification.metrics.maxScrollExtent.toString());
                     setState(() {
                       show = true;
                     });
