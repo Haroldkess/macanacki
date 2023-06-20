@@ -7,6 +7,7 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:makanaki/model/profile_feed_post.dart';
 import 'package:makanaki/presentation/allNavigation.dart';
 import 'package:makanaki/presentation/constants/colors.dart';
+import 'package:makanaki/presentation/uiproviders/screen/tab_provider.dart';
 import 'package:numeral/numeral.dart';
 import 'package:provider/provider.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
@@ -177,6 +178,8 @@ class _MyGridViewItemsState extends State<MyGridViewItems> {
     return InkWell(
       splashColor: HexColor(primaryColor),
       onTap: () async {
+        TabProvider action = Provider.of<TabProvider>(context, listen: false);
+        action.isHomeChange(true);
         //    provide.changeIndex(widget.index);
         PageRouting.pushToPage(
             context,

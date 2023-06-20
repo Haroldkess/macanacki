@@ -9,6 +9,7 @@ class TabProvider extends ChangeNotifier {
   VideoPlayerController? controller;
   VideoPlayerController? controllerHolder;
   bool isTapped = false;
+  bool isHome = false;
   PageController? pageController = PageController();
 
   void addPageControl(PageController page) {
@@ -20,7 +21,10 @@ class TabProvider extends ChangeNotifier {
     isTapped = val;
     notifyListeners();
   }
-
+ void isHomeChange(bool val) {
+    isHome = val;
+    notifyListeners();
+  }
   void changeMultipleIndex(int page) {
     multipleImageIndex = page;
     notifyListeners();

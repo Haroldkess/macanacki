@@ -111,23 +111,30 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
                 if (provide.isTapped) {
                   provide.tap(false);
                 }
+                provide.isHomeChange(false);
               } else {
                 tabs.pageController!.animateToPage(
                   index,
                   duration: const Duration(milliseconds: 1),
                   curve: Curves.easeIn,
                 );
+                //provide.isHomeChange(true);
 
-                if (provide.controller != null) {
-                  if (provide.controller!.value.isInitialized) {
-                    if (provide.controller!.value.isBuffering ||
-                        provide.controller!.value.isPlaying) {
-                      provide.pauseControl();
-                      provide.tap(true);
-                    } else {
-                      return;
+                try {
+                  if (provide.controller != null) {
+                    if (provide.controller!.value.isInitialized) {
+                      if (provide.controller!.value.isBuffering ||
+                          provide.controller!.value.isPlaying) {
+                        provide.pauseControl();
+                        provide.tap(true);
+                      } else {
+                        provide.pauseControl();
+                        provide.tap(true);
+                      }
                     }
                   }
+                } catch (e) {
+                  emitter(e.toString());
                 }
               }
             },
@@ -207,6 +214,7 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
   Future reloadChat(BuildContext context) async {
     emitter("W have started the reload");
     reloadTime = Timer.periodic(const Duration(minutes: 1), (timer) async {
+      ChatController.retreiveUnread(context);
       await ChatController.retrievChatController(context, false);
     });
   }

@@ -11,6 +11,7 @@ import '../../../services/controllers/view_controller.dart';
 import '../../constants/string.dart';
 import '../../screens/home/Feed/feed_video_holder.dart';
 import '../../uiproviders/screen/tab_provider.dart';
+import '../debug_emitter.dart';
 import '../loader.dart';
 
 class MultiplePost extends StatelessWidget {
@@ -116,7 +117,14 @@ class _MultipleViewState extends State<MultipleView> {
           if (provide.index == 0) {
             _controller!.play();
           } else {
-            _controller!.pause();
+            if (provide.index == 4 && provide.isHome) {
+              emitter("heyyyyy");
+              _controller!.play();
+            }else{
+               _controller!.pause();
+
+            }
+           
           }
         });
         //_controller!.play();

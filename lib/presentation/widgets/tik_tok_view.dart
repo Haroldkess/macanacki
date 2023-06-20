@@ -104,7 +104,12 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
             if (provide.index == 0) {
               _controller!.play();
             } else {
-              _controller!.pause();
+              if (provide.index == 4 && provide.isHome) {
+                emitter("heyyyyy");
+                _controller!.play();
+              } else {
+                _controller!.pause();
+              }
             }
           });
 
