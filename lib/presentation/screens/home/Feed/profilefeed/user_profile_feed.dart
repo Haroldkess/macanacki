@@ -169,8 +169,6 @@ class _UserProfileFeedState extends State<UserProfileFeed> {
           ),
         )
       ],
-   
-   
       body: Stack(
         children: [
           PageView.builder(
@@ -241,7 +239,7 @@ class _UserProfileFeedState extends State<UserProfileFeed> {
             },
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 18.0),
+            padding: const EdgeInsets.only(top: 25.0),
             child: IconButton(
                 onPressed: () => PageRouting.popToPage(context),
                 icon: const Icon(

@@ -71,7 +71,7 @@ class PublicUserProfileFeed extends StatefulWidget {
 }
 
 class _PublicUserProfileFeedState extends State<PublicUserProfileFeed> {
-    @override
+  @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -82,7 +82,6 @@ class _PublicUserProfileFeedState extends State<PublicUserProfileFeed> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     PageController? controller = PageController(initialPage: widget.index);
@@ -90,14 +89,17 @@ class _PublicUserProfileFeedState extends State<PublicUserProfileFeed> {
 
     UserProfileWare provide =
         Provider.of<UserProfileWare>(context, listen: false);
-        UserProfileWare userStream = context.watch<UserProfileWare>();
+    UserProfileWare userStream = context.watch<UserProfileWare>();
     return Scaffold(
-          backgroundColor: Colors.black,
+      backgroundColor: Colors.black,
       persistentFooterButtons: [
         InkWell(
           onTap: () {
-            commentModal(context,
-                stream.publicUserProfileModel.posts![userStream.publicIndex].id!, "public");
+            commentModal(
+                context,
+                stream
+                    .publicUserProfileModel.posts![userStream.publicIndex].id!,
+                "public");
           },
           child: Container(
             height: 30,
@@ -125,8 +127,6 @@ class _PublicUserProfileFeedState extends State<PublicUserProfileFeed> {
           ),
         )
       ],
-   
-   
       body: Stack(
         children: [
           PageView.builder(
@@ -185,7 +185,6 @@ class _PublicUserProfileFeedState extends State<PublicUserProfileFeed> {
                 button: post.button,
                 viewCount: post.viewCount,
                 user: user,
-                
               );
 
               return TikTokView(
@@ -198,11 +197,11 @@ class _PublicUserProfileFeedState extends State<PublicUserProfileFeed> {
               );
             }),
             onPageChanged: (index) {
-             provide.changePublicIndex(index);
+              provide.changePublicIndex(index);
             },
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 18.0),
+            padding: const EdgeInsets.only(top: 25.0),
             child: IconButton(
                 onPressed: () => PageRouting.popToPage(context),
                 icon: const Icon(
