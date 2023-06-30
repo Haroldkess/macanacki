@@ -69,10 +69,10 @@ Future<http.Response?> shareComment(ShareCommentsModel data, int id) async {
         HttpHeaders.authorizationHeader: "Bearer $token",
       },
       // body: jsonEncode(data.toJson())
-    ).timeout(Duration(seconds: 30));
+    ).timeout(const Duration(seconds: 30));
 
-   // log(response.body.toString());
-   // log(response.statusCode.toString());
+   log(response.body.toString());
+    log(response.statusCode.toString());
   } catch (e) {
     response = null;
   }

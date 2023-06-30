@@ -31,7 +31,7 @@ class PeopleHome extends StatefulWidget {
 }
 
 class _PeopleHomeState extends State<PeopleHome>
-    with AutomaticKeepAliveClientMixin {
+     {
   PageController? controller;
 
   @override
@@ -135,6 +135,6 @@ class _PeopleHomeState extends State<PeopleHome>
     super.initState();
   }
 
-  @override
-  bool get wantKeepAlive => true;
+  // @override
+  // bool get wantKeepAlive => true;
 }

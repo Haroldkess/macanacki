@@ -105,41 +105,43 @@ class CreatePostController {
         .shareCommentFromApi(data, id)
         .whenComplete(() => log("api function done"));
 
-    final CommentInfo sendCom = ware.comments.comments!
-        .where((element) => pref.getString(userNameKey) == element.username)
-        .last;
-
-    Comment finalData = Comment(
-        id: sendCom.id,
-        username: sendCom.username,
-        createdAt: sendCom.createdAt,
-        updatedAt: sendCom.updatedAt,
-        body: sendCom.body,
-        profilePhoto: sendCom.profilePhoto,
-        noOfLikes: sendCom.noOfLikes, postId: id);
-
-    PublicComment publicData = PublicComment(
-        id: sendCom.id,
-        username: sendCom.username,
-        createdAt: sendCom.createdAt,
-        updatedAt: sendCom.updatedAt,
-        body: sendCom.body,
-        profilePhoto: sendCom.profilePhoto,
-        noOfLikes: sendCom.noOfLikes, postId: id);
-
-    ProfileComment userData = ProfileComment(
-        id: sendCom.id,
-        username: sendCom.username,
-        createdAt: sendCom.createdAt,
-        updatedAt: sendCom.updatedAt,
-        body: sendCom.body,
-        profilePhoto: sendCom.profilePhoto,
-        noOfLikes: sendCom.noOfLikes, postId: id);
-
     // ignore: use_build_context_synchronously
     //await FeedPostController.getUserPostController(context);
 
     if (isDone) {
+      final CommentInfo sendCom = ware.comments.comments!
+          .where((element) => pref.getString(userNameKey) == element.username)
+          .last;
+
+      Comment finalData = Comment(
+          id: sendCom.id,
+          username: sendCom.username,
+          createdAt: sendCom.createdAt,
+          updatedAt: sendCom.updatedAt,
+          body: sendCom.body,
+          profilePhoto: sendCom.profilePhoto,
+          noOfLikes: sendCom.noOfLikes,
+          postId: id);
+
+      PublicComment publicData = PublicComment(
+          id: sendCom.id,
+          username: sendCom.username,
+          createdAt: sendCom.createdAt,
+          updatedAt: sendCom.updatedAt,
+          body: sendCom.body,
+          profilePhoto: sendCom.profilePhoto,
+          noOfLikes: sendCom.noOfLikes,
+          postId: id);
+
+      ProfileComment userData = ProfileComment(
+          id: sendCom.id,
+          username: sendCom.username,
+          createdAt: sendCom.createdAt,
+          updatedAt: sendCom.updatedAt,
+          body: sendCom.body,
+          profilePhoto: sendCom.profilePhoto,
+          noOfLikes: sendCom.noOfLikes,
+          postId: id);
       // ignore: use_build_context_synchronously
       Operations.commentOperation(context, true, [], finalData);
       if (page == "public") {
@@ -188,8 +190,6 @@ class CreatePostController {
       showToast2(context, "Failed to delete post", isError: true);
     }
   }
-
-  
 
   static Future editPost(context, id, String caption) async {
     CreatePostWare ware = Provider.of<CreatePostWare>(context, listen: false);

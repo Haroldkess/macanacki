@@ -103,6 +103,7 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
                 Provider.of<TabProvider>(context, listen: false);
             if (provide.index == 0) {
               _controller!.play();
+              provide.tap(false);
             } else {
               if (provide.index == 4 && provide.isHome) {
                 emitter("heyyyyy");
@@ -263,7 +264,8 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
           Align(
             alignment: Alignment.topCenter,
             child: Padding(
-              padding:  EdgeInsets.symmetric(horizontal: 10, vertical: widget.isHome ? 30 : 37),
+              padding: EdgeInsets.symmetric(
+                  horizontal: 10, vertical: widget.isHome ? 30 : 37),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [

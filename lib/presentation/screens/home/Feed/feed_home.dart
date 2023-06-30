@@ -24,13 +24,14 @@ class FeedHome extends StatefulWidget {
   State<FeedHome> createState() => _FeedHomeState();
 }
 
-class _FeedHomeState extends State<FeedHome> {
+class _FeedHomeState extends State<FeedHome>
+    with AutomaticKeepAliveClientMixin {
   @override
   void initState() {
     super.initState();
     //Operations.funcFindUser(context);
 
-     callFeedPost(false);
+    callFeedPost(false);
   }
 
   @override
@@ -43,7 +44,7 @@ class _FeedHomeState extends State<FeedHome> {
       onRefresh: () => callFeedPost(true),
       backgroundColor: HexColor(primaryColor),
       color: HexColor(backgroundColor),
-      child: const PeopleHome(),
+      child: PeopleHome(),
 
       //  stream.loadStatus ?const Center(child:  ScanningPerimeter()) : const PeopleHome()
     );
@@ -69,15 +70,20 @@ class _FeedHomeState extends State<FeedHome> {
       });
     } else {
       await FeedPostController.getFeedPostController(context, 1, false);
-    //   SchedulerBinding.instance.addPostFrameCallback((_) {
-        ActionController.retrievAllUserLikedController(context);
-     // });
-    //  SchedulerBinding.instance.addPostFrameCallback((_) {
-        ActionController.retrievAllUserFollowingController(context);
-    //  });
-    //  SchedulerBinding.instance.addPostFrameCallback((_) {
-        ActionController.retrievAllUserLikedCommentsController(context);
-    //  });
+      //   SchedulerBinding.instance.addPostFrameCallback((_) {
+      ActionController.retrievAllUserLikedController(context);
+      // });
+      //  SchedulerBinding.instance.addPostFrameCallback((_) {
+      ActionController.retrievAllUserFollowingController(context);
+      //  });
+      //  SchedulerBinding.instance.addPostFrameCallback((_) {
+      ActionController.retrievAllUserLikedCommentsController(context);
+
+      setState(() {});
+      //  });
     }
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
