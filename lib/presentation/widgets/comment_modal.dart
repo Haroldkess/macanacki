@@ -328,7 +328,7 @@ class CommentTile extends StatelessWidget {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     ActionWare action = context.watch<ActionWare>();
-    var w = (size.width - 4 * 1) / 6;
+    var w = 30.0;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Row(
@@ -347,19 +347,32 @@ class CommentTile extends StatelessWidget {
                       // color: Colors.amber,
                       child: Stack(
                         children: [
-                          HexagonWidget.pointy(
-                            width: w,
-                            elevation: 2.0,
-                            color: Colors.white,
-                            cornerRadius: 20.0,
-                            child: AspectRatio(
-                              aspectRatio: HexagonType.POINTY.ratio,
-                              // child: Image.asset(
-                              //   'assets/tram.jpg',
-                              //   fit: BoxFit.fitWidth,
-                              // ),
-                            ),
-                          ),
+                            HexagonWidget.pointy(
+                                  width: w - 3,
+                                  elevation: 2.0,
+                                  color: Colors.white,
+                                  cornerRadius: 2.0,
+                                  child: AspectRatio(
+                                    aspectRatio: HexagonType.POINTY.ratio,
+                                    // child: Image.asset(
+                                    //   'assets/tram.jpg',
+                                    //   fit: BoxFit.fitWidth,
+                                    // ),
+                                  ),
+                                ),
+                          // HexagonWidget.pointy(
+                          //   width: w,
+                          //   elevation: 2.0,
+                          //   color: Colors.white,
+                          //   cornerRadius: 20.0,
+                          //   child: AspectRatio(
+                          //     aspectRatio: HexagonType.POINTY.ratio,
+                          //     // child: Image.asset(
+                          //     //   'assets/tram.jpg',
+                          //     //   fit: BoxFit.fitWidth,
+                          //     // ),
+                          //   ),
+                          // ),
                           HexagonAvatar(
                               url:
                                   e.profilePhoto == null ? "" : e.profilePhoto!,

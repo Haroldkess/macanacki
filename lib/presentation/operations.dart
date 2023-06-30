@@ -24,6 +24,7 @@ import '../model/feed_post_model.dart';
 import '../model/gender_model.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../services/middleware/chat_ware.dart';
 import '../services/middleware/create_post_ware.dart';
 import '../services/middleware/facial_ware.dart';
 
@@ -201,7 +202,7 @@ class Operations {
   static Future commentOperation(BuildContext context, bool isAdd,
       [List<dynamic>? commentList, Comment? data]) async {
     StoreComment comment = Provider.of<StoreComment>(context, listen: false);
- 
+
     if (isAdd == false) {
       comment.addAllComments(commentList!);
     } else {
@@ -315,5 +316,11 @@ class Operations {
   static Future stopCommentLoad(context) async {
     CreatePostWare ware = Provider.of<CreatePostWare>(context, listen: false);
     ware.isLoading2(false);
+  }
+
+  static Future<void> searchInConversations(
+      BuildContext context, String text) async {
+    ChatWare action = Provider.of<ChatWare>(context, listen: false);
+    action.addToSearch(text);
   }
 }

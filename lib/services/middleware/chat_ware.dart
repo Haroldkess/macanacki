@@ -15,18 +15,112 @@ class ChatWare extends ChangeNotifier {
   bool _loadStatus = false;
   String message = "Something went wrong";
   ScrollController controller = ScrollController();
+  List<SockerUserModel> allSocketUsers = [];
   List<String> fakeMsg = [];
   Timer? _timing;
+  int chatPage = 0;
   List<Conversation> justChat = [];
   List<UnreadData> unreadMsgs = [];
-
+  String searchName = "";
   List<ChatData> _chatList = [];
   List<ChatData> chatList2 = [];
   AllConversationModel _chat = AllConversationModel();
-
+  IO.Socket? socket;
+  dynamic messageReturn;
   bool get loadStatus => _loadStatus;
   List<ChatData> get chatList => _chatList;
   AllConversationModel get chat => _chat;
+
+  void addToSearch(String txt) {
+    searchName = txt;
+    notifyListeners();
+  }
+
+  void clearReturnMessage() {
+    messageReturn = "";
+    messageReturn = null;
+    notifyListeners();
+  }
+
+  void chatPageChange(int val) {
+    chatPage = val;
+    notifyListeners();
+  }
+
+  void testAddToChatData(ChatData? dat) async {
+    List<ChatData> tempData = _chatList;
+    ChatData chatAdd = tempData.where((element) => element.id == dat!.id).first;
+    Conversation toBeAdded = Conversation(
+      id: dat!.conversations!.first.id,
+      body: dat.conversations!.first.body,
+      read: dat.conversations!.first.read,
+      senderId: dat.conversations!.first.senderId,
+      createdAt: dat.conversations!.first.createdAt,
+      updatedAt: dat.conversations!.first.updatedAt,
+      sender: dat.conversations!.first.sender,
+      media: dat.conversations!.first.media,
+      determineId: dat.id,
+    );
+
+    chatAdd.conversations!.insert(0, toBeAdded);
+
+    ChatData newChat = chatAdd;
+
+    for (var i = 0; i < tempData.length; i++) {
+      List<ChatData> forCheck =
+          tempData.where((element) => element.id == dat.id).toList();
+      if (tempData[i].id == dat.id) {
+        tempData.removeAt(i);
+        tempData.add(newChat);
+        _chatList = [];
+        _chatList.clear();
+        _chatList = tempData;
+
+        addMsg(toBeAdded);
+        notifyListeners();
+      }
+
+      // if(forCheck.isNotEmpty){
+
+      // }
+    }
+
+    // _chatList
+    //     .where((element) {
+    //       return element.id == dat!.id;
+    //     })
+    //     .toList()
+    //     .first
+    //     .conversations!
+    //     .addAll(dat!.conversations!);
+
+    // dat.conversations!.forEach((element) async {
+    // Conversation data = Conversation(
+    //   id: dat.conversations!.first.id,
+    //   body: dat.conversations!.first.body,
+    //   read: dat.conversations!.first.read,
+    //   senderId: dat.conversations!.first.senderId,
+    //   createdAt: dat.conversations!.first.createdAt,
+    //   updatedAt: dat.conversations!.first.updatedAt,
+    //   sender: dat.conversations!.first.sender,
+    //   media: dat.conversations!.first.media,
+    //   determineId: dat.id,
+    // );
+
+    //   });
+
+    notifyListeners();
+  }
+
+  void addSocket(IO.Socket? soc) {
+    socket = soc;
+    notifyListeners();
+  }
+
+  void addReturn(ret) {
+    messageReturn = ret;
+    notifyListeners();
+  }
 
   Future addTempFakeMsg(String msg) async {
     fakeMsg.add(msg);
@@ -78,14 +172,16 @@ class ChatWare extends ChangeNotifier {
     yield data ?? "nothing";
   }
 
-  Future addMsg(Conversation msg) async {
+  Future addMsg(
+    Conversation msg,
+  ) async {
     // emitter(msg.createdAt);
     if (justChat.isEmpty) {
       justChat.insert(0, msg);
     } else {
       if (justChat[0].body == msg.body &&
-          "${justChat[0].createdAt!.year}-${justChat[0].createdAt!.month}-${justChat[0].createdAt!.day} ${justChat[0].createdAt!.hour}:${justChat[0].createdAt!.minute}" ==
-              "${msg.createdAt!.year}-${msg.createdAt!.month}-${msg.createdAt!.day} ${msg.createdAt!.hour}:${msg.createdAt!.minute}") {
+          "${justChat[0].createdAt!.year}-${justChat[0].createdAt!.month}-${justChat[0].createdAt!.day} ${justChat[0].createdAt!.hour}:${justChat[0].createdAt!.minute} ${justChat[0].createdAt!.second}" ==
+              "${msg.createdAt!.year}-${msg.createdAt!.month}-${msg.createdAt!.day} ${msg.createdAt!.hour}:${msg.createdAt!.minute} ${msg.createdAt!.second}") {
       } else {
         justChat.insert(0, msg);
       }
@@ -94,10 +190,27 @@ class ChatWare extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future addAllMsg(List<Conversation> msg) async {
+  Future addAllMsg(List<Conversation> msg, id) async {
     //final List<Conversation> hold = justChat;
+    List<Conversation> hold = [];
     justChat.clear();
-    justChat.addAll(msg);
+    await Future.forEach(msg, (element) async {
+      Conversation data = Conversation(
+        id: element.id,
+        body: element.body,
+        read: element.read,
+        senderId: element.senderId,
+        createdAt: element.createdAt,
+        updatedAt: element.updatedAt,
+        sender: element.sender,
+        media: element.media,
+        determineId: id,
+      );
+      hold.add(data);
+    })
+        .whenComplete(() => justChat.addAll(hold))
+        .whenComplete(() => hold.clear());
+
     //justChat.addAll();
     notifyListeners();
   }
@@ -270,6 +383,24 @@ class ChatWare extends ChangeNotifier {
     return isSuccessful;
   }
 
+  void addUser(List<SockerUserModel> val) async {
+    allSocketUsers.clear();
+    allSocketUsers.addAll(val);
+    // val.forEach((element) {
+    //   List<SockerUserModel> dat = allSocketUsers
+    //       .where((value) => value.userId == element.userId)
+    //       .toList();
+    //   if (dat.isEmpty) {
+    //     allSocketUsers.add(element);
+    //   } else {
+    //     allSocketUsers.removeWhere((el) => el.userId == element.userId);
+    //     allSocketUsers.add(element);
+    //   }
+    // });
+
+    notifyListeners();
+  }
+
   Future<bool> sendMsgUserFromApi(
     SendMsgModel data,
   ) async {
@@ -285,6 +416,10 @@ class ChatWare extends ChangeNotifier {
         final res = await http.Response.fromStream(response);
         var jsonData = jsonDecode(res.body);
         message = jsonData["message"];
+        messageReturn = res.body;
+        emitter(
+            "THIS IS WHAT WILL BE SENT TO THE SOCKET ${messageReturn.toString()}");
+        //  emitter(jsonData.ToString());
         //  log(jsonData["message"]);
         emitter("message sent successfully");
         isSuccessful = true;

@@ -29,14 +29,17 @@ class ChatList extends StatefulWidget {
   String? myUserId;
   String? toUserId;
   bool isHome;
+  ChatData? user;
   ChatList(
       {super.key,
       required this.chat,
       required this.me,
+      this.user,
       this.to,
       required this.controller,
       required this.myUserId,
-      this.toUserId, required this.isHome});
+      this.toUserId,
+      required this.isHome});
 
   @override
   State<ChatList> createState() => _ChatListState();
@@ -55,8 +58,8 @@ class _ChatListState extends State<ChatList> {
     // });
     //  initPref();
 
- //   print(widget.myUserId ?? "Me");
-  //  print(widget.toUserId ?? "Friend ");
+    //   print(widget.myUserId ?? "Me");
+    //  print(widget.toUserId ?? "Friend ");
   }
 
   bool show = true;
@@ -75,13 +78,13 @@ class _ChatListState extends State<ChatList> {
             //List scroll position
 
             if (notification.metrics.pixels == 0) {
-           //   print(notification.scrollDelta);
-             // log(notification.metrics.maxScrollExtent.toString());
+              //   print(notification.scrollDelta);
+              // log(notification.metrics.maxScrollExtent.toString());
               setState(() {
                 show = false;
               });
             } else {
-           //   log(notification.metrics.maxScrollExtent.toString());
+              //   log(notification.metrics.maxScrollExtent.toString());
               setState(() {
                 show = true;
               });
@@ -92,12 +95,15 @@ class _ChatListState extends State<ChatList> {
               stream: null,
               builder: (context, AsyncSnapshot<String> snapshot) {
                 if (!snapshot.hasData) {
-              //    print("nodata");
+                  //    print("nodata");
                 } else if (snapshot.hasData) {
-               //   print(snapshot.data);
+                  //   print(snapshot.data);
                 }
+                List<Conversation> thisChat = stream.justChat
+                    .where((element) => element.determineId == widget.user!.id)
+                    .toList();
                 return ListView.builder(
-                  itemCount: stream.justChat.length,
+                  itemCount: thisChat.length,
                   // itemCount: widget.chat.last.sender != temp.userName
                   //     ? stream.chatList
                   //         .where((element) => element.userOne == widget.to)
@@ -114,6 +120,7 @@ class _ChatListState extends State<ChatList> {
                   reverse: true,
                   padding: const EdgeInsets.only(top: 100, bottom: 100),
                   itemBuilder: (context, index) {
+                    //  Conversation chats;
                     // Conversation chats = widget.chat.last.sender !=
                     //         temp.userName
                     //     ? stream.chatList
@@ -124,7 +131,8 @@ class _ChatListState extends State<ChatList> {
                     //         .where((element) => element.userTwo == widget.to)
                     //         .single
                     //         .conversations![index];
-                    Conversation chats = stream.justChat[index];
+
+                    Conversation chats = thisChat[index];
 
                     //not here before
                     // widget.controller.animateTo(
@@ -213,13 +221,13 @@ class _FakeChatListState extends State<FakeChatList> {
                   //List scroll position
 
                   if (notification.metrics.pixels == 0) {
-                 //   print(notification.scrollDelta);
-                 //   log(notification.metrics.maxScrollExtent.toString());
+                    //   print(notification.scrollDelta);
+                    //   log(notification.metrics.maxScrollExtent.toString());
                     setState(() {
                       show = false;
                     });
                   } else {
-                  //  log(notification.metrics.maxScrollExtent.toString());
+                    //  log(notification.metrics.maxScrollExtent.toString());
                     setState(() {
                       show = true;
                     });

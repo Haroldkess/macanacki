@@ -99,7 +99,7 @@ class _FeedVideoHolderState extends State<FeedVideoHolder> {
 
     return widget.isHome
         ? Stack(
-            alignment: Alignment.center,
+            alignment:  Alignment.center,
             children: [
               StreamBuilder<Object>(
                   stream: null,
@@ -201,10 +201,11 @@ class _FeedVideoHolderState extends State<FeedVideoHolder> {
                           ])),
                         )
                       : Container(
-                          width: width,
-                          height: widget.controller.value.aspectRatio < 1
-                              ? height
-                              : null,
+                          //   width: width,
+                          //  height: widget.controller.value.aspectRatio,
+                          // < 1
+                          //     ? height
+                          //     : null,
                           child: AspectRatio(
                             aspectRatio: widget.controller.value.aspectRatio,
                             // Use the VideoPlayer widget to display the video.
@@ -229,10 +230,11 @@ class _FeedVideoHolderState extends State<FeedVideoHolder> {
                           ])),
                         )
                       : Container(
-                          width: double.infinity,
-                          height: widget.controller.value.aspectRatio < 1
-                              ? height
-                              : null,
+                          //  width: double.infinity,
+                          //     height: widget.controller.value.aspectRatio ,
+                          // < 1
+                          //     ? height
+                          //     : null,
                           child: AspectRatio(
                             aspectRatio: widget.controller.value.aspectRatio,
                             // Use the VideoPlayer widget to display the video.
@@ -392,10 +394,11 @@ class _FeedVideoHolderState extends State<FeedVideoHolder> {
                           ])),
                         )
                       : Container(
-                          width: width,
-                          height: widget.controller.value.aspectRatio < 1
-                              ? height
-                              : null,
+                          // width: width,
+                          // height: widget.controller.value.aspectRatio
+                          //  < 1
+                          //     ? height
+                          //     : null,
                           child: AspectRatio(
                             aspectRatio: widget.controller.value.aspectRatio,
                             // Use the VideoPlayer widget to display the video.
@@ -420,10 +423,10 @@ class _FeedVideoHolderState extends State<FeedVideoHolder> {
                           ])),
                         )
                       : Container(
-                          width: double.infinity,
-                          height: widget.controller.value.aspectRatio < 1
-                              ? height
-                              : null,
+                          // width: double.infinity,
+                          // height: widget.controller.value.aspectRatio < 1
+                          //     ? height
+                          //     : null,
                           child: AspectRatio(
                             aspectRatio: widget.controller.value.aspectRatio,
                             // Use the VideoPlayer widget to display the video.

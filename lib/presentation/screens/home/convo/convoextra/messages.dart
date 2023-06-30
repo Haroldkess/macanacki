@@ -21,22 +21,34 @@ import '../../../../widgets/loader.dart';
 
 class MessageList extends StatelessWidget {
   List<ChatData> peopleChats;
-  MessageList({super.key, required this.peopleChats});
+  String? search;
+  MessageList({super.key, required this.peopleChats, this.search});
 
   @override
   Widget build(BuildContext context) {
-    List<ChatData> peopleChat = peopleChats
+    ChatWare stream = context.watch<ChatWare>();
+    List<ChatData> peopleChat = stream.chatList
       ..sort((a, b) =>
           b.conversations!.first.id!.compareTo(a.conversations!.first.id!));
-    return ListBody(
-      //  reverse:  true,
-      children: peopleChat
-          .map((e) => Padding(
-                padding: const EdgeInsets.symmetric(vertical: 5.0),
-                child: MessageWidget(people: e),
-              ))
-          .toList(),
-    );
+    return StreamBuilder(
+        stream: null,
+        builder: (context, snapshot) {
+          List<ChatData>? filtered = peopleChat
+              .where((element) =>
+                  element.userOne!.contains(stream.searchName.toLowerCase()) ||
+                  element.userTwo!.contains(stream.searchName.toLowerCase()))
+              .toList();
+
+          return ListBody(
+            //  reverse:  true,
+            children: filtered
+                .map((e) => Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 5.0),
+                      child: MessageWidget(people: e),
+                    ))
+                .toList(),
+          );
+        });
 
     // ListView.builder(
     //     itemCount: chatUsers.length,
@@ -60,17 +72,21 @@ class MessageWidget extends StatelessWidget {
     ChatWare streams = context.watch<ChatWare>();
     String isOnline;
     int verify;
+    dynamic id;
     var width = MediaQuery.of(context).size.width;
     var size = MediaQuery.of(context).size;
     var padding = 8.0;
     var w = (size.width - 4 * 1) / 8;
     Temp temp = context.watch<Temp>();
+
     if (people.conversations!.last.sender == temp.userName) {
       isOnline = people.userTwoMode ?? "";
       verify = people.userTwoVerify!;
+      id = people.userTwoId!;
     } else {
       isOnline = people.userOneMode ?? "";
       verify = people.userOneVerify!;
+      id = people.userOneId!;
     }
 
     return InkWell(
@@ -89,10 +105,7 @@ class MessageWidget extends StatelessWidget {
         height: 80,
         width: MediaQuery.of(context).size.width * 0.9,
         decoration: BoxDecoration(
-            color: people.conversations!.first.sender != temp.userName
-                ? HexColor("#F5F2F9")
-                : Colors.transparent,
-            borderRadius: BorderRadius.circular(10)),
+            color: Colors.transparent, borderRadius: BorderRadius.circular(10)),
         child: Padding(
           padding: const EdgeInsets.only(left: 8.0),
           child: Row(
@@ -114,7 +127,12 @@ class MessageWidget extends StatelessWidget {
                           padding: const EdgeInsets.only(right: 0, bottom: 0),
                           child: CircleAvatar(
                             radius: 5,
-                            backgroundColor: isOnline == "online"
+                            backgroundColor: streams.allSocketUsers
+                                    .where((element) =>
+                                        element.userId.toString() ==
+                                        id.toString())
+                                    .toList()
+                                    .isNotEmpty
                                 ? Colors.green
                                 : Colors.red,
                           ),
@@ -172,7 +190,12 @@ class MessageWidget extends StatelessWidget {
                             // color: Colors.amber,
                             width: width * 0.4,
                             child: AppText(
-                              text: people.conversations!.first.body!,
+                              text: streams.chatList
+                                  .where((element) => element.id == people.id)
+                                  .first
+                                  .conversations!
+                                  .first
+                                  .body!,
                               color: people.conversations!.isNotEmpty
                                   ? HexColor(darkColor)
                                   : HexColor("#8B8B8B"),
@@ -251,8 +274,6 @@ class MessageWidget extends StatelessWidget {
                                 ),
                               ),
                             )
-                          
-                          
                           : const SizedBox.shrink()
 
                       // people.conversations!.isEmpty

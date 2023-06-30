@@ -26,6 +26,8 @@ class GlobalSearchBar extends StatelessWidget {
       child: TextFormField(
         controller: x,
         cursorColor: HexColor(primaryColor),
+        enableSuggestions: false,
+        autocorrect: false,
         onChanged: (value) async {
           // if (value.isEmpty) {
           //   return;
@@ -38,9 +40,8 @@ class GlobalSearchBar extends StatelessWidget {
           hintText: " Search",
           hintStyle:
               GoogleFonts.spartan(color: HexColor("#C0C0C0"), fontSize: 14),
-          border: UnderlineInputBorder(
-              borderRadius: BorderRadius.circular(2.0),
-              borderSide: const BorderSide(color: Colors.transparent)),
+          border: InputBorder.none,
+          enabledBorder: InputBorder.none,
           disabledBorder: UnderlineInputBorder(
               borderRadius: BorderRadius.circular(2.0),
               borderSide: BorderSide(color: HexColor("#F5F2F9"))),

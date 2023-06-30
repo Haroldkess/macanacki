@@ -69,15 +69,15 @@ class _FeedHomeState extends State<FeedHome> {
       });
     } else {
       await FeedPostController.getFeedPostController(context, 1, false);
-       SchedulerBinding.instance.addPostFrameCallback((_) {
+    //   SchedulerBinding.instance.addPostFrameCallback((_) {
         ActionController.retrievAllUserLikedController(context);
-      });
-      SchedulerBinding.instance.addPostFrameCallback((_) {
+     // });
+    //  SchedulerBinding.instance.addPostFrameCallback((_) {
         ActionController.retrievAllUserFollowingController(context);
-      });
-      SchedulerBinding.instance.addPostFrameCallback((_) {
+    //  });
+    //  SchedulerBinding.instance.addPostFrameCallback((_) {
         ActionController.retrievAllUserLikedCommentsController(context);
-      });
+    //  });
     }
   }
 }

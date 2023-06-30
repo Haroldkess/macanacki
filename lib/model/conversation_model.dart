@@ -62,7 +62,7 @@ class ChatData {
   });
 
   int? id;
-  int? status;
+  dynamic status;
   dynamic blockedBy;
   DateTime? createdAt;
   DateTime? updatedAt;
@@ -91,12 +91,12 @@ class ChatData {
         userOne: json["user_one"],
         userOneId: json["user_one_id"],
         userOneMode: json["user_one_mode"],
-         userOneVerify: json["user_one_verify"],
+        userOneVerify: json["user_one_verify"],
         userOneProfilePhoto: json["user_one_profile_photo"],
         userTwo: json["user_two"],
         userTwoId: json["user_two_id"],
         userTwoMode: json["user_two_mode"],
-         userTwoVerify: json["user_two_verify"],
+        userTwoVerify: json["user_two_verify"],
         userTwoProfilePhoto: json["user_two_profile_photo"],
         conversations: json["conversations"] == null
             ? []
@@ -136,6 +136,7 @@ class Conversation {
     this.updatedAt,
     this.sender,
     this.media,
+    this.determineId
   });
 
   int? id;
@@ -146,6 +147,7 @@ class Conversation {
   DateTime? updatedAt;
   String? sender;
   String? media;
+  int? determineId;
 
   factory Conversation.fromJson(Map<String, dynamic> json) => Conversation(
         id: json["id"],
@@ -160,6 +162,7 @@ class Conversation {
             : DateTime.parse(json["updated_at"]),
         sender: json["sender"],
         media: json["media"],
+         determineId: json["determineId"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -171,6 +174,7 @@ class Conversation {
         "updated_at": updatedAt?.toIso8601String(),
         "sender": sender,
         "media": media,
+        "determineId": determineId,
       };
 }
 
@@ -182,57 +186,94 @@ class SendMsgModel {
   SendMsgModel({this.body, this.media, this.username});
 }
 
-
 // To parse this JSON data, do
 //
 //     final unreadChatModel = unreadChatModelFromJson(jsonString);
 
+UnreadChatModel unreadChatModelFromJson(String str) =>
+    UnreadChatModel.fromJson(json.decode(str));
 
-
-UnreadChatModel unreadChatModelFromJson(String str) => UnreadChatModel.fromJson(json.decode(str));
-
-String unreadChatModelToJson(UnreadChatModel data) => json.encode(data.toJson());
+String unreadChatModelToJson(UnreadChatModel data) =>
+    json.encode(data.toJson());
 
 class UnreadChatModel {
-    bool? status;
-    String? message;
-    List<UnreadData>? data;
+  bool? status;
+  String? message;
+  List<UnreadData>? data;
 
-    UnreadChatModel({
-        this.status,
-        this.message,
-        this.data,
-    });
+  UnreadChatModel({
+    this.status,
+    this.message,
+    this.data,
+  });
 
-    factory UnreadChatModel.fromJson(Map<String, dynamic> json) => UnreadChatModel(
+  factory UnreadChatModel.fromJson(Map<String, dynamic> json) =>
+      UnreadChatModel(
         status: json["status"],
         message: json["message"],
-        data: json["data"] == null ? [] : List<UnreadData>.from(json["data"]!.map((x) => UnreadData.fromJson(x))),
-    );
+        data: json["data"] == null
+            ? []
+            : List<UnreadData>.from(
+                json["data"]!.map((x) => UnreadData.fromJson(x))),
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "status": status,
         "message": message,
-        "data": data == null ? [] : List<dynamic>.from(data!.map((x) => x.toJson())),
-    };
+        "data": data == null
+            ? []
+            : List<dynamic>.from(data!.map((x) => x.toJson())),
+      };
 }
 
 class UnreadData {
-    int? senderId;
-    int? totalUnread;
+  int? senderId;
+  int? totalUnread;
 
-    UnreadData({
-        this.senderId,
-        this.totalUnread,
-    });
+  UnreadData({
+    this.senderId,
+    this.totalUnread,
+  });
 
-    factory UnreadData.fromJson(Map<String, dynamic> json) => UnreadData(
+  factory UnreadData.fromJson(Map<String, dynamic> json) => UnreadData(
         senderId: json["sender_id"],
         totalUnread: json["total_unread"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "sender_id": senderId,
         "total_unread": totalUnread,
-    };
+      };
+}
+
+// To parse this JSON data, do
+//
+//     final sockerUserModel = sockerUserModelFromJson(jsonString);
+
+List<SockerUserModel> sockerUserModelFromJson(dynamic str) =>
+    List<SockerUserModel>.from(
+        jsonDecode(jsonEncode(str)).map((x) => SockerUserModel.fromJson(x)));
+
+String sockerUserModelToJson(List<SockerUserModel> data) =>
+    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+
+class SockerUserModel {
+  dynamic socketId;
+  dynamic userId;
+
+  SockerUserModel({
+    this.socketId,
+    this.userId,
+  });
+
+  factory SockerUserModel.fromJson(Map<String, dynamic> json) =>
+      SockerUserModel(
+        socketId: json['socketId'],
+        userId: json['userId'],
+      );
+
+  Map<String, dynamic> toJson() => {
+        'socketId': socketId,
+        'userId': userId,
+      };
 }

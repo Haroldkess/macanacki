@@ -47,23 +47,34 @@ class TabScreen extends StatefulWidget {
 class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
   final GlobalKey<ScaffoldState> key = GlobalKey();
   late Timer reloadTime;
-  final AsyncMemoizer _memoizer = AsyncMemoizer();
+  final AsyncMemoizer _memoizerUser = AsyncMemoizer();
+  final AsyncMemoizer _memoizer2 = AsyncMemoizer();
+  final AsyncMemoizer _memoizerChat = AsyncMemoizer();
 
+  final List<Widget> _children = [
+    const FeedHome(),
+    const GlobalSearch(),
+    const SwipeCardScreen(),
+    const ConversationScreen(),
+    const ProfileScreen(),
+  ];
   @override
   Widget build(BuildContext context) {
     TabProvider provide = Provider.of<TabProvider>(context, listen: false);
 
     TabProvider tabs = context.watch<TabProvider>();
+    ChatWare chat = context.watch<ChatWare>();
     FindPeopleProvider listen = context.watch<FindPeopleProvider>();
+    _memoizer2.runOnce(() => ChatController.initSocket(context)
+        .whenComplete(() => ChatController.addUserToSocket(context)));
+    if (chat.socket != null) {
+      //  ChatController.addUserToSocket(context);
+      _memoizerChat.runOnce(() => ChatController.listenForMessages(context));
 
-    _memoizer.runOnce(() => reloadChat(context));
-    final List<Widget> _children = [
-      const FeedHome(),
-      const GlobalSearch(),
-      const SwipeCardScreen(),
-      const ConversationScreen(),
-      const ProfileScreen(),
-    ];
+      _memoizerUser.runOnce(() => ChatController.listenForUser(context));
+      // ChatController.listenForUser(context);
+    }
+
     return WillPopScope(
       onWillPop: () async {
         // print("back button pressed");
@@ -72,7 +83,7 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
         return shouldPop!;
       },
       child: SafeArea(
-        top: false,
+        top: true,
         child: Scaffold(
           backgroundColor: tabs.index == 4 || tabs.index == 2
               ? HexColor(backgroundColor)
@@ -89,18 +100,68 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
                       ? HexColor(backgroundColor)
                       : Colors.transparent,
                 ),
-          body: PageView(
-            physics: const NeverScrollableScrollPhysics(),
-            controller: tabs.pageController,
-            children: _children,
-            onPageChanged: (index) {
-              provide.changeIndex(index);
-            },
-          ),
+          body: StreamBuilder(
+              stream: streamSocketMsgs.getResponse,
+              builder: (con, AsyncSnapshot<dynamic> snapshot) {
+                if (snapshot.connectionState == ConnectionState.active) {
+                  if (snapshot.hasData) {
+                    if (snapshot.data != null) {
+                      if (mounted) {
+                        WidgetsBinding.instance
+                            .addPostFrameCallback((timeStamp) async {
+                          ChatController.handleMessage(context, snapshot.data);
+                          streamSocketMsgs.addResponse(null);
+                        });
+                      }
+                    } else {
+                      emitter("snapshot is null");
+                    }
+                  }
+                }
+                return SizedBox(
+                  child: StreamBuilder(
+                      stream: streamSocket.getResponse,
+                      builder: (con, AsyncSnapshot<dynamic> snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.active) {
+                          if (snapshot.hasData) {
+                            if (snapshot.data != null) {
+                              if (mounted) {
+                                WidgetsBinding.instance
+                                    .addPostFrameCallback((timeStamp) async {
+                                  ChatController.addUserToList(
+                                      context, snapshot.data);
+                                  streamSocket.addResponse(null);
+                                });
+                              }
+                            } else {
+                              emitter("snapshot is null");
+                            }
+                          }
+                        }
+                        return PageView(
+                          physics: const NeverScrollableScrollPhysics(),
+                          controller: tabs.pageController,
+                          children: _children,
+                          onPageChanged: (index) {
+                            provide.changeIndex(index);
+                          },
+                        );
+                      }),
+                );
+              }),
           bottomNavigationBar: CupertinoTabBar(
             currentIndex: context.watch<TabProvider>().index,
             onTap: (index) async {
               provide.changeIndex(index);
+              ChatController.initSocket(context)
+                  .whenComplete(() => ChatController.addUserToSocket(context));
+              // if (chat.socket != null) {
+              //   ChatController.addUserToSocket(context);
+              // }
+              if (chat.chatPage != 0) {
+                ChatController.changeChatPage(context, 0);
+              }
 
               if (provide.index == 0) {
                 tabs.pageController!.animateToPage(
@@ -213,15 +274,16 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
 
   Future reloadChat(BuildContext context) async {
     emitter("W have started the reload");
-    reloadTime = Timer.periodic(const Duration(minutes: 1), (timer) async {
+    reloadTime = Timer.periodic(const Duration(seconds: 10), (_) {
+      //  ChatController.retrievChatController(context, false);
       ChatController.retreiveUnread(context);
-      await ChatController.retrievChatController(context, false);
     });
   }
 
   @override
   void initState() {
     super.initState();
+
     //  = PageController(initialPage:  )
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -304,6 +366,14 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
       emitter("closed");
       ModeController.handleMode("offline");
     } else if (isResumed) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ChatWare action = Provider.of(context, listen: false);
+        if (action.socket != null) {
+          ChatController.initSocket(context)
+              .whenComplete(() => ChatController.addUserToSocket(context));
+          // action.socket!.disconnect().connect();
+        }
+      });
       emitter("resumed");
       ModeController.handleMode("online");
     } else if (isInactive) {

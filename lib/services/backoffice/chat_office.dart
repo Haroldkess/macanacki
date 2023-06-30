@@ -41,7 +41,7 @@ Future<http.StreamedResponse?> sendMessageTo(
   }
 
   try {
-    response = await request.send().timeout(const Duration(seconds: 30));
+    response = await request.send();
   } catch (e) {
     //  log("hello");
     //  log(e.toString());

@@ -1,9 +1,14 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:makanaki/model/conversation_model.dart';
 import 'package:makanaki/presentation/widgets/debug_emitter.dart';
 import 'package:makanaki/presentation/widgets/snack_msg.dart';
+import 'package:makanaki/services/api_url.dart';
 import 'package:makanaki/services/controllers/plan_controller.dart';
 import 'package:makanaki/services/middleware/chat_ware.dart';
 import 'package:makanaki/services/middleware/gender_ware.dart';
@@ -12,6 +17,36 @@ import 'package:makanaki/services/temps/temps_id.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:socket_io_client/socket_io_client.dart';
+
+import '../../presentation/uiproviders/screen/card_provider.dart';
+
+class StreamSocket {
+  final _socketResponse = StreamController<dynamic>();
+
+  void Function(dynamic) get addResponse => _socketResponse.sink.add;
+
+  Stream<dynamic> get getResponse => _socketResponse.stream;
+
+  void dispose() {
+    _socketResponse.close();
+  }
+}
+
+class StreamSocketMsgs {
+  final _socketResponse = StreamController<dynamic>();
+
+  void Function(dynamic) get addResponse => _socketResponse.sink.add;
+
+  Stream<dynamic> get getResponse => _socketResponse.stream;
+
+  void dispose() {
+    _socketResponse.close();
+  }
+}
+
+StreamSocket streamSocket = StreamSocket();
+StreamSocketMsgs streamSocketMsgs = StreamSocketMsgs();
 
 class ChatController {
   static Future<void> retrievChatCompare(
@@ -96,7 +131,7 @@ class ChatController {
 
     if (isDone) {
       // ignore: use_build_context_synchronously
-    //  await retreiveUnread(context);
+      //  await retreiveUnread(context);
       emitter("we read all unread messages");
     } else {
       emitter(" read all unread messages FAILED");
@@ -108,8 +143,9 @@ class ChatController {
     }
   }
 
-  static Future<void> sendChatController(
+  static Future<bool> sendChatController(
       BuildContext context, String msg, String to, ChatData chat) async {
+    late bool sent;
     ChatWare ware = Provider.of<ChatWare>(context, listen: false);
     UserProfileWare user = Provider.of<UserProfileWare>(context, listen: false);
 
@@ -136,6 +172,7 @@ class ChatController {
         () => emitter("everything from api and provider is done"));
 
     if (isDone) {
+      sent = true;
       // if (chat.conversations!.isNotEmpty) {
       //   ware.removeTempMsg(chat.id!);
       // }
@@ -173,6 +210,7 @@ class ChatController {
       }
       //  ware.isLoading(false);
     } else {
+      sent = false;
       // if (user.userProfileModel.activePlan == "inactive subscription") {
       //   // ignore: use_build_context_synchronously
       //   await PlanController.retrievPlanController(context);
@@ -189,5 +227,224 @@ class ChatController {
       // ignore: use_build_context_synchronously
       // showToast2(context, ware.message, isError: true);
     }
+
+    return sent;
+  }
+
+  static Future<void> initSocket(BuildContext context) async {
+    IO.Socket? socket;
+
+    ChatWare ware = Provider.of<ChatWare>(context, listen: false);
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    String? token = pref.getString(tokenKey);
+    socket = IO.io(
+      chatUrl,
+      OptionBuilder()
+          .setTransports(['websocket'])
+          .enableAutoConnect()
+          .setExtraHeaders({"Authorization": "$token"})
+          .build(),
+    );
+    socket.connect();
+
+    socket.onConnect((_) {
+      ware.addSocket(socket);
+      print('Connection established');
+    });
+    ware.addSocket(socket);
+// socket.on("getMessage", (data) {
+//       if (data != null) {
+//         ChatController.handleMessage(context, data);
+//       } else {
+//         print("null");
+//       }
+//     });
+    addUserToSocket(context);
+
+    socket.onConnectError((err) => print(err));
+    socket.onError((err) => print(err));
+    socket.onDisconnect((_) => print('Connection Disconnection'));
+    print(socket.connected);
+
+    // ignore: use_build_context_synchronously
+  }
+
+  static void addUserToSocket(BuildContext context) {
+    ChatWare ware = Provider.of<ChatWare>(context, listen: false);
+    UserProfileWare user = Provider.of<UserProfileWare>(context, listen: false);
+
+    ware.socket!.emit("addUserId", '${user.userProfileModel.id}');
+  }
+
+  static void listenForUser(BuildContext context) {
+    ChatWare ware = Provider.of<ChatWare>(context, listen: false);
+    ware.socket!.on("getUsers", (data) {
+      if (data != null) {
+        streamSocket.addResponse(data);
+
+        // print(data);
+      } else {
+        print("null");
+      }
+    });
+  }
+
+  static void addUserToList(BuildContext context, data) {
+    ChatWare ware = Provider.of<ChatWare>(context, listen: false);
+    var dat = jsonDecode(jsonEncode(data));
+    // SockerUserModel sockerUserModel = SockerUserModel(data: );
+
+    emitter(data.toString());
+
+    final val = sockerUserModelFromJson(data);
+
+    ware.addUser(val);
+
+    emitter(ware.allSocketUsers.length.toString());
+  }
+
+  static void listenForMessages(BuildContext context) async {
+    ChatWare ware = Provider.of<ChatWare>(context, listen: false);
+    ware.socket!.on("getMessage", (data) {
+      if (data != null) {
+        streamSocketMsgs.addResponse(data);
+
+        // handleMessage(context, data);
+      } else {
+        print("null");
+      }
+    });
+  }
+
+  static void handleMessage(context, data) async {
+    ChatWare ware = Provider.of<ChatWare>(context, listen: false);
+    final jsonData = jsonDecode(data);
+    emitter(jsonData.toString());
+
+    var val = AllConversationModel.fromJson(jsonData);
+
+    var dat = val.data!.first;
+
+    ChatData chatData = ChatData(
+      id: dat.id,
+      status: dat.status,
+      blockedBy: dat.blockedBy,
+      createdAt: dat.createdAt,
+      updatedAt: dat.updatedAt,
+      userOne: dat.userOne,
+      userOneId: dat.userOneId,
+      userOneMode: dat.userOneMode,
+      userOneVerify: dat.userOneVerify,
+      userOneProfilePhoto: dat.userOneProfilePhoto,
+      userTwo: dat.userTwo,
+      userTwoId: dat.userTwoId,
+      userTwoMode: dat.userTwoMode,
+      userTwoVerify: dat.userTwoVerify,
+      userTwoProfilePhoto: dat.userTwoProfilePhoto,
+      conversations: dat.conversations,
+    );
+
+    // ChatData chatData = ChatData(
+    //   id: dat.id,
+    //   status: dat.status,
+    //   blockedBy: dat.blockedBy,
+    //   createdAt: dat.createdAt,
+    //   updatedAt: dat.updatedAt,
+    //   userOne: dat.userOne,
+    //   userOneId: dat.userOneId,
+    //   userOneMode: dat.userOneMode,
+    //   userOneVerify: dat.userOneVerify,
+    //   userOneProfilePhoto: dat.userOneProfilePhoto,
+    //   userTwo: dat.userTwo,
+    //   userTwoId: dat.userTwoId,
+    //   userTwoMode: dat.userTwoMode,
+    //   userTwoVerify: dat.userTwoVerify,
+    //   userTwoProfilePhoto: dat.userTwoProfilePhoto,
+    //   conversations: dat.conversations,
+    // );
+    emitter(chatData.conversations!.first.body!);
+
+    ware.testAddToChatData(chatData);
+
+    retreiveUnread(context);
+
+    if (ware.chatPage != 0) {
+      readAll(context, ware.chatPage);
+    }
+
+    // Conversation data3 = Conversation(
+    //   body: data2.toString(),
+    //   read: true,
+    //   id: chatWare.justChat.length + 1,
+    //   senderId: int.tryParse(toId!),
+    //   createdAt: DateTime.now(),
+    //   updatedAt: DateTime.now(),
+    //   sender: sendTo,
+    // );
+
+   // emitter(jsonData.toString());
+  }
+
+  static Future sendMessageHandler(
+      BuildContext context,
+      TextEditingController msgController,
+      ChatData chat,
+      String toId,
+      String sendTo) async {
+    UserProfileWare user = Provider.of<UserProfileWare>(context, listen: false);
+    ChatWare ware = Provider.of<ChatWare>(context, listen: false);
+    CardProvider provide = Provider.of<CardProvider>(context, listen: false);
+    if (msgController.text.isEmpty) return;
+    final saveMsg = msgController.text;
+    Conversation data = Conversation(
+        body: msgController.text,
+        read: true,
+        id: ware.justChat.length + 1,
+        senderId: user.userProfileModel.id,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+        sender: user.userProfileModel.username,
+        determineId: chat.id);
+
+    ware.addMsg(data);
+    msgController.clear();
+    provide.typeMsg(false);
+
+    bool isSent = await sendChatController(
+      context,
+      saveMsg,
+      sendTo,
+      chat,
+    );
+
+    if (isSent) {
+      emitter("we call the socket here");
+      var messageMap = {
+        "from": int.tryParse(user.userProfileModel.id!.toString()),
+        "to": int.tryParse(toId),
+        "message": ware.messageReturn,
+      };
+      emitter("Sent message ${ware.messageReturn}");
+      ware.socket!.emit(
+        "sendMessage",
+        messageMap,
+      );
+
+      ware.clearReturnMessage();
+    } else {
+      emitter("WE DID NOT SEND TO SOCKET");
+    }
+
+//  { "data": [  {"socketId": "ePYULb5MpymhWOA4AAsU", "userId": 17}, {"socketId": "yZbBEpAggJLn0vDYAAsa", "userId": 16}]}
+
+    retreiveUnread(context);
+    readAll(context, int.tryParse(toId)!);
+  }
+
+  static Future<void> changeChatPage(context, int id) async {
+    ChatWare ware = Provider.of<ChatWare>(context, listen: false);
+    ware.chatPageChange(id);
+
+    emitter("Chat page id ${ware.chatPage}");
   }
 }

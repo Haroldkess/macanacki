@@ -38,25 +38,27 @@ class ChatForm extends StatelessWidget {
     ChatWare listenWare = Provider.of<ChatWare>(context, listen: false);
     if (socket == null) {
     } else {
-      socket!.on("getMessage", (data2) async {
-        Conversation data3 = Conversation(
-          body: data2.toString(),
-          read: true,
-          id: chatWare.justChat.length + 1,
-          senderId: int.tryParse(toId!),
-          createdAt: DateTime.now(),
-          updatedAt: DateTime.now(),
-          sender: sendTo,
-        );
-        if (data2 != null) {
-          print(data2);
-          listenWare.addMsg(data3);
-         ChatController.readAll(context, int.tryParse(toId!)!);
-         ChatController.retrievChatController(context, false);
-        } else {
-          print("null");
-        }
-      });
+    
+
+      // socket!.on("getMessage", (data2) async {
+      //   Conversation data3 = Conversation(
+      //     body: data2.toString(),
+      //     read: true,
+      //     id: chatWare.justChat.length + 1,
+      //     senderId: int.tryParse(toId!),
+      //     createdAt: DateTime.now(),
+      //     updatedAt: DateTime.now(),
+      //     sender: sendTo,
+      //   );
+      //   if (data2 != null) {
+      //     print(data2);
+      //     listenWare.addMsg(data3);
+      //     ChatController.readAll(context, int.tryParse(toId!)!);
+      //     //  ChatController.retrievChatController(context, false);
+      //   } else {
+      //     print("null");
+      //   }
+      // });
     }
 
     // Future.delayed(const Duration(seconds: 1)).whenComplete(() {
@@ -118,45 +120,49 @@ class ChatForm extends StatelessWidget {
                     padding: const EdgeInsets.all(10.0),
                     child: InkWell(
                       onTap: () async {
-                        UserProfileWare user = Provider.of<UserProfileWare>(
-                            context,
-                            listen: false);
-                        ChatWare ware =
-                            Provider.of<ChatWare>(context, listen: false);
-                        if (msgController.text.isEmpty) return;
+                            if (chatWare.socket != null) {
+                ChatController.addUserToSocket(context);
+              }
+                        ChatController.sendMessageHandler(
+                            context, msgController, chat, toId!, sendTo);
+                        // UserProfileWare user = Provider.of<UserProfileWare>(
+                        //     context,
+                        //     listen: false);
+                        // ChatWare ware =
+                        //     Provider.of<ChatWare>(context, listen: false);
+                        // if (msgController.text.isEmpty) return;
 
-                        final saveMsg = msgController.text;
+                        // final saveMsg = msgController.text;
 
-                        Conversation data = Conversation(
-                          body: msgController.text,
-                          read: true,
-                          id: ware.justChat.length + 1,
-                          senderId: user.userProfileModel.id,
-                          createdAt: DateTime.now(),
-                          updatedAt: DateTime.now(),
-                          sender: user.userProfileModel.username,
-                        );
-                        var messageMap = {
-                          "from": int.tryParse(
-                              user.userProfileModel.id!.toString()),
-                          "to": int.tryParse(toId!),
-                          "message": saveMsg,
-                        };
-                        socket!.emit(
-                          "sendMessage",
-                          messageMap,
-                        );
-                        ware.addMsg(data);
-                        msgController.clear();
-                        provide.typeMsg(false);
+                        // Conversation data = Conversation(
+                        //   body: msgController.text,
+                        //   read: true,
+                        //   id: ware.justChat.length + 1,
+                        //   senderId: user.userProfileModel.id,
+                        //   createdAt: DateTime.now(),
+                        //   updatedAt: DateTime.now(),
+                        //   sender: user.userProfileModel.username,
+                        // );
+                        // var messageMap = {
+                        //   "from": int.tryParse(
+                        //       user.userProfileModel.id!.toString()),
+                        //   "to": int.tryParse(toId!),
+                        //   "message": saveMsg,
+                        // };
+                        // socket!.emit(
+                        //   "sendMessage",
+                        //   messageMap,
+                        // );
+                        // ware.addMsg(data);
+                        // msgController.clear();
+                        // provide.typeMsg(false);
 
-                        await ChatController.sendChatController(
-                          context,
-                          saveMsg,
-                          sendTo,
-                          chat,
-                        );
-                        ModeController.handleMode("online");
+                        // await ChatController.sendChatController(
+                        //   context,
+                        //   saveMsg,
+                        //   sendTo,
+                        //   chat,
+                        // );
                       },
                       child: SvgPicture.asset(
                         "assets/icon/Send.svg",

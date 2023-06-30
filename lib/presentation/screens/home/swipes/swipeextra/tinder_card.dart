@@ -24,6 +24,7 @@ import '../../../../../model/swiped_user_model.dart';
 import '../../../../../services/controllers/action_controller.dart';
 import '../../../../../services/controllers/swipe_users_controller.dart';
 import '../../../../../services/middleware/action_ware.dart';
+import '../../../../../services/middleware/chat_ware.dart';
 import '../../../../uiproviders/screen/card_provider.dart';
 import '../../../../widgets/snack_msg.dart';
 import '../../profile/profileextras/not_mine_buttons.dart';
@@ -130,7 +131,7 @@ class _TinderCardState extends State<TinderCard> {
     var height = MediaQuery.of(context).size.height;
     ActionWare stream = context.watch<ActionWare>();
     ActionWare action = Provider.of<ActionWare>(context, listen: false);
-
+ ChatWare myChat = context.watch<ChatWare>();
     return Column(
       children: [
         SizedBox(
@@ -338,8 +339,12 @@ class _TinderCardState extends State<TinderCard> {
                       children: [
                         CircleAvatar(
                           radius: 5,
-                          backgroundColor: widget.users[indexer].mode == null ||
-                                  widget.users[indexer].mode == "offline"
+                          backgroundColor:  myChat.allSocketUsers
+                                  .where((element) =>
+                                      element.userId.toString() ==
+                                      widget.users[indexer].id.toString())
+                                  .toList()
+                                  .isEmpty
                               ? Colors.red
                               : HexColor("#00B074"),
                         ),
@@ -347,7 +352,12 @@ class _TinderCardState extends State<TinderCard> {
                           width: 5,
                         ),
                         AppText(
-                          text: "${widget.users[indexer].mode ?? "offline"}",
+                          text: myChat.allSocketUsers
+                                  .where((element) =>
+                                      element.userId.toString() ==
+                                      widget.users[indexer].id.toString())
+                                  .toList()
+                                  .isEmpty ?  "offline": "online",
                           size: 12,
                           fontWeight: FontWeight.w500,
                         )

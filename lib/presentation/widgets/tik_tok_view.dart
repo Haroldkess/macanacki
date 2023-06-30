@@ -362,9 +362,9 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
 
                                 String newVal =
                                     "https://${start.last}".toString();
-                                print(newVal);
-                                // await UrlLaunchController.launchWebViewOrVC(
-                                //     Uri.parse(newVal));
+                                emitter(newVal);
+                                await UrlLaunchController.launchWebViewOrVC(
+                                    Uri.parse(newVal));
                               } else {
                                 await UrlLaunchController.launchWebViewOrVC(
                                     Uri.parse(widget.data.btnLink!));
