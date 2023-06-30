@@ -123,7 +123,12 @@ class CreatePostController {
           noOfLikes: sendCom.noOfLikes,
           postId: id);
 
-      PublicComment publicData = PublicComment(
+      
+
+      // ignore: use_build_context_synchronously
+      Operations.commentOperation(context, true, [], finalData);
+      if (page == "public") {
+        PublicComment publicData = PublicComment(
           id: sendCom.id,
           username: sendCom.username,
           createdAt: sendCom.createdAt,
@@ -132,7 +137,10 @@ class CreatePostController {
           profilePhoto: sendCom.profilePhoto,
           noOfLikes: sendCom.noOfLikes,
           postId: id);
-
+        user.addSingleComment(publicData, id);
+      }
+      if (page == "user") {
+        
       ProfileComment userData = ProfileComment(
           id: sendCom.id,
           username: sendCom.username,
@@ -142,12 +150,6 @@ class CreatePostController {
           profilePhoto: sendCom.profilePhoto,
           noOfLikes: sendCom.noOfLikes,
           postId: id);
-      // ignore: use_build_context_synchronously
-      Operations.commentOperation(context, true, [], finalData);
-      if (page == "public") {
-        user.addSingleComment(publicData, id);
-      }
-      if (page == "user") {
         profile.addSingleComment(userData, id);
       }
       comment.clear();
