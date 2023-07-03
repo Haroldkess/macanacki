@@ -6,6 +6,7 @@ import 'package:async/async.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:makanaki/presentation/allNavigation.dart';
@@ -83,7 +84,7 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
         return shouldPop!;
       },
       child: SafeArea(
-        top: true,
+        top: false,
         child: Scaffold(
           backgroundColor: tabs.index == 4 || tabs.index == 2
               ? HexColor(backgroundColor)
@@ -209,6 +210,7 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
                   'assets/icon/profile.svg', tabs.index == 4 ? true : false),
             ],
             activeColor: HexColor(primaryColor),
+            backgroundColor: HexColor(backgroundColor),
           ),
         ),
       ),
@@ -283,7 +285,10 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-
+    // SystemChrome.setPreferredOrientations(
+    //       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+    //    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+  
     //  = PageController(initialPage:  )
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:makanaki/model/feed_post_model.dart';
@@ -239,7 +241,7 @@ class _UserProfileFeedState extends State<UserProfileFeed> {
             },
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 25.0),
+            padding: EdgeInsets.only(top: Platform.isAndroid ? 25 : 38),
             child: IconButton(
                 onPressed: () => PageRouting.popToPage(context),
                 icon: const Icon(

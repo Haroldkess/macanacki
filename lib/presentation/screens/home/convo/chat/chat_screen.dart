@@ -214,305 +214,311 @@ class _ChatScreenState extends State<ChatScreen> {
         Navigator.pop(context);
         return Future.value(false);
       },
-      child: Scaffold(
-        backgroundColor: HexColor("#F5F2F9"),
-        appBar: AppBar(
-          backgroundColor: HexColor(backgroundColor),
-          automaticallyImplyLeading: false,
-          elevation: 0,
-          title: InkWell(
-            onTap: () {
-              if (widget.user.conversations!.isNotEmpty) {
-                String name =
-                    widget.user.conversations!.last.sender == stream.userName
-                        ? widget.user.userTwo!
-                        : widget.user.userOne!;
+      child: SafeArea(
+        top: false,
+        child: Scaffold(
+          backgroundColor: HexColor("#F5F2F9"),
+          appBar: AppBar(
+            backgroundColor: HexColor(backgroundColor),
+            automaticallyImplyLeading: false,
+            elevation: 0,
+            title: InkWell(
+              onTap: () {
+                if (widget.user.conversations!.isNotEmpty) {
+                  String name =
+                      widget.user.conversations!.last.sender == stream.userName
+                          ? widget.user.userTwo!
+                          : widget.user.userOne!;
 
-                if (name == ware.userProfileModel.username) {
-                  PageRouting.pushToPage(context, const ProfileScreen());
-                } else {
-                  PageRouting.pushToPage(
-                      context,
-                      UsersProfile(
-                        username: name,
-                      ));
+                  if (name == ware.userProfileModel.username) {
+                    PageRouting.pushToPage(context, const ProfileScreen());
+                  } else {
+                    PageRouting.pushToPage(
+                        context,
+                        UsersProfile(
+                          username: name,
+                        ));
+                  }
                 }
-              }
-            },
-            child: Row(
-              children: [
-                Stack(
-                  children: [
-                    Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        HexagonWidget.pointy(
-                          width: w + 4.0,
-                          elevation: 3.0,
-                          color: Colors.white,
-                          cornerRadius: 7.0,
-                          child: AspectRatio(
-                            aspectRatio: HexagonType.POINTY.ratio,
-                            // child: Image.asset(
-                            //   'assets/tram.jpg',
-                            //   fit: BoxFit.fitWidth,
-                            // ),
-                          ),
-                        ),
-                        widget.user.conversations!.isEmpty
-                            ? HexagonAvatar(
-                                url: widget.user.userTwoProfilePhoto == null
-                                    ? widget.dp!
-                                    : widget.user.userTwoProfilePhoto!,
-                                w: w + 4)
-                            : HexagonAvatar(
-                                url: widget.user.conversations!.last.sender ==
-                                        stream.userName
-                                    ? widget.user.userTwoProfilePhoto!
-                                    : widget.user.userOneProfilePhoto!,
-                                w: w + 4),
-                      ],
-                    ),
-                    Positioned(
-                      right: 1.1,
-                      top: 0.0,
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 0, bottom: 0),
-                        child: CircleAvatar(
-                          radius: 5,
-                          backgroundColor: myChat.allSocketUsers
-                                  .where((element) =>
-                                      element.userId.toString() ==
-                                      id.toString())
-                                  .toList()
-                                  .isNotEmpty
-                              ? Colors.green
-                              : Colors.red,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                widget.user.conversations!.isNotEmpty
-                    ? Row(
+              },
+              child: Row(
+                children: [
+                  Stack(
+                    children: [
+                      Stack(
+                        alignment: Alignment.center,
                         children: [
-                          Container(
-                            constraints: BoxConstraints(maxWidth: 150),
-                            child: RichText(
-                                maxLines: 1,
-                                overflow: TextOverflow.visible,
-                                text: TextSpan(
-                                  text:
-                                      widget.user.conversations!.last.sender ==
-                                              stream.userName
-                                          ? "${widget.user.userTwo}"
-                                          : "${widget.user.userOne} ",
-
-                                  style: GoogleFonts.spartan(
-                                    color: HexColor(darkColor),
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                  //     children: [
-                                  //   TextSpan(
-                                  //     text: widget.user.age,
-                                  //     style: GoogleFonts.spartan(
-                                  //         color: HexColor("#C0C0C0"), fontSize: 20),
-                                  //   )
-                                  // ]
-                                )),
-                          ),
-                          widget.verified == 0
-                              ? const SizedBox.shrink()
-                              : Padding(
-                                  padding: const EdgeInsets.only(left: 3),
-                                  child: SvgPicture.asset(
-                                    "assets/icon/badge.svg",
-                                    height: 13,
-                                    width: 13,
-                                  ),
-                                )
-                        ],
-                      )
-                    : Row(
-                        children: [
-                          Container(
-                            constraints: BoxConstraints(maxWidth: 150),
-                            child: RichText(
-                                maxLines: 1,
-                                overflow: TextOverflow.visible,
-                                text: TextSpan(
-                                  text: "${widget.user.userTwo} ",
-
-                                  style: GoogleFonts.spartan(
-                                    color: HexColor(darkColor),
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                  //     children: [
-                                  //   TextSpan(
-                                  //     text: widget.user.age,
-                                  //     style: GoogleFonts.spartan(
-                                  //         color: HexColor("#C0C0C0"), fontSize: 20),
-                                  //   )
-                                  // ]
-                                )),
-                          ),
-                          widget.verified == 0
-                              ? const SizedBox.shrink()
-                              : Padding(
-                                  padding: const EdgeInsets.only(left: 3),
-                                  child: SvgPicture.asset(
-                                    "assets/icon/badge.svg",
-                                    height: 13,
-                                    width: 13,
-                                  ),
-                                )
-                        ],
-                      ),
-              ],
-            ),
-          ),
-
-          // AppText(
-          //   text: widget.user.name,
-          //   color: HexColor(darkColor),
-          //   size: 24,
-          //   fontWeight: FontWeight.w700,
-          // ),
-          centerTitle: true,
-          leading: BackButton(
-            color: HexColor("#322929"),
-            onPressed: () async {
-              setState(() {
-                leaving = true;
-              });
-              if (myChat.chatPage != 0) {
-                ChatController.changeChatPage(context, 0);
-              }
-              Navigator.pop(context);
-            },
-          ),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 18),
-              child: InkWell(
-                onTap: () => chatOptionModal(context),
-                child: Container(
-                  height: 25,
-                  width: 25,
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                          width: 1.0,
-                          color: Colors.transparent,
-                          style: BorderStyle.solid)),
-                  child: SvgPicture.asset(
-                    "assets/icon/options.svg",
-                    color: HexColor(darkColor),
-                  ),
-                ),
-              ),
-            )
-          ],
-        ),
-        body: StreamBuilder(
-            stream: null,
-            builder: (context, snapshot) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 5),
-                child: Stack(
-                  children: [
-                    Align(
-                      alignment: Alignment.topCenter,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            AppText(
-                              text: "",
-                              size: 14,
-                              color: HexColor("#8B8B8B"),
+                          HexagonWidget.pointy(
+                            width: w + 4.0,
+                            elevation: 3.0,
+                            color: Colors.white,
+                            cornerRadius: 7.0,
+                            child: AspectRatio(
+                              aspectRatio: HexagonType.POINTY.ratio,
+                              // child: Image.asset(
+                              //   'assets/tram.jpg',
+                              //   fit: BoxFit.fitWidth,
+                              // ),
                             ),
+                          ),
+                          widget.user.conversations!.isEmpty
+                              ? HexagonAvatar(
+                                  url: widget.user.userTwoProfilePhoto == null
+                                      ? widget.dp!
+                                      : widget.user.userTwoProfilePhoto!,
+                                  w: w + 4)
+                              : HexagonAvatar(
+                                  url: widget.user.conversations!.last.sender ==
+                                          stream.userName
+                                      ? widget.user.userTwoProfilePhoto!
+                                      : widget.user.userOneProfilePhoto!,
+                                  w: w + 4),
+                        ],
+                      ),
+                      Positioned(
+                        right: 1.1,
+                        top: 0.0,
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 0, bottom: 0),
+                          child: CircleAvatar(
+                            radius: 5,
+                            backgroundColor: myChat.allSocketUsers
+                                    .where((element) =>
+                                        element.userId.toString() ==
+                                        id.toString())
+                                    .toList()
+                                    .isNotEmpty
+                                ? Colors.green
+                                : Colors.red,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  widget.user.conversations!.isNotEmpty
+                      ? Row(
+                          children: [
+                            Container(
+                              constraints: BoxConstraints(maxWidth: 150),
+                              child: RichText(
+                                  maxLines: 1,
+                                  overflow: TextOverflow.visible,
+                                  text: TextSpan(
+                                    text: widget.user.conversations!.last
+                                                .sender ==
+                                            stream.userName
+                                        ? "${widget.user.userTwo}"
+                                        : "${widget.user.userOne} ",
+
+                                    style: GoogleFonts.spartan(
+                                      color: HexColor(darkColor),
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    //     children: [
+                                    //   TextSpan(
+                                    //     text: widget.user.age,
+                                    //     style: GoogleFonts.spartan(
+                                    //         color: HexColor("#C0C0C0"), fontSize: 20),
+                                    //   )
+                                    // ]
+                                  )),
+                            ),
+                            widget.verified == 0
+                                ? const SizedBox.shrink()
+                                : Padding(
+                                    padding: const EdgeInsets.only(left: 3),
+                                    child: SvgPicture.asset(
+                                      "assets/icon/badge.svg",
+                                      height: 13,
+                                      width: 13,
+                                    ),
+                                  )
+                          ],
+                        )
+                      : Row(
+                          children: [
+                            Container(
+                              constraints: BoxConstraints(maxWidth: 150),
+                              child: RichText(
+                                  maxLines: 1,
+                                  overflow: TextOverflow.visible,
+                                  text: TextSpan(
+                                    text: "${widget.user.userTwo} ",
+
+                                    style: GoogleFonts.spartan(
+                                      color: HexColor(darkColor),
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    //     children: [
+                                    //   TextSpan(
+                                    //     text: widget.user.age,
+                                    //     style: GoogleFonts.spartan(
+                                    //         color: HexColor("#C0C0C0"), fontSize: 20),
+                                    //   )
+                                    // ]
+                                  )),
+                            ),
+                            widget.verified == 0
+                                ? const SizedBox.shrink()
+                                : Padding(
+                                    padding: const EdgeInsets.only(left: 3),
+                                    child: SvgPicture.asset(
+                                      "assets/icon/badge.svg",
+                                      height: 13,
+                                      width: 13,
+                                    ),
+                                  )
                           ],
                         ),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: widget.user.conversations!.isEmpty
-                          ? ChatList(
-                              chat: widget.chat,
-                              me: ware.userProfileModel.username,
-                              myUserId: ware.userProfileModel.id.toString(),
-                              to: ware.publicUserProfileModel.username,
-                              toUserId:
-                                  ware.publicUserProfileModel.id.toString(),
-                              controller: controiller!,
-                              isHome: widget.isHome,
-                              user: widget.user,
-                            )
-                          : ChatList(
-                              chat: widget.chat,
-                              me: widget.user.conversations!.last.sender ==
-                                      stream.userName
-                                  ? widget.user.userOne!
-                                  : widget.user.userTwo!,
-                              myUserId: ware.userProfileModel.id.toString(),
-                              to: widget.user.conversations!.last.sender ==
-                                      stream.userName
-                                  ? widget.user.userTwo
-                                  : widget.user.userOne,
-                              toUserId:
-                                  widget.user.conversations!.last.sender ==
-                                          stream.userName
-                                      ? widget.user.userTwoId.toString()
-                                      : widget.user.userOneId.toString(),
-                              controller: controiller!,
-                              isHome: widget.isHome,
-                              user: widget.user,
-                            ),
-                    ),
-                    Align(
-                        alignment: Alignment.bottomCenter,
-                        child: widget.user.conversations!.isEmpty
-                            ? ChatForm(
-                                controller: controiller!,
-                                msgController: msgController,
-                                sendTo: ware.publicUserProfileModel.username!,
-                                chat: widget.user,
-                                socket: myChat.socket == null
-                                    ? null
-                                    : myChat.socket!,
-                                toId: ware.publicUserProfileModel.id!.toString()
+                ],
+              ),
+            ),
 
-                                //  val: controiller!.position.maxScrollExtent,
-                                )
-                            : ChatForm(
+            // AppText(
+            //   text: widget.user.name,
+            //   color: HexColor(darkColor),
+            //   size: 24,
+            //   fontWeight: FontWeight.w700,
+            // ),
+            centerTitle: true,
+            leading: BackButton(
+              color: HexColor("#322929"),
+              onPressed: () async {
+                setState(() {
+                  leaving = true;
+                });
+                if (myChat.chatPage != 0) {
+                  ChatController.changeChatPage(context, 0);
+                }
+                Navigator.pop(context);
+              },
+            ),
+            actions: [
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 18),
+                child: InkWell(
+                  onTap: () => chatOptionModal(context),
+                  child: Container(
+                    height: 25,
+                    width: 25,
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                            width: 1.0,
+                            color: Colors.transparent,
+                            style: BorderStyle.solid)),
+                    child: SvgPicture.asset(
+                      "assets/icon/options.svg",
+                      color: HexColor(darkColor),
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
+          body: StreamBuilder(
+              stream: null,
+              builder: (context, snapshot) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  child: Stack(
+                    children: [
+                      Align(
+                        alignment: Alignment.topCenter,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              AppText(
+                                text: "",
+                                size: 14,
+                                color: HexColor("#8B8B8B"),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.center,
+                        child: widget.user.conversations!.isEmpty
+                            ? ChatList(
+                                chat: widget.chat,
+                                me: ware.userProfileModel.username,
+                                myUserId: ware.userProfileModel.id.toString(),
+                                to: ware.publicUserProfileModel.username,
+                                toUserId:
+                                    ware.publicUserProfileModel.id.toString(),
                                 controller: controiller!,
-                                msgController: msgController,
-                                sendTo:
+                                isHome: widget.isHome,
+                                user: widget.user,
+                              )
+                            : ChatList(
+                                chat: widget.chat,
+                                me: widget.user.conversations!.last.sender ==
+                                        stream.userName
+                                    ? widget.user.userOne!
+                                    : widget.user.userTwo!,
+                                myUserId: ware.userProfileModel.id.toString(),
+                                to: widget.user.conversations!.last.sender ==
+                                        stream.userName
+                                    ? widget.user.userTwo
+                                    : widget.user.userOne,
+                                toUserId:
                                     widget.user.conversations!.last.sender ==
                                             stream.userName
-                                        ? widget.user.userTwo!
-                                        : widget.user.userOne!,
-                                chat: widget.user,
-                                socket: myChat.socket == null
-                                    ? null
-                                    : myChat.socket!,
-                                toId: widget.user.conversations!.last.sender ==
-                                        stream.userName
-                                    ? widget.user.userTwoId.toString()
-                                    : widget.user.userOneId.toString(),
-                                //  val: controiller!.position.maxScrollExtent,
-                              ))
-                  ],
-                ),
-              );
-            }),
+                                        ? widget.user.userTwoId.toString()
+                                        : widget.user.userOneId.toString(),
+                                controller: controiller!,
+                                isHome: widget.isHome,
+                                user: widget.user,
+                              ),
+                      ),
+                      Align(
+                          alignment: Alignment.bottomCenter,
+                          child: widget.user.conversations!.isEmpty
+                              ? ChatForm(
+                                  controller: controiller!,
+                                  msgController: msgController,
+                                  sendTo: ware.publicUserProfileModel.username!,
+                                  chat: widget.user,
+                                  socket: myChat.socket == null
+                                      ? null
+                                      : myChat.socket!,
+                                  toId:
+                                      ware.publicUserProfileModel.id!.toString()
+
+                                  //  val: controiller!.position.maxScrollExtent,
+                                  )
+                              : ChatForm(
+                                  controller: controiller!,
+                                  msgController: msgController,
+                                  sendTo:
+                                      widget.user.conversations!.last.sender ==
+                                              stream.userName
+                                          ? widget.user.userTwo!
+                                          : widget.user.userOne!,
+                                  chat: widget.user,
+                                  socket: myChat.socket == null
+                                      ? null
+                                      : myChat.socket!,
+                                  toId:
+                                      widget.user.conversations!.last.sender ==
+                                              stream.userName
+                                          ? widget.user.userTwoId.toString()
+                                          : widget.user.userOneId.toString(),
+                                  //  val: controiller!.position.maxScrollExtent,
+                                ))
+                    ],
+                  ),
+                );
+              }),
+        ),
       ),
     );
   }
