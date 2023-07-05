@@ -347,19 +347,19 @@ class CommentTile extends StatelessWidget {
                       // color: Colors.amber,
                       child: Stack(
                         children: [
-                            HexagonWidget.pointy(
-                                  width: w - 3,
-                                  elevation: 2.0,
-                                  color: Colors.white,
-                                  cornerRadius: 2.0,
-                                  child: AspectRatio(
-                                    aspectRatio: HexagonType.POINTY.ratio,
-                                    // child: Image.asset(
-                                    //   'assets/tram.jpg',
-                                    //   fit: BoxFit.fitWidth,
-                                    // ),
-                                  ),
-                                ),
+                          HexagonWidget.pointy(
+                            width: w - 3,
+                            elevation: 2.0,
+                            color: Colors.white,
+                            cornerRadius: 2.0,
+                            child: AspectRatio(
+                              aspectRatio: HexagonType.POINTY.ratio,
+                              // child: Image.asset(
+                              //   'assets/tram.jpg',
+                              //   fit: BoxFit.fitWidth,
+                              // ),
+                            ),
+                          ),
                           // HexagonWidget.pointy(
                           //   width: w,
                           //   elevation: 2.0,
@@ -393,14 +393,26 @@ class CommentTile extends StatelessWidget {
                       padding: const EdgeInsets.only(top: 0.0),
                       child: Row(
                         children: [
-                          Container(
-                            constraints: BoxConstraints(maxWidth: 100),
-                            child: AppText(
-                              text: e.username!,
-                              fontWeight: FontWeight.w700,
-                              size: 12,
+                          Row(children: [
+                            Container(
+                              constraints: BoxConstraints(maxWidth: 100),
+                              child: AppText(
+                                text: e.username!,
+                                fontWeight: FontWeight.w700,
+                                size: 12,
+                              ),
                             ),
-                          ),
+                            // const SizedBox(
+                            //   width: 5,
+                            // ),
+                            e.isVerified == 0 || e.isVerified == null
+                                ? const SizedBox.shrink()
+                                : SvgPicture.asset("assets/icon/badge.svg",
+                                    height: 13, width: 13)
+
+                            // SvgPicture.asset("assets/icon/badge.svg",
+                            //     height: 9, width: 9)
+                          ]),
                           const SizedBox(
                             width: 5,
                           ),

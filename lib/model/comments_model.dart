@@ -67,7 +67,9 @@ class CommentData {
             ? null
             : DateTime.parse(json["updated_at"]),
         creator: json["creator"],
-             media: json["media"] == null ? [] : List<String>.from(json["media"]!.map((x) => x)),
+        media: json["media"] == null
+            ? []
+            : List<String>.from(json["media"]!.map((x) => x)),
         comments: json["comments"] == null
             ? []
             : List<CommentInfo>.from(
@@ -82,7 +84,7 @@ class CommentData {
         "created_at": createdAt?.toIso8601String(),
         "updated_at": updatedAt?.toIso8601String(),
         "creator": creator,
-         "media": media == null ? [] : List<dynamic>.from(media!.map((x) => x)),
+        "media": media == null ? [] : List<dynamic>.from(media!.map((x) => x)),
         "comments": comments == null
             ? []
             : List<dynamic>.from(comments!.map((x) => x.toJson())),
@@ -99,6 +101,7 @@ class CommentInfo {
     this.username,
     this.profilePhoto,
     this.noOfLikes,
+    this.isVerified,
   });
 
   int? id;
@@ -108,6 +111,7 @@ class CommentInfo {
   String? username;
   String? profilePhoto;
   int? noOfLikes;
+  int? isVerified;
 
   factory CommentInfo.fromJson(Map<String, dynamic> json) => CommentInfo(
         id: json["id"],
@@ -121,6 +125,7 @@ class CommentInfo {
         username: json["username"],
         profilePhoto: json["profile_photo"],
         noOfLikes: json["no_of_likes"],
+        isVerified: json["user_verified"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -131,6 +136,7 @@ class CommentInfo {
         "username": username,
         "profile_photo": profilePhoto,
         "no_of_likes": noOfLikes,
+        "user_verified": isVerified
       };
 }
 
@@ -164,7 +170,7 @@ class User {
   DateTime? createdAt;
   DateTime? updatedAt;
   String? gender;
-    dynamic verified;
+  dynamic verified;
   String? profilephoto;
   int? noOfFollowers;
   int? noOfFollowing;
@@ -187,7 +193,7 @@ class User {
             ? null
             : DateTime.parse(json["updated_at"]),
         gender: json["gender"],
-            verified: json["verified"],
+        verified: json["verified"],
         profilephoto: json["profilephoto"],
         noOfFollowers: json["no_of_followers"],
         noOfFollowing: json["no_of_following"],
@@ -205,70 +211,76 @@ class User {
         "created_at": createdAt?.toIso8601String(),
         "updated_at": updatedAt?.toIso8601String(),
         "gender": gender,
-          "verified": verified,
+        "verified": verified,
         "profilephoto": profilephoto,
         "no_of_followers": noOfFollowers,
         "no_of_following": noOfFollowing,
       };
 }
 
-
-
-
-
-
 class LikedCommentModel {
-    LikedCommentModel({
-        this.status,
-        this.message,
-        this.data,
-    });
+  LikedCommentModel({
+    this.status,
+    this.message,
+    this.data,
+  });
 
-    bool? status;
-    String? message;
-    List<LikedCommentData>? data;
+  bool? status;
+  String? message;
+  List<LikedCommentData>? data;
 
-    factory LikedCommentModel.fromJson(Map<String, dynamic> json) => LikedCommentModel(
+  factory LikedCommentModel.fromJson(Map<String, dynamic> json) =>
+      LikedCommentModel(
         status: json["status"],
         message: json["message"],
-        data: json["data"] == null ? [] : List<LikedCommentData>.from(json["data"]!.map((x) => LikedCommentData.fromJson(x))),
-    );
+        data: json["data"] == null
+            ? []
+            : List<LikedCommentData>.from(
+                json["data"]!.map((x) => LikedCommentData.fromJson(x))),
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "status": status,
         "message": message,
-        "data": data == null ? [] : List<dynamic>.from(data!.map((x) => x.toJson())),
-    };
+        "data": data == null
+            ? []
+            : List<dynamic>.from(data!.map((x) => x.toJson())),
+      };
 }
 
 class LikedCommentData {
-    LikedCommentData({
-        this.id,
-        this.createdAt,
-        this.updatedAt,
-        this.username,
-        this.profilePhoto,
-    });
+  LikedCommentData({
+    this.id,
+    this.createdAt,
+    this.updatedAt,
+    this.username,
+    this.profilePhoto,
+  });
 
-    int? id;
-    DateTime? createdAt;
-    DateTime? updatedAt;
-    String? username;
-    String? profilePhoto;
+  int? id;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+  String? username;
+  String? profilePhoto;
 
-    factory LikedCommentData.fromJson(Map<String, dynamic> json) => LikedCommentData(
+  factory LikedCommentData.fromJson(Map<String, dynamic> json) =>
+      LikedCommentData(
         id: json["comment_id"],
-        createdAt: json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
-        updatedAt: json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
+        createdAt: json["created_at"] == null
+            ? null
+            : DateTime.parse(json["created_at"]),
+        updatedAt: json["updated_at"] == null
+            ? null
+            : DateTime.parse(json["updated_at"]),
         username: json["username"],
         profilePhoto: json["profile_photo"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "comment_id": id,
         "created_at": createdAt?.toIso8601String(),
         "updated_at": updatedAt?.toIso8601String(),
         "username": username,
         "profile_photo": profilePhoto,
-    };
+      };
 }

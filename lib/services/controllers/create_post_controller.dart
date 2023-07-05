@@ -121,35 +121,35 @@ class CreatePostController {
           body: sendCom.body,
           profilePhoto: sendCom.profilePhoto,
           noOfLikes: sendCom.noOfLikes,
-          postId: id);
-
-      
+          postId: id,
+          isVerified: user.userProfileModel.verified);
 
       // ignore: use_build_context_synchronously
       Operations.commentOperation(context, true, [], finalData);
       if (page == "public") {
         PublicComment publicData = PublicComment(
-          id: sendCom.id,
-          username: sendCom.username,
-          createdAt: sendCom.createdAt,
-          updatedAt: sendCom.updatedAt,
-          body: sendCom.body,
-          profilePhoto: sendCom.profilePhoto,
-          noOfLikes: sendCom.noOfLikes,
-          postId: id);
+            id: sendCom.id,
+            username: sendCom.username,
+            createdAt: sendCom.createdAt,
+            updatedAt: sendCom.updatedAt,
+            body: sendCom.body,
+            profilePhoto: sendCom.profilePhoto,
+            noOfLikes: sendCom.noOfLikes,
+            postId: id,
+            isVerified: sendCom.isVerified);
         user.addSingleComment(publicData, id);
       }
       if (page == "user") {
-        
-      ProfileComment userData = ProfileComment(
-          id: sendCom.id,
-          username: sendCom.username,
-          createdAt: sendCom.createdAt,
-          updatedAt: sendCom.updatedAt,
-          body: sendCom.body,
-          profilePhoto: sendCom.profilePhoto,
-          noOfLikes: sendCom.noOfLikes,
-          postId: id);
+        ProfileComment userData = ProfileComment(
+            id: sendCom.id,
+            username: sendCom.username,
+            createdAt: sendCom.createdAt,
+            updatedAt: sendCom.updatedAt,
+            body: sendCom.body,
+            profilePhoto: sendCom.profilePhoto,
+            noOfLikes: sendCom.noOfLikes,
+            postId: id,
+            isVerified: sendCom.isVerified);
         profile.addSingleComment(userData, id);
       }
       comment.clear();

@@ -137,119 +137,122 @@ class _UserProfileFeedState extends State<UserProfileFeed> {
         Provider.of<UserProfileWare>(context, listen: false);
     UserProfileWare userStream = context.watch<UserProfileWare>();
 
-    return Scaffold(
-      backgroundColor: Colors.black,
-      persistentFooterButtons: [
-        InkWell(
-          onTap: () {
-            commentModal(context,
-                stream.profileFeedPosts[userStream.userIndex].id!, "user");
-          },
-          child: Container(
-            height: 30,
-            width: double.infinity,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  AppText(
-                    text: "Add comment...",
-                    color: Colors.grey,
-                  ),
-                  Row(
-                    children: const [
-                      Icon(
-                        Icons.emoji_emotions_outlined,
-                        color: Colors.grey,
-                      ),
-                    ],
-                  )
-                ],
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        backgroundColor: Colors.black,
+        persistentFooterButtons: [
+          InkWell(
+            onTap: () {
+              commentModal(context,
+                  stream.profileFeedPosts[userStream.userIndex].id!, "user");
+            },
+            child: Container(
+              height: 30,
+              width: double.infinity,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    AppText(
+                      text: "Add comment...",
+                      color: Colors.grey,
+                    ),
+                    Row(
+                      children: const [
+                        Icon(
+                          Icons.emoji_emotions_outlined,
+                          color: Colors.grey,
+                        ),
+                      ],
+                    )
+                  ],
+                ),
               ),
             ),
-          ),
-        )
-      ],
-      body: Stack(
-        children: [
-          PageView.builder(
-            itemCount: stream.profileFeedPosts.length,
-            controller: controller,
-            scrollDirection: Axis.vertical,
-            padEnds: false,
-            itemBuilder: ((context, index) {
-              final ProfileFeedDatum post = stream.profileFeedPosts[index];
-              List<Comment> talks = [];
-
-              final User user = User(
-                id: post.user!.id,
-                email: post.user!.email,
-                username: post.user!.username,
-                faceVerification: post.user!.faceVerification,
-                dob: post.user!.dob,
-                emailVerified: post.user!.emailVerified,
-                registrationComplete: post.user!.registrationComplete,
-                emailVerifiedAt: post.user!.emailVerifiedAt,
-                createdAt: post.user!.createdAt,
-                updatedAt: post.user!.updatedAt,
-                gender: post.user!.gender,
-                profilephoto: post.user!.profilephoto,
-                noOfFollowers: post.user!.noOfFollowers,
-                noOfFollowing: post.user!.noOfFollowing,
-              );
-              post.comments!.forEach((element) {
-                Comment comment = Comment(
-                    id: element.id,
-                    body: element.body,
-                    createdAt: element.createdAt,
-                    updatedAt: element.updatedAt,
-                    username: element.username,
-                    profilePhoto: element.profilePhoto,
-                    noOfLikes: element.noOfLikes,
-                    postId: element.postId);
-
-                talks.add(comment);
-              });
-
-              final FeedPost data = FeedPost(
-                  id: post.id,
-                  description: post.description,
-                  published: post.published,
-                  createdAt: post.createdAt,
-                  updatedAt: post.updatedAt,
-                  creator: post.creator,
-                  media: post.media,
-                  comments: talks,
-                  noOfLikes: post.noOfLikes,
-                  user: user,
-                  btnLink: post.btnLink,
-                  button: post.button,
-                  viewCount: post.viewCount,
-                  mux: post.mux);
-
-              return TikTokView(
-                media: post.mux!,
-                data: data,
-                page: "user",
-                urls: post.media!,
-                isHome: false,
-              );
-            }),
-            onPageChanged: (index) {
-              provide.changeUserIndex(index);
-            },
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: Platform.isAndroid ? 25 : 38),
-            child: IconButton(
-                onPressed: () => PageRouting.popToPage(context),
-                icon: const Icon(
-                  Icons.arrow_back_ios,
-                  color: Colors.white,
-                )),
           )
         ],
+        body: Stack(
+          children: [
+            PageView.builder(
+              itemCount: stream.profileFeedPosts.length,
+              controller: controller,
+              scrollDirection: Axis.vertical,
+              padEnds: false,
+              itemBuilder: ((context, index) {
+                final ProfileFeedDatum post = stream.profileFeedPosts[index];
+                List<Comment> talks = [];
+
+                final User user = User(
+                  id: post.user!.id,
+                  email: post.user!.email,
+                  username: post.user!.username,
+                  faceVerification: post.user!.faceVerification,
+                  dob: post.user!.dob,
+                  emailVerified: post.user!.emailVerified,
+                  registrationComplete: post.user!.registrationComplete,
+                  emailVerifiedAt: post.user!.emailVerifiedAt,
+                  createdAt: post.user!.createdAt,
+                  updatedAt: post.user!.updatedAt,
+                  gender: post.user!.gender,
+                  profilephoto: post.user!.profilephoto,
+                  noOfFollowers: post.user!.noOfFollowers,
+                  noOfFollowing: post.user!.noOfFollowing,
+                );
+                post.comments!.forEach((element) {
+                  Comment comment = Comment(
+                      id: element.id,
+                      body: element.body,
+                      createdAt: element.createdAt,
+                      updatedAt: element.updatedAt,
+                      username: element.username,
+                      profilePhoto: element.profilePhoto,
+                      noOfLikes: element.noOfLikes,
+                      postId: element.postId);
+
+                  talks.add(comment);
+                });
+
+                final FeedPost data = FeedPost(
+                    id: post.id,
+                    description: post.description,
+                    published: post.published,
+                    createdAt: post.createdAt,
+                    updatedAt: post.updatedAt,
+                    creator: post.creator,
+                    media: post.media,
+                    comments: talks,
+                    noOfLikes: post.noOfLikes,
+                    user: user,
+                    btnLink: post.btnLink,
+                    button: post.button,
+                    viewCount: post.viewCount,
+                    mux: post.mux);
+
+                return TikTokView(
+                  media: post.mux!,
+                  data: data,
+                  page: "user",
+                  urls: post.media!,
+                  isHome: false,
+                );
+              }),
+              onPageChanged: (index) {
+                provide.changeUserIndex(index);
+              },
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 38),
+              child: IconButton(
+                  onPressed: () => PageRouting.popToPage(context),
+                  icon: const Icon(
+                    Icons.arrow_back_ios,
+                    color: Colors.white,
+                  )),
+            )
+          ],
+        ),
       ),
     );
   }

@@ -237,6 +237,7 @@ class Comment {
     this.profilePhoto,
     this.noOfLikes,
     this.postId,
+    this.isVerified,
   });
 
   int? id;
@@ -247,6 +248,7 @@ class Comment {
   String? profilePhoto;
   int? noOfLikes;
   int? postId;
+  int? isVerified;
 
   factory Comment.fromJson(Map<String, dynamic> json) => Comment(
         id: json["id"],
@@ -261,6 +263,7 @@ class Comment {
         profilePhoto: json["profile_photo"],
         noOfLikes: json["no_of_likes"],
         postId: json["post_id"],
+         isVerified: json["user_verified"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -272,6 +275,7 @@ class Comment {
         "profile_photo": profilePhoto,
         "no_of_likes": noOfLikes,
         "post_id": postId,
+        "user_verified": isVerified
       };
 }
 

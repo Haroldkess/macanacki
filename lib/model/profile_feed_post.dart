@@ -128,6 +128,7 @@ class ProfileComment {
     this.profilePhoto,
     this.noOfLikes,
     this.postId,
+      this.isVerified,
   });
 
   int? id;
@@ -138,6 +139,7 @@ class ProfileComment {
   String? profilePhoto;
   int? noOfLikes;
   int? postId;
+    int? isVerified;
 
   factory ProfileComment.fromJson(Map<String, dynamic> json) => ProfileComment(
         id: json["id"],
@@ -152,6 +154,7 @@ class ProfileComment {
         profilePhoto: json["profile_photo"],
         noOfLikes: json["no_of_likes"],
         postId: json["post_id"],
+           isVerified: json["user_verified"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -163,6 +166,7 @@ class ProfileComment {
         "profile_photo": profilePhoto,
         "no_of_likes": noOfLikes,
         "post_id": postId,
+           "user_verified": isVerified
       };
 }
 
