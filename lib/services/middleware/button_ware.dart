@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
-import 'package:makanaki/model/gender_model.dart';
-import 'package:makanaki/model/plan_model.dart';
-import 'package:makanaki/services/backoffice/gender_office.dart';
+import 'package:macanacki/model/gender_model.dart';
+import 'package:macanacki/model/plan_model.dart';
+import 'package:macanacki/services/backoffice/gender_office.dart';
 import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;

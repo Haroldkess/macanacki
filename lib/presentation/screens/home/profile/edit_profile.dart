@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
-import 'package:makanaki/presentation/screens/home/profile/editprofileextra/about_me.dart';
-import 'package:makanaki/presentation/screens/home/profile/editprofileextra/edit_gender.dart';
-import 'package:makanaki/presentation/screens/home/profile/editprofileextra/edit_studies.dart';
-import 'package:makanaki/presentation/screens/home/profile/editprofileextra/my_num.dart';
-import 'package:makanaki/presentation/screens/home/profile/editprofileextra/profile_pic.dart';
-import 'package:makanaki/presentation/screens/home/profile/editprofileextra/select_profile_settings.dart';
-import 'package:makanaki/presentation/widgets/buttons.dart';
-import 'package:makanaki/presentation/widgets/loader.dart';
-import 'package:makanaki/presentation/widgets/text.dart';
-import 'package:makanaki/services/controllers/edit_profile_controller.dart';
-import 'package:makanaki/services/middleware/edit_profile_ware.dart';
-import 'package:makanaki/services/middleware/user_profile_ware.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/screens/home/profile/editprofileextra/about_me.dart';
+import 'package:macanacki/presentation/screens/home/profile/editprofileextra/edit_gender.dart';
+import 'package:macanacki/presentation/screens/home/profile/editprofileextra/edit_studies.dart';
+import 'package:macanacki/presentation/screens/home/profile/editprofileextra/my_num.dart';
+import 'package:macanacki/presentation/screens/home/profile/editprofileextra/profile_pic.dart';
+import 'package:macanacki/presentation/screens/home/profile/editprofileextra/select_profile_settings.dart';
+import 'package:macanacki/presentation/widgets/buttons.dart';
+import 'package:macanacki/presentation/widgets/loader.dart';
+import 'package:macanacki/presentation/widgets/text.dart';
+import 'package:macanacki/services/controllers/edit_profile_controller.dart';
+import 'package:macanacki/services/middleware/edit_profile_ware.dart';
+import 'package:macanacki/services/middleware/user_profile_ware.dart';
 import 'package:provider/provider.dart';
 
 class EditProfile extends StatefulWidget {
@@ -25,9 +25,9 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
- late TextEditingController about;
+  late TextEditingController about;
 
-late  TextEditingController phone ;
+  late TextEditingController phone;
   @override
   void initState() {
     super.initState();

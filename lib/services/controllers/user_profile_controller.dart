@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:makanaki/presentation/widgets/snack_msg.dart';
-import 'package:makanaki/services/middleware/user_profile_ware.dart';
+import 'package:macanacki/presentation/widgets/snack_msg.dart';
+import 'package:macanacki/services/middleware/user_profile_ware.dart';
 import 'package:provider/provider.dart';
 
 import '../middleware/action_ware.dart';
@@ -36,9 +36,9 @@ class UserProfileController {
       // ignore: use_build_context_synchronously
       showToast2(context, "An error occured", isError: true);
     }
-     if (isFirstLoad == false) {
-        ware.isLoading(false);
-      }
+    if (isFirstLoad == false) {
+      ware.isLoading(false);
+    }
   }
 
   static Future<void> retrievPublicProfileController(
@@ -60,6 +60,6 @@ class UserProfileController {
       // ignore: use_build_context_synchronously
       showToast2(context, "An error occured", isError: true);
     }
-      ware.isLoading2(false);
+    ware.isLoading2(false);
   }
 }

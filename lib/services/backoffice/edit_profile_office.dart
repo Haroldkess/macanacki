@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:http/http.dart' as http;
-import 'package:makanaki/model/create_post_model.dart';
-import 'package:makanaki/services/api_url.dart';
-import 'package:makanaki/services/temps/temps_id.dart';
+import 'package:macanacki/model/create_post_model.dart';
+import 'package:macanacki/services/api_url.dart';
+import 'package:macanacki/services/temps/temps_id.dart';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:makanaki/services/backoffice/otp_office.dart';
+import 'package:macanacki/services/backoffice/otp_office.dart';
 import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
@@ -27,24 +27,24 @@ class OtpWare extends ChangeNotifier {
           .whenComplete(() => emitter("verify  email request sent"));
       if (response == null) {
         isSuccessful = false;
-    //    log("verify  email request failed");
+        //    log("verify  email request failed");
       } else if (response.statusCode == 200) {
         var jsonData = jsonDecode(response.body);
         message = jsonData["message"];
 
-      //  log("verify  email request success");
+        //  log("verify  email request success");
         isSuccessful = true;
       } else {
         var jsonData = jsonDecode(response.body);
         message = jsonData["message"];
-     //   log(jsonData["message"]);
-      //  log("verify  email request failed");
+        //   log(jsonData["message"]);
+        //  log("verify  email request failed");
         isSuccessful = false;
       }
     } catch (e) {
       isSuccessful = false;
-    //  log("verify  email request failed");
-    //  log(e.toString());
+      //  log("verify  email request failed");
+      //  log(e.toString());
     }
 
     notifyListeners();

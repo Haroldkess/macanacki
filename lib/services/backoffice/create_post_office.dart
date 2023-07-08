@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:http/http.dart' as http;
-import 'package:makanaki/model/create_post_model.dart';
-import 'package:makanaki/services/api_url.dart';
-import 'package:makanaki/services/temps/temps_id.dart';
+import 'package:macanacki/model/create_post_model.dart';
+import 'package:macanacki/services/api_url.dart';
+import 'package:macanacki/services/temps/temps_id.dart';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -71,7 +71,7 @@ Future<http.Response?> shareComment(ShareCommentsModel data, int id) async {
       // body: jsonEncode(data.toJson())
     ).timeout(const Duration(seconds: 30));
 
-   log(response.body.toString());
+    log(response.body.toString());
     log(response.statusCode.toString());
   } catch (e) {
     response = null;
@@ -94,7 +94,7 @@ Future<http.Response?> deletePost(int id) async {
       // body: jsonEncode(data.toJson())
     );
 
-  //  log(response.body.toString());
+    //  log(response.body.toString());
   } catch (e) {
     response = null;
   }
@@ -116,7 +116,7 @@ Future<http.Response?> deleteComment(int postId, int commentId) async {
       // body: jsonEncode(data.toJson())
     );
 
-  //  log(response.body.toString());
+    //  log(response.body.toString());
   } catch (e) {
     response = null;
   }
@@ -136,7 +136,7 @@ Future<http.Response?> editPost(EditPost data, int id) async {
         },
         body: jsonEncode(data.toJson()));
 
- //   log(response.body.toString());
+    //   log(response.body.toString());
   } catch (e) {
     response = null;
     emitter(e.toString());

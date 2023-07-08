@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/allNavigation.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
-import 'package:makanaki/presentation/model/ui_model.dart';
-import 'package:makanaki/presentation/screens/home/subscription/subscrtiption_plan.dart';
-import 'package:makanaki/presentation/widgets/loader.dart';
-import 'package:makanaki/presentation/widgets/text.dart';
-import 'package:makanaki/services/controllers/create_post_controller.dart';
-import 'package:makanaki/services/controllers/plan_controller.dart';
-import 'package:makanaki/services/controllers/save_media_controller.dart';
-import 'package:makanaki/services/middleware/plan_ware.dart';
-import 'package:makanaki/services/middleware/user_profile_ware.dart';
+import 'package:macanacki/presentation/allNavigation.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/model/ui_model.dart';
+import 'package:macanacki/presentation/screens/home/subscription/subscrtiption_plan.dart';
+import 'package:macanacki/presentation/widgets/loader.dart';
+import 'package:macanacki/presentation/widgets/text.dart';
+import 'package:macanacki/services/controllers/create_post_controller.dart';
+import 'package:macanacki/services/controllers/plan_controller.dart';
+import 'package:macanacki/services/controllers/save_media_controller.dart';
+import 'package:macanacki/services/middleware/plan_ware.dart';
+import 'package:macanacki/services/middleware/user_profile_ware.dart';
 import 'package:provider/provider.dart';
 
 List<String> id = [

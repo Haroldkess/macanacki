@@ -1,4 +1,4 @@
-package com.example.makanaki
+package com.thomas.macanacki
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -5,16 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
-import 'package:makanaki/presentation/model/ui_model.dart';
-import 'package:makanaki/presentation/screens/home/convo/chat/chatextra/reciever_chat_bubble.dart';
-import 'package:makanaki/presentation/screens/home/convo/chat/chatextra/sender_chat_bubble.dart';
-import 'package:makanaki/presentation/widgets/loader.dart';
-import 'package:makanaki/presentation/widgets/text.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/model/ui_model.dart';
+import 'package:macanacki/presentation/screens/home/convo/chat/chatextra/reciever_chat_bubble.dart';
+import 'package:macanacki/presentation/screens/home/convo/chat/chatextra/sender_chat_bubble.dart';
+import 'package:macanacki/presentation/widgets/loader.dart';
+import 'package:macanacki/presentation/widgets/text.dart';
 
-import 'package:makanaki/services/controllers/chat_controller.dart';
-import 'package:makanaki/services/temps/temp.dart';
-import 'package:makanaki/services/temps/temps_id.dart';
+import 'package:macanacki/services/controllers/chat_controller.dart';
+import 'package:macanacki/services/temps/temp.dart';
+import 'package:macanacki/services/temps/temps_id.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

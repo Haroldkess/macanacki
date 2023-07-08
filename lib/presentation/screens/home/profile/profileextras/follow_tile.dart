@@ -4,11 +4,11 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexagon/hexagon.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/model/following_model.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
-import 'package:makanaki/presentation/widgets/text.dart';
-import 'package:makanaki/services/controllers/action_controller.dart';
-import 'package:makanaki/services/middleware/action_ware.dart';
+import 'package:macanacki/model/following_model.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/widgets/text.dart';
+import 'package:macanacki/services/controllers/action_controller.dart';
+import 'package:macanacki/services/middleware/action_ware.dart';
 import 'package:numeral/numeral.dart';
 import 'package:provider/provider.dart';
 

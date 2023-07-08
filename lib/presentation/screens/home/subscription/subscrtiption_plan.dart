@@ -4,14 +4,14 @@ import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/model/ui_model.dart';
-import 'package:makanaki/presentation/screens/home/subscription/plan_box.dart';
-import 'package:makanaki/presentation/screens/home/subscription/sub_successful.dart';
-import 'package:makanaki/presentation/widgets/buttons.dart';
-import 'package:makanaki/presentation/widgets/snack_msg.dart';
-import 'package:makanaki/services/controllers/payment_controller.dart';
-import 'package:makanaki/services/middleware/plan_ware.dart';
-import 'package:makanaki/services/middleware/user_profile_ware.dart';
+import 'package:macanacki/presentation/model/ui_model.dart';
+import 'package:macanacki/presentation/screens/home/subscription/plan_box.dart';
+import 'package:macanacki/presentation/screens/home/subscription/sub_successful.dart';
+import 'package:macanacki/presentation/widgets/buttons.dart';
+import 'package:macanacki/presentation/widgets/snack_msg.dart';
+import 'package:macanacki/services/controllers/payment_controller.dart';
+import 'package:macanacki/services/middleware/plan_ware.dart';
+import 'package:macanacki/services/middleware/user_profile_ware.dart';
 import 'package:provider/provider.dart';
 import '../../../../model/plan_model.dart';
 import '../../../allNavigation.dart';
@@ -327,7 +327,9 @@ payModal(BuildContext context) async {
                               color: HexColor("#C0C0C0"),
                               width: 1.0,
                               style: BorderStyle.solid)),
-                      onPressed: () { showToast2(context, "Coming soon");},
+                      onPressed: () {
+                        showToast2(context, "Coming soon");
+                      },
                       child: Platform.isAndroid
                           ? SvgPicture.asset("assets/icon/G.svg")
                           : SvgPicture.asset("assets/icon/A.svg")),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
-import 'package:makanaki/presentation/widgets/text.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/widgets/text.dart';
 
 import '../constants/params.dart';
 
@@ -21,7 +21,9 @@ class AppButton extends StatelessWidget {
       required this.color,
       required this.text,
       required this.backColor,
-      required this.onTap, required this.curves , required this.textColor});
+      required this.onTap,
+      required this.curves,
+      required this.textColor});
 
   @override
   Widget build(BuildContext context) {

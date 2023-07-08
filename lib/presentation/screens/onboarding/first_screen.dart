@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:makanaki/presentation/allNavigation.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
-import 'package:makanaki/presentation/constants/params.dart';
-import 'package:makanaki/presentation/screens/onboarding/email_screen.dart';
-import 'package:makanaki/presentation/screens/onboarding/login_screen.dart';
-import 'package:makanaki/presentation/widgets/app_icon.dart';
-import 'package:makanaki/presentation/widgets/buttons.dart';
+import 'package:macanacki/presentation/allNavigation.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/constants/params.dart';
+import 'package:macanacki/presentation/screens/onboarding/email_screen.dart';
+import 'package:macanacki/presentation/screens/onboarding/login_screen.dart';
+import 'package:macanacki/presentation/widgets/app_icon.dart';
+import 'package:macanacki/presentation/widgets/buttons.dart';
 
 class FirstScreen extends StatelessWidget {
   const FirstScreen({super.key});
@@ -54,9 +54,8 @@ class FirstScreen extends StatelessWidget {
                         children: [
                           AppButton(
                               onTap: () {
-                            
                                 PageRouting.pushToPage(
-                                    context, const   LoginScreen());
+                                    context, const LoginScreen());
                               },
                               width: 0.4,
                               height: 0.05,
@@ -67,8 +66,7 @@ class FirstScreen extends StatelessWidget {
                               text: "LOGIN"),
                           AppButton(
                             onTap: () {
-                              PageRouting.pushToPage(
-                                  context,  EmailScreen());
+                              PageRouting.pushToPage(context, EmailScreen());
                             },
                             width: 0.4,
                             height: 0.05,
@@ -76,7 +74,7 @@ class FirstScreen extends StatelessWidget {
                             text: "SIGNUP",
                             backColor: darkColor,
                             textColor: backgroundColor,
-                            curves:  buttonCurves,
+                            curves: buttonCurves,
                           )
                         ],
                       ),

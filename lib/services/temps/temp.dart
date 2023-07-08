@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
-import 'package:makanaki/services/temps/temps_id.dart';
+import 'package:macanacki/services/temps/temps_id.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Temp extends ChangeNotifier {
   SharedPreferences? _pref;
 
   String _userName = "";
-  
+
   String _dp = "";
 
   String get userName => _userName;
@@ -27,7 +27,7 @@ class Temp extends ChangeNotifier {
     notifyListeners();
   }
 
-    Future<void> addDp(String photo) async {
+  Future<void> addDp(String photo) async {
     await initPref();
     _pref!.setString(dpKey, photo);
     _dp = photo;

@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:lottie/lottie.dart';
-import 'package:makanaki/model/common/data.dart';
-import 'package:makanaki/model/feed_post_model.dart';
-import 'package:makanaki/presentation/constants/params.dart';
-import 'package:makanaki/presentation/widgets/loader.dart';
-import 'package:makanaki/presentation/widgets/tik_tok_view.dart';
+import 'package:macanacki/model/common/data.dart';
+import 'package:macanacki/model/feed_post_model.dart';
+import 'package:macanacki/presentation/constants/params.dart';
+import 'package:macanacki/presentation/widgets/loader.dart';
+import 'package:macanacki/presentation/widgets/tik_tok_view.dart';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
@@ -30,8 +30,7 @@ class PeopleHome extends StatefulWidget {
   State<PeopleHome> createState() => _PeopleHomeState();
 }
 
-class _PeopleHomeState extends State<PeopleHome>
-     {
+class _PeopleHomeState extends State<PeopleHome> {
   PageController? controller;
 
   @override
@@ -94,7 +93,9 @@ class _PeopleHomeState extends State<PeopleHome>
               if (index % 2 == 0) {
                 List<FeedPost> toSend = [];
 
-                for (var i = index; i < (index + (postLenght.feedPosts.length - index)); i++) {   
+                for (var i = index;
+                    i < (index + (postLenght.feedPosts.length - index));
+                    i++) {
                   toSend.add(postLenght.feedPosts[i]);
                 }
                 FeedPostController.downloadThumbs(

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/widgets/loader.dart';
+import 'package:macanacki/presentation/widgets/loader.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
-import 'package:makanaki/services/controllers/chat_controller.dart';
-import 'package:makanaki/services/middleware/chat_ware.dart';
+import 'package:macanacki/services/controllers/chat_controller.dart';
+import 'package:macanacki/services/middleware/chat_ware.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../../../model/conversation_model.dart';
@@ -38,8 +38,6 @@ class ChatForm extends StatelessWidget {
     ChatWare listenWare = Provider.of<ChatWare>(context, listen: false);
     if (socket == null) {
     } else {
-    
-
       // socket!.on("getMessage", (data2) async {
       //   Conversation data3 = Conversation(
       //     body: data2.toString(),
@@ -120,9 +118,9 @@ class ChatForm extends StatelessWidget {
                     padding: const EdgeInsets.all(10.0),
                     child: InkWell(
                       onTap: () async {
-                            if (chatWare.socket != null) {
-                ChatController.addUserToSocket(context);
-              }
+                        if (chatWare.socket != null) {
+                          ChatController.addUserToSocket(context);
+                        }
                         ChatController.sendMessageHandler(
                             context, msgController, chat, toId!, sendTo);
                         // UserProfileWare user = Provider.of<UserProfileWare>(

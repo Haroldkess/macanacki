@@ -4,10 +4,10 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexagon/hexagon.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/allNavigation.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
-import 'package:makanaki/presentation/widgets/text.dart';
-import 'package:makanaki/services/temps/temps_id.dart';
+import 'package:macanacki/presentation/allNavigation.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/widgets/text.dart';
+import 'package:macanacki/services/temps/temps_id.dart';
 import 'package:numeral/numeral.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -106,7 +106,7 @@ class UserResultTile extends StatelessWidget {
                                       // )
                                     ])),
                           ),
-                          data.verified == 0 ||  data.verified == null
+                          data.verified == 0 || data.verified == null
                               ? const SizedBox.shrink()
                               : SvgPicture.asset("assets/icon/badge.svg",
                                   height: 15, width: 15)

@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
-import 'package:makanaki/presentation/widgets/debug_emitter.dart';
+import 'package:macanacki/presentation/widgets/debug_emitter.dart';
 
 import '../../model/asset_data.dart';
 import '../../model/video_data.dart';

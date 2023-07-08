@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
-import 'package:makanaki/presentation/model/ui_model.dart';
+import 'package:macanacki/presentation/model/ui_model.dart';
 
 import '../../../model/gender_model.dart';
 

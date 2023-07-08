@@ -2,15 +2,15 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:makanaki/model/reg_email_model.dart';
-import 'package:makanaki/presentation/allNavigation.dart';
-import 'package:makanaki/presentation/screens/onboarding/select_gender.dart';
-import 'package:makanaki/presentation/screens/verification/otp_screen.dart';
-import 'package:makanaki/presentation/widgets/snack_msg.dart';
-import 'package:makanaki/services/middleware/action_ware.dart';
-import 'package:makanaki/services/middleware/registeration_ware.dart';
-import 'package:makanaki/services/temps/temp.dart';
-import 'package:makanaki/services/temps/temps_id.dart';
+import 'package:macanacki/model/reg_email_model.dart';
+import 'package:macanacki/presentation/allNavigation.dart';
+import 'package:macanacki/presentation/screens/onboarding/select_gender.dart';
+import 'package:macanacki/presentation/screens/verification/otp_screen.dart';
+import 'package:macanacki/presentation/widgets/snack_msg.dart';
+import 'package:macanacki/services/middleware/action_ware.dart';
+import 'package:macanacki/services/middleware/registeration_ware.dart';
+import 'package:macanacki/services/temps/temp.dart';
+import 'package:macanacki/services/temps/temps_id.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -34,13 +34,9 @@ class ActionController {
     if (isDone) {
       if (ware.message == "Follow successfully") {
         ware.addFollowId(userId);
-      
       } else if (ware.message == "Unfollow successfully") {
         ware.removeFollowId(userId);
-    
-      } else {
-     
-      }
+      } else {}
 
       ware.isLoading(false);
     } else {
@@ -114,13 +110,10 @@ class ActionController {
 
     if (isDone) {
       await Future.forEach(ware.allLiked, (element) async {
-        if(element.id == null){
-
-        }else{
-           await ware.addLikeId(element.id!);
-          
+        if (element.id == null) {
+        } else {
+          await ware.addLikeId(element.id!);
         }
-        
       });
       //log(ware.likeIds.toString());
 
@@ -191,10 +184,9 @@ class ActionController {
 
     if (isDone) {
       await Future.forEach(ware.allLikedComments, (element) async {
-        if(element.id != null){
-           await ware.addCommentId(element.id!);
+        if (element.id != null) {
+          await ware.addCommentId(element.id!);
         }
-       
       });
 
       ware.isLoadingAllComments(false);
@@ -206,15 +198,15 @@ class ActionController {
     ware.isLoadingAllComments(false);
   }
 
-     static Future deleteComment(BuildContext context, id, commentId) async {
+  static Future deleteComment(BuildContext context, id, commentId) async {
     CreatePostWare ware = Provider.of<CreatePostWare>(context, listen: false);
- StoreComment comment = Provider.of<StoreComment>(context, listen: false);
+    StoreComment comment = Provider.of<StoreComment>(context, listen: false);
     FeedPostWare profile = Provider.of<FeedPostWare>(context, listen: false);
 
-    bool isDone = await ware.deleteCommentFromApi(id,commentId);
+    bool isDone = await ware.deleteCommentFromApi(id, commentId);
 
     if (isDone) {
-   //   await profile.remove(id);
+      //   await profile.remove(id);
       // ignore: use_build_context_synchronously
       showToast2(
         context,
@@ -225,5 +217,4 @@ class ActionController {
       showToast2(context, "Failed to delete post", isError: true);
     }
   }
-
 }

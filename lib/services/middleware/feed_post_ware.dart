@@ -2,16 +2,16 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:makanaki/model/common/data.dart';
-import 'package:makanaki/model/feed_post_model.dart';
-import 'package:makanaki/model/gender_model.dart';
-import 'package:makanaki/services/backoffice/feed_post_office.dart';
-import 'package:makanaki/services/backoffice/gender_office.dart';
+import 'package:macanacki/model/common/data.dart';
+import 'package:macanacki/model/feed_post_model.dart';
+import 'package:macanacki/model/gender_model.dart';
+import 'package:macanacki/services/backoffice/feed_post_office.dart';
+import 'package:macanacki/services/backoffice/gender_office.dart';
 import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
-import 'package:makanaki/services/backoffice/user_profile_office.dart';
-import 'package:makanaki/services/controllers/feed_post_controller.dart';
+import 'package:macanacki/services/backoffice/user_profile_office.dart';
+import 'package:macanacki/services/controllers/feed_post_controller.dart';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 
@@ -150,14 +150,12 @@ class FeedPostWare extends ChangeNotifier {
           _feedPosts = _feedData.data!;
         } else {
           _moreFeedPosts = incomingData.data!;
-          if(_moreFeedPosts.length > 5){
-             _moreFeedPosts.shuffle();
-              _feedPosts.addAll(_moreFeedPosts);
-          }else{
-             _feedPosts.addAll(_moreFeedPosts);
-
+          if (_moreFeedPosts.length > 5) {
+            _moreFeedPosts.shuffle();
+            _feedPosts.addAll(_moreFeedPosts);
+          } else {
+            _feedPosts.addAll(_moreFeedPosts);
           }
-         
         }
         if (_moreFeedPosts.isNotEmpty) {
           _moreFeedPosts.clear();

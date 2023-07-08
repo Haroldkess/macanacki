@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
-import 'package:makanaki/model/public_profile_model.dart';
+import 'package:macanacki/model/public_profile_model.dart';
 import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
-import 'package:makanaki/services/backoffice/user_profile_office.dart';
-import 'package:makanaki/services/temps/temps_id.dart';
+import 'package:macanacki/services/backoffice/user_profile_office.dart';
+import 'package:macanacki/services/temps/temps_id.dart';
 
 import '../../model/gender_model.dart';
 import '../../model/register_model.dart';
@@ -19,16 +19,16 @@ class UserProfileWare extends ChangeNotifier {
   PublicUserData _publicUserProfileModel = PublicUserData();
 
   int _index = 0;
-  
+
   int _userindex = 0;
-  
+
   int _publicindex = 0;
 
   int get index => _index;
 
-    int get userIndex => _userindex;
+  int get userIndex => _userindex;
 
-      int get publicIndex => _publicindex;
+  int get publicIndex => _publicindex;
 
   bool get loadStatus => _loadStatus;
   bool get loadStatus2 => _loadStatus2;
@@ -77,14 +77,17 @@ class UserProfileWare extends ChangeNotifier {
     _index = fig;
     notifyListeners();
   }
+
   void changeUserIndex(int fig) {
     _userindex = fig;
     notifyListeners();
   }
+
   void changePublicIndex(int fig) {
     _publicindex = fig;
     notifyListeners();
   }
+
   Future<void> isLoading(bool isLoad) async {
     _loadStatus = isLoad;
     notifyListeners();

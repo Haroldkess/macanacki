@@ -1,14 +1,14 @@
 import 'package:geolocator/geolocator.dart';
-import 'package:makanaki/main.dart';
-import 'package:makanaki/presentation/allNavigation.dart';
-import 'package:makanaki/presentation/operations.dart';
+import 'package:macanacki/main.dart';
+import 'package:macanacki/presentation/allNavigation.dart';
+import 'package:macanacki/presentation/operations.dart';
 import 'dart:io' show Platform;
 import 'dart:async';
-import 'package:makanaki/presentation/screens/onboarding/first_screen.dart';
-import 'package:makanaki/presentation/screens/onboarding/login_screen.dart';
-import 'package:makanaki/presentation/screens/onboarding/splash_screen.dart';
-import 'package:makanaki/presentation/widgets/snack_msg.dart';
-import 'package:makanaki/services/temps/temps_id.dart';
+import 'package:macanacki/presentation/screens/onboarding/first_screen.dart';
+import 'package:macanacki/presentation/screens/onboarding/login_screen.dart';
+import 'package:macanacki/presentation/screens/onboarding/splash_screen.dart';
+import 'package:macanacki/presentation/widgets/snack_msg.dart';
+import 'package:macanacki/services/temps/temps_id.dart';
 import 'package:restart_app/restart_app.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:location/location.dart' hide LocationAccuracy;
@@ -62,7 +62,7 @@ class LocationController {
 
   static Future<void> getAndSaveLatLong(context) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-   
+
     Position? currentPosition = await determinePosition(context);
     //   late bool isDone;
 

@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
 
 class Avatar extends StatelessWidget {
   final String image;

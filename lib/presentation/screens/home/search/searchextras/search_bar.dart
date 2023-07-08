@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/services/controllers/search_controller.dart';
+import 'package:macanacki/services/controllers/search_controller.dart';
 
 import '../../../../constants/colors.dart';
 

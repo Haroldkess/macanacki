@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/widgets/text.dart';
-import 'package:makanaki/services/middleware/notification_ware..dart';
+import 'package:macanacki/presentation/widgets/text.dart';
+import 'package:macanacki/services/middleware/notification_ware..dart';
 import 'package:provider/provider.dart';
 
 import '../../../services/controllers/chat_controller.dart';
@@ -50,7 +50,7 @@ class _UsersProfileState extends State<UsersProfile>
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  // myIcon("assets/icon/makanakiicon.svg", primaryColor, 16.52,
+                  // myIcon("assets/icon/macanackiicon.svg", primaryColor, 16.52,
                   //     70, false),
                   InkWell(
                     onTap: () => PageRouting.pushToPage(

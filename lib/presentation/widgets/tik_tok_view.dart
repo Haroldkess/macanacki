@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
-import 'package:makanaki/presentation/operations.dart';
-import 'package:makanaki/presentation/widgets/debug_emitter.dart';
-import 'package:makanaki/presentation/widgets/feed_views/follow_section.dart';
-import 'package:makanaki/presentation/widgets/feed_views/like_section.dart';
-import 'package:makanaki/presentation/widgets/feed_views/multiple_post.dart';
-import 'package:makanaki/presentation/widgets/feed_views/single_posts.dart';
-import 'package:makanaki/presentation/widgets/text.dart';
-import 'package:makanaki/services/controllers/action_controller.dart';
-import 'package:makanaki/services/controllers/view_controller.dart';
-import 'package:makanaki/services/middleware/action_ware.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/operations.dart';
+import 'package:macanacki/presentation/widgets/debug_emitter.dart';
+import 'package:macanacki/presentation/widgets/feed_views/follow_section.dart';
+import 'package:macanacki/presentation/widgets/feed_views/like_section.dart';
+import 'package:macanacki/presentation/widgets/feed_views/multiple_post.dart';
+import 'package:macanacki/presentation/widgets/feed_views/single_posts.dart';
+import 'package:macanacki/presentation/widgets/text.dart';
+import 'package:macanacki/services/controllers/action_controller.dart';
+import 'package:macanacki/services/controllers/view_controller.dart';
+import 'package:macanacki/services/middleware/action_ware.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
@@ -103,7 +103,7 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
                 Provider.of<TabProvider>(context, listen: false);
             if (provide.index == 0) {
               _controller!.play();
-           //   provide.tap(false);
+              //   provide.tap(false);
             } else {
               if (provide.index == 4 && provide.isHome) {
                 emitter("heyyyyy");
@@ -265,8 +265,7 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
           Align(
             alignment: Alignment.topCenter,
             child: Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: 10, vertical:   50),
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 50),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [

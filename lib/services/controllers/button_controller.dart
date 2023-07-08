@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:makanaki/services/middleware/plan_ware.dart';
+import 'package:macanacki/services/middleware/plan_ware.dart';
 import 'package:provider/provider.dart';
 
 import '../../presentation/allNavigation.dart';
@@ -22,13 +22,11 @@ class ButtonController {
     if (isDone) {
       ware.isLoading(false);
       // ignore: use_build_context_synchronously
-     
+
     } else {
       ware.isLoading(false);
       // ignore: use_build_context_synchronously
       showToast2(context, ware.message, isError: true);
     }
   }
-
-  
 }

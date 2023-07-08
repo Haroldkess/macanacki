@@ -1,7 +1,5 @@
-
-
 // API for sending videos
-import 'package:makanaki/presentation/constants/params.dart';
+import 'package:macanacki/presentation/constants/params.dart';
 
 const muxBaseUrl = 'https://api.mux.com';
 
@@ -27,7 +25,8 @@ const contentType = 'application/json';
 const authToken = '$accessTokenMUX:$secretTokenMUX';
 
 // Test video url provided by MUX
-const demoVideoUrl = 'https://storage.googleapis.com/muxdemofiles/mux-video-intro.mp4';
+const demoVideoUrl =
+    'https://storage.googleapis.com/muxdemofiles/mux-video-intro.mp4';
 
 // Specifying playback policy to public
 const playbackPolicy = 'public';

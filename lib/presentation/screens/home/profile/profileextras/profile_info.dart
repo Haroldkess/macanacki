@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
-import 'package:makanaki/presentation/screens/home/profile/profileextras/not_mine_buttons.dart';
-import 'package:makanaki/presentation/screens/home/profile/profileextras/profile_action_buttons.dart';
-import 'package:makanaki/presentation/screens/home/profile/profileextras/profile_followers.dart';
-import 'package:makanaki/presentation/screens/home/profile/profileextras/profile_image_name.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/screens/home/profile/profileextras/not_mine_buttons.dart';
+import 'package:macanacki/presentation/screens/home/profile/profileextras/profile_action_buttons.dart';
+import 'package:macanacki/presentation/screens/home/profile/profileextras/profile_followers.dart';
+import 'package:macanacki/presentation/screens/home/profile/profileextras/profile_image_name.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 

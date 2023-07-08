@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:makanaki/model/reg_email_model.dart';
-import 'package:makanaki/presentation/screens/onboarding/business/business_modal.dart';
-import 'package:makanaki/services/backoffice/registeration_office.dart';
+import 'package:macanacki/model/reg_email_model.dart';
+import 'package:macanacki/presentation/screens/onboarding/business/business_modal.dart';
+import 'package:macanacki/services/backoffice/registeration_office.dart';
 import 'dart:convert';
 import 'dart:developer';
 
@@ -174,8 +174,8 @@ class RegisterationWare extends ChangeNotifier {
   ) async {
     late bool isSuccessful;
     try {
-      http.Response? response =
-          await verifyUserName(name).whenComplete(() => emitter(" request done"));
+      http.Response? response = await verifyUserName(name)
+          .whenComplete(() => emitter(" request done"));
       if (response == null) {
         _verifyName = false;
         isSuccessful = false;

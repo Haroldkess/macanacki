@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/model/ui_model.dart';
-import 'package:makanaki/presentation/screens/home/profile/profileextras/follow_tile.dart';
+import 'package:macanacki/presentation/model/ui_model.dart';
+import 'package:macanacki/presentation/screens/home/profile/profileextras/follow_tile.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../../model/following_model.dart';
@@ -44,7 +44,6 @@ class FollowFollowingList extends StatelessWidget {
         : StreamBuilder(
             stream: null,
             builder: (context, snapshot) {
-           
               List<FollowingData> searched = search.SearchInProfile.isEmpty
                   ? data
                   : data.where((element) {

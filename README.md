@@ -1,4 +1,4 @@
-# makanaki
+# macanacki
 
 A social networking platform for individuals and businesses for africa
 !. Full auth (email, otp )

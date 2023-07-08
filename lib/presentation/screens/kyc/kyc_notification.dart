@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
-import 'package:makanaki/presentation/constants/params.dart';
-import 'package:makanaki/presentation/model/ui_model.dart';
-import 'package:makanaki/presentation/screens/kyc/camera_screen.dart';
-import 'package:makanaki/presentation/widgets/custom_paint.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/constants/params.dart';
+import 'package:macanacki/presentation/model/ui_model.dart';
+import 'package:macanacki/presentation/screens/kyc/camera_screen.dart';
+import 'package:macanacki/presentation/widgets/custom_paint.dart';
 import 'dart:ui' as ui;
 
-import 'package:makanaki/presentation/widgets/text.dart';
+import 'package:macanacki/presentation/widgets/text.dart';
 
 import '../../allNavigation.dart';
 import '../../widgets/buttons.dart';

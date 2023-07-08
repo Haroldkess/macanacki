@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/allNavigation.dart';
-import 'package:makanaki/presentation/operations.dart';
-import 'package:makanaki/presentation/screens/home/profile/createpost/create_post_screen.dart';
-import 'package:makanaki/presentation/screens/home/profile/edit_profile.dart';
-import 'package:makanaki/presentation/screens/home/settings/settings_screen.dart';
-import 'package:makanaki/services/middleware/user_profile_ware.dart';
+import 'package:macanacki/presentation/allNavigation.dart';
+import 'package:macanacki/presentation/operations.dart';
+import 'package:macanacki/presentation/screens/home/profile/createpost/create_post_screen.dart';
+import 'package:macanacki/presentation/screens/home/profile/edit_profile.dart';
+import 'package:macanacki/presentation/screens/home/settings/settings_screen.dart';
+import 'package:macanacki/services/middleware/user_profile_ware.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../widgets/text.dart';

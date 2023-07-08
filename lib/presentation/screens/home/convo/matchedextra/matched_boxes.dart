@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexagon/hexagon.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/model/ui_model.dart';
+import 'package:macanacki/presentation/model/ui_model.dart';
 
 import '../../../../allNavigation.dart';
 import '../../../../constants/colors.dart';

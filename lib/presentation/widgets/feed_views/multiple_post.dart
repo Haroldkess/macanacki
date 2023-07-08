@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 import '../../../model/feed_post_model.dart';
@@ -116,12 +116,12 @@ class _MultipleViewState extends State<MultipleView> {
               Provider.of<TabProvider>(context, listen: false);
           if (provide.index == 0) {
             _controller!.play();
-           // provide.tap(false);
+            // provide.tap(false);
           } else {
             if (provide.index == 4 && provide.isHome) {
               emitter("heyyyyy");
               _controller!.play();
-             //   provide.tap(false);
+              //   provide.tap(false);
             } else {
               _controller!.pause();
             }
@@ -226,6 +226,4 @@ class _MultipleViewState extends State<MultipleView> {
             ],
           );
   }
-
-
 }

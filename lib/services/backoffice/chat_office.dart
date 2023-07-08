@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 import 'package:http/http.dart' as http;
-import 'package:makanaki/model/conversation_model.dart';
-import 'package:makanaki/services/api_url.dart';
+import 'package:macanacki/model/conversation_model.dart';
+import 'package:macanacki/services/api_url.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import '../../presentation/widgets/debug_emitter.dart';
@@ -88,7 +88,6 @@ Future<http.Response?> getUnreadChat() async {
   }
   return response;
 }
-
 
 Future<http.Response?> readAllChats(int userId) async {
   http.Response? response;

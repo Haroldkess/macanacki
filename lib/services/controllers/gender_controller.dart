@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:makanaki/presentation/widgets/snack_msg.dart';
-import 'package:makanaki/services/middleware/gender_ware.dart';
+import 'package:macanacki/presentation/widgets/snack_msg.dart';
+import 'package:macanacki/services/middleware/gender_ware.dart';
 import 'package:provider/provider.dart';
 
 class GenderController {
@@ -19,7 +19,7 @@ class GenderController {
     } else {
       ware.isLoading(false);
       // ignore: use_build_context_synchronously
-       showToast2(context, "An error occured", isError: true);
+      showToast2(context, "An error occured", isError: true);
     }
   }
 }

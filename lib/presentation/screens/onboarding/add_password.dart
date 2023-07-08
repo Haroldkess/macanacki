@@ -5,12 +5,12 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexagon/hexagon.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/allNavigation.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
-import 'package:makanaki/presentation/screens/onboarding/user_name.dart';
-import 'package:makanaki/presentation/widgets/app_icon.dart';
-import 'package:makanaki/services/controllers/complete_reg.dart';
-import 'package:makanaki/services/temps/temp.dart';
+import 'package:macanacki/presentation/allNavigation.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/screens/onboarding/user_name.dart';
+import 'package:macanacki/presentation/widgets/app_icon.dart';
+import 'package:macanacki/services/controllers/complete_reg.dart';
+import 'package:macanacki/services/temps/temp.dart';
 import 'package:provider/provider.dart';
 
 import '../../../services/middleware/registeration_ware.dart';
@@ -347,7 +347,8 @@ class _AddPasswordScreenState extends State<AddPasswordScreen> {
       return;
     } else {
       await temp.addPasswordTemp(password.text).whenComplete(() async {
-        await CompleteRegisterationController.registerationController(context, false);
+        await CompleteRegisterationController.registerationController(
+            context, false);
       });
     }
     _formKey.currentState?.save();

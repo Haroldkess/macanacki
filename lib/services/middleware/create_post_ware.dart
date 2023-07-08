@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:makanaki/model/comments_model.dart';
-import 'package:makanaki/model/create_post_model.dart';
-import 'package:makanaki/services/backoffice/create_post_office.dart';
+import 'package:macanacki/model/comments_model.dart';
+import 'package:macanacki/model/create_post_model.dart';
+import 'package:macanacki/services/backoffice/create_post_office.dart';
 import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
@@ -156,8 +156,8 @@ class CreatePostWare extends ChangeNotifier {
   Future<bool> deletePostFromApi(int id) async {
     late bool isSuccessful;
     try {
-      http.Response? response =
-          await deletePost(id).whenComplete(() => emitter("delete request done"));
+      http.Response? response = await deletePost(id)
+          .whenComplete(() => emitter("delete request done"));
       if (response == null) {
         isSuccessful = false;
       } else if (response.statusCode == 200) {
@@ -172,11 +172,11 @@ class CreatePostWare extends ChangeNotifier {
     return isSuccessful;
   }
 
-    Future<bool> deleteCommentFromApi(int id, int commentId) async {
+  Future<bool> deleteCommentFromApi(int id, int commentId) async {
     late bool isSuccessful;
     try {
-      http.Response? response =
-          await deleteComment(id,commentId).whenComplete(() => emitter("delete comment request done"));
+      http.Response? response = await deleteComment(id, commentId)
+          .whenComplete(() => emitter("delete comment request done"));
       if (response == null) {
         isSuccessful = false;
       } else if (response.statusCode == 200) {

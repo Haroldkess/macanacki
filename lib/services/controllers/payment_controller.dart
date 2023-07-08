@@ -10,11 +10,11 @@ import 'package:hexcolor/hexcolor.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:http/http.dart' as http;
-import 'package:makanaki/presentation/allNavigation.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
-import 'package:makanaki/presentation/screens/home/subscription/sub_successful.dart';
-import 'package:makanaki/presentation/widgets/snack_msg.dart';
-import 'package:makanaki/services/middleware/user_profile_ware.dart';
+import 'package:macanacki/presentation/allNavigation.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/screens/home/subscription/sub_successful.dart';
+import 'package:macanacki/presentation/widgets/snack_msg.dart';
+import 'package:macanacki/services/middleware/user_profile_ware.dart';
 import 'package:provider/provider.dart';
 
 import '../../presentation/screens/onboarding/business/success.dart';
@@ -37,7 +37,7 @@ class PaymentController {
 
   static Future chargeCard(BuildContext context, int amount,
       [bool? isFirst]) async {
-  //  log(sk);
+    //  log(sk);
     UserProfileWare user = Provider.of<UserProfileWare>(context, listen: false);
     final String ref = await getReference();
     // ignore: use_build_context_synchronously
@@ -154,7 +154,7 @@ class PaymentController {
       platform = 'Android';
     }
     ret =
-        'ChargedFrom${platform}Makanaki${DateTime.now().millisecondsSinceEpoch.toString()}';
+        'ChargedFrom${platform}macanacki${DateTime.now().millisecondsSinceEpoch.toString()}';
 
     return ret;
   }

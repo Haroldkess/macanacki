@@ -1,9 +1,9 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:makanaki/presentation/widgets/snack_msg.dart';
-import 'package:makanaki/services/middleware/action_ware.dart';
-import 'package:makanaki/services/middleware/search_ware.dart';
-import 'package:makanaki/services/middleware/user_profile_ware.dart';
+import 'package:macanacki/presentation/widgets/snack_msg.dart';
+import 'package:macanacki/services/middleware/action_ware.dart';
+import 'package:macanacki/services/middleware/search_ware.dart';
+import 'package:macanacki/services/middleware/user_profile_ware.dart';
 import 'package:provider/provider.dart';
 
 class SearchController {
@@ -13,7 +13,6 @@ class SearchController {
     ActionWare action = Provider.of<ActionWare>(context, listen: false);
 
     ware.isLoading(true);
-
 
     bool isDone = await ware
         .getSearchedUserFromApi(x)
@@ -35,7 +34,6 @@ class SearchController {
       // ignore: use_build_context_synchronously
       ///  showToast(context, "An error occured", Colors.red);
     }
-        ware.isLoading(false);
-
+    ware.isLoading(false);
   }
 }

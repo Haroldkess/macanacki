@@ -29,6 +29,49 @@
             {
               "client_id": "1052028176799-96bu7to3o9bt03lg5kdb1apin4jlvi8c.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "1052028176799-mj6k988o03j1foflibl0gc1gf2h92f01.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.makanaki"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1052028176799:android:ba31456cf563574f3b15aa",
+        "android_client_info": {
+          "package_name": "com.thomas.macanacki"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1052028176799-96bu7to3o9bt03lg5kdb1apin4jlvi8c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLMFyOmzch9tzQcR8csUA9ealVLonstRU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1052028176799-96bu7to3o9bt03lg5kdb1apin4jlvi8c.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1052028176799-mj6k988o03j1foflibl0gc1gf2h92f01.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.makanaki"
+              }
             }
           ]
         }

@@ -1,12 +1,13 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:makanaki/presentation/widgets/snack_msg.dart';
-import 'package:makanaki/services/middleware/gender_ware.dart';
-import 'package:makanaki/services/middleware/swipe_ware.dart';
+import 'package:macanacki/presentation/widgets/snack_msg.dart';
+import 'package:macanacki/services/middleware/gender_ware.dart';
+import 'package:macanacki/services/middleware/swipe_ware.dart';
 import 'package:provider/provider.dart';
 
 class SwipeController {
-  static Future<void> retrievSwipeController(BuildContext context, String type) async {
+  static Future<void> retrievSwipeController(
+      BuildContext context, String type) async {
     SwipeWare ware = Provider.of<SwipeWare>(context, listen: false);
 
     ware.isLoading(true);
@@ -23,6 +24,6 @@ class SwipeController {
       // ignore: use_build_context_synchronously
       showToast2(context, "An error occured", isError: true);
     }
-     ware.isLoading(false);
+    ware.isLoading(false);
   }
 }

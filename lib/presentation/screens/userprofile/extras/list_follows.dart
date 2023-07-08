@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/model/public_profile_model.dart';
-import 'package:makanaki/presentation/model/ui_model.dart';
-import 'package:makanaki/presentation/screens/home/profile/profileextras/follow_tile.dart';
-import 'package:makanaki/presentation/screens/userprofile/extras/public_tile.dart';
+import 'package:macanacki/model/public_profile_model.dart';
+import 'package:macanacki/presentation/model/ui_model.dart';
+import 'package:macanacki/presentation/screens/home/profile/profileextras/follow_tile.dart';
+import 'package:macanacki/presentation/screens/userprofile/extras/public_tile.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../../model/following_model.dart';

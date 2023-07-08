@@ -1,6 +1,5 @@
-
 import 'package:http/http.dart' as http;
-import 'package:makanaki/services/middleware/view_ware.dart';
+import 'package:macanacki/services/middleware/view_ware.dart';
 
 class ViewController extends ViewWare {
   static Future<void> handleView(int postId) async {

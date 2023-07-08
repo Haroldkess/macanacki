@@ -4,9 +4,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexagon/hexagon.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/constants/params.dart';
-import 'package:makanaki/presentation/widgets/text.dart';
-import 'package:makanaki/services/middleware/user_profile_ware.dart';
+import 'package:macanacki/presentation/constants/params.dart';
+import 'package:macanacki/presentation/widgets/text.dart';
+import 'package:macanacki/services/middleware/user_profile_ware.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../constants/colors.dart';
@@ -170,7 +170,7 @@ class ProfileImageAndNameShimmer extends StatelessWidget {
                     RichText(
                         overflow: TextOverflow.ellipsis,
                         text: TextSpan(
-                            text: "Makanaki, ",
+                            text: "macanacki, ",
                             style: GoogleFonts.spartan(
                               color: HexColor(darkColor),
                               fontSize: 24,

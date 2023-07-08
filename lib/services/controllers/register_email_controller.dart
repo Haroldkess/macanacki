@@ -1,11 +1,11 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:makanaki/model/reg_email_model.dart';
-import 'package:makanaki/presentation/allNavigation.dart';
-import 'package:makanaki/presentation/screens/verification/otp_screen.dart';
-import 'package:makanaki/presentation/widgets/snack_msg.dart';
-import 'package:makanaki/services/middleware/registeration_ware.dart';
-import 'package:makanaki/services/temps/temp.dart';
+import 'package:macanacki/model/reg_email_model.dart';
+import 'package:macanacki/presentation/allNavigation.dart';
+import 'package:macanacki/presentation/screens/verification/otp_screen.dart';
+import 'package:macanacki/presentation/widgets/snack_msg.dart';
+import 'package:macanacki/services/middleware/registeration_ware.dart';
+import 'package:macanacki/services/temps/temp.dart';
 import 'package:provider/provider.dart';
 
 class RegisterEmailController {
@@ -34,7 +34,7 @@ class RegisterEmailController {
     } else {
       ware.isLoading(false);
       // ignore: use_build_context_synchronously
-    showToast2(context, ware.message, isError: true);
+      showToast2(context, ware.message, isError: true);
       //print("something went wrong");
     }
   }

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
-import 'package:makanaki/model/gender_model.dart';
-import 'package:makanaki/model/plan_model.dart';
-import 'package:makanaki/services/backoffice/gender_office.dart';
+import 'package:macanacki/model/gender_model.dart';
+import 'package:macanacki/model/plan_model.dart';
+import 'package:macanacki/services/backoffice/gender_office.dart';
 import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
@@ -35,9 +35,7 @@ class PlanWare extends ChangeNotifier {
     notifyListeners();
   }
 
-
-
-  void addAmount(int  paying) {
+  void addAmount(int paying) {
     amount = paying;
     notifyListeners();
   }
@@ -45,11 +43,11 @@ class PlanWare extends ChangeNotifier {
   Future<bool> getPlansFromApi() async {
     late bool isSuccessful;
     try {
-      http.Response? response =
-          await getPlan().whenComplete(() => emitter("plans gotten successfully"));
+      http.Response? response = await getPlan()
+          .whenComplete(() => emitter("plans gotten successfully"));
       if (response == null) {
         isSuccessful = false;
-  //      log("get gender request failed");
+        //      log("get gender request failed");
       } else if (response.statusCode == 200) {
         var jsonData = jsonDecode(response.body);
 
@@ -57,7 +55,7 @@ class PlanWare extends ChangeNotifier {
         _plans = incomingData.data!;
         _message = incomingData.message!.toString();
 
-    //    log("plans  request success");
+        //    log("plans  request success");
         isSuccessful = true;
       } else {
         var jsonData = jsonDecode(response.body);
@@ -65,13 +63,13 @@ class PlanWare extends ChangeNotifier {
         var incomingData = PlanModel.fromJson(jsonData);
         _message = incomingData.message!.toString();
 
-      //  log("plans  request failed");
+        //  log("plans  request failed");
         isSuccessful = false;
       }
     } catch (e) {
       isSuccessful = false;
-     // log("get gender  request failed");
-   //   log(e.toString());
+      // log("get gender  request failed");
+      //   log(e.toString());
     }
 
     notifyListeners();

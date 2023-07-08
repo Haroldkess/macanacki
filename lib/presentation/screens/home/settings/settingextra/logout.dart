@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/main.dart';
-import 'package:makanaki/presentation/allNavigation.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
-import 'package:makanaki/presentation/widgets/text.dart';
-import 'package:makanaki/services/temps/temps_id.dart';
+import 'package:macanacki/main.dart';
+import 'package:macanacki/presentation/allNavigation.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/widgets/text.dart';
+import 'package:macanacki/services/temps/temps_id.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:restart_app/restart_app.dart';
 import '../../../onboarding/splash_screen.dart';
@@ -56,7 +56,7 @@ class Logout extends StatelessWidget {
 
                 // ignore: use_build_context_synchronously
                 PageRouting.removeAllToPage(context, const Splash());
-                 Restart.restartApp();
+                Restart.restartApp();
               }),
         ));
       },

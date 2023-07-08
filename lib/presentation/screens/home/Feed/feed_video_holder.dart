@@ -6,9 +6,9 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
-import 'package:makanaki/presentation/widgets/debug_emitter.dart';
-import 'package:makanaki/services/middleware/feed_post_ware.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/widgets/debug_emitter.dart';
+import 'package:macanacki/services/middleware/feed_post_ware.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
@@ -99,7 +99,7 @@ class _FeedVideoHolderState extends State<FeedVideoHolder> {
 
     return widget.isHome
         ? Stack(
-            alignment:  Alignment.center,
+            alignment: Alignment.center,
             children: [
               StreamBuilder<Object>(
                   stream: null,

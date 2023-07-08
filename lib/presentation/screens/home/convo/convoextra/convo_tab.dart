@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/widgets/buttons.dart';
-import 'package:makanaki/presentation/widgets/text.dart';
+import 'package:macanacki/presentation/widgets/buttons.dart';
+import 'package:macanacki/presentation/widgets/text.dart';
 
 import '../../../../constants/colors.dart';
 import '../../../../constants/params.dart';
@@ -56,7 +56,7 @@ class _ConvoTabState extends State<ConvoTab> {
                 Container(
                   decoration: BoxDecoration(
                       color: HexColor(primaryColor), shape: BoxShape.circle),
-                  child: Padding(    
+                  child: Padding(
                     padding: const EdgeInsets.all(5.0),
                     child: AppText(
                       text: "2",

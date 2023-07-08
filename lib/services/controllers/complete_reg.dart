@@ -1,15 +1,15 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/model/register_model.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
-import 'package:makanaki/presentation/screens/home/tab_screen.dart';
-import 'package:makanaki/presentation/widgets/snack_msg.dart';
-import 'package:makanaki/services/controllers/login_controller.dart';
-import 'package:makanaki/services/middleware/facial_ware.dart';
-import 'package:makanaki/services/middleware/registeration_ware.dart';
-import 'package:makanaki/services/temps/temp.dart';
-import 'package:makanaki/services/temps/temps_id.dart';
+import 'package:macanacki/model/register_model.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/screens/home/tab_screen.dart';
+import 'package:macanacki/presentation/widgets/snack_msg.dart';
+import 'package:macanacki/services/controllers/login_controller.dart';
+import 'package:macanacki/services/middleware/facial_ware.dart';
+import 'package:macanacki/services/middleware/registeration_ware.dart';
+import 'package:macanacki/services/temps/temp.dart';
+import 'package:macanacki/services/temps/temps_id.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -30,9 +30,7 @@ class CompleteRegisterationController {
   }
 
   static Future<void> registerationController(
-    BuildContext context,
-    bool isSplash
-  ) async {
+      BuildContext context, bool isSplash) async {
     RegisterationWare ware =
         Provider.of<RegisterationWare>(context, listen: false);
     Temp temp = Provider.of<Temp>(context, listen: false);

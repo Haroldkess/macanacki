@@ -5,11 +5,11 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:makanaki/presentation/widgets/float_toast.dart';
-import 'package:makanaki/presentation/widgets/snack_msg.dart';
-import 'package:makanaki/services/controllers/network_controller.dart';
-import 'package:makanaki/services/controllers/user_profile_controller.dart';
-import 'package:makanaki/services/middleware/action_ware.dart';
+import 'package:macanacki/presentation/widgets/float_toast.dart';
+import 'package:macanacki/presentation/widgets/snack_msg.dart';
+import 'package:macanacki/services/controllers/network_controller.dart';
+import 'package:macanacki/services/controllers/user_profile_controller.dart';
+import 'package:macanacki/services/middleware/action_ware.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -209,13 +209,13 @@ class FeedPostController {
                 String newThumb = thumbs! + element.media![i];
                 storeThumb.add(newThumb);
                 if (i + 1 == element.media!.length) {
-                   ware
+                  ware
                       .addThumbs(storeThumb)
                       .whenComplete(() => storeThumb.clear());
                 }
               }
             } else {
-             // emitter("not a video we are skip[ping] this one ");
+              // emitter("not a video we are skip[ping] this one ");
             }
           } catch (e) {
             emitter("Download Failed.\n\n" + e.toString());
@@ -228,7 +228,7 @@ class FeedPostController {
         // }
       }
     }).whenComplete(() => emitter("CACHE COMPLETED WAITING FOR NEXT BATCH"));
-  
+
     return;
   }
 

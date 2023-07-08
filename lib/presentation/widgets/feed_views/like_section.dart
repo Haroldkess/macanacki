@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:like_button/like_button.dart';
-import 'package:makanaki/presentation/widgets/debug_emitter.dart';
-import 'package:makanaki/presentation/widgets/option_modal.dart';
+import 'package:macanacki/presentation/widgets/debug_emitter.dart';
+import 'package:macanacki/presentation/widgets/option_modal.dart';
 import 'package:numeral/numeral.dart';
 import 'package:provider/provider.dart';
 import '../../../model/asset_data.dart';
@@ -75,14 +75,11 @@ class _LikeSectionState extends State<LikeSection> {
 
                 if (checkCom.isEmpty) {
                   if (widget.data.comments!.isEmpty) {
-                 
                   } else {
                     Operations.commentOperation(
                         context, false, widget.data.comments!);
                   }
-                } else {
-                
-                }
+                } else {}
                 setState(() {});
                 //   emitter(comment.comments.length.toString());
                 // emitter(widget.data.id!.toString());
@@ -104,8 +101,7 @@ class _LikeSectionState extends State<LikeSection> {
                         .length),
               ),
             ),
-          
-          
+
             InkWell(
                 onTap: () => optionModal(
                     context, widget.urls, widget.data.user!.id, widget.data.id),
@@ -223,6 +219,4 @@ class _LikeSectionState extends State<LikeSection> {
 
     // return !isLiked;
   }
-
-
 }

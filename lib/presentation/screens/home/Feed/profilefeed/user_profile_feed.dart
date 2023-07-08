@@ -2,12 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:makanaki/model/feed_post_model.dart';
-import 'package:makanaki/model/profile_feed_post.dart';
-import 'package:makanaki/presentation/constants/params.dart';
-import 'package:makanaki/presentation/screens/home/Feed/profilefeed/profilefeedextra/post_view.dart';
-import 'package:makanaki/presentation/widgets/text.dart';
-import 'package:makanaki/presentation/widgets/tik_tok_view.dart';
+import 'package:macanacki/model/feed_post_model.dart';
+import 'package:macanacki/model/profile_feed_post.dart';
+import 'package:macanacki/presentation/constants/params.dart';
+import 'package:macanacki/presentation/screens/home/Feed/profilefeed/profilefeedextra/post_view.dart';
+import 'package:macanacki/presentation/widgets/text.dart';
+import 'package:macanacki/presentation/widgets/tik_tok_view.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../../model/public_profile_model.dart';

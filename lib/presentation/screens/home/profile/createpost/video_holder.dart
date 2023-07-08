@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoHolder extends StatefulWidget {
@@ -26,7 +26,6 @@ class _VideoHolderState extends State<VideoHolder> {
 
     _controller = VideoPlayerController.file(
       widget.file,
-      
     );
 
     // Initialize the controller and store the Future for later use.
@@ -66,9 +65,8 @@ class _VideoHolderState extends State<VideoHolder> {
   }
 }
 
-
 class VideoHolderTwo extends StatefulWidget {
-  final String  file;
+  final String file;
   const VideoHolderTwo({super.key, required this.file});
 
   @override
@@ -85,7 +83,6 @@ class _VideoHolderTwoState extends State<VideoHolderTwo> {
 
     _controller = VideoPlayerController.network(
       widget.file,
-      
     );
 
     // Initialize the controller and store the Future for later use.

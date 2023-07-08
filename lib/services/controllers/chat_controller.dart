@@ -5,15 +5,15 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:makanaki/model/conversation_model.dart';
-import 'package:makanaki/presentation/widgets/debug_emitter.dart';
-import 'package:makanaki/presentation/widgets/snack_msg.dart';
-import 'package:makanaki/services/api_url.dart';
-import 'package:makanaki/services/controllers/plan_controller.dart';
-import 'package:makanaki/services/middleware/chat_ware.dart';
-import 'package:makanaki/services/middleware/gender_ware.dart';
-import 'package:makanaki/services/middleware/user_profile_ware.dart';
-import 'package:makanaki/services/temps/temps_id.dart';
+import 'package:macanacki/model/conversation_model.dart';
+import 'package:macanacki/presentation/widgets/debug_emitter.dart';
+import 'package:macanacki/presentation/widgets/snack_msg.dart';
+import 'package:macanacki/services/api_url.dart';
+import 'package:macanacki/services/controllers/plan_controller.dart';
+import 'package:macanacki/services/middleware/chat_ware.dart';
+import 'package:macanacki/services/middleware/gender_ware.dart';
+import 'package:macanacki/services/middleware/user_profile_ware.dart';
+import 'package:macanacki/services/temps/temps_id.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -382,7 +382,7 @@ class ChatController {
     //   sender: sendTo,
     // );
 
-   // emitter(jsonData.toString());
+    // emitter(jsonData.toString());
   }
 
   static Future sendMessageHandler(

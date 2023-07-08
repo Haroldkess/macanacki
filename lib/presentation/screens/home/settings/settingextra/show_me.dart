@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/screens/home/settings/settingextra/show_me_option.dart';
-import 'package:makanaki/presentation/widgets/text.dart';
+import 'package:macanacki/presentation/screens/home/settings/settingextra/show_me_option.dart';
+import 'package:macanacki/presentation/widgets/text.dart';
 
 import '../../../../constants/colors.dart';
 

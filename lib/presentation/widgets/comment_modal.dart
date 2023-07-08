@@ -7,21 +7,25 @@ import 'package:flutter_svg/parser.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexagon/hexagon.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/model/feed_post_model.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
-import 'package:makanaki/presentation/constants/params.dart';
-import 'package:makanaki/presentation/model/ui_model.dart';
-import 'package:makanaki/presentation/operations.dart';
-import 'package:makanaki/presentation/uiproviders/screen/comment_provider.dart';
-import 'package:makanaki/presentation/widgets/loader.dart';
-import 'package:makanaki/presentation/widgets/text.dart';
-import 'package:makanaki/services/controllers/action_controller.dart';
-import 'package:makanaki/services/controllers/create_post_controller.dart';
-import 'package:makanaki/services/middleware/action_ware.dart';
-import 'package:makanaki/services/middleware/create_post_ware.dart';
+import 'package:macanacki/model/feed_post_model.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/constants/params.dart';
+import 'package:macanacki/presentation/model/ui_model.dart';
+import 'package:macanacki/presentation/operations.dart';
+import 'package:macanacki/presentation/uiproviders/screen/comment_provider.dart';
+import 'package:macanacki/presentation/widgets/loader.dart';
+import 'package:macanacki/presentation/widgets/text.dart';
+import 'package:macanacki/services/controllers/action_controller.dart';
+import 'package:macanacki/services/controllers/create_post_controller.dart';
+import 'package:macanacki/services/middleware/action_ware.dart';
+import 'package:macanacki/services/middleware/create_post_ware.dart';
 import 'package:numeral/numeral.dart';
 import 'package:provider/provider.dart';
 
+import '../../services/middleware/user_profile_ware.dart';
+import '../allNavigation.dart';
+import '../screens/userprofile/user_profile_screen.dart';
+import '../uiproviders/screen/tab_provider.dart';
 import 'hexagon_avatar.dart';
 
 commentModal(BuildContext context, int id, String page) async {
@@ -341,44 +345,79 @@ class CommentTile extends StatelessWidget {
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Container(
-                      height: 43,
-                      width: 47,
-                      // color: Colors.amber,
-                      child: Stack(
-                        children: [
-                          HexagonWidget.pointy(
-                            width: w - 3,
-                            elevation: 2.0,
-                            color: Colors.white,
-                            cornerRadius: 2.0,
-                            child: AspectRatio(
-                              aspectRatio: HexagonType.POINTY.ratio,
-                              // child: Image.asset(
-                              //   'assets/tram.jpg',
-                              //   fit: BoxFit.fitWidth,
-                              // ),
+                  InkWell(
+                    onTap: () async {
+                      UserProfileWare user =
+                          Provider.of<UserProfileWare>(context, listen: false);
+                      TabProvider action =
+                          Provider.of<TabProvider>(context, listen: false);
+
+                      // if (action.controller != null) {
+                      //   if (action.controller!.value.isInitialized) {
+                      //     action.controller!.pause();
+                      //   } else {
+                      //     action.controller!.pause();
+                      //   }
+                      // }
+                      if (action.controller != null) {
+                        if (action.controller!.value.isInitialized) {
+                          if (action.controller!.value.isBuffering ||
+                              action.controller!.value.isPlaying) {
+                            action.pauseControl();
+                            action.tap(true);
+                          } else {
+                            action.pauseControl();
+                            action.tap(true);
+                            //  return;
+                          }
+                        }
+                      }
+
+                      // widget.controller!.pause();
+
+                      if (e.username! != user.userProfileModel.username) {
+                        PageRouting.pushToPage(
+                            context,
+                            UsersProfile(
+                              username: e.username!,
+                            ));
+                        // action.changeIndex(4);
+                        // action.pageController!.animateToPage(
+                        //   4,
+                        //   duration: const Duration(milliseconds: 1),
+                        //   curve: Curves.easeIn,
+                        // );
+                        // PageRouting.pushToPage(
+                        //     context, const ProfileScreen());
+                      } else {}
+                    },
+                    child: Container(
+                        height: 43,
+                        width: 47,
+                        // color: Colors.amber,
+                        child: Stack(
+                          children: [
+                            HexagonWidget.pointy(
+                              width: w - 3,
+                              elevation: 2.0,
+                              color: Colors.white,
+                              cornerRadius: 2.0,
+                              child: AspectRatio(
+                                aspectRatio: HexagonType.POINTY.ratio,
+                                // child: Image.asset(
+                                //   'assets/tram.jpg',
+                                //   fit: BoxFit.fitWidth,
+                                // ),
+                              ),
                             ),
-                          ),
-                          // HexagonWidget.pointy(
-                          //   width: w,
-                          //   elevation: 2.0,
-                          //   color: Colors.white,
-                          //   cornerRadius: 20.0,
-                          //   child: AspectRatio(
-                          //     aspectRatio: HexagonType.POINTY.ratio,
-                          //     // child: Image.asset(
-                          //     //   'assets/tram.jpg',
-                          //     //   fit: BoxFit.fitWidth,
-                          //     // ),
-                          //   ),
-                          // ),
-                          HexagonAvatar(
-                              url:
-                                  e.profilePhoto == null ? "" : e.profilePhoto!,
-                              w: w),
-                        ],
-                      )),
+                            HexagonAvatar(
+                                url: e.profilePhoto == null
+                                    ? ""
+                                    : e.profilePhoto!,
+                                w: w),
+                          ],
+                        )),
+                  ),
                 ],
               ),
               const SizedBox(

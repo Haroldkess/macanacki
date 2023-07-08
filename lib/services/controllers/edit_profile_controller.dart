@@ -2,10 +2,10 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:makanaki/model/create_post_model.dart';
-import 'package:makanaki/services/controllers/user_profile_controller.dart';
-import 'package:makanaki/services/middleware/edit_profile_ware.dart';
-import 'package:makanaki/services/middleware/facial_ware.dart';
+import 'package:macanacki/model/create_post_model.dart';
+import 'package:macanacki/services/controllers/user_profile_controller.dart';
+import 'package:macanacki/services/middleware/edit_profile_ware.dart';
+import 'package:macanacki/services/middleware/facial_ware.dart';
 import 'package:provider/provider.dart';
 
 import '../../presentation/widgets/snack_msg.dart';
@@ -15,7 +15,6 @@ class EditProfileController {
       BuildContext context, String description, String phone) async {
     EditProfileWare pic = Provider.of<EditProfileWare>(context, listen: false);
     FacialWare img = Provider.of<FacialWare>(context, listen: false);
- 
 
     EditProfileModel data = EditProfileModel(
       description: description,

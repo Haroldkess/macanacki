@@ -1,11 +1,11 @@
 import 'dart:developer';
 
-import 'package:makanaki/services/middleware/action_ware.dart';
-import 'package:makanaki/services/middleware/chat_ware.dart';
-import 'package:makanaki/services/middleware/create_post_ware.dart';
-import 'package:makanaki/services/middleware/search_ware.dart';
-import 'package:makanaki/services/middleware/swipe_ware.dart';
-import 'package:makanaki/services/temps/temp.dart';
+import 'package:macanacki/services/middleware/action_ware.dart';
+import 'package:macanacki/services/middleware/chat_ware.dart';
+import 'package:macanacki/services/middleware/create_post_ware.dart';
+import 'package:macanacki/services/middleware/search_ware.dart';
+import 'package:macanacki/services/middleware/swipe_ware.dart';
+import 'package:macanacki/services/temps/temp.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

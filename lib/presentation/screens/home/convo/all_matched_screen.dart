@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
-import 'package:makanaki/presentation/screens/home/convo/matchedextra/matched_grid.dart';
-import 'package:makanaki/presentation/widgets/text.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/screens/home/convo/matchedextra/matched_grid.dart';
+import 'package:macanacki/presentation/widgets/text.dart';
 
 class MatchedWithYouScreen extends StatelessWidget {
   const MatchedWithYouScreen({super.key});
@@ -26,8 +26,8 @@ class MatchedWithYouScreen extends StatelessWidget {
         ),
       ),
       body: const Padding(
-        padding:  EdgeInsets.only(top: 11),
-        child:  MatchedGrid(),
+        padding: EdgeInsets.only(top: 11),
+        child: MatchedGrid(),
       ),
     );
   }

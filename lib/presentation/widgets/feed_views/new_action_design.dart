@@ -4,7 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:hexagon/hexagon.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:like_button/like_button.dart';
-import 'package:makanaki/services/middleware/user_profile_ware.dart';
+import 'package:macanacki/services/middleware/user_profile_ware.dart';
 import 'package:numeral/numeral.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -281,9 +281,7 @@ class _NewDesignTestState extends State<NewDesignTest> {
                                     context, false, widget.data.comments!);
                               }
                             } else {}
-                            setState(() {
- 
-                            });
+                            setState(() {});
                             //   emitter(comment.comments.length.toString());
                             // emitter(widget.data.id!.toString());
                             // Operations.commentOperation(

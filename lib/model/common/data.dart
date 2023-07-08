@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'package:makanaki/model/common/playback_id.dart';
-import 'package:makanaki/model/common/track.dart';
+import 'package:macanacki/model/common/playback_id.dart';
+import 'package:macanacki/model/common/track.dart';
 
 class Data {
   Data({

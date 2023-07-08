@@ -4,15 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
-import 'package:makanaki/presentation/screens/home/profile/profileextras/profile_info.dart';
-import 'package:makanaki/presentation/screens/home/profile/profileextras/profile_post_grid.dart';
-import 'package:makanaki/presentation/widgets/text.dart';
-import 'package:makanaki/services/controllers/feed_post_controller.dart';
-import 'package:makanaki/services/controllers/user_profile_controller.dart';
-import 'package:makanaki/services/middleware/notification_ware..dart';
-import 'package:makanaki/services/middleware/user_profile_ware.dart';
-import 'package:makanaki/services/temps/temps_id.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/screens/home/profile/profileextras/profile_info.dart';
+import 'package:macanacki/presentation/screens/home/profile/profileextras/profile_post_grid.dart';
+import 'package:macanacki/presentation/widgets/text.dart';
+import 'package:macanacki/services/controllers/feed_post_controller.dart';
+import 'package:macanacki/services/controllers/user_profile_controller.dart';
+import 'package:macanacki/services/middleware/notification_ware..dart';
+import 'package:macanacki/services/middleware/user_profile_ware.dart';
+import 'package:macanacki/services/temps/temps_id.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -23,8 +23,9 @@ import '../../../widgets/drawer.dart';
 import '../../notification/notification_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
-  
-  const ProfileScreen({super.key,});
+  const ProfileScreen({
+    super.key,
+  });
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -32,7 +33,7 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen>
     with AutomaticKeepAliveClientMixin {
-       final GlobalKey<ScaffoldState> key = GlobalKey();
+  final GlobalKey<ScaffoldState> key = GlobalKey();
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -44,9 +45,9 @@ class _ProfileScreenState extends State<ProfileScreen>
     return Scaffold(
       key: key,
       backgroundColor: HexColor("#F5F2F9"),
-         drawer: DrawerSide(
-            scafKey: key,
-          ),
+      drawer: DrawerSide(
+        scafKey: key,
+      ),
       body: RefreshIndicator(
         onRefresh: () => _getUserPost(true),
         backgroundColor: HexColor(primaryColor),
@@ -66,7 +67,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                         height: 15,
                         width: 20,
                       )),
-                  // myIcon("assets/icon/makanakiicon.svg", primaryColor, 16.52,
+                  // myIcon("assets/icon/macanackiicon.svg", primaryColor, 16.52,
                   //     70, false),
                   InkWell(
                     onTap: () => PageRouting.pushToPage(

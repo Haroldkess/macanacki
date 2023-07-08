@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:makanaki/presentation/model/ui_model.dart';
-import 'package:makanaki/presentation/screens/home/convo/matchedextra/matched_boxes.dart';
+import 'package:macanacki/presentation/model/ui_model.dart';
+import 'package:macanacki/presentation/screens/home/convo/matchedextra/matched_boxes.dart';
 
 class MatchedGrid extends StatelessWidget {
   const MatchedGrid({super.key});

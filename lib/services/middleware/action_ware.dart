@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:makanaki/model/all_liked_model.dart';
-import 'package:makanaki/model/comments_model.dart';
-import 'package:makanaki/model/following_model.dart';
-import 'package:makanaki/model/reg_email_model.dart';
-import 'package:makanaki/presentation/widgets/debug_emitter.dart';
-import 'package:makanaki/services/backoffice/actions_office.dart';
-import 'package:makanaki/services/backoffice/registeration_office.dart';
+import 'package:macanacki/model/all_liked_model.dart';
+import 'package:macanacki/model/comments_model.dart';
+import 'package:macanacki/model/following_model.dart';
+import 'package:macanacki/model/reg_email_model.dart';
+import 'package:macanacki/presentation/widgets/debug_emitter.dart';
+import 'package:macanacki/services/backoffice/actions_office.dart';
+import 'package:macanacki/services/backoffice/registeration_office.dart';
 import 'dart:convert';
 import 'dart:developer';
 
@@ -123,7 +123,7 @@ class ActionWare extends ChangeNotifier {
     notifyListeners();
   }
 
-   Future<void> performOfflineFollow(int id) async {
+  Future<void> performOfflineFollow(int id) async {
     if (_followIds.contains(id)) {
       _followIds.removeWhere((element) => id == element);
     } else {
@@ -134,7 +134,6 @@ class ActionWare extends ChangeNotifier {
 
     notifyListeners();
   }
-
 
   Future<void> addCommentId(int id) async {
     if (_commentIds.contains(id)) {
@@ -369,7 +368,7 @@ class ActionWare extends ChangeNotifier {
           .whenComplete(() => emitter("all following action request done"));
       if (response == null) {
         isSuccessful = false;
-          emitter("all following  action request failed");
+        emitter("all following  action request failed");
       } else if (response.statusCode == 200) {
         var jsonData = jsonDecode(response.body);
         FollowingModel incommingData = FollowingModel.fromJson(jsonData);
@@ -378,7 +377,7 @@ class ActionWare extends ChangeNotifier {
         //  log("all following  action request success");
         isSuccessful = true;
       } else {
-         emitter("all following  action request failed");
+        emitter("all following  action request failed");
         // ignore: use_build_context_synchronously
         //showToast(context, ain"something went wrong. pls try ag", Colors.red);
         isSuccessful = false;
@@ -386,7 +385,7 @@ class ActionWare extends ChangeNotifier {
     } catch (e) {
       isSuccessful = false;
       //   log("all following  action request failed");
-        emitter(e.toString());
+      emitter(e.toString());
     }
 
     notifyListeners();

@@ -5,8 +5,8 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexagon/hexagon.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/screens/home/subscription/get_verified_info.dart';
-import 'package:makanaki/services/controllers/user_profile_controller.dart';
+import 'package:macanacki/presentation/screens/home/subscription/get_verified_info.dart';
+import 'package:macanacki/services/controllers/user_profile_controller.dart';
 
 import '../../../../services/controllers/mode_controller.dart';
 import '../../../allNavigation.dart';

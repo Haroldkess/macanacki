@@ -1,4 +1,4 @@
-name: makanaki
+name: macanacki
 description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
@@ -75,6 +75,7 @@ dependencies:
   lottie:
   cached_video_preview: ^1.0.6
   pull_to_refresh: ^2.0.0
+  change_app_package_name: 1.0.0
   
   
 
@@ -84,13 +85,14 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_launcher_icons:
+ 
+
 
   flutter_lints: ^2.0.0
   build_runner:
   freezed: 0.14.0+1
   json_serializable: ^4.0.2
   hive_generator:
-
 
 
 flutter_icons:

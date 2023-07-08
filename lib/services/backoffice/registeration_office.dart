@@ -3,9 +3,9 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
-import 'package:makanaki/model/reg_email_model.dart';
-import 'package:makanaki/services/api_url.dart';
-import 'package:makanaki/services/temps/temps_id.dart';
+import 'package:macanacki/model/reg_email_model.dart';
+import 'package:macanacki/services/api_url.dart';
+import 'package:macanacki/services/temps/temps_id.dart';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -73,7 +73,6 @@ Future<http.StreamedResponse?> verifyBusiness(
   final filePhotoName = basename(data.evidence!.path);
   final filePhotoName1 = basename(data.photo!.path);
 
-
   var request = http.MultipartRequest(
       "POST", Uri.parse("$baseUrl/public/api/user/verification"));
   Map<String, String> headers = {
@@ -101,7 +100,6 @@ Future<http.StreamedResponse?> verifyBusiness(
   request.files.add(filePhoto1);
   request.files.add(filePhoto);
   request.fields["business_address"] = data.businessAddress!.toString();
-
 
   try {
     response = await request.send();

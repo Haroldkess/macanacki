@@ -4,14 +4,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexagon/hexagon.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/screens/home/convo/chat/chatextra/chat_field.dart';
-import 'package:makanaki/presentation/screens/home/convo/chat/chatextra/chat_grid.dart';
-import 'package:makanaki/presentation/screens/home/convo/chat/chatextra/option_menu.dart';
-import 'package:makanaki/presentation/widgets/debug_emitter.dart';
-import 'package:makanaki/presentation/widgets/text.dart';
-import 'package:makanaki/services/controllers/chat_controller.dart';
-import 'package:makanaki/services/middleware/user_profile_ware.dart';
-import 'package:makanaki/services/temps/temp.dart';
+import 'package:macanacki/presentation/screens/home/convo/chat/chatextra/chat_field.dart';
+import 'package:macanacki/presentation/screens/home/convo/chat/chatextra/chat_grid.dart';
+import 'package:macanacki/presentation/screens/home/convo/chat/chatextra/option_menu.dart';
+import 'package:macanacki/presentation/widgets/debug_emitter.dart';
+import 'package:macanacki/presentation/widgets/text.dart';
+import 'package:macanacki/services/controllers/chat_controller.dart';
+import 'package:macanacki/services/middleware/user_profile_ware.dart';
+import 'package:macanacki/services/temps/temp.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -24,7 +24,7 @@ import '../../../../constants/colors.dart';
 import '../../../../widgets/hexagon_avatar.dart';
 
 import 'package:socket_io_client/socket_io_client.dart';
-import 'package:makanaki/services/api_url.dart';
+import 'package:macanacki/services/api_url.dart';
 import '../../../userprofile/user_profile_screen.dart';
 import '../../profile/profile_screen.dart';
 

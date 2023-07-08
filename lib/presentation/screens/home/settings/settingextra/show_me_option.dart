@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/operations.dart';
+import 'package:macanacki/presentation/operations.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../constants/colors.dart';

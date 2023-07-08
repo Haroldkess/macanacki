@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:makanaki/model/reg_email_model.dart';
-import 'package:makanaki/services/backoffice/login_office.dart';
+import 'package:macanacki/model/reg_email_model.dart';
+import 'package:macanacki/services/backoffice/login_office.dart';
 import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
-import 'package:makanaki/services/temps/temps_id.dart';
+import 'package:macanacki/services/temps/temps_id.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../presentation/widgets/debug_emitter.dart';
@@ -30,33 +30,33 @@ class LoginWare extends ChangeNotifier {
   ) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     late bool isSuccessful;
-        emitter("attempting the  Login call");
-   // log("hello");
+    emitter("attempting the  Login call");
+    // log("hello");
     try {
       http.Response? response = await loginUser(body)
           .whenComplete(() => emitter("login user request done"));
       if (response == null) {
         _message = "Something went wrong";
         isSuccessful = false;
-     //   log("login user  request failed");
+        //   log("login user  request failed");
       } else if (response.statusCode == 200) {
         var jsonData = jsonDecode(response.body);
         _message = jsonData["message"].toString();
         _token = jsonData["data"]["access_token"].toString();
         await pref.setString(tokenKey, _token);
-      //  log("login user  request success");
+        //  log("login user  request success");
         isSuccessful = true;
       } else {
         var jsonData = jsonDecode(response.body);
         _message = jsonData["message"].toString();
 
-       // log("login user  request failed");
+        // log("login user  request failed");
         isSuccessful = false;
       }
     } catch (e) {
       isSuccessful = false;
-     // log("login user  request failed");
-    //  log(e.toString());
+      // log("login user  request failed");
+      //  log(e.toString());
     }
 
     notifyListeners();

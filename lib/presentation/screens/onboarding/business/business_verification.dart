@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/model/register_model.dart';
-import 'package:makanaki/presentation/operations.dart';
-import 'package:makanaki/presentation/screens/onboarding/business/business_modal.dart';
-import 'package:makanaki/presentation/screens/onboarding/business/id_type.dart';
-import 'package:makanaki/presentation/screens/onboarding/business/sub_plan.dart';
-import 'package:makanaki/services/middleware/user_profile_ware.dart';
+import 'package:macanacki/model/register_model.dart';
+import 'package:macanacki/presentation/operations.dart';
+import 'package:macanacki/presentation/screens/onboarding/business/business_modal.dart';
+import 'package:macanacki/presentation/screens/onboarding/business/id_type.dart';
+import 'package:macanacki/presentation/screens/onboarding/business/sub_plan.dart';
+import 'package:macanacki/services/middleware/user_profile_ware.dart';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 

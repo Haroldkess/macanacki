@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/constants/params.dart';
-import 'package:makanaki/presentation/screens/home/Feed/scanning.dart';
-import 'package:makanaki/presentation/screens/home/swipes/swipeextra/tinder_card.dart';
-import 'package:makanaki/presentation/uiproviders/screen/card_provider.dart';
-import 'package:makanaki/presentation/widgets/text.dart';
-import 'package:makanaki/services/middleware/notification_ware..dart';
-import 'package:makanaki/services/middleware/swipe_ware.dart';
+import 'package:macanacki/presentation/constants/params.dart';
+import 'package:macanacki/presentation/screens/home/Feed/scanning.dart';
+import 'package:macanacki/presentation/screens/home/swipes/swipeextra/tinder_card.dart';
+import 'package:macanacki/presentation/uiproviders/screen/card_provider.dart';
+import 'package:macanacki/presentation/widgets/text.dart';
+import 'package:macanacki/services/middleware/notification_ware..dart';
+import 'package:macanacki/services/middleware/swipe_ware.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../model/swiped_user_model.dart';
@@ -30,18 +30,15 @@ class _SwipeCardScreenState extends State<SwipeCardScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-        SwipeWare swipe = Provider.of<SwipeWare>(context, listen: false);
-            if(swipe.filterName == "Women"){
-                  SwipeController.retrievSwipeController(context, "female");
-
-          }else if (swipe.filterName == "Men"){
-            SwipeController.retrievSwipeController(context, "male");
-
-          }else{
-            SwipeController.retrievSwipeController(context, swipe.filterName.toLowerCase());
-
-          }
-     
+      SwipeWare swipe = Provider.of<SwipeWare>(context, listen: false);
+      if (swipe.filterName == "Women") {
+        SwipeController.retrievSwipeController(context, "female");
+      } else if (swipe.filterName == "Men") {
+        SwipeController.retrievSwipeController(context, "male");
+      } else {
+        SwipeController.retrievSwipeController(
+            context, swipe.filterName.toLowerCase());
+      }
     });
   }
 
@@ -61,7 +58,7 @@ class _SwipeCardScreenState extends State<SwipeCardScreen> {
             //  Row(
             //   mainAxisAlignment: MainAxisAlignment.end,
             //   children: [
-            //     // myIcon("assets/icon/makanakiicon.svg", primaryColor, 16.52,
+            //     // myIcon("assets/icon/macanackiicon.svg", primaryColor, 16.52,
             //     //     70, false),
             //     // InkWell(
             //     //   onTap: () =>
@@ -156,17 +153,14 @@ class CategoryView extends StatelessWidget {
         onTap: () {
           SwipeWare swipe = Provider.of<SwipeWare>(context, listen: false);
           swipe.changeFilter(name);
-          if(swipe.filterName == "Women"){
-                  SwipeController.retrievSwipeController(context, "female");
-
-          }else if (swipe.filterName == "Men"){
+          if (swipe.filterName == "Women") {
+            SwipeController.retrievSwipeController(context, "female");
+          } else if (swipe.filterName == "Men") {
             SwipeController.retrievSwipeController(context, "male");
-
-          }else{
-            SwipeController.retrievSwipeController(context, swipe.filterName.toLowerCase());
-
+          } else {
+            SwipeController.retrievSwipeController(
+                context, swipe.filterName.toLowerCase());
           }
-              
         },
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),

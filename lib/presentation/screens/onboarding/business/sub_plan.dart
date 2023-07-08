@@ -4,16 +4,16 @@ import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/model/ui_model.dart';
-import 'package:makanaki/presentation/screens/home/subscription/plan_box.dart';
-import 'package:makanaki/presentation/screens/home/subscription/sub_successful.dart';
-import 'package:makanaki/presentation/screens/onboarding/business/success.dart';
-import 'package:makanaki/presentation/screens/onboarding/login_screen.dart';
-import 'package:makanaki/presentation/widgets/buttons.dart';
-import 'package:makanaki/presentation/widgets/snack_msg.dart';
-import 'package:makanaki/services/controllers/payment_controller.dart';
-import 'package:makanaki/services/middleware/plan_ware.dart';
-import 'package:makanaki/services/middleware/user_profile_ware.dart';
+import 'package:macanacki/presentation/model/ui_model.dart';
+import 'package:macanacki/presentation/screens/home/subscription/plan_box.dart';
+import 'package:macanacki/presentation/screens/home/subscription/sub_successful.dart';
+import 'package:macanacki/presentation/screens/onboarding/business/success.dart';
+import 'package:macanacki/presentation/screens/onboarding/login_screen.dart';
+import 'package:macanacki/presentation/widgets/buttons.dart';
+import 'package:macanacki/presentation/widgets/snack_msg.dart';
+import 'package:macanacki/services/controllers/payment_controller.dart';
+import 'package:macanacki/services/middleware/plan_ware.dart';
+import 'package:macanacki/services/middleware/user_profile_ware.dart';
 import 'package:provider/provider.dart';
 import 'package:restart_app/restart_app.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -360,7 +360,8 @@ payModal(BuildContext context, PlanData plan) async {
                         //   return;
                         // } else {
                         int amount = plan.amountInNaira!.toInt() * 100;
-                        await PaymentController.chargeCard(context, amount, true);
+                        await PaymentController.chargeCard(
+                            context, amount, true);
 
                         //   plan.addAmount(0);
                         // }
