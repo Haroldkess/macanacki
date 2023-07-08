@@ -101,7 +101,7 @@ class MatchRequestScreen extends StatelessWidget {
                             ],
                           ),
                           SizedBox(
-                            height: 10,
+                            height: 7,
                           ),
                           Row(
                             children: [
@@ -110,7 +110,7 @@ class MatchRequestScreen extends StatelessWidget {
                                 width: 5,
                               ),
                               AppText(
-                                text: "2 km away",
+                                text: "some km away",
                                 size: 12,
                                 fontWeight: FontWeight.w500,
                               )
@@ -123,7 +123,7 @@ class MatchRequestScreen extends StatelessWidget {
                 ),
               )),
               const SizedBox(
-                height: 35,
+                height: 25,
               ),
               Container(
                 height: 58,

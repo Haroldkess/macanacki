@@ -16,18 +16,16 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   FirebaseFirestore.instance.settings;
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      systemNavigationBarIconBrightness: Brightness.dark,
+      systemNavigationBarColor: HexColor(backgroundColor)));
   runApp(const MyApp());
 }
-
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        systemNavigationBarIconBrightness: Brightness.dark,
-        
-        systemNavigationBarColor: HexColor(backgroundColor)));
     return MultiProvider(
         providers: InitProvider.providerInit(),
         child: OverlaySupport(
@@ -35,7 +33,10 @@ class MyApp extends StatelessWidget {
           child: MaterialApp(
             debugShowCheckedModeBanner: false,
             title: 'Macanacki',
-            theme: ThemeData(primaryColor: HexColor(primaryColor)),
+            theme: ThemeData(
+              primaryColor: HexColor(primaryColor),
+              brightness: Brightness.light,
+            ),
             home: const Splash(),
           ),
         ));
