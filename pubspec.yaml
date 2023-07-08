@@ -75,7 +75,7 @@ dependencies:
   lottie:
   cached_video_preview: ^1.0.6
   pull_to_refresh: ^2.0.0
-  change_app_package_name: 1.0.0
+  # change_app_package_name: 1.0.0
   
   
 

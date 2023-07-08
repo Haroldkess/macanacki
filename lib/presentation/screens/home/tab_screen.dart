@@ -65,7 +65,6 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     TabProvider provide = Provider.of<TabProvider>(context, listen: false);
-
     TabProvider tabs = context.watch<TabProvider>();
     ChatWare chat = context.watch<ChatWare>();
     FindPeopleProvider listen = context.watch<FindPeopleProvider>();
