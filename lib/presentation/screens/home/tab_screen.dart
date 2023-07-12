@@ -34,9 +34,11 @@ import '../../../services/controllers/action_controller.dart';
 import '../../../services/middleware/chat_ware.dart';
 import '../../../services/middleware/feed_post_ware.dart';
 import '../../../services/middleware/swipe_ware.dart';
+import '../../../services/middleware/user_profile_ware.dart';
 import '../../uiproviders/screen/find_people_provider.dart';
 import '../../widgets/app_bar.dart';
 import '../../widgets/debug_emitter.dart';
+import '../../widgets/screen_loader.dart';
 
 class TabScreen extends StatefulWidget {
   const TabScreen({super.key});
@@ -50,7 +52,7 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
   final SystemUiOverlayStyle _currentStyle = SystemUiOverlayStyle(
       systemNavigationBarIconBrightness: Brightness.dark,
       systemNavigationBarColor: HexColor(backgroundColor));
-  late Timer reloadTime;
+  // late Timer reloadTime;
   final AsyncMemoizer _memoizerUser = AsyncMemoizer();
   final AsyncMemoizer _memoizer2 = AsyncMemoizer();
   final AsyncMemoizer _memoizerChat = AsyncMemoizer();
@@ -68,6 +70,8 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
     TabProvider tabs = context.watch<TabProvider>();
     ChatWare chat = context.watch<ChatWare>();
     FindPeopleProvider listen = context.watch<FindPeopleProvider>();
+    UserProfileWare user = context.watch<UserProfileWare>();
+
     _memoizer2.runOnce(() => ChatController.initSocket(context)
         .whenComplete(() => ChatController.addUserToSocket(context)));
     if (chat.socket != null) {
@@ -88,7 +92,7 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
       child: AnnotatedRegion<SystemUiOverlayStyle>(
         value: _currentStyle,
         child: Container(
-          color: Colors.white,
+          color: Color.fromARGB(255, 12, 4, 4),
           child: SafeArea(
             top: false,
             child: Scaffold(
@@ -287,13 +291,13 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
     );
   }
 
-  Future reloadChat(BuildContext context) async {
-    emitter("W have started the reload");
-    reloadTime = Timer.periodic(const Duration(seconds: 10), (_) {
-      //  ChatController.retrievChatController(context, false);
-      ChatController.retreiveUnread(context);
-    });
-  }
+  // Future reloadChat(BuildContext context) async {
+  //   emitter("W have started the reload");
+  //   reloadTime = Timer.periodic(const Duration(seconds: 10), (_) {
+  //     //  ChatController.retrievChatController(context, false);
+  //     ChatController.retreiveUnread(context);
+  //   });
+  // }
 
   @override
   void initState() {
@@ -360,10 +364,10 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
     WidgetsBinding.instance.removeObserver(this);
 
     super.dispose();
-    if (mounted) {
-      reloadTime.cancel();
-      //  emitter("close reload chat");
-    }
+    // if (mounted) {
+    //   reloadTime.cancel();
+    //   //  emitter("close reload chat");
+    // }
   }
 
   @override

@@ -55,12 +55,12 @@ dependencies:
   firebase_core:
   cloud_firestore:
   flutter_paystack: ^1.0.7
-  geolocator: ^9.0.2
+  # geolocator: ^9.0.2
   overlay_support: ^1.2.1
   restart_app:
   firebase_analytics:
   connectivity_plus: ^3.0.3
-  location: ^4.3.0
+  # location: ^4.3.0
   app_settings: ^4.2.0
   country_code_picker: ^3.0.0
   expansion_tile_card: ^2.0.0

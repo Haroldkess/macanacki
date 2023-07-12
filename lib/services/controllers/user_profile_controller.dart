@@ -1,10 +1,16 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:macanacki/presentation/allNavigation.dart';
 import 'package:macanacki/presentation/widgets/snack_msg.dart';
 import 'package:macanacki/services/middleware/user_profile_ware.dart';
 import 'package:provider/provider.dart';
+import 'package:restart_app/restart_app.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../presentation/screens/onboarding/splash_screen.dart';
+import '../../presentation/widgets/screen_loader.dart';
 import '../middleware/action_ware.dart';
+import '../temps/temps_id.dart';
 
 class UserProfileController {
   static Future<void> retrievProfileController(
@@ -61,5 +67,47 @@ class UserProfileController {
       showToast2(context, "An error occured", isError: true);
     }
     ware.isLoading2(false);
+  }
+
+  static Future deleteUserProfile(context) async {
+    UserProfileWare ware = Provider.of<UserProfileWare>(context, listen: false);
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    ware.resetPublicUser();
+
+    ware.isDeleting(true);
+    progressIndicator(context, message: "Deleting account");
+
+    bool isDone = await ware
+        .deleteUserFromApi()
+        .whenComplete(() => log("everything from api and provider is done"));
+
+    if (isDone) {
+      ware.isDeleting(false);
+      //  PageRouting.popToPage(context);
+
+      await pref.remove(isLoggedInKey);
+      await pref.remove(tokenKey);
+      await pref.remove(passwordKey);
+      await pref.remove(emailKey);
+      await pref.remove(dobKey);
+      await pref.remove(isFirstTimeKey);
+      await pref.remove(photoKey);
+      await pref.remove(userNameKey);
+
+      await pref.clear();
+
+      // ignore: use_build_context_synchronously
+      await removeProviders(context);
+
+      // ignore: use_build_context_synchronously
+      PageRouting.removeAllToPage(context, const Splash());
+      Restart.restartApp();
+    } else {
+      ware.isDeleting(false);
+      PageRouting.popToPage(context);
+      // ignore: use_build_context_synchronously
+      showToast2(context, "An error occured", isError: true);
+    }
+    ware.isDeleting(false);
   }
 }

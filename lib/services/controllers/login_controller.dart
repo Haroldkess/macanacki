@@ -20,6 +20,7 @@ import 'package:macanacki/services/controllers/mode_controller.dart';
 import 'package:macanacki/services/controllers/plan_controller.dart';
 import 'package:macanacki/services/controllers/user_profile_controller.dart';
 import 'package:macanacki/services/controllers/verify_controller.dart';
+import 'package:macanacki/services/middleware/gender_ware.dart';
 import 'package:macanacki/services/middleware/login_ware.dart';
 import 'package:macanacki/services/temps/temp.dart';
 import 'package:macanacki/services/temps/temps_id.dart';
@@ -27,6 +28,7 @@ import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../model/gender_model.dart';
 import '../../presentation/screens/onboarding/business/sub_plan.dart';
 import '../../presentation/widgets/debug_emitter.dart';
 import '../middleware/user_profile_ware.dart';
@@ -51,6 +53,7 @@ class LoginController {
     );
 
     LoginWare ware = Provider.of<LoginWare>(context, listen: false);
+    genderWare gender = Provider.of<genderWare>(context, listen: false);
 
     Temp temp = Provider.of<Temp>(context, listen: false);
 
@@ -60,7 +63,18 @@ class LoginController {
         .loginUserFromApi(data)
         .whenComplete(() => log("can now navigate to home"));
     if (isSplash != true) {
-      await VerifyController.business(context);
+      List<GenderList> selected = gender.genderList
+          .where((element) => element.selected == true)
+          .toList();
+      if (selected.isNotEmpty) {
+        if (selected.first.name == "Business") {
+          await VerifyController.business(context);
+        } else {
+          emitter("Business not selected rather it is ${selected.first.name}");
+        }
+      } else {
+        emitter("Business not selected");
+      }
     }
 
     if (isDone) {

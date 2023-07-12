@@ -372,16 +372,22 @@ class _TinderCardState extends State<TinderCard> {
                       padding: const EdgeInsets.only(top: 5),
                       child: Row(
                         children: [
-                          SvgPicture.asset("assets/icon/location.svg"),
-                          const SizedBox(
-                            width: 5,
-                          ),
-                          AppText(
+                            AppText(
                             text:
-                                "${Numeral(widget.users[indexer].distance == null ? 0 : widget.users[indexer].distance!)} km away",
+                                "Suggested account",
                             size: 12,
                             fontWeight: FontWeight.w500,
                           )
+                          // SvgPicture.asset("assets/icon/location.svg"),
+                          // const SizedBox(
+                          //   width: 5,
+                          // ),
+                          // AppText(
+                          //   text:
+                          //       "${Numeral(widget.users[indexer].distance == null ? 0 : widget.users[indexer].distance!)} km away",
+                          //   size: 12,
+                          //   fontWeight: FontWeight.w500,
+                          // )
                         ],
                       ),
                     )

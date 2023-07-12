@@ -15,6 +15,7 @@ import '../../presentation/widgets/debug_emitter.dart';
 class UserProfileWare extends ChangeNotifier {
   bool _loadStatus = false;
   bool _loadStatus2 = false;
+  bool _deleting = false;
   UserData _userProfileModel = UserData();
   PublicUserData _publicUserProfileModel = PublicUserData();
 
@@ -32,6 +33,7 @@ class UserProfileWare extends ChangeNotifier {
 
   bool get loadStatus => _loadStatus;
   bool get loadStatus2 => _loadStatus2;
+  bool get deleting => _deleting;
   UserData get userProfileModel => _userProfileModel;
   PublicUserData get publicUserProfileModel => _publicUserProfileModel;
   String id = "";
@@ -93,6 +95,11 @@ class UserProfileWare extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> isDeleting(bool del) async {
+    _deleting = del;
+    notifyListeners();
+  }
+
   Future<void> isLoading2(bool isLoad) async {
     _loadStatus2 = isLoad;
     notifyListeners();
@@ -150,6 +157,37 @@ class UserProfileWare extends ChangeNotifier {
 
         var incomingData = PublicProfileModel.fromJson(jsonData);
         _publicUserProfileModel = incomingData.data!;
+
+        //   log("get user profile data  request success");
+        isSuccessful = true;
+      } else {
+        //   log("get user profile data  request failed");
+        isSuccessful = false;
+      }
+    } catch (e) {
+      isSuccessful = false;
+      // log("get user profile data  request failed");
+      //   log(e.toString());
+    }
+
+    notifyListeners();
+
+    return isSuccessful;
+  }
+
+  Future<bool> deleteUserFromApi() async {
+    late bool isSuccessful;
+    try {
+      http.Response? response = await deletePubProfile()
+          .whenComplete(() => emitter("user profile data gotten successfully"));
+      if (response == null) {
+        isSuccessful = false;
+        // log("get user profile data request failed");
+      } else if (response.statusCode == 200) {
+        // var jsonData = jsonDecode(response.body);
+
+        // var incomingData = PublicProfileModel.fromJson(jsonData);
+        // _publicUserProfileModel = incomingData.data!;
 
         //   log("get user profile data  request success");
         isSuccessful = true;

@@ -48,3 +48,25 @@ Future<http.Response?> getUserPublicProfile(String username) async {
   }
   return response;
 }
+
+Future<http.Response?> deletePubProfile() async {
+  http.Response? response;
+  SharedPreferences pref = await SharedPreferences.getInstance();
+
+  String? token = pref.getString(tokenKey);
+
+  try {
+    response = await http.delete(
+      Uri.parse('$baseUrl/public/api/user/account/delete'),
+      headers: {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $token",
+      },
+    ).timeout(Duration(seconds: 30));
+
+    log(response.body.toString());
+  } catch (e) {
+    response = null;
+  }
+  return response;
+}
