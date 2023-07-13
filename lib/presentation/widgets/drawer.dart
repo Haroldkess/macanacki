@@ -55,13 +55,15 @@ class _DrawerSideState extends State<DrawerSide> {
                         top: 10, bottom: 10, left: 15, right: 3),
                     content: Row(
                       children: [
-                        AppText(
-                          text:
-                              "You will be logged out of ${pref.getString(userNameKey)} ?",
-                          color: Colors.white,
-                          size: 15,
-                          fontWeight: FontWeight.w600,
-                        )
+                        Container(
+                            constraints: BoxConstraints(maxWidth: 200),
+                            child: AppText(
+                                text: "Sure you want to log out?",
+                                color: Colors.white,
+                                size: 15,
+                                fontWeight: FontWeight.w600,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis))
                       ],
                     ),
                     backgroundColor: HexColor(primaryColor).withOpacity(.9),
@@ -88,7 +90,7 @@ class _DrawerSideState extends State<DrawerSide> {
 
                           // ignore: use_build_context_synchronously
                           PageRouting.removeAllToPage(context, const Splash());
-                         // Restart.restartApp();
+                          Restart.restartApp();
                           // PageRouting.popToPage(
                           //     cont);
                         }),
@@ -107,7 +109,6 @@ class _DrawerSideState extends State<DrawerSide> {
                 ),
               ),
               const SizedBox(
-
                 height: 10,
               ),
               ListTile(

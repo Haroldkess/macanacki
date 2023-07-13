@@ -444,6 +444,7 @@ class CommentTile extends StatelessWidget {
                                 text: e.username ?? "",
                                 fontWeight: FontWeight.w700,
                                 size: 12,
+                                maxLines: 1,
                               ),
                             ),
                             // const SizedBox(
