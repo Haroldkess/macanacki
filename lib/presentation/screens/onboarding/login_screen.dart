@@ -47,72 +47,75 @@ class _LoginScreenState extends State<LoginScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-                height: height * 0.37,
+                //height: 250,
                 child: Column(
-                  children: [
-                    const SizedBox(
-                      height: 56,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 40),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: const [
-                          AppIcon(
-                            width: 8,
-                            height: 15,
-                          ),
-                        ],
+              children: [
+                const SizedBox(
+                  height: 56,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 40),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: const [
+                      AppIcon(
+                        width: 8,
+                        height: 15,
                       ),
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 15),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          // CircleAvatar(
-                          //   radius: 40,
-                          //   backgroundColor: HexColor('#FC9DBF'),
-                          //   child: SvgPicture.asset("assets/icon/email.svg"),
-                          // ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 15),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // CircleAvatar(
+                      //   radius: 40,
+                      //   backgroundColor: HexColor('#FC9DBF'),
+                      //   child: SvgPicture.asset("assets/icon/email.svg"),
+                      // ),
 
-                          HexagonWidget.pointy(
-                            width: w,
-                            elevation: 0.0,
-                            color: HexColor('#FC9DBF'),
-                            padding: 2,
-                            cornerRadius: 20.0,
-                            child: AspectRatio(
-                                aspectRatio: HexagonType.POINTY.ratio,
-                                child: Center(
-                                  child: SvgPicture.asset(
-                                    "assets/icon/profile.svg",
-                                    color: HexColor(backgroundColor),
-                                  ),
-                                )),
-                          )
-                        ],
-                      ),
-                    ),
-                    AppText(
-                      text: "Welcome",
-                      fontWeight: FontWeight.w400,
-                      size: 20,
-                      align: TextAlign.center,
-                      color: HexColor(backgroundColor),
-                    ),
-                    // AppText(
-                    //   text: "usertagname@email.com",
-                    //   fontWeight: FontWeight.w400,
-                    //   size: 16,
-                    //   align: TextAlign.center,
-                    //   color: HexColor(backgroundColor),
-                    // ),
-                  ],
-                )),
+                      HexagonWidget.pointy(
+                        width: w,
+                        elevation: 0.0,
+                        color: HexColor('#FC9DBF'),
+                        padding: 2,
+                        cornerRadius: 20.0,
+                        child: AspectRatio(
+                            aspectRatio: HexagonType.POINTY.ratio,
+                            child: Center(
+                              child: SvgPicture.asset(
+                                "assets/icon/profile.svg",
+                                color: HexColor(backgroundColor),
+                              ),
+                            )),
+                      )
+                    ],
+                  ),
+                ),
+                AppText(
+                  text: "Welcome",
+                  fontWeight: FontWeight.w400,
+                  size: 20,
+                  align: TextAlign.center,
+                  color: HexColor(backgroundColor),
+                ),
+                // AppText(
+                //   text: "usertagname@email.com",
+                //   fontWeight: FontWeight.w400,
+                //   size: 16,
+                //   align: TextAlign.center,
+                //   color: HexColor(backgroundColor),
+                // ),
+              ],
+            )),
+            SizedBox(
+              height: 20,
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40),
               child: Column(

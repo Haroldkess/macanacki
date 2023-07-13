@@ -88,7 +88,7 @@ class _DrawerSideState extends State<DrawerSide> {
 
                           // ignore: use_build_context_synchronously
                           PageRouting.removeAllToPage(context, const Splash());
-                          Restart.restartApp();
+                         // Restart.restartApp();
                           // PageRouting.popToPage(
                           //     cont);
                         }),
@@ -107,7 +107,7 @@ class _DrawerSideState extends State<DrawerSide> {
                 ),
               ),
               const SizedBox(
-                
+
                 height: 10,
               ),
               ListTile(
