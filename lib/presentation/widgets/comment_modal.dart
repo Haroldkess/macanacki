@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:async/async.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -37,6 +38,7 @@ commentModal(BuildContext context, int id, String page) async {
   TextEditingController comment = TextEditingController();
   Operations.stopCommentLoad(context);
   ScrollController control = ScrollController();
+  AsyncMemoizer run = AsyncMemoizer();
   return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -351,6 +353,9 @@ class CommentTile extends StatelessWidget {
                           Provider.of<UserProfileWare>(context, listen: false);
                       TabProvider action =
                           Provider.of<TabProvider>(context, listen: false);
+                      if (e.username == null) {
+                        return;
+                      }
 
                       // if (action.controller != null) {
                       //   if (action.controller!.value.isInitialized) {
@@ -436,7 +441,7 @@ class CommentTile extends StatelessWidget {
                             Container(
                               constraints: BoxConstraints(maxWidth: 100),
                               child: AppText(
-                                text: e.username!,
+                                text: e.username ?? "",
                                 fontWeight: FontWeight.w700,
                                 size: 12,
                               ),
@@ -469,7 +474,7 @@ class CommentTile extends StatelessWidget {
                         constraints: BoxConstraints(maxWidth: 200),
                         // color: Colors.amber,
                         child: AppText(
-                          text: e.body!,
+                          text: e.body ?? "",
                           fontWeight: FontWeight.w500,
                           size: 10,
                         ),

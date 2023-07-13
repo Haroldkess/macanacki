@@ -6,16 +6,18 @@ import 'package:macanacki/presentation/allNavigation.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
 import 'package:macanacki/presentation/constants/params.dart';
 import 'package:macanacki/presentation/widgets/buttons.dart';
+import 'package:macanacki/presentation/widgets/debug_emitter.dart';
 import 'package:macanacki/presentation/widgets/loader.dart';
 import 'package:macanacki/services/controllers/action_controller.dart';
 import 'package:provider/provider.dart';
 
 import '../../../services/middleware/action_ware.dart';
+import '../../../services/middleware/chat_ware.dart';
 import '../../widgets/text.dart';
 import '../userprofile/user_profile_screen.dart';
 
 class MatchRequestScreen extends StatelessWidget {
-  final String userName;
+  final String? userName;
   final int id;
   final String? img;
   const MatchRequestScreen(
@@ -27,6 +29,7 @@ class MatchRequestScreen extends StatelessWidget {
     var height = MediaQuery.of(context).size.height;
     ActionWare stream = context.watch<ActionWare>();
     ActionWare action = Provider.of<ActionWare>(context, listen: false);
+    ChatWare myChat = context.watch<ChatWare>();
     return Scaffold(
       backgroundColor: HexColor(backgroundColor),
       body: Stack(
@@ -51,11 +54,11 @@ class MatchRequestScreen extends StatelessWidget {
                             child: InkWell(
                               onTap: () {
                                 PageRouting.pushToPage(
-                                    context, UsersProfile(username: userName));
+                                    context, UsersProfile(username: userName!));
                               },
                               child: RichText(
                                   text: TextSpan(
-                                      text: userName,
+                                      text: userName ?? "",
                                       style: GoogleFonts.spartan(
                                         color: HexColor(darkColor),
                                         fontSize: 20,
@@ -88,13 +91,27 @@ class MatchRequestScreen extends StatelessWidget {
                             children: [
                               CircleAvatar(
                                 radius: 5,
-                                backgroundColor: HexColor("#00B074"),
+                                backgroundColor: myChat.allSocketUsers
+                                        .where((element) =>
+                                            element.userId.toString() ==
+                                            id.toString())
+                                        .toList()
+                                        .isEmpty
+                                    ? Colors.red
+                                    : HexColor("#00B074"),
                               ),
                               const SizedBox(
                                 width: 5,
                               ),
                               AppText(
-                                text: "Online Now",
+                                text: myChat.allSocketUsers
+                                        .where((element) =>
+                                            element.userId.toString() ==
+                                            id.toString())
+                                        .toList()
+                                        .isEmpty
+                                    ? "offline"
+                                    : "online",
                                 size: 12,
                                 fontWeight: FontWeight.w500,
                               )
@@ -138,7 +155,7 @@ class MatchRequestScreen extends StatelessWidget {
                             ? "UnFollow"
                             : "Follow Back",
                         backColor: primaryColor,
-                        onTap: () => followAction(context, userName, id),
+                        onTap: () => followAction(context, userName!, id),
                         curves: 37,
                         textColor: "#FFFFFF"),
               ),
@@ -154,7 +171,9 @@ class MatchRequestScreen extends StatelessWidget {
                     color: "#F5F2F9",
                     text: "Maybe Later",
                     backColor: "#F5F2F9",
-                    onTap: () => PageRouting.popToPage(context),
+                    onTap: () {
+                      PageRouting.popToPage(context);
+                    },
                     curves: 37,
                     textColor: "#8B8B8B"),
               ),

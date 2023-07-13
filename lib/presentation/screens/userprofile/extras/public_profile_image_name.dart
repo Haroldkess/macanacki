@@ -87,18 +87,21 @@ class PublicProfileImageAndName extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
-                      constraints: BoxConstraints(maxWidth: 150),
+                      constraints: BoxConstraints(maxWidth: 210),
                       child: AppText(
                         text: stream.publicUserProfileModel.username == null
                             ? ""
                             : "${stream.publicUserProfileModel.username}",
                         color: HexColor(darkColor),
-                        size: 18,
+                        size: 15,
                         letterSpacing: 0.0,
                         fontWeight: FontWeight.w800,
                         align: TextAlign.center,
                         maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                        overflow: stream.publicUserProfileModel.username.toString().length >
+                                    20
+                                ? TextOverflow.ellipsis
+                                : TextOverflow.fade,
                       ),
                     ),
                     stream.publicUserProfileModel.verified == 0

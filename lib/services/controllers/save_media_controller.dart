@@ -28,30 +28,27 @@ class SaveMediaController {
         try {
           showToast2(context, "Video downloaded successfully", isError: false);
         } catch (e) {
-          await Fluttertoast.showToast(
-              msg: 'Video downloaded successfully',
-              textColor: HexColor(backgroundColor),
-              gravity: ToastGravity.TOP,
-              backgroundColor: HexColor(primaryColor));
+          showToastLater('Video downloaded successfully');
+          // await Fluttertoast.showToast(
+          //     msg: 'Video downloaded successfully',
+          //     textColor: HexColor(backgroundColor),
+          //     gravity: ToastGravity.TOP,
+          //     backgroundColor: HexColor(primaryColor));
         }
       }
 
       // ignore: use_build_context_synchronously
       // PageRouting.popToPage(context);
     } else {
-      await Fluttertoast.showToast(
-          msg: 'Could not download video',
-          textColor: HexColor(backgroundColor),
-          gravity: ToastGravity.TOP,
-          backgroundColor: HexColor(primaryColor));
       try {
         showToast2(context, "Could not download video", isError: true);
       } catch (e) {
-        Fluttertoast.showToast(
-            msg: 'Could not download video',
-            textColor: HexColor(backgroundColor),
-            gravity: ToastGravity.TOP,
-            backgroundColor: HexColor(primaryColor));
+        showToastLater('Could not download video');
+        // Fluttertoast.showToast(
+        //     msg: 'Could not download video',
+        //     textColor: HexColor(backgroundColor),
+        //     gravity: ToastGravity.TOP,
+        //     backgroundColor: HexColor(primaryColor));
       }
       // ignore: use_build_context_synchronously
 
@@ -74,11 +71,12 @@ class SaveMediaController {
       try {
         showToast2(context, "Image downloaded successfully", isError: false);
       } catch (e) {
-        await Fluttertoast.showToast(
-            msg: 'Image downloaded successfully',
-            textColor: HexColor(backgroundColor),
-            gravity: ToastGravity.TOP,
-            backgroundColor: HexColor(primaryColor));
+        showToastLater('Image downloaded successfully');
+        // await Fluttertoast.showToast(
+        //     msg: 'Image downloaded successfully',
+        //     textColor: HexColor(backgroundColor),
+        //     gravity: ToastGravity.TOP,
+        //     backgroundColor: HexColor(primaryColor));
       }
       // ignore: use_build_context_synchronously
       // PageRouting.popToPage(context);
@@ -88,11 +86,12 @@ class SaveMediaController {
       try {
         showToast2(context, "Could not download Image", isError: true);
       } catch (e) {
-        await Fluttertoast.showToast(
-            msg: 'Could not download Image',
-            textColor: HexColor(backgroundColor),
-            gravity: ToastGravity.TOP,
-            backgroundColor: HexColor(primaryColor));
+        showToastLater('Could not download Image');
+        // await Fluttertoast.showToast(
+        //     msg: 'Could not download Image',
+        //     textColor: HexColor(backgroundColor),
+        //     gravity: ToastGravity.TOP,
+        //     backgroundColor: HexColor(primaryColor));
       }
       // ignore: use_build_context_synchronously
       // PageRouting.popToPage(context);

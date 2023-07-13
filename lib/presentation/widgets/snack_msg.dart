@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
 import 'package:macanacki/presentation/widgets/text.dart';
@@ -89,4 +90,13 @@ showToast2(BuildContext context, String message, {bool isError = false}) {
           const StyledToastPosition(align: Alignment.topCenter, offset: 40.0),
       reverseCurve: Curves.easeInCubic,
       context: context);
+}
+
+
+Future<void> showToastLater (msg) async {
+   await Fluttertoast.showToast(
+              msg: msg,
+              textColor: HexColor(backgroundColor),
+              gravity: ToastGravity.TOP,
+              backgroundColor: HexColor(primaryColor));
 }

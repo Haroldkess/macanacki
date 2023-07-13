@@ -16,6 +16,7 @@ import 'package:macanacki/presentation/widgets/text.dart';
 import 'package:macanacki/services/controllers/login_controller.dart';
 import 'package:macanacki/services/controllers/mode_controller.dart';
 import 'package:macanacki/services/middleware/gender_ware.dart';
+import 'package:macanacki/services/middleware/user_profile_ware.dart';
 import 'package:macanacki/services/temps/temps_id.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -172,6 +173,7 @@ class Operations {
 
   static Future pickForPost(BuildContext context) async {
     CreatePostWare picked = Provider.of<CreatePostWare>(context, listen: false);
+    UserProfileWare user = Provider.of<UserProfileWare>(context, listen: false);
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
           type: FileType.media,
@@ -180,11 +182,43 @@ class Operations {
 
       if (result != null) {
         List<File> file = result.paths.map((path) => File(path!)).toList();
-        if (file.length > 10) {
-          // ignore: use_build_context_synchronously
-          showToast2(context, "You can only select maximum of 10 files",
-              isError: true);
-          return;
+
+        if (user.userProfileModel.verified == null ||
+            (user.userProfileModel.verified == 0 &&
+                user.userProfileModel.gender != "Business")) {
+          emitter("selected file lenght ${file.length.toString()}");
+          if (file.length > 1) {
+            // ignore: use_build_context_synchronously
+            errors(context);
+
+            return;
+          }
+        } else {
+          if ((user.userProfileModel.verified == 1 &&
+              user.userProfileModel.gender == "Business")) {
+            if (file.length > 10) {
+              // ignore: use_build_context_synchronously
+              showToast2(
+                  context, "You can only select maximum of 10 media files",
+                  isError: true);
+              return;
+            }
+          } else if ((user.userProfileModel.verified == 0 &&
+              user.userProfileModel.gender == "Business")) {
+            if (file.length > 1) {
+              // ignore: use_build_context_synchronously
+              errors(context);
+
+              return;
+            }
+          } else {
+            if (file.length > 1) {
+              // ignore: use_build_context_synchronously
+              errors(context);
+
+              return;
+            }
+          }
         }
 
         emitter(file.first.path.toString());
@@ -196,6 +230,21 @@ class Operations {
       }
     } catch (e) {
       emitter(e.toString());
+    }
+  }
+
+  static Future errors(context) async {
+    showToast2(context, "You can only select maximum of 1 media files",
+        isError: true);
+
+    await Future.delayed(Duration(seconds: 4));
+    // ignore: use_build_context_synchronously
+    try {
+      // ignore: use_build_context_synchronously
+      showToast2(context, "Become a verified Business to post more media files",
+          isError: false);
+    } catch (e) {
+      showToastLater("Become a verified Business to post more media files");
     }
   }
 

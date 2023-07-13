@@ -294,15 +294,15 @@ class _TinderCardState extends State<TinderCard> {
                   child: Row(
                     children: [
                       Container(
-                        constraints: BoxConstraints(maxWidth: 200),
+                        constraints: BoxConstraints(maxWidth: 250),
                         child: RichText(
                             maxLines: 1,
                             overflow: TextOverflow.visible,
                             text: TextSpan(
-                                text: "${widget.users[indexer].username}",
+                                text: widget.users[indexer].username ?? "",
                                 style: GoogleFonts.spartan(
                                   color: HexColor(darkColor),
-                                  fontSize: 20,
+                                  fontSize: 15,
                                   fontWeight: FontWeight.w700,
                                 ),
                                 children: [
@@ -372,9 +372,8 @@ class _TinderCardState extends State<TinderCard> {
                       padding: const EdgeInsets.only(top: 5),
                       child: Row(
                         children: [
-                            AppText(
-                            text:
-                                "Suggested account",
+                          AppText(
+                            text: "Suggested account",
                             size: 12,
                             fontWeight: FontWeight.w500,
                           )
