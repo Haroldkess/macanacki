@@ -61,7 +61,7 @@ dependencies:
   firebase_analytics:
   connectivity_plus: ^3.0.3
   # location: ^4.3.0
-  app_settings: ^4.2.0
+  # app_settings: ^4.2.0
   country_code_picker: ^3.0.0
   expansion_tile_card: ^2.0.0
   url_launcher: ^6.1.10

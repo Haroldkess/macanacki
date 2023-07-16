@@ -1,24 +1,21 @@
 // import 'package:geolocator/geolocator.dart';
-import 'package:macanacki/main.dart';
-import 'package:macanacki/presentation/allNavigation.dart';
+// import 'package:macanacki/main.dart';
+// import 'package:macanacki/presentation/allNavigation.dart';
 import 'package:macanacki/presentation/operations.dart';
-import 'dart:io' show Platform;
+//import 'dart:io' show Platform;
 import 'dart:async';
-import 'package:macanacki/presentation/screens/onboarding/first_screen.dart';
+//import 'package:macanacki/presentation/screens/onboarding/first_screen.dart';
 import 'package:macanacki/presentation/screens/onboarding/login_screen.dart';
-import 'package:macanacki/presentation/screens/onboarding/splash_screen.dart';
-import 'package:macanacki/presentation/widgets/snack_msg.dart';
+// import 'package:macanacki/presentation/screens/onboarding/splash_screen.dart';
+// import 'package:macanacki/presentation/widgets/snack_msg.dart';
 import 'package:macanacki/services/temps/temps_id.dart';
 import 'package:restart_app/restart_app.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:location/location.dart' hide LocationAccuracy;
-import 'package:app_settings/app_settings.dart';
-import 'package:async/async.dart';
+// import 'package:app_settings/app_settings.dart';
 
-import '../../presentation/widgets/debug_emitter.dart';
 
-final AsyncMemoizer _memoizer = AsyncMemoizer();
-final AsyncMemoizer _memoizer2 = AsyncMemoizer();
+
 
 class LocationController {
   // static Future checkDeviceLocation(context) async {

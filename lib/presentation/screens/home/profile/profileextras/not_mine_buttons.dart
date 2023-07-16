@@ -4,6 +4,7 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:macanacki/model/conversation_model.dart';
 import 'package:macanacki/presentation/allNavigation.dart';
 import 'package:macanacki/presentation/screens/home/convo/chat/chat_screen.dart';
+import 'package:macanacki/presentation/widgets/debug_emitter.dart';
 import 'package:macanacki/presentation/widgets/loader.dart';
 import 'package:macanacki/presentation/widgets/snack_msg.dart';
 import 'package:macanacki/services/controllers/chat_controller.dart';
@@ -297,7 +298,7 @@ class UserProfileActions extends StatelessWidget {
                                   // ignore: use_build_context_synchronously
 
                                 } else {
-                                  print(data.publicUserProfileModel.username);
+                                  
                                   List<ChatData> checker = chatWareStream
                                       .chatList2
                                       .where((element) =>
@@ -342,8 +343,6 @@ class UserProfileActions extends StatelessWidget {
                                               .publicUserProfileModel.verified!,
                                         ));
                                   } else {
-                                    print(
-                                        chatWareStream.chatList.first.userTwo);
                                     // ignore: use_build_context_synchronously
 
                                     // ignore: use_build_context_synchronously
@@ -389,7 +388,7 @@ class UserProfileActions extends StatelessWidget {
                                 //       context, ChatScreen(user: chatData, chat: empty));
                                 // }
 
-                                print("not exist");
+                                emitter("not exist");
 
                                 // PageRouting.pushToPage(
                                 //     context, ChatScreen(user: user, chat: chat));
@@ -420,7 +419,7 @@ class UserProfileActions extends StatelessWidget {
               children: [
                 InkWell(
                   onTap: () async {
-                    print("dfdd");
+                
                     await followAction(context, data.publicUserProfileModel.id!,
                         data.publicUserProfileModel.username!);
                   },
@@ -599,7 +598,6 @@ class UserProfileActions extends StatelessWidget {
                                   // ignore: use_build_context_synchronously
 
                                 } else {
-                                  print(data.publicUserProfileModel.username);
                                   List<ChatData> checker = chatWareStream
                                       .chatList2
                                       .where((element) =>
@@ -644,8 +642,6 @@ class UserProfileActions extends StatelessWidget {
                                               .publicUserProfileModel.verified!,
                                         ));
                                   } else {
-                                    print(
-                                        chatWareStream.chatList.first.userTwo);
                                     // ignore: use_build_context_synchronously
 
                                     // ignore: use_build_context_synchronously
@@ -690,8 +686,6 @@ class UserProfileActions extends StatelessWidget {
                                 //   PageRouting.pushToPage(
                                 //       context, ChatScreen(user: chatData, chat: empty));
                                 // }
-
-                                print("not exist");
 
                                 // PageRouting.pushToPage(
                                 //     context, ChatScreen(user: user, chat: chat));
