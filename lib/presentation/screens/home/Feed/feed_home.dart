@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -41,13 +43,15 @@ class _FeedHomeState extends State<FeedHome>
     // ActionWare actionStream = context.watch<ActionWare>();
 
     return RefreshIndicator(
-      onRefresh: () => callFeedPost(true),
-      backgroundColor: HexColor(primaryColor),
-      color: HexColor(backgroundColor),
-      child: PeopleHome(),
-
-      //  stream.loadStatus ?const Center(child:  ScanningPerimeter()) : const PeopleHome()
-    );
+        onRefresh: () => callFeedPost(true),
+        backgroundColor: HexColor(primaryColor),
+        color: HexColor(backgroundColor),
+        child: stream.loadStatusReferesh
+            ? const Center(
+                child: ScanningPerimeter(
+                msg: "Getting new posts for you...",
+              ))
+            : const PeopleHome());
   }
 
   callFeedPost(bool isRefreshed) async {
@@ -69,6 +73,10 @@ class _FeedHomeState extends State<FeedHome>
         ActionController.retrievAllUserLikedCommentsController(context);
       });
     } else {
+      FeedPostWare provide = Provider.of<FeedPostWare>(context, listen: false);
+
+      provide.isLoadingReferesh(true);
+      provide.indexChange(0);
       await FeedPostController.getFeedPostController(context, 1, false);
       //   SchedulerBinding.instance.addPostFrameCallback((_) {
       ActionController.retrievAllUserLikedController(context);
@@ -78,6 +86,7 @@ class _FeedHomeState extends State<FeedHome>
       //  });
       //  SchedulerBinding.instance.addPostFrameCallback((_) {
       ActionController.retrievAllUserLikedCommentsController(context);
+      provide.isLoadingReferesh(false);
 
       setState(() {});
       //  });

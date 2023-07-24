@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 
 import '../../presentation/allNavigation.dart';
 import '../../presentation/screens/home/subscription/subscrtiption_plan.dart';
+import '../../presentation/widgets/debug_emitter.dart';
 import '../../presentation/widgets/snack_msg.dart';
 
 class PlanController {
@@ -17,7 +18,7 @@ class PlanController {
 
     bool isDone = await ware
         .getPlansFromApi()
-        .whenComplete(() => log("everything from api and provider is done"));
+        .whenComplete(() => emitter("everything from api and provider is done"));
 
     if (isDone) {
       ware.isLoading(false);

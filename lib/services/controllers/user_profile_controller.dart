@@ -8,6 +8,7 @@ import 'package:restart_app/restart_app.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../presentation/screens/onboarding/splash_screen.dart';
+import '../../presentation/widgets/debug_emitter.dart';
 import '../../presentation/widgets/screen_loader.dart';
 import '../middleware/action_ware.dart';
 import '../temps/temps_id.dart';
@@ -25,7 +26,7 @@ class UserProfileController {
 
     bool isDone = await ware
         .getUserProfileFromApi(context)
-        .whenComplete(() => log("everything from api and provider is done"));
+        .whenComplete(() => emitter("everything from api and provider is done"));
 
     if (isDone) {
       //        await Future.forEach(ware.publicUserProfileModel., (element) async {
@@ -56,7 +57,7 @@ class UserProfileController {
 
     bool isDone = await ware
         .getPublicUserProfileFromApi(username)
-        .whenComplete(() => log("everything from api and provider is done"));
+        .whenComplete(() => emitter("everything from api and provider is done"));
 
     if (isDone) {
       ware.isLoading2(false);
@@ -79,7 +80,7 @@ class UserProfileController {
 
     bool isDone = await ware
         .deleteUserFromApi()
-        .whenComplete(() => log("everything from api and provider is done"));
+        .whenComplete(() => emitter("everything from api and provider is done"));
 
     if (isDone) {
       ware.isDeleting(false);

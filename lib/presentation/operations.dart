@@ -372,4 +372,8 @@ class Operations {
     ChatWare action = Provider.of<ChatWare>(context, listen: false);
     action.addToSearch(text);
   }
+
+  static Future VideoControl (context)async {
+    
+  }
 }

@@ -105,20 +105,29 @@ class _NewDesignTestState extends State<NewDesignTest> {
                               if (widget.data.media![i].contains(".mp4")) {
                                 if (action.controller != null) {
                                   if (action.controller!.value.isInitialized) {
-                                    action.controller!.pause();
+                                    if (mounted) {
+                                      action.controller!.pause();
+                                    }
                                   } else {
-                                    action.controller!.pause();
+                                    if (mounted) {
+                                      action.controller!.pause();
+                                    }
                                   }
                                 }
                                 if (action.controller != null) {
                                   if (action.controller!.value.isInitialized) {
                                     if (action.controller!.value.isBuffering ||
                                         action.controller!.value.isPlaying) {
-                                      action.pauseControl();
-                                      action.tap(true);
+                                      if (mounted) {
+                                        action.pauseControl();
+                                        action.tap(true);
+                                      }
                                     } else {
-                                      action.pauseControl();
-                                      action.tap(true);
+                                      if (mounted) {
+                                        action.pauseControl();
+                                        action.tap(true);
+                                      }
+
                                       //  return;
                                     }
                                   }
@@ -133,8 +142,10 @@ class _NewDesignTestState extends State<NewDesignTest> {
                                 if (action.controller!.value.isInitialized) {
                                   if (action.controller!.value.isBuffering ||
                                       action.controller!.value.isPlaying) {
-                                    action.pauseControl();
-                                    action.tap(true);
+                                    if (mounted) {
+                                      action.pauseControl();
+                                      action.tap(true);
+                                    }
                                   } else {
                                     //  return;
                                   }
@@ -148,6 +159,7 @@ class _NewDesignTestState extends State<NewDesignTest> {
                                   pref.getString(userNameKey) ||
                               widget.data.user!.username! ==
                                   user.userProfileModel.username) {
+                            action.tapTrack(0);
                             action.changeIndex(4);
                             action.pageController!.animateToPage(
                               4,

@@ -11,7 +11,8 @@ import '../../../uiproviders/screen/find_people_provider.dart';
 import '../../../widgets/avatar.dart';
 
 class ScanningPerimeter extends StatefulWidget {
-  const ScanningPerimeter({super.key});
+  final String? msg;
+  const ScanningPerimeter({super.key, this.msg});
 
   @override
   State<ScanningPerimeter> createState() => _ScanningPerimeterState();
@@ -27,14 +28,15 @@ class _ScanningPerimeterState extends State<ScanningPerimeter> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         AvatarGlow(
-            endRadius: 141.0,
+            endRadius: 120.0,
+            duration: Duration(milliseconds: 800),
             glowColor: HexColor(primaryColor),
-            child: Avatar(image: temp.dp, radius: 50)),
+            child: Avatar(image: temp.dp, radius: 40)),
         const SizedBox(
           height: 24,
         ),
         AppText(
-          text: "Finding people near you...",
+          text: widget.msg ?? "Finding people near you...",
           fontWeight: FontWeight.w400,
           size: 14,
           align: TextAlign.center,

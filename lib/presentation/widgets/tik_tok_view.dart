@@ -115,7 +115,7 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
             }
           });
 
-          setState(() {});
+         setState(() {});
         }).then((value) => {
               _controller!.addListener(() {
                 if (_controller!.value.position.inSeconds > 7 &&

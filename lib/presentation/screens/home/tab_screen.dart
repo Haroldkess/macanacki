@@ -56,7 +56,7 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
   final AsyncMemoizer _memoizerUser = AsyncMemoizer();
   final AsyncMemoizer _memoizer2 = AsyncMemoizer();
   final AsyncMemoizer _memoizerChat = AsyncMemoizer();
-
+  int trackTaps = 0;
   final List<Widget> _children = [
     const FeedHome(),
     const GlobalSearch(),
@@ -114,6 +114,30 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
               body: StreamBuilder(
                   stream: streamSocketMsgs.getResponse,
                   builder: (con, AsyncSnapshot<dynamic> snapshot) {
+                    if (tabs.index != 0) {
+                      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                        try {
+                          if (provide.controller != null) {
+                            if (provide.controller!.value.isInitialized) {
+                              if (provide.controller!.value.isBuffering ||
+                                  provide.controller!.value.isPlaying) {
+                                if (mounted) {
+                                  provide.pauseControl();
+                                  provide.tap(true);
+                                }
+                              } else {
+                                if (mounted) {
+                                  provide.pauseControl();
+                                  provide.tap(true);
+                                }
+                              }
+                            }
+                          }
+                        } catch (e) {
+                          emitter(e.toString());
+                        }
+                      });
+                    }
                     if (snapshot.connectionState == ConnectionState.active) {
                       if (snapshot.hasData) {
                         if (snapshot.data != null) {
@@ -177,6 +201,30 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
                   }
 
                   if (provide.index == 0) {
+                    provide.addtapTrack();
+                    if (provide.index == 0 &&
+                        index == 0 &&
+                        provide.tapTracker > 1) {
+                      await FeedPostController.reloadPage(context);
+
+                      setState(() {});
+                      // setState(() {
+                      //   FeedHome().createState().dispose();
+
+                      //   // _children = [
+
+                      //   //   const GlobalSearch(),
+                      //   //   const SwipeCardScreen(),
+                      //   //   const ConversationScreen(),
+                      //   //   const ProfileScreen(),
+                      //   // ];
+                      // });
+
+                      // setState(() {
+                      //   FeedHome().createState().build(context);
+                      // });
+                      //  emitter("referesh");
+                    }
                     tabs.pageController!.animateToPage(
                       index,
                       duration: const Duration(milliseconds: 1),
@@ -187,6 +235,10 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
                     }
                     provide.isHomeChange(false);
                   } else {
+                    setState(() {
+                      trackTaps = 0;
+                    });
+                    provide.tapTrack(0);
                     tabs.pageController!.animateToPage(
                       index,
                       duration: const Duration(milliseconds: 1),
@@ -199,11 +251,15 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
                         if (provide.controller!.value.isInitialized) {
                           if (provide.controller!.value.isBuffering ||
                               provide.controller!.value.isPlaying) {
-                            provide.pauseControl();
-                            provide.tap(true);
+                            if (mounted) {
+                              provide.pauseControl();
+                              provide.tap(true);
+                            }
                           } else {
-                            provide.pauseControl();
-                            provide.tap(true);
+                            if (mounted) {
+                              provide.pauseControl();
+                              provide.tap(true);
+                            }
                           }
                         }
                       }
@@ -362,7 +418,6 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-
     super.dispose();
     // if (mounted) {
     //   reloadTime.cancel();

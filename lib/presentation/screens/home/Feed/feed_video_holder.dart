@@ -70,13 +70,10 @@ class _FeedVideoHolderState extends State<FeedVideoHolder> {
         TabProvider tabs = Provider.of<TabProvider>(context, listen: false);
 
         tabs.addControl(widget.controller);
-        //tabs.tap(false);
+
+        tabs.tap(false);
       });
     }
-    emitter(widget.isHome.toString());
-
-    emitter(
-        " tHE ASPECT RATIO IS ${widget.controller.value.aspectRatio.toString()}");
   }
 
   Future<void> innit() async {}
@@ -84,6 +81,17 @@ class _FeedVideoHolderState extends State<FeedVideoHolder> {
   @override
   void dispose() {
     widget.controller.dispose();
+
+    if (widget.isHome) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          TabProvider tabs = Provider.of<TabProvider>(context, listen: false);
+          tabs.disposeControl();
+        }
+
+        //tabs.tap(false);
+      });
+    }
 
     super.dispose();
   }

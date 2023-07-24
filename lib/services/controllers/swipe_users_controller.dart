@@ -5,6 +5,8 @@ import 'package:macanacki/services/middleware/gender_ware.dart';
 import 'package:macanacki/services/middleware/swipe_ware.dart';
 import 'package:provider/provider.dart';
 
+import '../../presentation/widgets/debug_emitter.dart';
+
 class SwipeController {
   static Future<void> retrievSwipeController(
       BuildContext context, String type) async {
@@ -14,7 +16,7 @@ class SwipeController {
 
     bool isDone = await ware
         .getSwipeFromApi(type)
-        .whenComplete(() => log("everything from api and provider is done"));
+        .whenComplete(() => emitter("everything from api and provider is done"));
 
     if (isDone) {
       await Future.delayed(const Duration(seconds: 3));

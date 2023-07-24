@@ -31,7 +31,7 @@ class VerifyEmailController {
     OtpModel data = OtpModel(email: myEmail, otp: otp);
     bool isDone = await ware
         .verifyOtpFromApi(data)
-        .whenComplete(() => log("can now navigate to username page"));
+        .whenComplete(() => emitter("can now navigate to username page"));
 
     if (isDone) {
       ware.isLoading(false);

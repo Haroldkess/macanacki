@@ -6,6 +6,8 @@ import 'package:macanacki/services/middleware/search_ware.dart';
 import 'package:macanacki/services/middleware/user_profile_ware.dart';
 import 'package:provider/provider.dart';
 
+import '../../presentation/widgets/debug_emitter.dart';
+
 class SearchController {
   static Future<void> retrievSearchUserController(
       BuildContext context, String x) async {
@@ -16,7 +18,7 @@ class SearchController {
 
     bool isDone = await ware
         .getSearchedUserFromApi(x)
-        .whenComplete(() => log("everything from api and provider is done"));
+        .whenComplete(() => emitter("everything from api and provider is done"));
 
     if (isDone) {
       await Future.forEach(ware.userFound, (element) async {

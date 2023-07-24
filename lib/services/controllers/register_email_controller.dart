@@ -8,6 +8,8 @@ import 'package:macanacki/services/middleware/registeration_ware.dart';
 import 'package:macanacki/services/temps/temp.dart';
 import 'package:provider/provider.dart';
 
+import '../../presentation/widgets/debug_emitter.dart';
+
 class RegisterEmailController {
   static Future<void> registerationController(
       BuildContext context, String email) async {
@@ -21,7 +23,7 @@ class RegisterEmailController {
 
     bool isDone = await ware
         .registerEmailFromApi(data)
-        .whenComplete(() => log("can now navigate to otp page"));
+        .whenComplete(() => emitter("can now navigate to otp page"));
 
     if (isDone) {
       ware.isLoading(false);

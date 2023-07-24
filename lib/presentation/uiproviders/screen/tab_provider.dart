@@ -11,6 +11,18 @@ class TabProvider extends ChangeNotifier {
   bool isTapped = false;
   bool isHome = false;
   PageController? pageController = PageController();
+  int tapTracker = 0;
+
+  void tapTrack(int _index) {
+    tapTracker = _index;
+    notifyListeners();
+  }
+
+  
+  void addtapTrack() {
+    tapTracker += 1;
+    notifyListeners();
+  }
 
   void addPageControl(PageController page) {
     pageController = page;
@@ -21,10 +33,12 @@ class TabProvider extends ChangeNotifier {
     isTapped = val;
     notifyListeners();
   }
- void isHomeChange(bool val) {
+
+  void isHomeChange(bool val) {
     isHome = val;
     notifyListeners();
   }
+
   void changeMultipleIndex(int page) {
     multipleImageIndex = page;
     notifyListeners();
@@ -32,6 +46,14 @@ class TabProvider extends ChangeNotifier {
 
   Future addControl(VideoPlayerController control) async {
     controller = control;
+    notifyListeners();
+  }
+
+  Future disposeControl() async {
+    if (controller != null) {
+      controller!.dispose();
+    }
+
     notifyListeners();
   }
 

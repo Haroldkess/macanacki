@@ -61,7 +61,7 @@ class LoginController {
 
     bool isDone = await ware
         .loginUserFromApi(data)
-        .whenComplete(() => log("can now navigate to home"));
+        .whenComplete(() => emitter("can now navigate to home"));
     if (isSplash != true) {
       List<GenderList> selected = gender.genderList
           .where((element) => element.selected == true)

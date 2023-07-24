@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/widgets/debug_emitter.dart';
 import 'package:macanacki/presentation/widgets/loader.dart';
 import 'package:numeral/numeral.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
@@ -62,14 +63,14 @@ class _PublicGridViewItemsState extends State<PublicGridViewItems> {
         maxHeight:
             0, // specify the height of the thumbnail, let the width auto-scaled to keep the source aspect ratio
         quality: 100,
-      ).whenComplete(() => log(" thumbnail generated"));
+      );
 
-      log(fileName.toString());
+     // emitter(fileName.toString());
       setState(() {
         thumbnail = fileName;
       });
     } catch (e) {
-      log(e.toString());
+    emitter(e.toString());
     }
   }
 

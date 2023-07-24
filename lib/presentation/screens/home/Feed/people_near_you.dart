@@ -115,12 +115,19 @@ class _PeopleHomeState extends State<PeopleHome> {
     int checkNum = provide.feedPosts.length - 3; // lenght of posts
     int pageNum = provide.feedData.currentPage!; // api current  page num
     int maxPages = provide.feedData.lastPage!; // api last page num
+    emitter("there");
+    emitter(maxPages.toString());
+    emitter(pageNum.toString());
 
     if (pageNum >= maxPages) {
       emitter("cannot paginate");
       return;
     } else {
-      if (index > checkNum && index < provide.feedPosts.length - 2) {
+      if (index > (provide.feedPosts.length - 5)) {
+        emitter("PAGINTATING");
+        if (provide.loadStatus || (pageNum + 1) == pageNum) {
+          return;
+        }
         await FeedPostController.getFeedPostController(
                 context, pageNum + 1, true)
             .whenComplete(() => emitter("paginated"));

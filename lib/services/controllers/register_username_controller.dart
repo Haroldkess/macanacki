@@ -14,6 +14,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../presentation/screens/onboarding/dob_screen.dart';
+import '../../presentation/widgets/debug_emitter.dart';
 
 class RegisterUsernameController {
   static Future<void> usernameController(
@@ -28,7 +29,7 @@ class RegisterUsernameController {
 
     bool isDone = await ware
         .registerUsernameFromApi(data)
-        .whenComplete(() => log("can now navigate to gender page"));
+        .whenComplete(() => emitter("can now navigate to gender page"));
 
     if (isDone) {
       ware.isLoading2(false);

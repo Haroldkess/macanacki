@@ -29,7 +29,7 @@ class ActionController {
 
     bool isDone = await ware
         .followOrUnFollowFromApi(userName, userId)
-        .whenComplete(() => log("follow attempt done "));
+        .whenComplete(() => emitter("follow attempt done "));
 
     if (isDone) {
       if (ware.message == "Follow successfully") {
@@ -56,7 +56,7 @@ class ActionController {
 
     bool isDone = await ware
         .likeOrDislikeromApi(postId)
-        .whenComplete(() => log("like action attempt done "));
+        .whenComplete(() => emitter("like action attempt done "));
 
     if (isDone) {
       if (ware.message2 == "Post Liked") {
@@ -85,7 +85,7 @@ class ActionController {
 
     bool isDone = await ware
         .likeCommentFromApi(postId, commentId)
-        .whenComplete(() => log("like action attempt done "));
+        .whenComplete(() => emitter("like action attempt done "));
 
     if (isDone) {
       ware.isLoading3(false);
@@ -106,7 +106,7 @@ class ActionController {
 
     bool isDone = await ware
         .getlikeFromApi()
-        .whenComplete(() => log("everything from api and provider is done"));
+        .whenComplete(() => emitter("everything from api and provider is done"));
 
     if (isDone) {
       await Future.forEach(ware.allLiked, (element) async {
@@ -134,7 +134,7 @@ class ActionController {
 
     bool isDone = await ware
         .getFollowingFromApi()
-        .whenComplete(() => log("everything from api and provider is done"));
+        .whenComplete(() => emitter("everything from api and provider is done"));
 
     if (isDone) {
       await Future.forEach(ware.allFollowing, (element) async {
@@ -157,7 +157,7 @@ class ActionController {
 
     bool isDone = await ware
         .getFollowersFromApi()
-        .whenComplete(() => log("everything from api and provider is done"));
+        .whenComplete(() => emitter("everything from api and provider is done"));
 
     if (isDone) {
       // await Future.forEach(ware.allFollowing, (element) async {
@@ -180,7 +180,7 @@ class ActionController {
 
     bool isDone = await ware
         .getLikeCommentFromApi()
-        .whenComplete(() => log("everything from api and provider is done"));
+        .whenComplete(() => emitter("everything from api and provider is done"));
 
     if (isDone) {
       await Future.forEach(ware.allLikedComments, (element) async {

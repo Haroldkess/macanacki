@@ -16,6 +16,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../model/register_model.dart';
 import '../../presentation/screens/onboarding/business/business_modal.dart';
 import '../../presentation/screens/onboarding/dob_screen.dart';
+import '../../presentation/widgets/debug_emitter.dart';
 import '../middleware/user_profile_ware.dart';
 
 class VerifyController {
@@ -43,7 +44,7 @@ class VerifyController {
 
     bool isDone = await ware
         .verifyBusinessFromApi(registerBusinessModel)
-        .whenComplete(() => log("verification done "));
+        .whenComplete(() => emitter("verification done "));
 
     if (isDone) {
       ware.isLoadingBus(false);
@@ -74,7 +75,7 @@ class VerifyController {
 
     bool isDone = await ware
         .verifyUserFromApi(user.verifyUserModel)
-        .whenComplete(() => log("complete"));
+        .whenComplete(() => emitter("complete"));
 
     if (isDone) {
       ware.isLoadingUser(false);

@@ -8,6 +8,7 @@ import 'package:macanacki/services/middleware/edit_profile_ware.dart';
 import 'package:macanacki/services/middleware/facial_ware.dart';
 import 'package:provider/provider.dart';
 
+import '../../presentation/widgets/debug_emitter.dart';
 import '../../presentation/widgets/snack_msg.dart';
 
 class EditProfileController {
@@ -36,7 +37,7 @@ class EditProfileController {
 
     bool isDone = await ware
         .editProfileFromApi(data)
-        .whenComplete(() => log("api function done"));
+        .whenComplete(() => emitter("api function done"));
 
     // ignore: use_build_context_synchronously
 

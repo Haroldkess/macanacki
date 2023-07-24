@@ -14,6 +14,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../presentation/allNavigation.dart';
+import '../../presentation/widgets/debug_emitter.dart';
 
 class CompleteRegisterationController {
   static Future<RegisterUserModel> regData(BuildContext context) async {
@@ -40,7 +41,7 @@ class CompleteRegisterationController {
 
     bool isDone = await ware
         .registerUserFromApi(data)
-        .whenComplete(() => log("api function done"));
+        .whenComplete(() => emitter("api function done"));
 
     if (isDone) {
       // ignore: use_build_context_synchronously

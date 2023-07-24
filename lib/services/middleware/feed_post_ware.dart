@@ -26,6 +26,7 @@ class FeedPostWare extends ChangeNotifier {
   MUXClient muxClient = MUXClient();
   bool _loadStatus = false;
   bool _loadStatus2 = false;
+  bool _loadStatusReferesh = false;
   int _index = 0;
   FeedData _feedData = FeedData();
   List<FeedPost> _feedPosts = [];
@@ -39,6 +40,7 @@ class FeedPostWare extends ChangeNotifier {
   int get index => _index;
   bool get loadStatus => _loadStatus;
   bool get loadStatus2 => _loadStatus2;
+  bool get loadStatusReferesh => _loadStatusReferesh;
   FeedData get feedData => _feedData;
   List<FeedPost> get feedPosts => _feedPosts;
   List<Data?> get feedStreamPosts => _feedStreamPosts;
@@ -118,6 +120,11 @@ class FeedPostWare extends ChangeNotifier {
     notifyListeners();
   }
 
+   Future<void> isLoadingReferesh(bool isLoad) async {
+    _loadStatusReferesh = isLoad;
+    notifyListeners();
+  }
+
   Future<void> indexChange(int num) async {
     _index = num;
     notifyListeners();
@@ -143,19 +150,20 @@ class FeedPostWare extends ChangeNotifier {
 
         var incomingData = FeedData.fromJson(jsonData["data"]);
         _feedData = incomingData;
-        _feedData.data!.shuffle();
+        //  _feedData.data!.shuffle();
         emitter(pageNum.toString());
 
         if (pageNum == 1) {
           _feedPosts = _feedData.data!;
         } else {
           _moreFeedPosts = incomingData.data!;
-          if (_moreFeedPosts.length > 5) {
-            _moreFeedPosts.shuffle();
-            _feedPosts.addAll(_moreFeedPosts);
-          } else {
-            _feedPosts.addAll(_moreFeedPosts);
-          }
+          _feedPosts.addAll(_moreFeedPosts);
+          // if (_moreFeedPosts.length > 5) {
+          // //  _moreFeedPosts.shuffle();
+
+          // } else {
+          //   _feedPosts.addAll(_moreFeedPosts);
+          // }
         }
         if (_moreFeedPosts.isNotEmpty) {
           _moreFeedPosts.clear();

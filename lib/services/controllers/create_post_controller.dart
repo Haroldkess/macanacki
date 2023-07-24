@@ -25,6 +25,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../model/feed_post_model.dart';
 import '../../model/public_profile_model.dart';
 import '../../presentation/allNavigation.dart';
+import '../../presentation/widgets/debug_emitter.dart';
 import '../middleware/button_ware.dart';
 import '../middleware/create_post_ware.dart';
 import '../middleware/feed_post_ware.dart';
@@ -58,7 +59,7 @@ class CreatePostController {
 
     bool isDone = await ware
         .createPostFromApi(data)
-        .whenComplete(() => log("api function done"));
+        .whenComplete(() => emitter("api function done"));
 
     // ignore: use_build_context_synchronously
     await FeedPostController.getUserPostController(context);
@@ -103,7 +104,7 @@ class CreatePostController {
 
     bool isDone = await ware
         .shareCommentFromApi(data, id)
-        .whenComplete(() => log("api function done"));
+        .whenComplete(() => emitter("api function done"));
 
     // ignore: use_build_context_synchronously
     //await FeedPostController.getUserPostController(context);

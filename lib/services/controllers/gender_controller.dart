@@ -4,6 +4,8 @@ import 'package:macanacki/presentation/widgets/snack_msg.dart';
 import 'package:macanacki/services/middleware/gender_ware.dart';
 import 'package:provider/provider.dart';
 
+import '../../presentation/widgets/debug_emitter.dart';
+
 class GenderController {
   static Future<void> retrievGenderController(BuildContext context) async {
     genderWare ware = Provider.of<genderWare>(context, listen: false);
@@ -12,7 +14,7 @@ class GenderController {
 
     bool isDone = await ware
         .getGenderFromApi()
-        .whenComplete(() => log("everything from api and provider is done"));
+        .whenComplete(() => emitter("everything from api and provider is done"));
 
     if (isDone) {
       ware.isLoading(false);

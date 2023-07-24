@@ -18,43 +18,73 @@ import 'package:video_thumbnail/video_thumbnail.dart';
 import '../../model/feed_post_model.dart';
 import '../../presentation/widgets/debug_emitter.dart';
 import '../middleware/feed_post_ware.dart';
+import 'action_controller.dart';
 
 class FeedPostController {
   static Future<void> getFeedPostController(
       BuildContext context, int pageNum, bool isPaginating) async {
     FeedPostWare ware = Provider.of<FeedPostWare>(context, listen: false);
 
-    if (isPaginating == false) {
+    if (isPaginating == true) {
       ware.isLoading(true);
     }
 
-    bool isDone = await ware
-        .getFeedPostFromApi(pageNum)
-        .whenComplete(() => log("everything from api and provider is done"));
+    bool isDone = await ware.getFeedPostFromApi(pageNum).whenComplete(
+        () => emitter("everything from api and provider is done"));
     // ignore: use_build_context_synchronously
     //  VideosController.addVideosOffline(context);
 
     // ignore: use_build_context_synchronously
 
     if (isDone) {
-      if (isPaginating == false) {
+      if (isPaginating == true) {
         ware.isLoading(false);
       }
 
-      log("feed post stored");
+      emitter("feed post stored");
     } else {
-      if (isPaginating == false) {
+      if (isPaginating == true) {
         ware.isLoading(false);
+        floatToast("Can't get more feed post", Colors.red.shade300);
+      } else {
+        floatToast("Can't get your feed", Colors.red.shade300);
       }
-      floatToast("Can't get your feed", Colors.red.shade300);
 
       // ignore: use_build_context_synchronously
       // showToast(context, "An error occured", Colors.red);
     }
 
-    if (isPaginating == false) {
+    if (isPaginating == true) {
       ware.isLoading(false);
     }
+  }
+
+  static Future reloadPage(context) async {
+    FeedPostWare provide = Provider.of<FeedPostWare>(context, listen: false);
+    provide.indexChange(0);
+
+    provide.isLoadingReferesh(true);
+    await FeedPostController.getFeedPostController(context, 1, false);
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      //    FeedPostWare post = Provider.of<FeedPostWare>(context, listen: false);
+      List<FeedPost> data = [];
+      for (var i = 0; i < 5; i++) {
+        data.add(provide.feedPosts[i]);
+      }
+
+      FeedPostController.downloadThumbs(
+          data, context, MediaQuery.of(context).size.height);
+      emitter('caching first ${data.length} sent');
+    });
+    //   SchedulerBinding.instance.addPostFrameCallback((_) {
+    ActionController.retrievAllUserLikedController(context);
+    // });
+    //  SchedulerBinding.instance.addPostFrameCallback((_) {
+    ActionController.retrievAllUserFollowingController(context);
+    //  });
+    //  SchedulerBinding.instance.addPostFrameCallback((_) {
+    ActionController.retrievAllUserLikedCommentsController(context);
+    provide.isLoadingReferesh(false);
   }
 
   static Future<void> getUserPostController(BuildContext context) async {
@@ -64,7 +94,7 @@ class FeedPostController {
     // ignore: use_build_context_synchronously
     bool isDone = await ware
         .getUserPostFromApi()
-        .whenComplete(() => log("everything from api and provider is done"));
+        .whenComplete(() => emitter("everything from api and provider is done"));
     // ignore: use_build_context_synchronously
     //  UserProfileController.retrievProfileController(context, false);
 
