@@ -15,6 +15,7 @@ import '../../../../../services/middleware/feed_post_ware.dart';
 import '../../../../../services/middleware/user_profile_ware.dart';
 import '../../../../widgets/comment_modal.dart';
 import '../../../../widgets/text.dart';
+import '../../../../widgets/user_post_views.dart';
 
 // class PublicUserProfileFeed extends StatefulWidget {
 //   final int index;
@@ -159,6 +160,7 @@ class _PublicUserProfileFeedState extends State<PublicUserProfileFeed> {
                   profilephoto: post.user!.profilephoto,
                   noOfFollowers: post.user!.noOfFollowers,
                   noOfFollowing: post.user!.noOfFollowing,
+                  verified:  post.user!.verified!
                 );
                 post.comments!.forEach((element) {
                   Comment comment = Comment(
@@ -191,7 +193,7 @@ class _PublicUserProfileFeedState extends State<PublicUserProfileFeed> {
                   user: user,
                 );
 
-                return TikTokView(
+                return UserTikTokView(
                   media: post.mux!,
                   data: data,
                   page: "public",

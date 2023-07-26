@@ -49,9 +49,9 @@ class TabScreen extends StatefulWidget {
 
 class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
   final GlobalKey<ScaffoldState> key = GlobalKey();
-  final SystemUiOverlayStyle _currentStyle = SystemUiOverlayStyle(
-      systemNavigationBarIconBrightness: Brightness.dark,
-      systemNavigationBarColor: HexColor(backgroundColor));
+  // final SystemUiOverlayStyle _currentStyle = SystemUiOverlayStyle(
+  //     systemNavigationBarIconBrightness: Brightness.dark,
+  //     systemNavigationBarColor: HexColor(backgroundColor));
   // late Timer reloadTime;
   final AsyncMemoizer _memoizerUser = AsyncMemoizer();
   final AsyncMemoizer _memoizer2 = AsyncMemoizer();
@@ -89,171 +89,40 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
         final shouldPop = await Operations.showWarning(context);
         return shouldPop!;
       },
-      child: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: _currentStyle,
-        child: Container(
-          color: Color.fromARGB(255, 12, 4, 4),
-          child: SafeArea(
-            top: false,
-            child: Scaffold(
-              backgroundColor: tabs.index == 4 || tabs.index == 2
-                  ? HexColor(backgroundColor)
-                  : HexColor("#F5F2F9"),
-              appBar: tabs.index == 0 ||
-                      tabs.index == 3 ||
-                      tabs.index == 4 ||
-                      tabs.index == 1 ||
-                      tabs.index == 2
-                  ? null
-                  : AppHeader(
-                      index: tabs.index,
-                      color: tabs.index == 4
-                          ? HexColor(backgroundColor)
-                          : Colors.transparent,
-                    ),
-              body: StreamBuilder(
-                  stream: streamSocketMsgs.getResponse,
-                  builder: (con, AsyncSnapshot<dynamic> snapshot) {
-                    if (tabs.index != 0) {
-                      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                        try {
-                          if (provide.controller != null) {
-                            if (provide.controller!.value.isInitialized) {
-                              if (provide.controller!.value.isBuffering ||
-                                  provide.controller!.value.isPlaying) {
-                                if (mounted) {
-                                  provide.pauseControl();
-                                  provide.tap(true);
-                                }
-                              } else {
-                                if (mounted) {
-                                  provide.pauseControl();
-                                  provide.tap(true);
-                                }
-                              }
-                            }
-                          }
-                        } catch (e) {
-                          emitter(e.toString());
-                        }
-                      });
-                    }
-                    if (snapshot.connectionState == ConnectionState.active) {
-                      if (snapshot.hasData) {
-                        if (snapshot.data != null) {
-                          if (mounted) {
-                            WidgetsBinding.instance
-                                .addPostFrameCallback((timeStamp) async {
-                              ChatController.handleMessage(
-                                  context, snapshot.data);
-                              streamSocketMsgs.addResponse(null);
-                            });
-                          }
-                        } else {
-                          emitter("snapshot is null");
-                        }
-                      }
-                    }
-                    return SizedBox(
-                      child: StreamBuilder(
-                          stream: streamSocket.getResponse,
-                          builder: (con, AsyncSnapshot<dynamic> snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.active) {
-                              if (snapshot.hasData) {
-                                if (snapshot.data != null) {
-                                  if (mounted) {
-                                    WidgetsBinding.instance
-                                        .addPostFrameCallback(
-                                            (timeStamp) async {
-                                      ChatController.addUserToList(
-                                          context, snapshot.data);
-                                      streamSocket.addResponse(null);
-                                    });
-                                  }
-                                } else {
-                                  emitter("snapshot is null");
-                                }
-                              }
-                            }
-                            return PageView(
-                              physics: const NeverScrollableScrollPhysics(),
-                              controller: tabs.pageController,
-                              children: _children,
-                              onPageChanged: (index) {
-                                provide.changeIndex(index);
-                              },
-                            );
-                          }),
-                    );
-                  }),
-              bottomNavigationBar: CupertinoTabBar(
-                currentIndex: context.watch<TabProvider>().index,
-                onTap: (index) async {
-                  provide.changeIndex(index);
-                  ChatController.initSocket(context).whenComplete(
-                      () => ChatController.addUserToSocket(context));
-                  // if (chat.socket != null) {
-                  //   ChatController.addUserToSocket(context);
-                  // }
-                  if (chat.chatPage != 0) {
-                    ChatController.changeChatPage(context, 0);
-                  }
-
-                  if (provide.index == 0) {
-                    provide.addtapTrack();
-                    if (provide.index == 0 &&
-                        index == 0 &&
-                        provide.tapTracker > 1) {
-                      await FeedPostController.reloadPage(context);
-
-                      setState(() {});
-                      // setState(() {
-                      //   FeedHome().createState().dispose();
-
-                      //   // _children = [
-
-                      //   //   const GlobalSearch(),
-                      //   //   const SwipeCardScreen(),
-                      //   //   const ConversationScreen(),
-                      //   //   const ProfileScreen(),
-                      //   // ];
-                      // });
-
-                      // setState(() {
-                      //   FeedHome().createState().build(context);
-                      // });
-                      //  emitter("referesh");
-                    }
-                    tabs.pageController!.animateToPage(
-                      index,
-                      duration: const Duration(milliseconds: 1),
-                      curve: Curves.easeIn,
-                    );
-                    if (provide.isTapped) {
-                      provide.tap(false);
-                    }
-                    provide.isHomeChange(false);
-                  } else {
-                    setState(() {
-                      trackTaps = 0;
-                    });
-                    provide.tapTrack(0);
-                    tabs.pageController!.animateToPage(
-                      index,
-                      duration: const Duration(milliseconds: 1),
-                      curve: Curves.easeIn,
-                    );
-                    //provide.isHomeChange(true);
-
+      child: SafeArea(
+        top: false,
+        child: Scaffold(
+          backgroundColor: tabs.index == 4 || tabs.index == 2
+              ? HexColor(backgroundColor)
+              : HexColor("#F5F2F9"),
+          appBar: tabs.index == 0 ||
+                  tabs.index == 3 ||
+                  tabs.index == 4 ||
+                  tabs.index == 1 ||
+                  tabs.index == 2
+              ? null
+              : AppHeader(
+                  index: tabs.index,
+                  color: tabs.index == 4
+                      ? HexColor(backgroundColor)
+                      : Colors.transparent,
+                ),
+          body: StreamBuilder(
+              stream: streamSocketMsgs.getResponse,
+              builder: (con, AsyncSnapshot<dynamic> snapshot) {
+                if (tabs.index != 0) {
+                  WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
                     try {
                       if (provide.controller != null) {
                         if (provide.controller!.value.isInitialized) {
                           if (provide.controller!.value.isBuffering ||
                               provide.controller!.value.isPlaying) {
                             if (mounted) {
-                              provide.pauseControl();
                               provide.tap(true);
+                              try {
+                                provide.pauseControl();
+                                provide.tap(true);
+                              } catch (e) {}
                             }
                           } else {
                             if (mounted) {
@@ -264,26 +133,149 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
                         }
                       }
                     } catch (e) {
-                      emitter(e.toString());
+                      //   emitter(e.toString());
+                    }
+                  });
+                }
+                if (snapshot.connectionState == ConnectionState.active) {
+                  if (snapshot.hasData) {
+                    if (snapshot.data != null) {
+                      if (mounted) {
+                        WidgetsBinding.instance
+                            .addPostFrameCallback((timeStamp) async {
+                          ChatController.handleMessage(context, snapshot.data);
+                          streamSocketMsgs.addResponse(null);
+                        });
+                      }
+                    } else {
+                      emitter("snapshot is null");
                     }
                   }
-                },
-                items: [
-                  barItem(
-                      'assets/icon/home.svg', tabs.index == 0 ? true : false),
-                  barItem(
-                      'assets/icon/search.svg', tabs.index == 1 ? true : false),
-                  barItem(
-                      'assets/icon/crown.svg', tabs.index == 2 ? true : false),
-                  barItem('assets/icon/chat.svg',
-                      tabs.index == 3 ? true : false, true),
-                  barItem('assets/icon/profile.svg',
-                      tabs.index == 4 ? true : false),
-                ],
-                activeColor: HexColor(primaryColor),
-                backgroundColor: HexColor(backgroundColor),
-              ),
-            ),
+                }
+                return SizedBox(
+                  child: StreamBuilder(
+                      stream: streamSocket.getResponse,
+                      builder: (con, AsyncSnapshot<dynamic> snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.active) {
+                          if (snapshot.hasData) {
+                            if (snapshot.data != null) {
+                              if (mounted) {
+                                WidgetsBinding.instance
+                                    .addPostFrameCallback((timeStamp) async {
+                                  ChatController.addUserToList(
+                                      context, snapshot.data);
+                                  streamSocket.addResponse(null);
+                                });
+                              }
+                            } else {
+                              emitter("snapshot is null");
+                            }
+                          }
+                        }
+                        return PageView(
+                          physics: const NeverScrollableScrollPhysics(),
+                          controller: tabs.pageController,
+                          children: _children,
+                          onPageChanged: (index) {
+                            provide.changeIndex(index);
+                          },
+                        );
+                      }),
+                );
+              }),
+          bottomNavigationBar: CupertinoTabBar(
+            currentIndex: context.watch<TabProvider>().index,
+            onTap: (index) async {
+              provide.changeIndex(index);
+              ChatController.initSocket(context)
+                  .whenComplete(() => ChatController.addUserToSocket(context));
+              // if (chat.socket != null) {
+              //   ChatController.addUserToSocket(context);
+              // }
+              if (chat.chatPage != 0) {
+                ChatController.changeChatPage(context, 0);
+              }
+
+              if (provide.index == 0) {
+                provide.addtapTrack();
+                if (provide.index == 0 &&
+                    index == 0 &&
+                    provide.tapTracker > 1) {
+                  await FeedPostController.reloadPage(context);
+
+                  setState(() {});
+                  // setState(() {
+                  //   FeedHome().createState().dispose();
+
+                  //   // _children = [
+
+                  //   //   const GlobalSearch(),
+                  //   //   const SwipeCardScreen(),
+                  //   //   const ConversationScreen(),
+                  //   //   const ProfileScreen(),
+                  //   // ];
+                  // });
+
+                  // setState(() {
+                  //   FeedHome().createState().build(context);
+                  // });
+                  //  emitter("referesh");
+                }
+                tabs.pageController!.animateToPage(
+                  index,
+                  duration: const Duration(milliseconds: 1),
+                  curve: Curves.easeIn,
+                );
+                if (provide.isTapped) {
+                  provide.tap(false);
+                }
+                provide.isHomeChange(false);
+              } else {
+                setState(() {
+                  trackTaps = 0;
+                });
+                provide.tapTrack(0);
+                tabs.pageController!.animateToPage(
+                  index,
+                  duration: const Duration(milliseconds: 1),
+                  curve: Curves.easeIn,
+                );
+                //provide.isHomeChange(true);
+
+                try {
+                  if (provide.controller != null) {
+                    if (provide.controller!.value.isInitialized) {
+                      if (provide.controller!.value.isBuffering ||
+                          provide.controller!.value.isPlaying) {
+                        if (mounted) {
+                          //   provide.pauseControl();
+                          provide.tap(true);
+                        }
+                      } else {
+                        if (mounted) {
+                          //  provide.pauseControl();
+                          provide.tap(true);
+                        }
+                      }
+                    }
+                  }
+                } catch (e) {
+                  emitter(e.toString());
+                }
+              }
+            },
+            items: [
+              barItem('assets/icon/home.svg', tabs.index == 0 ? true : false),
+              barItem('assets/icon/search.svg', tabs.index == 1 ? true : false),
+              barItem('assets/icon/crown.svg', tabs.index == 2 ? true : false),
+              barItem(
+                  'assets/icon/chat.svg', tabs.index == 3 ? true : false, true),
+              barItem(
+                  'assets/icon/profile.svg', tabs.index == 4 ? true : false),
+            ],
+            activeColor: HexColor(primaryColor),
+            backgroundColor: HexColor(backgroundColor),
           ),
         ),
       ),
@@ -393,7 +385,7 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
       FeedPostController.getUserPostController(context);
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      NotificationController.retrievNotificationController(context);
+      NotificationController.retrievNotificationController(context, false);
     });
     UserProfileController.retrievProfileController(context, true);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
@@ -411,7 +403,7 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
 
       FeedPostController.downloadThumbs(
           data, context, MediaQuery.of(context).size.height);
-      emitter('caching first ${data.length} sent');
+      // emitter('caching first ${data.length} sent');
     });
   }
 

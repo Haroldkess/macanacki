@@ -46,8 +46,8 @@ class ProfileActionButtonNotThisUsers extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: SvgPicture.asset(
               icon,
-              height: isSwipe ? 30 : null,
-              width: isSwipe ? 30 : null,
+              height: isSwipe ? 22 : null,
+              width: isSwipe ? 22 : null,
               color: HexColor(color),
             ),
           ),
@@ -298,7 +298,6 @@ class UserProfileActions extends StatelessWidget {
                                   // ignore: use_build_context_synchronously
 
                                 } else {
-                                  
                                   List<ChatData> checker = chatWareStream
                                       .chatList2
                                       .where((element) =>
@@ -418,18 +417,58 @@ class UserProfileActions extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 InkWell(
+                  //   onTap: () => PageRouting.pushToPage(context, const EditProfile()),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      ProfileActionButtonNotThisUsers(
+                        icon: "assets/icon/email.svg",
+                        isSwipe: true,
+                        onClick: () async {
+                          UserProfileWare data = Provider.of<UserProfileWare>(
+                              context,
+                              listen: false);
+                          if (data.publicUserProfileModel.email == null ||
+                              data.publicUserProfileModel.email!.isEmpty) {
+                            showToast2(
+                                context, "Can't reach this user at the moment",
+                                isError: true);
+                          } else {
+                            final url =
+                                'mailTo:${data.publicUserProfileModel.email}?subject=${Uri.encodeFull("From a follower on Macanacki")}&body=${Uri.encodeFull("Sending from my device")}';
+
+                            UrlLaunchController.launchInWebViewOrVC(
+                                Uri.parse(url));
+                          }
+                        },
+                        color: "#FFC1D6",
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Container(
+                        width: 50,
+                        alignment: Alignment.center,
+                        // color: Colors.amber,
+                        child: AppText(
+                          text: "Email",
+                          fontWeight: FontWeight.w400,
+                          size: 12,
+                          color: HexColor("#797979"),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                InkWell(
                   onTap: () async {
-                
                     await followAction(context, data.publicUserProfileModel.id!,
                         data.publicUserProfileModel.username!);
                   },
                   child: AnimatedContainer(
                     duration: Duration(seconds: 2),
                     child: Column(
-                      mainAxisAlignment:
-                          data.publicUserProfileModel.gender == "Business"
-                              ? MainAxisAlignment.end
-                              : MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         ProfileActionButtonNotThisUsers(
                           icon: "assets/icon/follow.svg",
@@ -450,7 +489,7 @@ class UserProfileActions extends StatelessWidget {
                           height: 5,
                         ),
                         AnimatedContainer(
-                          width: 70,
+                          width: 50,
                           alignment: Alignment.center,
                           //color: Colors.amber,
                           duration: Duration(seconds: 2),
@@ -477,11 +516,11 @@ class UserProfileActions extends StatelessWidget {
                 InkWell(
                   onTap: () {},
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      const SizedBox(
-                        height: 4,
-                      ),
+                      // const SizedBox(
+                      //   height: 4,
+                      // ),
                       chatWareStream.loadStatus
                           ? Padding(
                               padding: const EdgeInsets.only(top: 8.0),
@@ -696,7 +735,7 @@ class UserProfileActions extends StatelessWidget {
                         height: 5,
                       ),
                       Container(
-                        width: 70,
+                        width: 50,
                         alignment: Alignment.center,
                         //color: Colors.amber,
                         child: AppText(

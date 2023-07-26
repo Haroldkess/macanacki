@@ -13,6 +13,8 @@ import '../backoffice/chat_office.dart';
 
 class ChatWare extends ChangeNotifier {
   bool _loadStatus = false;
+  ChatData? newChatData;
+  Conversation? newConversationData;
   String message = "Something went wrong";
   ScrollController controller = ScrollController();
   List<SockerUserModel> allSocketUsers = [];
@@ -31,6 +33,16 @@ class ChatWare extends ChangeNotifier {
   List<ChatData> get chatList => _chatList;
   AllConversationModel get chat => _chat;
 
+  void addNewChatData(newData) {
+    newChatData = newData;
+    notifyListeners();
+  }
+
+  void addNewConvoData(newData) {
+    newConversationData = newData;
+    notifyListeners();
+  }
+
   void addToSearch(String txt) {
     searchName = txt;
     notifyListeners();
@@ -47,7 +59,76 @@ class ChatWare extends ChangeNotifier {
     notifyListeners();
   }
 
-  void testAddToChatData(ChatData? dat) async {
+  Future<void> replaceChatData(ChatData? dat) async {
+    _chatList
+        .where((element) => element.id == dat!.id)
+        .first
+        .conversations!
+        .insert(0,dat!.conversations!.first);
+
+    //  tempData.;
+    // Conversation toBeAdded = Conversation(
+    //   id: dat!.conversations!.first.id,
+    //   body: dat.conversations!.first.body,
+    //   read: dat.conversations!.first.read,
+    //   senderId: dat.conversations!.first.senderId,
+    //   createdAt: dat.conversations!.first.createdAt,
+    //   updatedAt: dat.conversations!.first.updatedAt,
+    //   sender: dat.conversations!.first.sender,
+    //   media: dat.conversations!.first.media,
+    //   determineId: dat.id,
+    // );
+
+    // chatAdd.conversations!.insert(0, toBeAdded);
+
+    // ChatData newChat = chatAdd;
+
+    // for (var i = 0; i < tempData.length; i++) {
+    //   List<ChatData> forCheck =
+    //       tempData.where((element) => element.id == dat.id).toList();
+    //   if (tempData[i].id == dat.id) {
+
+    //     tempData.add(newChat);
+    //     _chatList = [];
+    //     _chatList.clear();
+    //     _chatList = tempData;
+    //     addMsg(toBeAdded);
+    //     notifyListeners();
+    //   }
+
+    //   // if(forCheck.isNotEmpty){
+
+    //   // }
+    // }
+
+    // _chatList
+    //     .where((element) {
+    //       return element.id == dat!.id;
+    //     })
+    //     .toList()
+    //     .first
+    //     .conversations!
+    //     .addAll(dat!.conversations!);
+
+    // dat.conversations!.forEach((element) async {
+    // Conversation data = Conversation(
+    //   id: dat.conversations!.first.id,
+    //   body: dat.conversations!.first.body,
+    //   read: dat.conversations!.first.read,
+    //   senderId: dat.conversations!.first.senderId,
+    //   createdAt: dat.conversations!.first.createdAt,
+    //   updatedAt: dat.conversations!.first.updatedAt,
+    //   sender: dat.conversations!.first.sender,
+    //   media: dat.conversations!.first.media,
+    //   determineId: dat.id,
+    // );
+
+    //   });
+
+    notifyListeners();
+  }
+
+  Future<void> testAddToChatData(ChatData? dat) async {
     List<ChatData> tempData = _chatList;
     ChatData chatAdd = tempData.where((element) => element.id == dat!.id).first;
     Conversation toBeAdded = Conversation(

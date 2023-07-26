@@ -15,6 +15,7 @@ import '../../../../../services/middleware/feed_post_ware.dart';
 import '../../../../../services/middleware/user_profile_ware.dart';
 import '../../../../allNavigation.dart';
 import '../../../../widgets/comment_modal.dart';
+import '../../../../widgets/user_post_views.dart';
 
 // class UserProfileFeed extends StatefulWidget {
 //   final int index;
@@ -185,21 +186,21 @@ class _UserProfileFeedState extends State<UserProfileFeed> {
                 List<Comment> talks = [];
 
                 final User user = User(
-                  id: post.user!.id,
-                  email: post.user!.email,
-                  username: post.user!.username,
-                  faceVerification: post.user!.faceVerification,
-                  dob: post.user!.dob,
-                  emailVerified: post.user!.emailVerified,
-                  registrationComplete: post.user!.registrationComplete,
-                  emailVerifiedAt: post.user!.emailVerifiedAt,
-                  createdAt: post.user!.createdAt,
-                  updatedAt: post.user!.updatedAt,
-                  gender: post.user!.gender,
-                  profilephoto: post.user!.profilephoto,
-                  noOfFollowers: post.user!.noOfFollowers,
-                  noOfFollowing: post.user!.noOfFollowing,
-                );
+                    id: post.user!.id,
+                    email: post.user!.email,
+                    username: post.user!.username,
+                    faceVerification: post.user!.faceVerification,
+                    dob: post.user!.dob,
+                    emailVerified: post.user!.emailVerified,
+                    registrationComplete: post.user!.registrationComplete,
+                    emailVerifiedAt: post.user!.emailVerifiedAt,
+                    createdAt: post.user!.createdAt,
+                    updatedAt: post.user!.updatedAt,
+                    gender: post.user!.gender,
+                    profilephoto: post.user!.profilephoto,
+                    noOfFollowers: post.user!.noOfFollowers,
+                    noOfFollowing: post.user!.noOfFollowing,
+                    verified: post.user!.verified!);
                 post.comments!.forEach((element) {
                   Comment comment = Comment(
                       id: element.id,
@@ -230,7 +231,7 @@ class _UserProfileFeedState extends State<UserProfileFeed> {
                     viewCount: post.viewCount,
                     mux: post.mux);
 
-                return TikTokView(
+                return UserTikTokView(
                   media: post.mux!,
                   data: data,
                   page: "user",

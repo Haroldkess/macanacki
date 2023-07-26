@@ -18,7 +18,6 @@ class TabProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  
   void addtapTrack() {
     tapTracker += 1;
     notifyListeners();
@@ -52,6 +51,7 @@ class TabProvider extends ChangeNotifier {
   Future disposeControl() async {
     if (controller != null) {
       controller!.dispose();
+      controller = null;
     }
 
     notifyListeners();

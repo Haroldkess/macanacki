@@ -60,7 +60,7 @@ class ChatController {
       // if (isForm) {
       //   ware.isLoading(false);
       // }
-      debugPrint("we  have fetched all Chat");
+   //   debugPrint("we  have fetched all Chat");
 
       // if (isForm) {
       //   ware.isLoading(false);
@@ -68,7 +68,7 @@ class ChatController {
       // ignore: use_build_context_synchronously
       //  showToast2(context, ware.message, isError: false);
     } else {
-      debugPrint("we  have fetched all Chat");
+   //   debugPrint("we  have fetched all Chat");
     }
 
     // if (isForm) {
@@ -91,7 +91,7 @@ class ChatController {
       if (isForm) {
         ware.isLoading(false);
       }
-      debugPrint("we  have fetched all Chat");
+    //  debugPrint("we  have fetched all Chat");
     } else {
       if (isForm) {
         ware.isLoading(false);
@@ -132,9 +132,9 @@ class ChatController {
     if (isDone) {
       // ignore: use_build_context_synchronously
       //  await retreiveUnread(context);
-      emitter("we read all unread messages");
+  //    emitter("we read all unread messages");
     } else {
-      emitter(" read all unread messages FAILED");
+  //    emitter(" read all unread messages FAILED");
       // ignore: use_build_context_synchronously
       // showToast2(context, "something went wrong", isError: false);
 
@@ -200,7 +200,7 @@ class ChatController {
         // if (isForm) {
         //   ware.isLoading(false);
         // }
-        debugPrint("we  have fetched all Chat");
+      //  debugPrint("we  have fetched all Chat");
       } else {
         // if (isForm) {
         //   ware.isLoading(false);
@@ -249,7 +249,7 @@ class ChatController {
 
     socket.onConnect((_) {
       ware.addSocket(socket);
-      print('Connection established');
+   //   print('Connection established');
     });
     ware.addSocket(socket);
 // socket.on("getMessage", (data) {
@@ -264,7 +264,7 @@ class ChatController {
     socket.onConnectError((err) => print(err));
     socket.onError((err) => print(err));
     socket.onDisconnect((_) => print('Connection Disconnection'));
-    print(socket.connected);
+   // print(socket.connected);
 
     // ignore: use_build_context_synchronously
   }
@@ -284,7 +284,7 @@ class ChatController {
 
         // print(data);
       } else {
-        print("null");
+      //  print("null");
       }
     });
   }
@@ -311,7 +311,7 @@ class ChatController {
 
         // handleMessage(context, data);
       } else {
-        print("null");
+      //  print("null");
       }
     });
   }
@@ -344,24 +344,6 @@ class ChatController {
       conversations: dat.conversations,
     );
 
-    // ChatData chatData = ChatData(
-    //   id: dat.id,
-    //   status: dat.status,
-    //   blockedBy: dat.blockedBy,
-    //   createdAt: dat.createdAt,
-    //   updatedAt: dat.updatedAt,
-    //   userOne: dat.userOne,
-    //   userOneId: dat.userOneId,
-    //   userOneMode: dat.userOneMode,
-    //   userOneVerify: dat.userOneVerify,
-    //   userOneProfilePhoto: dat.userOneProfilePhoto,
-    //   userTwo: dat.userTwo,
-    //   userTwoId: dat.userTwoId,
-    //   userTwoMode: dat.userTwoMode,
-    //   userTwoVerify: dat.userTwoVerify,
-    //   userTwoProfilePhoto: dat.userTwoProfilePhoto,
-    //   conversations: dat.conversations,
-    // );
     emitter(chatData.conversations!.first.body!);
 
     ware.testAddToChatData(chatData);
@@ -385,6 +367,42 @@ class ChatController {
     // emitter(jsonData.toString());
   }
 
+  static Future addToList(context, data) async {
+    ChatWare ware = Provider.of<ChatWare>(context, listen: false);
+    if (data != null && ware.newConversationData != null) {
+      //   emitter("Lets try this  ${data.userTwoProfilePhoto}");
+      List<Conversation> newConvo = data.first.conversations!;
+      newConvo.insert(0, data.last);
+
+      ChatData chatData = ChatData(
+        id: data.first.id,
+        status: data.first.status,
+        blockedBy: data.first.blockedBy,
+        createdAt: data.first.createdAt,
+        updatedAt: data.first.updatedAt,
+        userOne: data.first.userOne,
+        userOneId: data.first.userOneId,
+        userOneMode: data.first.userOneMode,
+        userOneVerify: data.first.userOneVerify,
+        userOneProfilePhoto: data.first.userOneProfilePhoto,
+        userTwo: data.first.userTwo,
+        userTwoId: data.first.userTwoId,
+        userTwoMode: data.first.userTwoMode,
+        userTwoVerify: data.first.userTwoVerify,
+        userTwoProfilePhoto: data.first.userTwoProfilePhoto,
+        conversations: newConvo,
+      );
+
+    //  emitter("Lets try this");
+
+      ware.replaceChatData(chatData);
+    } else {
+   //   emitter("did not work");
+    }
+    ware.addNewChatData(null);
+    ware.addNewConvoData(null);
+  }
+
   static Future sendMessageHandler(
       BuildContext context,
       TextEditingController msgController,
@@ -405,6 +423,8 @@ class ChatController {
         updatedAt: DateTime.now(),
         sender: user.userProfileModel.username,
         determineId: chat.id);
+    ware.addNewChatData(chat);
+    ware.addNewConvoData(data);
 
     ware.addMsg(data);
     msgController.clear();
@@ -418,13 +438,15 @@ class ChatController {
     );
 
     if (isSent) {
-      emitter("we call the socket here");
+      //   emitter("message is sent run extra functions");
+
+      // emitter("we call the socket here");
       var messageMap = {
         "from": int.tryParse(user.userProfileModel.id!.toString()),
         "to": int.tryParse(toId),
         "message": ware.messageReturn,
       };
-      emitter("Sent message ${ware.messageReturn}");
+      //   emitter("Sent message ${ware.messageReturn}");
       ware.socket!.emit(
         "sendMessage",
         messageMap,
@@ -432,19 +454,27 @@ class ChatController {
 
       ware.clearReturnMessage();
     } else {
-      emitter("WE DID NOT SEND TO SOCKET");
+      //  emitter("WE DID NOT SEND TO SOCKET");
     }
+    ReadAndRetrieve.handleunread(toId);
+    // retreiveUnread(context);
+    //readAll(context, int.tryParse(toId)!);
 
 //  { "data": [  {"socketId": "ePYULb5MpymhWOA4AAsU", "userId": 17}, {"socketId": "yZbBEpAggJLn0vDYAAsa", "userId": 16}]}
-
-    retreiveUnread(context);
-    readAll(context, int.tryParse(toId)!);
   }
 
   static Future<void> changeChatPage(context, int id) async {
     ChatWare ware = Provider.of<ChatWare>(context, listen: false);
     ware.chatPageChange(id);
 
-    emitter("Chat page id ${ware.chatPage}");
+   // emitter("Chat page id ${ware.chatPage}");
+  }
+}
+
+class ReadAndRetrieve extends ChatWare {
+  static Future<void> handleunread(id) async {
+    ChatWare ware = ChatWare();
+    ware.getAllUnreadFromApi();
+    ware.readAllFromApi(int.tryParse(id.toString())!);
   }
 }

@@ -145,23 +145,26 @@ commentModal(BuildContext context, int id, String page) async {
 }
 
 commentHeader(BuildContext context) {
-  return Row(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: [
-      BackButton(
-        color: HexColor(darkColor),
-      ),
-      AppText(
-        text: "Comments",
-        fontWeight: FontWeight.w700,
-        size: 20,
-        align: TextAlign.center,
-      ),
-      const BackButton(
-        color: Colors.transparent,
-        onPressed: null,
-      ),
-    ],
+  return Padding(
+    padding: const EdgeInsets.only(top: 15),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        BackButton(
+          color: HexColor(darkColor),
+        ),
+        AppText(
+          text: "Comments",
+          fontWeight: FontWeight.w700,
+          size: 20,
+          align: TextAlign.center,
+        ),
+        const BackButton(
+          color: Colors.transparent,
+          onPressed: null,
+        ),
+      ],
+    ),
   );
 }
 
@@ -444,8 +447,7 @@ class CommentTile extends StatelessWidget {
                                 text: e.username ?? "",
                                 fontWeight: FontWeight.w700,
                                 size: 12,
-                                maxLines: 1
-                                ,
+                                maxLines: 1,
                               ),
                             ),
                             // const SizedBox(

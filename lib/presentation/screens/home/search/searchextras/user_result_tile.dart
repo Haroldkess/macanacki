@@ -7,6 +7,7 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:macanacki/presentation/allNavigation.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
 import 'package:macanacki/presentation/widgets/text.dart';
+import 'package:macanacki/services/middleware/user_profile_ware.dart';
 import 'package:macanacki/services/temps/temps_id.dart';
 import 'package:numeral/numeral.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +16,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../../model/search_user_model.dart';
 import '../../../../../services/controllers/action_controller.dart';
 import '../../../../../services/middleware/action_ware.dart';
+import '../../../../uiproviders/screen/tab_provider.dart';
 import '../../../../widgets/loader.dart';
 import '../../../userprofile/user_profile_screen.dart';
 import '../../profile/profile_screen.dart';
@@ -27,13 +29,23 @@ class UserResultTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ActionWare stream = context.watch<ActionWare>();
+    UserProfileWare user = context.watch<UserProfileWare>();
     return InkWell(
       onTap: () async {
+        TabProvider action = Provider.of<TabProvider>(context, listen: false);
+
         SharedPreferences pref = await SharedPreferences.getInstance();
 
         if (pref.getString(userNameKey) == data.username) {
           // ignore: use_build_context_synchronously
-          PageRouting.pushToPage(context, const ProfileScreen());
+          //    PageRouting.pushToPage(context, const ProfileScreen());
+          action.tapTrack(0);
+          action.changeIndex(4);
+          action.pageController!.animateToPage(
+            4,
+            duration: const Duration(milliseconds: 1),
+            curve: Curves.easeIn,
+          );
         } else {
           if (data.username == null) {
             return;
@@ -129,7 +141,7 @@ class UserResultTile extends StatelessWidget {
               Expanded(
                 child: Align(
                   alignment: Alignment.centerRight,
-                  child: username == data.username
+                  child: user.userProfileModel.username == data.username
                       ? const SizedBox.shrink()
                       : InkWell(
                           onTap: () {

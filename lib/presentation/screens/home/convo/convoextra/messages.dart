@@ -9,8 +9,10 @@ import 'package:macanacki/presentation/constants/colors.dart';
 import 'package:macanacki/presentation/constants/params.dart';
 import 'package:macanacki/presentation/model/ui_model.dart';
 import 'package:macanacki/presentation/screens/home/convo/chat/chat_screen.dart';
+import 'package:macanacki/presentation/widgets/debug_emitter.dart';
 import 'package:macanacki/presentation/widgets/hexagon_avatar.dart';
 import 'package:macanacki/presentation/widgets/text.dart';
+import 'package:macanacki/services/controllers/chat_controller.dart';
 import 'package:macanacki/services/middleware/chat_ware.dart';
 import 'package:macanacki/services/temps/temp.dart';
 import 'package:provider/provider.dart';
@@ -28,8 +30,8 @@ class MessageList extends StatelessWidget {
   Widget build(BuildContext context) {
     ChatWare stream = context.watch<ChatWare>();
     List<ChatData> peopleChat = stream.chatList
-      ..sort((a, b) =>
-          b.conversations!.first.id!.compareTo(a.conversations!.first.id!));
+      ..sort((a, b) => b.conversations!.first.createdAt!
+          .compareTo(a.conversations!.first.createdAt!));
     return StreamBuilder(
         stream: null,
         builder: (context, snapshot) {
@@ -63,13 +65,22 @@ class MessageList extends StatelessWidget {
   }
 }
 
-class MessageWidget extends StatelessWidget {
+class MessageWidget extends StatefulWidget {
   ChatData people;
   MessageWidget({super.key, required this.people});
 
   @override
+  State<MessageWidget> createState() => _MessageWidgetState();
+}
+
+class _MessageWidgetState extends State<MessageWidget> {
+  @override
   Widget build(BuildContext context) {
     ChatWare streams = context.watch<ChatWare>();
+    // ChatData people = streams.chatList
+    //     .where((element) => element.id == peopleData.id)
+    //     .toList()
+    //     .first;
     String isOnline;
     int verify;
     dynamic id;
@@ -79,28 +90,38 @@ class MessageWidget extends StatelessWidget {
     var w = (size.width - 4 * 1) / 8;
     Temp temp = context.watch<Temp>();
 
-    if (people.conversations!.last.sender == temp.userName) {
-      isOnline = people.userTwoMode ?? "";
-      verify = people.userTwoVerify!;
-      id = people.userTwoId!;
+    if (widget.people.conversations!.last.sender == temp.userName) {
+      isOnline = widget.people.userTwoMode ?? "";
+      verify = widget.people.userTwoVerify!;
+      id = widget.people.userTwoId!;
     } else {
-      isOnline = people.userOneMode ?? "";
-      verify = people.userOneVerify!;
-      id = people.userOneId!;
+      isOnline = widget.people.userOneMode ?? "";
+      verify = widget.people.userOneVerify!;
+      id = widget.people.userOneId!;
     }
 
     return InkWell(
-      onTap: () => PageRouting.pushToPage(
+      onTap: () async {
+        ChatWare ware = Provider.of<ChatWare>(context, listen: false);
+        final data = await Navigator.push(
           context,
-          ChatScreen(
-            user: people,
-            chat: people.conversations!,
-            mode: people.conversations!.last.sender == temp.userName
-                ? people.userTwoMode ?? "offline"
-                : people.userOneMode ?? "offline",
-            isHome: true,
-            verified: verify,
-          )),
+          MaterialPageRoute(
+              builder: (context) => ChatScreen(
+                    user: widget.people,
+                    chat: widget.people.conversations!,
+                    mode: widget.people.conversations!.last.sender ==
+                            temp.userName
+                        ? widget.people.userTwoMode ?? "offline"
+                        : widget.people.userOneMode ?? "offline",
+                    isHome: true,
+                    verified: verify,
+                  )),
+        );
+
+        // ignore: use_build_context_synchronously
+        await ChatController.addToList(context, data);
+        //  emitter("hello ${data.first.conversations.first.body}");
+      },
       child: Container(
         height: 80,
         width: MediaQuery.of(context).size.width * 0.9,
@@ -117,9 +138,10 @@ class MessageWidget extends StatelessWidget {
                     children: [
                       dp(
                           context,
-                          people.conversations!.last.sender == temp.userName
-                              ? people.userTwoProfilePhoto!
-                              : people.userOneProfilePhoto!),
+                          widget.people.conversations!.last.sender ==
+                                  temp.userName
+                              ? widget.people.userTwoProfilePhoto!
+                              : widget.people.userOneProfilePhoto!),
                       Positioned(
                         right: 10.1,
                         top: 13.0,
@@ -156,17 +178,17 @@ class MessageWidget extends StatelessWidget {
                                   ),
                                   //  color: Colors.amber,
                                   child: Text(
-                                    people.conversations!.last.sender ==
+                                    widget.people.conversations!.last.sender ==
                                             temp.userName
-                                        ? people.userTwo!
-                                        : people.userOne!,
+                                        ? widget.people.userTwo!
+                                        : widget.people.userOne!,
                                     style: GoogleFonts.spartan(
                                         textStyle: TextStyle(
                                             fontWeight: FontWeight.w700,
-                                            color:
-                                                people.conversations!.isNotEmpty
-                                                    ? HexColor(darkColor)
-                                                    : HexColor("#8B8B8B"),
+                                            color: widget.people.conversations!
+                                                    .isNotEmpty
+                                                ? HexColor(darkColor)
+                                                : HexColor("#8B8B8B"),
                                             decorationStyle:
                                                 TextDecorationStyle.solid,
                                             fontSize: 13)),
@@ -191,12 +213,13 @@ class MessageWidget extends StatelessWidget {
                             width: width * 0.4,
                             child: AppText(
                               text: streams.chatList
-                                  .where((element) => element.id == people.id)
+                                  .where((element) =>
+                                      element.id == widget.people.id)
                                   .first
                                   .conversations!
                                   .first
                                   .body!,
-                              color: people.conversations!.isNotEmpty
+                              color: widget.people.conversations!.isNotEmpty
                                   ? HexColor(darkColor)
                                   : HexColor("#8B8B8B"),
                               size: 12,
@@ -223,10 +246,10 @@ class MessageWidget extends StatelessWidget {
 
                             //  color: Colors.amber,
                             child: AppText(
-                              text: Operations.times(
-                                      people.conversations!.first.createdAt!)
+                              text: Operations.times(widget
+                                      .people.conversations!.first.createdAt!)
                                   .toString(),
-                              color: people.conversations!.isNotEmpty
+                              color: widget.people.conversations!.isNotEmpty
                                   ? HexColor(darkColor)
                                   : HexColor("#8B8B8B"),
                               size: 10,
@@ -237,11 +260,13 @@ class MessageWidget extends StatelessWidget {
                             )),
                       ),
 
-                      people.conversations!.first.sender != temp.userName &&
+                      widget.people.conversations!.first.sender !=
+                                  temp.userName &&
                               streams.unreadMsgs
                                   .where((element) =>
                                       element.senderId ==
-                                      people.conversations!.first.senderId)
+                                      widget
+                                          .people.conversations!.first.senderId)
                                   .toList()
                                   .isNotEmpty
                           ? Container(
@@ -255,8 +280,8 @@ class MessageWidget extends StatelessWidget {
                                   text: streams.unreadMsgs
                                               .where((element) =>
                                                   element.senderId ==
-                                                  people.conversations!.first
-                                                      .senderId)
+                                                  widget.people.conversations!
+                                                      .first.senderId)
                                               .first
                                               .totalUnread! >
                                           99
@@ -264,7 +289,7 @@ class MessageWidget extends StatelessWidget {
                                       : streams.unreadMsgs
                                           .where((element) =>
                                               element.senderId ==
-                                              people.conversations!.first
+                                              widget.people.conversations!.first
                                                   .senderId)
                                           .first
                                           .totalUnread!

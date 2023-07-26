@@ -42,7 +42,7 @@ class _NotificationListState extends State<NotificationList> {
     super.initState();
 
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-      NotificationController.retrievNotificationController(context);
+      NotificationController.retrievNotificationController(context, true);
     });
   }
 }

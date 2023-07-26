@@ -60,7 +60,7 @@ class _UsersProfileState extends State<UsersProfile>
                         SvgPicture.asset(
                           "assets/icon/notification.svg",
                         ),
-                        Positioned(
+                      notify.readAll ? SizedBox.shrink():  Positioned(
                           right: 0,
                           child: Align(
                             alignment: Alignment.topRight,

@@ -119,13 +119,13 @@ class _NewDesignTestState extends State<NewDesignTest> {
                                     if (action.controller!.value.isBuffering ||
                                         action.controller!.value.isPlaying) {
                                       if (mounted) {
-                                        action.pauseControl();
                                         action.tap(true);
+                                        action.pauseControl();
                                       }
                                     } else {
                                       if (mounted) {
-                                        action.pauseControl();
                                         action.tap(true);
+                                        action.pauseControl();
                                       }
 
                                       //  return;
@@ -143,10 +143,14 @@ class _NewDesignTestState extends State<NewDesignTest> {
                                   if (action.controller!.value.isBuffering ||
                                       action.controller!.value.isPlaying) {
                                     if (mounted) {
-                                      action.pauseControl();
                                       action.tap(true);
+                                      action.pauseControl();
                                     }
+                                    // action.tap(true);
+                                    // action.pauseControl();
                                   } else {
+                                    // action.tap(true);
+                                    // action.pauseControl();
                                     //  return;
                                   }
                                 }
@@ -174,6 +178,10 @@ class _NewDesignTestState extends State<NewDesignTest> {
                                 UsersProfile(
                                   username: widget.data.user!.username!,
                                 ));
+                            if (mounted) {
+                              action.tap(true);
+                              action.pauseControl();
+                            }
                           }
                         },
                         child: Row(
@@ -206,14 +214,17 @@ class _NewDesignTestState extends State<NewDesignTest> {
                             Row(
                               children: [
                                 Container(
-                                  constraints:
-                                      const BoxConstraints(maxWidth: 100),
+                                  constraints: BoxConstraints(maxWidth: 130),
+                                  //   color: Colors.amber,
                                   child: AppText(
                                     text: widget.data.user!.username!,
-                                    size: 15,
+                                    size: 13,
                                     fontWeight: FontWeight.w700,
                                     maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
+                                    overflow:
+                                        widget.data.user!.username!.length > 20
+                                            ? TextOverflow.ellipsis
+                                            : TextOverflow.clip,
                                     color: HexColor(backgroundColor),
                                   ),
                                 ),

@@ -7,17 +7,20 @@ import 'package:provider/provider.dart';
 
 import '../../presentation/widgets/debug_emitter.dart';
 
+const String lastMsgKey = "lastMsgKey";
+const String readAllKey = "readAllKey";
+
 class NotificationController {
   static Future<void> retrievNotificationController(
-      BuildContext context) async {
+      BuildContext context, bool fromPage) async {
+      
     NotificationWare ware =
         Provider.of<NotificationWare>(context, listen: false);
 
     ware.isLoading(true);
 
-    bool isDone = await ware
-        .getNotificationFromApi()
-        .whenComplete(() => emitter("everything from api and provider is done"));
+    bool isDone = await ware.getNotificationFromApi(fromPage).whenComplete(
+        () => emitter("everything from api and provider is done"));
 
     if (isDone) {
       ware.isLoading(false);

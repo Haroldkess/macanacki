@@ -92,9 +92,8 @@ class FeedPostController {
     ware.disposeValue2();
     ware.isLoading2(true);
     // ignore: use_build_context_synchronously
-    bool isDone = await ware
-        .getUserPostFromApi()
-        .whenComplete(() => emitter("everything from api and provider is done"));
+    bool isDone = await ware.getUserPostFromApi().whenComplete(
+        () => emitter("everything from api and provider is done"));
     // ignore: use_build_context_synchronously
     //  UserProfileController.retrievProfileController(context, false);
 
@@ -133,8 +132,8 @@ class FeedPostController {
       emitter("Downloading to $_localPath");
       List<String> toBeAdded = [];
       List<String> val = [];
-      emitter(
-          "----------------STARTING THE CACHING PROCESS ---------------------------------");
+      // emitter(
+      //     "----------------STARTING THE CACHING PROCESS ---------------------------------");
       await Future.forEach(data, (element) async {
         // late File hold;
 
@@ -146,7 +145,7 @@ class FeedPostController {
                 return el.media!.contains(element.media![i]);
               }).toList();
               if (check.isNotEmpty) {
-                emitter("======== Already exists  ========");
+                //   emitter("======== Already exists  ========");
               } else {
                 var splitStrings = element.media![i].split(
                     "https:macarn.s3.eu-west-2.amazonaws.com/post/medias/");
@@ -187,7 +186,7 @@ class FeedPostController {
                   ).toJson();
                   var jsonData = jsonDecode(jsonEncode(newPost));
                   FeedPost fresh = FeedPost.fromJson(jsonData);
-                  emitter("======== DONE BY CACHE${fresh.media2}  ========");
+                  //   emitter("======== DONE BY CACHE${fresh.media2}  ========");
 
                   await ware
                       .addCached(
@@ -196,10 +195,10 @@ class FeedPostController {
                       .whenComplete(() => val.clear());
                 }
 
-                emitter("Download Completed. ${finalPath.path}");
+                //   emitter("Download Completed. ${finalPath.path}");
               }
             } catch (e) {
-              emitter("Download Failed.\n\n" + e.toString());
+              //  emitter("Download Failed.\n\n" + e.toString());
             }
           }
 
@@ -215,11 +214,11 @@ class FeedPostController {
 
   static Future<void> downloadThumbs(
       List<FeedPost> data, BuildContext context, height) async {
-    emitter("-------------------------------------------------");
+    // emitter("-------------------------------------------------");
     FeedPostWare ware = Provider.of<FeedPostWare>(context, listen: false);
 
-    emitter(
-        "----------------STARTING THE CACHING PROCESS ---------------------------------");
+    // emitter(
+    //     "----------------STARTING THE CACHING PROCESS ---------------------------------");
     List<String> storeThumb = [];
     await Future.forEach(data, (element) async {
       // late File hold;
@@ -233,7 +232,7 @@ class FeedPostController {
             }).toList();
             if (element.media![i].contains(".mp4")) {
               if (find.isNotEmpty) {
-                emitter("thumbnail Exists already");
+                //  emitter("thumbnail Exists already");
               } else {
                 String? thumbs = await genThumbnail(element.media![i], height);
                 String newThumb = thumbs! + element.media![i];
@@ -248,7 +247,7 @@ class FeedPostController {
               // emitter("not a video we are skip[ping] this one ");
             }
           } catch (e) {
-            emitter("Download Failed.\n\n" + e.toString());
+            // emitter("Download Failed.\n\n" + e.toString());
           }
         }
 
@@ -257,7 +256,9 @@ class FeedPostController {
         //       .whenComplete(() => emitter(" Can continue"));
         // }
       }
-    }).whenComplete(() => emitter("CACHE COMPLETED WAITING FOR NEXT BATCH"));
+    }).whenComplete(() {
+     // emitter("CACHE COMPLETED WAITING FOR NEXT BATCH");
+    });
 
     return;
   }
@@ -274,9 +275,9 @@ class FeedPostController {
         quality: 75,
       );
       name = fileName!;
-      emitter(fileName.toString());
+   //   emitter(fileName.toString());
     } catch (e) {
-      emitter(e.toString());
+     // emitter(e.toString());
     }
 
     return name;

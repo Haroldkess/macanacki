@@ -6,6 +6,8 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:macanacki/services/backoffice/notification_office.dart';
+import 'package:macanacki/services/controllers/notification_controller.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../presentation/widgets/debug_emitter.dart';
 
@@ -16,14 +18,16 @@ class NotificationWare extends ChangeNotifier {
   List<NotifyData> notifyData = [];
 
   bool get loadStatus => _loadStatus;
+  bool readAll = false;
 
   void isLoading(bool isLoad) {
     _loadStatus = isLoad;
     notifyListeners();
   }
 
-  Future<bool> getNotificationFromApi() async {
+  Future<bool> getNotificationFromApi(bool fromPage) async {
     late bool isSuccessful;
+    SharedPreferences pref = await SharedPreferences.getInstance();
     try {
       http.Response? response = await getNotification()
           .whenComplete(() => emitter("notificationi gotten successfully"));
@@ -36,6 +40,36 @@ class NotificationWare extends ChangeNotifier {
         var incomingData = NotificationModel.fromJson(jsonData);
         notification = incomingData;
         notifyData = notification.data!;
+        //  emitter(notifyData.first.body!);
+
+        if (fromPage) {
+          if (pref.containsKey(lastMsgKey)) {
+            if (pref.getString(lastMsgKey)! == notifyData.first.body!) {
+              readAll = true;
+              pref.setBool(readAllKey, true);
+              pref.setString(lastMsgKey, notifyData.first.body!);
+            }
+          } else {
+            readAll = false;
+            pref.setBool(readAllKey, false);
+            pref.setString(lastMsgKey, notifyData.first.body!);
+          }
+        } else {
+          if (pref.containsKey(lastMsgKey)) {
+            if (pref.getString(lastMsgKey)! == notifyData.first.body!) {
+              pref.setBool(readAllKey, true);
+              pref.setString(lastMsgKey, notifyData.first.body!);
+              readAll = true;
+            } else {
+              pref.setBool(readAllKey, false);
+              pref.setString(lastMsgKey, notifyData.first.body!);
+              readAll = false;
+            }
+          } else {
+            pref.setBool(readAllKey, false);
+            pref.setString(lastMsgKey, "");
+          }
+        }
 
         isSuccessful = true;
       } else {

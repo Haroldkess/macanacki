@@ -116,7 +116,7 @@ class _FeedVideoHolderState extends State<FeedVideoHolder> {
                       return val.contains(widget.thumbLink);
                     }).toList();
                     if (data.isEmpty) {
-                      emitter("nothing found");
+                      //  emitter("nothing found");
                     } else {
                       var val = data.first.split(widget.thumbLink);
 
@@ -128,7 +128,7 @@ class _FeedVideoHolderState extends State<FeedVideoHolder> {
                       if (!widget.controller.value.isPlaying &&
                           tabs.isTapped == false) {
                         if (mounted) {
-                          emitter("played");
+                          // emitter("played");
                           WidgetsBinding.instance.addPostFrameCallback((_) {
                             widget.controller.play();
                           });
@@ -321,7 +321,7 @@ class _FeedVideoHolderState extends State<FeedVideoHolder> {
                       return val.contains(widget.thumbLink);
                     }).toList();
                     if (data.isEmpty) {
-                      emitter("nothing found");
+                      //   emitter("nothing found");
                     } else {
                       var val = data.first.split(widget.thumbLink);
 

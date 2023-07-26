@@ -65,12 +65,14 @@ class _PublicGridViewItemsState extends State<PublicGridViewItems> {
         quality: 100,
       );
 
-     // emitter(fileName.toString());
-      setState(() {
-        thumbnail = fileName;
-      });
+      // emitter(fileName.toString());
+      if (mounted) {
+        setState(() {
+          thumbnail = fileName;
+        });
+      }
     } catch (e) {
-    emitter(e.toString());
+      emitter(e.toString());
     }
   }
 
@@ -78,7 +80,7 @@ class _PublicGridViewItemsState extends State<PublicGridViewItems> {
   Widget build(BuildContext context) {
     return InkWell(
       splashColor: HexColor(primaryColor),
-      onTap: () {
+      onTap: () async {
         PageRouting.pushToPage(
             context,
             PublicUserProfileFeed(

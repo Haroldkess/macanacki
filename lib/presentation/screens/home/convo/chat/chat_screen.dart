@@ -60,6 +60,12 @@ class _ChatScreenState extends State<ChatScreen> {
     ChatController.initSocket(context)
         .whenComplete(() => ChatController.addUserToSocket(context));
     super.initState();
+    if (widget.isHome) {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        ChatWare ware = Provider.of<ChatWare>(context, listen: false);
+        ware.addNewChatData(widget.user);
+      });
+    }
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ChatWare chat = Provider.of<ChatWare>(context, listen: false);
@@ -204,6 +210,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
     return WillPopScope(
       onWillPop: () {
+        ChatWare ware = Provider.of<ChatWare>(context, listen: false);
         setState(() {
           leaving = true;
         });
@@ -211,7 +218,7 @@ class _ChatScreenState extends State<ChatScreen> {
           ChatController.changeChatPage(context, 0);
         }
 
-        Navigator.pop(context);
+        Navigator.pop(context, [widget.user, ware.newConversationData]);
         return Future.value(false);
       },
       child: SafeArea(
@@ -389,13 +396,14 @@ class _ChatScreenState extends State<ChatScreen> {
             leading: BackButton(
               color: HexColor("#322929"),
               onPressed: () async {
+                  ChatWare ware = Provider.of<ChatWare>(context, listen: false);
                 setState(() {
                   leaving = true;
                 });
                 if (myChat.chatPage != 0) {
                   ChatController.changeChatPage(context, 0);
                 }
-                Navigator.pop(context);
+                Navigator.pop(context, [widget.user, ware.newConversationData]);
               },
             ),
             actions: [
