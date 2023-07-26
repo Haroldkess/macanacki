@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
@@ -186,6 +187,9 @@ class _ProfileScreenState extends State<ProfileScreen>
   void initState() {
     super.initState();
     _getUserPost(false);
+     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        systemNavigationBarIconBrightness: Brightness.dark,
+        systemNavigationBarColor: HexColor(backgroundColor)));
   }
 
   @override

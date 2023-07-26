@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:macanacki/presentation/widgets/text.dart';
@@ -169,6 +170,9 @@ class _UsersProfileState extends State<UsersProfile>
       ChatWare chatWare = Provider.of<ChatWare>(context, listen: false);
       chatWare.isLoading(false);
     });
+     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        systemNavigationBarIconBrightness: Brightness.dark,
+        systemNavigationBarColor: HexColor(backgroundColor)));
   }
 
   Future<void> getData(bool isRef) async {

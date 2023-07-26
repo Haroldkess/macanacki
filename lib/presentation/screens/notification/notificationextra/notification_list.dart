@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:macanacki/model/notification_model.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
@@ -44,5 +45,9 @@ class _NotificationListState extends State<NotificationList> {
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
       NotificationController.retrievNotificationController(context, true);
     });
+
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        systemNavigationBarIconBrightness: Brightness.dark,
+        systemNavigationBarColor: HexColor(backgroundColor)));
   }
 }

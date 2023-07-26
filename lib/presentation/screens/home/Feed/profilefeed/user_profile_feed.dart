@@ -2,8 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:macanacki/model/feed_post_model.dart';
 import 'package:macanacki/model/profile_feed_post.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
 import 'package:macanacki/presentation/constants/params.dart';
 import 'package:macanacki/presentation/screens/home/Feed/profilefeed/profilefeedextra/post_view.dart';
 import 'package:macanacki/presentation/widgets/text.dart';
@@ -128,6 +131,9 @@ class _UserProfileFeedState extends State<UserProfileFeed> {
       print("hey");
       provide.changeUserIndex(widget.index);
     });
+     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        systemNavigationBarIconBrightness: Brightness.dark,
+        systemNavigationBarColor: HexColor(backgroundColor)));
   }
 
   @override

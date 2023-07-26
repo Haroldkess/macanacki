@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:macanacki/model/feed_post_model.dart';
 import 'package:macanacki/presentation/allNavigation.dart';
 import 'package:macanacki/presentation/constants/params.dart';
@@ -13,6 +15,7 @@ import 'package:provider/provider.dart';
 import '../../../../../model/public_profile_model.dart';
 import '../../../../../services/middleware/feed_post_ware.dart';
 import '../../../../../services/middleware/user_profile_ware.dart';
+import '../../../../constants/colors.dart';
 import '../../../../widgets/comment_modal.dart';
 import '../../../../widgets/text.dart';
 import '../../../../widgets/user_post_views.dart';
@@ -83,6 +86,9 @@ class _PublicUserProfileFeedState extends State<PublicUserProfileFeed> {
       print("hey");
       provide.changePublicIndex(widget.index);
     });
+     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        systemNavigationBarIconBrightness: Brightness.dark,
+        systemNavigationBarColor: HexColor(backgroundColor)));
   }
 
   @override
