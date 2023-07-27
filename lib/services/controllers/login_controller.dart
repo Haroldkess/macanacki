@@ -17,6 +17,7 @@ import 'package:macanacki/services/controllers/action_controller.dart';
 import 'package:macanacki/services/controllers/chat_controller.dart';
 import 'package:macanacki/services/controllers/feed_post_controller.dart';
 import 'package:macanacki/services/controllers/mode_controller.dart';
+import 'package:macanacki/services/controllers/notification_controller.dart';
 import 'package:macanacki/services/controllers/plan_controller.dart';
 import 'package:macanacki/services/controllers/user_profile_controller.dart';
 import 'package:macanacki/services/controllers/verify_controller.dart';
@@ -37,6 +38,12 @@ class LoginController {
   static Future<void> loginUserController(BuildContext context, String email,
       String password, bool isSplash) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
+    if (!pref.containsKey(readAllKey)) {
+      pref.setBool(readAllKey, false);
+    }
+    if (!pref.containsKey(lastMsgKey)) {
+      pref.setString(lastMsgKey, "");
+    }
     // ignore: use_build_context_synchronously
     await requestPermission();
     // String? _token = await FirebaseMessaging.instance.getToken();

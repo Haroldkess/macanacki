@@ -352,6 +352,9 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      NotificationController.checkNotification(context);
+    });
     // SystemChrome.setPreferredOrientations(
     //       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     //    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);

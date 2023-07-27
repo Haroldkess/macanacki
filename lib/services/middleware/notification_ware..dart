@@ -25,6 +25,11 @@ class NotificationWare extends ChangeNotifier {
     notifyListeners();
   }
 
+  void addNotifyStat(bool isLoad) {
+    readAll = isLoad;
+    notifyListeners();
+  }
+
   Future<bool> getNotificationFromApi(bool fromPage) async {
     late bool isSuccessful;
     SharedPreferences pref = await SharedPreferences.getInstance();
@@ -44,30 +49,41 @@ class NotificationWare extends ChangeNotifier {
 
         if (fromPage) {
           if (pref.containsKey(lastMsgKey)) {
-            if (pref.getString(lastMsgKey)! == notifyData.first.body!) {
+            if (pref
+                .getString(lastMsgKey)!
+                .toLowerCase()
+                .contains(notifyData.first.body!.toLowerCase())) {
+              log("found last message${notifyData.first.body!}");
               readAll = true;
               pref.setBool(readAllKey, true);
               pref.setString(lastMsgKey, notifyData.first.body!);
+            } else {
+              readAll = false;
+              pref.setBool(readAllKey, false);
+              pref.setString(lastMsgKey, notifyData.first.body!);
             }
           } else {
-            readAll = false;
+            // readAll = false;
             pref.setBool(readAllKey, false);
             pref.setString(lastMsgKey, notifyData.first.body!);
           }
         } else {
           if (pref.containsKey(lastMsgKey)) {
-            if (pref.getString(lastMsgKey)! == notifyData.first.body!) {
+            if (pref
+                .getString(lastMsgKey)!
+                .toLowerCase()
+                .contains(notifyData.first.body!.toLowerCase())) {
               pref.setBool(readAllKey, true);
               pref.setString(lastMsgKey, notifyData.first.body!);
               readAll = true;
             } else {
+              readAll = false;
               pref.setBool(readAllKey, false);
               pref.setString(lastMsgKey, notifyData.first.body!);
-              readAll = false;
             }
           } else {
             pref.setBool(readAllKey, false);
-            pref.setString(lastMsgKey, "");
+            pref.setString(lastMsgKey, notifyData.first.body!);
           }
         }
 
