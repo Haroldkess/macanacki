@@ -19,6 +19,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
 import '../../model/feed_post_model.dart';
+import '../../services/controllers/feed_post_controller.dart';
 import '../../services/controllers/url_launch_controller.dart';
 import '../../services/temps/temps_id.dart';
 import '../constants/string.dart';
@@ -69,6 +70,13 @@ class _UserTikTokViewState extends State<UserTikTokView>
   void initState() {
     super.initState();
     initPref();
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      // FeedPostWare post = Provider.of<FeedPostWare>(context, listen: false);
+
+      FeedPostController.getSingleThumb(
+          widget.urls, context, MediaQuery.of(context).size.height);
+      // emitter('caching first ${data.length} sent');
+    });
 
 //  muxClient.initializeDio();
 
@@ -89,7 +97,7 @@ class _UserTikTokViewState extends State<UserTikTokView>
     ).animate(controller);
 
     if (widget.media.length < 2) {
-    //  log("here ooooooo");
+      //  log("here ooooooo");
       //  debugPrint("This is the url ${widget.data.media!.first}");
       if (widget.media == null || widget.media.isEmpty) return;
       if (!widget.media.first.contains("https")) {
@@ -240,7 +248,7 @@ class _UserTikTokViewState extends State<UserTikTokView>
                                 data: widget.data,
                                 isHome: widget.isHome,
                                 thumbLinks: widget.urls,
-                                 page: widget.page,
+                                page: widget.page,
                               )))
               ],
             ),

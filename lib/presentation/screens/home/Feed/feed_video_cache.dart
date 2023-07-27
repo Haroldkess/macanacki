@@ -120,7 +120,7 @@ class _FeedVideoHolderPrivateState extends State<FeedVideoHolderPrivate> {
                 return val.contains(widget.thumbLink);
               }).toList();
               if (data.isEmpty) {
-                emitter("nothing found ${widget.controller.value.isPlaying}");
+             //   emitter("nothing found ${widget.controller.value.isPlaying}");
               } else {
                 var val = data.first.split(widget.thumbLink);
 

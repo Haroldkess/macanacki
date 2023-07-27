@@ -216,7 +216,7 @@ class _NewDesignTestState extends State<NewDesignTest> {
                               children: [
                                 Container(
                                   constraints: const BoxConstraints(
-                                      maxWidth: 139, minWidth: 100),
+                                      maxWidth: 139,),
                                   //   color: Colors.amber,
                                   child: AppText(
                                     text: widget.data.user!.username!,

@@ -257,10 +257,30 @@ class FeedPostController {
         // }
       }
     }).whenComplete(() {
-     // emitter("CACHE COMPLETED WAITING FOR NEXT BATCH");
+      // emitter("CACHE COMPLETED WAITING FOR NEXT BATCH");
     });
 
     return;
+  }
+
+  static Future<void> getSingleThumb(List<String> url, context, height) async {
+    FeedPostWare ware = Provider.of<FeedPostWare>(context, listen: false);
+
+    List<String> storeThumb = [];
+    Future.forEach(url, (element) async {
+      List<FeedPost> check = ware.cachedPosts.where((el) {
+        return el.media!.contains(element);
+      }).toList();
+      if (check.isNotEmpty) {
+        //   emitter("======== Already exists  ========");
+      } else {
+        String? thumbs = await genThumbnail(element, height);
+        String newThumb = thumbs! + element;
+        storeThumb.add(newThumb);
+      }
+    });
+
+    ware.addThumbs(storeThumb).whenComplete(() => storeThumb.clear());
   }
 
   static Future<String?> genThumbnail(String url, double height) async {
@@ -275,9 +295,9 @@ class FeedPostController {
         quality: 75,
       );
       name = fileName!;
-   //   emitter(fileName.toString());
+      //   emitter(fileName.toString());
     } catch (e) {
-     // emitter(e.toString());
+      // emitter(e.toString());
     }
 
     return name;
