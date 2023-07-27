@@ -61,6 +61,14 @@ class TabProvider extends ChangeNotifier {
     controllerHolder = control;
     notifyListeners();
   }
+    Future disposeHolldControl() async {
+    if (controllerHolder != null) {
+      controllerHolder!.dispose();
+      controllerHolder = null;
+    }
+
+    notifyListeners();
+  }
 
   Future pauseControl() async {
     controller!.pause();
@@ -69,6 +77,16 @@ class TabProvider extends ChangeNotifier {
 
   Future playControl() async {
     controller!.play();
+    notifyListeners();
+  }
+
+  Future pauseHoldControl() async {
+    controllerHolder!.pause();
+    notifyListeners();
+  }
+
+  Future playHoldControl() async {
+    controllerHolder!.play();
     notifyListeners();
   }
 

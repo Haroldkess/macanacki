@@ -447,13 +447,13 @@ class UserProfileActions extends StatelessWidget {
                         height: 5,
                       ),
                       Container(
-                        width: 50,
+                         constraints: BoxConstraints(maxWidth: 70, minWidth: 50) ,
                         alignment: Alignment.center,
                         // color: Colors.amber,
                         child: AppText(
                           text: "Email",
                           fontWeight: FontWeight.w400,
-                          size: 12,
+                          size: 10,
                           color: HexColor("#797979"),
                         ),
                       ),
@@ -489,7 +489,7 @@ class UserProfileActions extends StatelessWidget {
                           height: 5,
                         ),
                         AnimatedContainer(
-                          width: 50,
+                         constraints: BoxConstraints(maxWidth: 70, minWidth: 50) ,
                           alignment: Alignment.center,
                           //color: Colors.amber,
                           duration: Duration(seconds: 2),
@@ -499,13 +499,13 @@ class UserProfileActions extends StatelessWidget {
                               ? AppText(
                                   text: "Follow",
                                   fontWeight: FontWeight.w400,
-                                  size: 12,
+                                  size: 10,
                                   color: HexColor("#797979"),
                                 )
                               : AppText(
                                   text: "Unfollow",
                                   fontWeight: FontWeight.w400,
-                                  size: 12,
+                                  size: 10,
                                   color: HexColor("#797979"),
                                 ),
                         ),
@@ -735,13 +735,13 @@ class UserProfileActions extends StatelessWidget {
                         height: 5,
                       ),
                       Container(
-                        width: 50,
+                        constraints: BoxConstraints(maxWidth: 70, minWidth: 50) ,
                         alignment: Alignment.center,
                         //color: Colors.amber,
                         child: AppText(
                           text: chatWareStream.loadStatus ? "" : "Message",
                           fontWeight: FontWeight.w400,
-                          size: 12,
+                          size: 10,
                           color: HexColor("#797979"),
                         ),
                       ),

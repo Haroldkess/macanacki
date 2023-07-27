@@ -73,7 +73,9 @@ class _FeedVideoHolderPrivateState extends State<FeedVideoHolderPrivate> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       TabProvider tabs = Provider.of<TabProvider>(context, listen: false);
 
-      tabs.addControl(widget.controller);
+      tabs.addHoldControl(widget.controller);
+
+      tabs.tap(true);
 
       //   tabs.tap(false);
     });
@@ -90,9 +92,8 @@ class _FeedVideoHolderPrivateState extends State<FeedVideoHolderPrivate> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         TabProvider tabs = Provider.of<TabProvider>(context, listen: false);
-        tabs.disposeControl();
+        tabs.disposeHolldControl();
       }
-
       //   //tabs.tap(false);
     });
 //}
@@ -124,6 +125,18 @@ class _FeedVideoHolderPrivateState extends State<FeedVideoHolderPrivate> {
                 var val = data.first.split(widget.thumbLink);
 
                 // emitter(val.first + "  Second" + val.last);
+              }
+              if (widget.controller.value.isInitialized ||
+                  widget.controller.value.duration <
+                      const Duration(milliseconds: 500)) {
+                if (!widget.controller.value.isPlaying && isTapped == false) {
+                  if (mounted) {
+                    // emitter("played");
+                    // WidgetsBinding.instance.addPostFrameCallback((_) {
+                    //   widget.controller.play();
+                    // });
+                  }
+                }
               }
 
               return data.isEmpty
@@ -269,7 +282,11 @@ class _FeedVideoHolderPrivateState extends State<FeedVideoHolderPrivate> {
 
   @override
   void didChangeDependencies() {
-    widget.controller.pause();
+    if (mounted) {
+      if (isTapped == false) {
+        widget.controller.play();
+      }
+    }
     super.didChangeDependencies();
   }
 }

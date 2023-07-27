@@ -50,7 +50,7 @@ class PublicProfileFollowersStatistics extends StatelessWidget {
                                   null
                               ? 10
                               : stream.publicUserProfileModel.noOfFollowers!)
-                          .format(),
+                          .format(fractionDigits: 1),
                       fontWeight: FontWeight.w600,
                       size: 18,
                     ),
@@ -91,7 +91,7 @@ class PublicProfileFollowersStatistics extends StatelessWidget {
                                   null
                               ? 10
                               : stream.publicUserProfileModel.noOfFollowing!)
-                          .format(),
+                          .format(fractionDigits: 1),
                       fontWeight: FontWeight.w600,
                       size: 18,
                     ),

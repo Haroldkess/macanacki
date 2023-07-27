@@ -61,30 +61,33 @@ class _UsersProfileState extends State<UsersProfile>
                         SvgPicture.asset(
                           "assets/icon/notification.svg",
                         ),
-                      notify.readAll ? SizedBox.shrink():  Positioned(
-                          right: 0,
-                          child: Align(
-                            alignment: Alignment.topRight,
-                            child: Container(
-                              height: 15,
-                              width: 20,
-                              decoration: const BoxDecoration(
-                                  shape: BoxShape.circle, color: Colors.red),
-                              child: Padding(
-                                padding: const EdgeInsets.all(0.0),
-                                child: Center(
-                                  child: AppText(
-                                    text: notify.notifyData.length > 9
-                                        ? "9+"
-                                        : notify.notifyData.length.toString(),
-                                    size: 8,
-                                    fontWeight: FontWeight.bold,
+                        notify.readAll
+                            ? SizedBox.shrink()
+                            : Positioned(
+                                right: 5,
+                                child: Align(
+                                  alignment: Alignment.topCenter,
+                                  child: Container(
+                                    height: 10,
+                                    width: 10,
+                                    decoration: const BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.red),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(0.0),
+                                      child: Center(
+                                        child: AppText(
+                                          text: notify.notifyData.length > 9
+                                              ? ""
+                                              : "",
+                                          size: 8,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ),
-                          ),
-                        )
+                              )
                       ],
                     ),
 
@@ -170,7 +173,7 @@ class _UsersProfileState extends State<UsersProfile>
       ChatWare chatWare = Provider.of<ChatWare>(context, listen: false);
       chatWare.isLoading(false);
     });
-     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
         systemNavigationBarIconBrightness: Brightness.dark,
         systemNavigationBarColor: HexColor(backgroundColor)));
   }

@@ -8,6 +8,7 @@ import 'package:macanacki/model/profile_feed_post.dart';
 import 'package:macanacki/presentation/allNavigation.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
 import 'package:macanacki/presentation/uiproviders/screen/tab_provider.dart';
+import 'package:macanacki/presentation/widgets/debug_emitter.dart';
 import 'package:numeral/numeral.dart';
 import 'package:provider/provider.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
@@ -16,6 +17,7 @@ import '../../../../../model/feed_post_model.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../../../../../services/middleware/user_profile_ware.dart';
+import '../../../../operations.dart';
 import '../../../../widgets/text.dart';
 import '../../Feed/profilefeed/user_profile_feed.dart';
 
@@ -134,7 +136,7 @@ class _MyGridViewItemsState extends State<MyGridViewItems> {
   @override
   void initState() {
     super.initState();
-
+    Operations.controlSystemColor();
     getThumbnail();
   }
 
@@ -160,14 +162,16 @@ class _MyGridViewItemsState extends State<MyGridViewItems> {
         maxHeight:
             0, // specify the height of the thumbnail, let the width auto-scaled to keep the source aspect ratio
         quality: 100,
-      ).whenComplete(() => log(" thumbnail generated"));
+      ).whenComplete(() => emitter("thumbnail generated"));
 
-      log(fileName.toString());
-      setState(() {
-        thumbnail = fileName;
-      });
+      // log(fileName.toString());
+      if (mounted) {
+        setState(() {
+          thumbnail = fileName;
+        });
+      }
     } catch (e) {
-      log(e.toString());
+      emitter(e.toString());
     }
   }
 
@@ -178,6 +182,7 @@ class _MyGridViewItemsState extends State<MyGridViewItems> {
     return InkWell(
       splashColor: HexColor(primaryColor),
       onTap: () async {
+        Operations.controlSystemColor();
         TabProvider action = Provider.of<TabProvider>(context, listen: false);
         action.isHomeChange(true);
         //    provide.changeIndex(widget.index);

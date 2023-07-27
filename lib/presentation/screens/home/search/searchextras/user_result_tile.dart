@@ -86,6 +86,7 @@ class UserResultTile extends StatelessWidget {
                             constraints: BoxConstraints(maxWidth: 120),
                             child: RichText(
                                 maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                                 text: TextSpan(
                                     text: data.username ?? "...",
                                     style: GoogleFonts.spartan(
@@ -94,7 +95,7 @@ class UserResultTile extends StatelessWidget {
                                             color: Colors.black,
                                             decorationStyle:
                                                 TextDecorationStyle.solid,
-                                            fontSize: 13)),
+                                            fontSize: 12)),
                                     children: [
                                       TextSpan(
                                         text: "",
@@ -104,7 +105,7 @@ class UserResultTile extends StatelessWidget {
                                                 color: Colors.black,
                                                 decorationStyle:
                                                     TextDecorationStyle.solid,
-                                                fontSize: 14)),
+                                                fontSize: 12)),
                                       ),
                                       // TextSpan(
 

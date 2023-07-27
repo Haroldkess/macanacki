@@ -137,7 +137,9 @@ class _UserMultipleViewState extends State<UserMultipleView> {
 
         TabProvider action = Provider.of<TabProvider>(context, listen: false);
 
-        action.addControl(_controller!);
+          action.addHoldControl(_controller!);
+
+        action.tap(true);
       });
     } else {
       Future.delayed(const Duration(seconds: 2))

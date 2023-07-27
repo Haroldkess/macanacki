@@ -10,6 +10,7 @@ import 'package:macanacki/services/temps/temps_id.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../services/controllers/mode_controller.dart';
+import '../../../operations.dart';
 
 class GlobalSearch extends StatefulWidget {
   const GlobalSearch({
@@ -85,6 +86,7 @@ class _GlobalSearchState extends State<GlobalSearch> {
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       await ModeController.handleMode("online");
     });
+    Operations.controlSystemColor();
   }
 
   initPref() async {

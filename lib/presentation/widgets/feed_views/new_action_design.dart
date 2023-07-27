@@ -91,7 +91,8 @@ class _NewDesignTestState extends State<NewDesignTest> {
               children: [
                 Container(
                   //  color: Colors.amber,
-                  constraints: BoxConstraints(maxWidth: width * 0.475),
+                  //475
+                  constraints: BoxConstraints(maxWidth: width * 0.55),
                   child: Row(
                     children: [
                       InkWell(
@@ -214,7 +215,8 @@ class _NewDesignTestState extends State<NewDesignTest> {
                             Row(
                               children: [
                                 Container(
-                                  constraints: BoxConstraints(maxWidth: 130),
+                                  constraints: const BoxConstraints(
+                                      maxWidth: 139, minWidth: 100),
                                   //   color: Colors.amber,
                                   child: AppText(
                                     text: widget.data.user!.username!,
@@ -224,7 +226,7 @@ class _NewDesignTestState extends State<NewDesignTest> {
                                     overflow:
                                         widget.data.user!.username!.length > 20
                                             ? TextOverflow.ellipsis
-                                            : TextOverflow.clip,
+                                            : TextOverflow.ellipsis,
                                     color: HexColor(backgroundColor),
                                   ),
                                 ),
@@ -458,7 +460,7 @@ class _NewDesignTestState extends State<NewDesignTest> {
               text: text == null
                   ? ""
                   : Numeral(text == 0 ? widget.data.comments!.length : text)
-                      .format(),
+                      .format(fractionDigits: 1),
               size: 12,
               align: TextAlign.center,
               fontWeight: FontWeight.w400,
@@ -544,7 +546,7 @@ class _NewDesignTestState extends State<NewDesignTest> {
             child: Container(
               constraints: BoxConstraints(maxWidth: 40),
               child: AppText(
-                text: Numeral(likeCount!).format(),
+                text: Numeral(likeCount!).format(fractionDigits: 1),
                 color: Colors.white,
                 align: TextAlign.center,
                 size: 12,
@@ -554,7 +556,7 @@ class _NewDesignTestState extends State<NewDesignTest> {
           ),
           padding:
               EdgeInsets.only(right: 10, top: likedBefore ? 0 : 0, bottom: 0),
-          likeCount: int.tryParse(Numeral(likes).format()),
+          likeCount: int.tryParse(Numeral(likes).format(fractionDigits: 1)),
           likeBuilder: (bool isLiked) {
             return isLiked
                 ? Container(

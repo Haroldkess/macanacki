@@ -5,6 +5,7 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:macanacki/services/controllers/search_controller.dart';
 
 import '../../../../constants/colors.dart';
+import '../../../../operations.dart';
 
 class GlobalSearchBar extends StatelessWidget {
   TextEditingController x;
@@ -32,9 +33,11 @@ class GlobalSearchBar extends StatelessWidget {
           // if (value.isEmpty) {
           //   return;
           // }
-          await Future.delayed(const Duration(milliseconds: 900)).whenComplete(
-              () =>
-                  SearchController.retrievSearchUserController(context, value));
+          SearchController.retrievSearchUserController(context, value);
+
+          // await Future.delayed(const Duration(milliseconds: 1000)).whenComplete(
+          //     () =>
+          //         SearchController.retrievSearchUserController(context, value));
         },
         decoration: InputDecoration(
           hintText: " Search",

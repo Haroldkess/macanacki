@@ -187,6 +187,8 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
           bottomNavigationBar: CupertinoTabBar(
             currentIndex: context.watch<TabProvider>().index,
             onTap: (index) async {
+              Operations.controlSystemColor();
+
               provide.changeIndex(index);
               ChatController.initSocket(context)
                   .whenComplete(() => ChatController.addUserToSocket(context));

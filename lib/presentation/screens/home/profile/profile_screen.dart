@@ -19,6 +19,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../services/middleware/feed_post_ware.dart';
 import '../../../allNavigation.dart';
+import '../../../operations.dart';
 import '../../../uiproviders/screen/tab_provider.dart';
 import '../../../widgets/drawer.dart';
 import '../../notification/notification_screen.dart';
@@ -81,12 +82,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                         notify.readAll
                             ? SizedBox.shrink()
                             : Positioned(
-                                right: 0,
+                                right: 5,
                                 child: Align(
-                                  alignment: Alignment.topRight,
+                                  alignment: Alignment.topCenter,
                                   child: Container(
-                                    height: 15,
-                                    width: 20,
+                                    height: 10,
+                                    width: 10,
                                     decoration: const BoxDecoration(
                                         shape: BoxShape.circle,
                                         color: Colors.red),
@@ -95,9 +96,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       child: Center(
                                         child: AppText(
                                           text: notify.notifyData.length > 9
-                                              ? "9+"
-                                              : notify.notifyData.length
-                                                  .toString(),
+                                              ? ""
+                                              : "",
                                           size: 8,
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -187,9 +187,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   void initState() {
     super.initState();
     _getUserPost(false);
-     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        systemNavigationBarIconBrightness: Brightness.dark,
-        systemNavigationBarColor: HexColor(backgroundColor)));
+    Operations.controlSystemColor();
   }
 
   @override
