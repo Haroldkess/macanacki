@@ -120,7 +120,7 @@ class UserProfileActions extends StatelessWidget {
                     : const SizedBox.shrink(),
                 InkWell(
                   onTap: () async {
-                    print("dfdd");
+                 //   print("dfdd");
                     await followAction(context, data.publicUserProfileModel.id!,
                         data.publicUserProfileModel.username!);
                   },
