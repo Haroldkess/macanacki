@@ -26,6 +26,7 @@ import 'package:macanacki/services/controllers/feed_post_controller.dart';
 import 'package:macanacki/services/controllers/mode_controller.dart';
 import 'package:macanacki/services/controllers/notification_controller.dart';
 import 'package:macanacki/services/controllers/swipe_users_controller.dart';
+import 'package:macanacki/services/controllers/update_app.dart';
 import 'package:macanacki/services/controllers/user_profile_controller.dart';
 import 'package:provider/provider.dart';
 
@@ -206,7 +207,7 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
                     provide.tapTracker > 1) {
                   await FeedPostController.reloadPage(context);
 
-                  setState(() {});
+                  // setState(() {});
                   // setState(() {
                   //   FeedHome().createState().dispose();
 
@@ -234,6 +235,30 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
                 }
                 provide.isHomeChange(false);
               } else {
+                if (index == 4) {
+                  try {
+                    if (provide.controller != null) {
+                      if (provide.controller!.value.isInitialized) {
+                        if (provide.controller!.value.isBuffering ||
+                            provide.controller!.value.isPlaying) {
+                          if (mounted) {
+                            provide.pauseControl();
+                            provide.tap(true);
+                          }
+                        } else {
+                          if (mounted) {
+                            provide.pauseControl();
+                            provide.tap(true);
+                          }
+                        }
+                      }
+                    }
+                  } catch (e) {
+                    emitter(e.toString());
+                  }
+                  NotificationController.retrievNotificationController(
+                      context, false);
+                }
                 setState(() {
                   trackTaps = 0;
                 });
@@ -243,20 +268,18 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
                   duration: const Duration(milliseconds: 1),
                   curve: Curves.easeIn,
                 );
-                //provide.isHomeChange(true);
-
                 try {
                   if (provide.controller != null) {
                     if (provide.controller!.value.isInitialized) {
                       if (provide.controller!.value.isBuffering ||
                           provide.controller!.value.isPlaying) {
                         if (mounted) {
-                          //   provide.pauseControl();
+                          provide.pauseControl();
                           provide.tap(true);
                         }
                       } else {
                         if (mounted) {
-                          //  provide.pauseControl();
+                          provide.pauseControl();
                           provide.tap(true);
                         }
                       }
@@ -265,6 +288,8 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
                 } catch (e) {
                   emitter(e.toString());
                 }
+                //provide.isHomeChange(true);
+
               }
             },
             items: [
@@ -308,20 +333,23 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
                 unread < 1
                     ? const SizedBox.shrink()
                     : Positioned(
+                        right: 1,
+                        top: 1,
                         child: Padding(
-                          padding: const EdgeInsets.only(left: 20.0),
+                          padding: const EdgeInsets.only(left: 0.0, top: 0),
                           child: Align(
                             alignment: Alignment.topCenter,
                             //top: -2,
                             child: Container(
                               constraints:
-                                  BoxConstraints(maxHeight: 19, maxWidth: 25),
+                                  BoxConstraints(maxHeight: 10, maxWidth: 10),
                               decoration: const BoxDecoration(
                                   color: Colors.red, shape: BoxShape.circle),
                               child: Center(
                                 child: AppText(
                                   size: 8,
-                                  text: unread > 99 ? "99+" : unread.toString(),
+                                  text: "",
+                                  //   text: unread > 99 ? "99+" : unread.toString(),
                                   color: HexColor(backgroundColor),
                                   fontWeight: FontWeight.w400,
                                 ),
@@ -351,6 +379,7 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
 
   @override
   void initState() {
+    //UpdateApp.basicStatusCheck(context);
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       NotificationController.checkNotification(context);
@@ -367,9 +396,9 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
           PageController(initialPage: provide.index);
       provide.addPageControl(pageController);
     });
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ChatController.retreiveUnread(context);
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   ChatController.retreiveUnread(context);
+    // });
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       SwipeWare swipe = Provider.of<SwipeWare>(context, listen: false);
@@ -382,17 +411,18 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
             context, swipe.filterName.toLowerCase());
       }
     });
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ChatController.retrievChatController(context, false);
     });
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      FeedPostController.getUserPostController(context);
-    });
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      NotificationController.retrievNotificationController(context, false);
-    });
-    UserProfileController.retrievProfileController(context, true);
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   FeedPostController.getUserPostController(context);
+    // });
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+
+    // });
+    //   UserProfileController.retrievProfileController(context, true);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       await ActionController.retrievAllUserLikedController(context);
       await ActionController.retrievAllUserFollowingController(context);
@@ -400,14 +430,14 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
     });
 
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      FeedPostWare post = Provider.of<FeedPostWare>(context, listen: false);
-      List<FeedPost> data = [];
-      for (var i = 0; i < 5; i++) {
-        data.add(post.feedPosts[i]);
-      }
+      //  FeedPostWare post = Provider.of<FeedPostWare>(context, listen: false);
+      //  // List<FeedPost> data = [];
+      //   // for (var i = 0; i < post.feedPosts.length; i++) {
+      //   //   data.add(post.feedPosts[i]);
+      //   // }
 
-      FeedPostController.downloadThumbs(
-          data, context, MediaQuery.of(context).size.height);
+      //   FeedPostController.downloadThumbs(
+      //       post.feedPosts, context, MediaQuery.of(context).size.height);
       // emitter('caching first ${data.length} sent');
     });
   }

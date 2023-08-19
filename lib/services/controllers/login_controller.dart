@@ -69,20 +69,20 @@ class LoginController {
     bool isDone = await ware
         .loginUserFromApi(data)
         .whenComplete(() => emitter("can now navigate to home"));
-    if (isSplash != true) {
-      List<GenderList> selected = gender.genderList
-          .where((element) => element.selected == true)
-          .toList();
-      if (selected.isNotEmpty) {
-        if (selected.first.name == "Business") {
-          await VerifyController.business(context);
-        } else {
-          emitter("Business not selected rather it is ${selected.first.name}");
-        }
-      } else {
-        emitter("Business not selected");
-      }
-    }
+    // if (isSplash != true) {
+    //   List<GenderList> selected = gender.genderList
+    //       .where((element) => element.selected == true)
+    //       .toList();
+    //   if (selected.isNotEmpty) {
+    //     if (selected.first.name == "Business") {
+    //       await VerifyController.business(context);
+    //     } else {
+    //       emitter("Business not selected rather it is ${selected.first.name}");
+    //     }
+    //   } else {
+    //     emitter("Business not selected");
+    //   }
+    // }
 
     if (isDone) {
       emitter("Done with Login");
@@ -90,25 +90,29 @@ class LoginController {
       await temp.addPasswordTemp(password);
       await temp.addIsLoggedInTemp(true);
 
-      await UserProfileController.retrievProfileController(context, true);
-      ModeController.handleMode("online");
+       await UserProfileController.retrievProfileController(context, true);
+      // ModeController.handleMode("online");
 
       await runTask(
         context,
       );
-      UserProfileWare user =
-          Provider.of<UserProfileWare>(context, listen: false);
+      // UserProfileWare user =
+      //     Provider.of<UserProfileWare>(context, listen: false);
 
-      if (user.userProfileModel.gender == "Business" &&
-          user.userProfileModel.activePlan == "inactive subscription") {
-        callFeedPost(context);
-        await PlanController.retrievPlanController(context, true);
-        PageRouting.pushToPage(context, const SubscriptionPlansBusiness());
-      } else {
-        await callFeedPost(context);
-        emitter("removing all previous screens");
-        PageRouting.removeAllToPage(context, const TabScreen());
-      }
+      // if (user.userProfileModel.gender == "Business" &&
+      //     user.userProfileModel.activePlan == "inactive subscription") {
+      //   callFeedPost(context);
+      //   await PlanController.retrievPlanController(context, true);
+      //   PageRouting.pushToPage(context, const SubscriptionPlansBusiness());
+      // } else {
+      //   await callFeedPost(context);
+      //   emitter("removing all previous screens");
+      //   PageRouting.removeAllToPage(context, const TabScreen());
+      // }
+
+      await callFeedPost(context);
+      emitter("removing all previous screens");
+      PageRouting.removeAllToPage(context, const TabScreen());
       ware.isLoading(false);
     } else {
       ware.isLoading(false);
@@ -122,8 +126,11 @@ class LoginController {
 
   static Future callFeedPost(BuildContext context) async {
     await FeedPostController.getFeedPostController(context, 1, false);
+  //  await UserProfileController.retrievProfileController(context, true);
+    ChatController.retreiveUnread(context);
     ChatController.retrievChatController(context, false);
-    // ActionController.retrievAllUserFollowingController(context);
+    FeedPostController.getUserPostController(context);
+  //  ActionController.retrievAllUserFollowingController(context);
     // ActionController.retrievAllUserLikedCommentsController(context);
   }
 

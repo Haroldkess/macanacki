@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:inview_notifier_list/inview_notifier_list.dart';
 import 'package:macanacki/model/feed_post_model.dart';
 import 'package:macanacki/model/profile_feed_post.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
@@ -131,7 +132,7 @@ class _UserProfileFeedState extends State<UserProfileFeed> {
       print("hey");
       provide.changeUserIndex(widget.index);
     });
-     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
         systemNavigationBarIconBrightness: Brightness.dark,
         systemNavigationBarColor: HexColor(backgroundColor)));
   }
@@ -148,48 +149,69 @@ class _UserProfileFeedState extends State<UserProfileFeed> {
       top: false,
       child: Scaffold(
         backgroundColor: Colors.black,
-        persistentFooterButtons: [
-          InkWell(
-            onTap: () {
-              commentModal(context,
-                  stream.profileFeedPosts[userStream.userIndex].id!, "user");
-            },
-            child: Container(
-              height: 30,
-              width: double.infinity,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    AppText(
-                      text: "Add comment...",
-                      color: Colors.grey,
-                    ),
-                    Row(
-                      children: const [
-                        Icon(
-                          Icons.emoji_emotions_outlined,
-                          color: Colors.grey,
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-              ),
-            ),
-          )
-        ],
+        // persistentFooterButtons: [
+        //   InkWell(
+        //     onTap: () {
+        //       commentModal(context,
+        //           stream.profileFeedPosts[userStream.userIndex].id!, "user");
+        //     },
+        //     child: Container(
+        //       height: 30,
+        //       width: double.infinity,
+        //       child: Padding(
+        //         padding: const EdgeInsets.symmetric(horizontal: 10),
+        //         child: Row(
+        //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //           children: [
+        //             AppText(
+        //               text: "Add comment...",
+        //               color: Colors.grey,
+        //             ),
+        //             Row(
+        //               children: const [
+        //                 Icon(
+        //                   Icons.emoji_emotions_outlined,
+        //                   color: Colors.grey,
+        //                 ),
+        //               ],
+        //             )
+        //           ],
+        //         ),
+        //       ),
+        //     ),
+        //   )
+        // ],
         body: Stack(
           children: [
-            PageView.builder(
+            InViewNotifierList(
               itemCount: stream.profileFeedPosts.length,
               controller: controller,
               scrollDirection: Axis.vertical,
-              padEnds: false,
-              itemBuilder: ((context, index) {
+              isInViewPortCondition:
+                  (double deltaTop, double deltaBottom, double vpHeight) {
+                return deltaTop < (0.3 * vpHeight) &&
+                    deltaBottom > (0.3 * vpHeight);
+              },
+              initialInViewIds: ["${widget.index}"],
+              //  padEnds: false,
+              builder: ((context, index) {
                 final ProfileFeedDatum post = stream.profileFeedPosts[index];
                 List<Comment> talks = [];
+                WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                  post.comments!.forEach((element) {
+                    Comment comment = Comment(
+                        id: element.id,
+                        body: element.body,
+                        createdAt: element.createdAt,
+                        updatedAt: element.updatedAt,
+                        username: element.username,
+                        profilePhoto: element.profilePhoto,
+                        noOfLikes: element.noOfLikes,
+                        postId: element.postId);
+
+                    talks.add(comment);
+                  });
+                });
 
                 final User user = User(
                     id: post.user!.id,
@@ -207,19 +229,6 @@ class _UserProfileFeedState extends State<UserProfileFeed> {
                     noOfFollowers: post.user!.noOfFollowers,
                     noOfFollowing: post.user!.noOfFollowing,
                     verified: post.user!.verified!);
-                post.comments!.forEach((element) {
-                  Comment comment = Comment(
-                      id: element.id,
-                      body: element.body,
-                      createdAt: element.createdAt,
-                      updatedAt: element.updatedAt,
-                      username: element.username,
-                      profilePhoto: element.profilePhoto,
-                      noOfLikes: element.noOfLikes,
-                      postId: element.postId);
-
-                  talks.add(comment);
-                });
 
                 final FeedPost data = FeedPost(
                     id: post.id,
@@ -236,18 +245,24 @@ class _UserProfileFeedState extends State<UserProfileFeed> {
                     button: post.button,
                     viewCount: post.viewCount,
                     mux: post.mux);
-
-                return UserTikTokView(
-                  media: post.mux!,
-                  data: data,
-                  page: "user",
-                  urls: post.media!,
-                  isHome: false,
-                );
+                return InViewNotifierWidget(
+                    id: '$index',
+                    builder:
+                        (BuildContext context, bool isInView, Widget? child) {
+                      return UserTikTokView(
+                        media: post.mux!,
+                        data: data,
+                        page: "user",
+                        urls: post.media!,
+                        isHome: false,
+                        isInView: isInView,
+                        pageData: post,
+                      );
+                    });
               }),
-              onPageChanged: (index) {
-                provide.changeUserIndex(index);
-              },
+              // onPageChanged: (index) {
+              //   provide.changeUserIndex(index);
+              // },
             ),
             Padding(
               padding: EdgeInsets.only(top: 38),

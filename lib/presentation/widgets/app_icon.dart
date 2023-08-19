@@ -9,7 +9,7 @@ class AppIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SvgPicture.asset(
-      "assets/icon/macanackiicon.svg",
+      "assets/icon/makanakiicon.svg",
       width: width == null ? null : width!,
       height: height == null ? null : height!,
     );

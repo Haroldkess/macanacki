@@ -19,11 +19,12 @@ import '../../../uiproviders/screen/tab_provider.dart';
 
 class FeedVideoHolderPrivate extends StatefulWidget {
   String file;
-  VideoPlayerController controller;
+  VideoPlayerController? controller;
   bool isHome;
   bool shouldPlay;
   String thumbLink;
   final String page;
+  bool? isInView;
 
   FeedVideoHolderPrivate(
       {super.key,
@@ -32,7 +33,8 @@ class FeedVideoHolderPrivate extends StatefulWidget {
       required this.isHome,
       required this.shouldPlay,
       required this.thumbLink,
-      required this.page});
+      required this.page,
+      required this.isInView});
 
   @override
   State<FeedVideoHolderPrivate> createState() => _FeedVideoHolderPrivateState();
@@ -66,6 +68,7 @@ class _FeedVideoHolderPrivateState extends State<FeedVideoHolderPrivate> {
   @override
   void initState() {
     super.initState();
+
     //   getThumbnail();
     // widget.controller.play();
     // log(widget.file);
@@ -73,7 +76,7 @@ class _FeedVideoHolderPrivateState extends State<FeedVideoHolderPrivate> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       TabProvider tabs = Provider.of<TabProvider>(context, listen: false);
 
-      tabs.addHoldControl(widget.controller);
+      tabs.addHoldControl(widget.controller!);
 
       tabs.tap(true);
 
@@ -86,7 +89,7 @@ class _FeedVideoHolderPrivateState extends State<FeedVideoHolderPrivate> {
 
   @override
   void dispose() {
-    widget.controller.dispose();
+    widget.controller!.dispose();
 
     // if (widget.page == "user") {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -120,21 +123,37 @@ class _FeedVideoHolderPrivateState extends State<FeedVideoHolderPrivate> {
                 return val.contains(widget.thumbLink);
               }).toList();
               if (data.isEmpty) {
-             //   emitter("nothing found ${widget.controller.value.isPlaying}");
+                //   emitter("nothing found ${widget.controller.value.isPlaying}");
               } else {
                 var val = data.first.split(widget.thumbLink);
 
                 // emitter(val.first + "  Second" + val.last);
               }
-              if (widget.controller.value.isInitialized ||
-                  widget.controller.value.duration <
-                      const Duration(milliseconds: 500)) {
-                if (!widget.controller.value.isPlaying && isTapped == false) {
-                  if (mounted) {
-                    // emitter("played");
-                    // WidgetsBinding.instance.addPostFrameCallback((_) {
-                    //   widget.controller.play();
-                    // });
+              if (widget.isInView == true) {
+                // log(" IN VIEW ${widget.data.user!.username}, ${widget.data.description}");
+                //  log("${widget.data.description} ${widget.isInView == true ? "is in view" : "null"}");
+
+                if (widget.controller != null) {
+                  if (widget.controller!.value.isInitialized) {
+                    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                      if (mounted) {
+                        if (isTapped == false) {
+                          widget.controller!.play();
+                        }
+                      }
+                    });
+                  }
+                }
+              } else {
+                //  log("NO LONGER IN VIEW ${widget.data.user!.username}, ${widget.data.description}");
+
+                if (widget.controller != null) {
+                  if (widget.controller!.value.isInitialized) {
+                    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                      if (mounted) {
+                        widget.controller!.pause();
+                      }
+                    });
                   }
                 }
               }
@@ -155,7 +174,7 @@ class _FeedVideoHolderPrivateState extends State<FeedVideoHolderPrivate> {
                                 File(data.first.split(widget.thumbLink).first)),
                             fit: BoxFit.contain,
                           )),
-                      child: widget.controller.value.duration <
+                      child: widget.controller!.value.duration <
                               Duration(milliseconds: 500)
                           ? null
                           : Container(
@@ -193,9 +212,9 @@ class _FeedVideoHolderPrivateState extends State<FeedVideoHolderPrivate> {
         //       );
 
         //     }),
-        widget.controller.value.aspectRatio == null ||
-                widget.controller.value.isInitialized == false ||
-                widget.controller.value.duration < Duration(milliseconds: 500)
+        widget.controller!.value.aspectRatio == null ||
+                widget.controller!.value.isInitialized == false ||
+                widget.controller!.value.duration < Duration(milliseconds: 500)
             ? Container(
                 width: width,
                 height: height,
@@ -215,12 +234,12 @@ class _FeedVideoHolderPrivateState extends State<FeedVideoHolderPrivate> {
                 //     ? height
                 //     : null,
                 child: AspectRatio(
-                  aspectRatio: widget.controller.value.aspectRatio,
+                  aspectRatio: widget.controller!.value.aspectRatio,
                   // Use the VideoPlayer widget to display the video.
-                  child: VideoPlayer(widget.controller),
+                  child: VideoPlayer(widget.controller!),
                 ),
               ),
-        widget.controller.value.duration < const Duration(milliseconds: 500) &&
+        widget.controller!.value.duration < const Duration(milliseconds: 500) &&
                 isTapped == false
             ? const SizedBox.shrink()
             : InkWell(
@@ -228,7 +247,7 @@ class _FeedVideoHolderPrivateState extends State<FeedVideoHolderPrivate> {
                 hoverColor: Colors.transparent,
                 highlightColor: Colors.transparent,
                 onTap: () {
-                  if (widget.controller.value.isInitialized == false) {
+                  if (widget.controller!.value.isInitialized == false) {
                     return;
                   }
                   if (isTapped) {
@@ -240,12 +259,12 @@ class _FeedVideoHolderPrivateState extends State<FeedVideoHolderPrivate> {
                       isTapped = true;
                     });
                   }
-                  if (widget.controller.value.isPlaying) {
-                    widget.controller.pause();
+                  if (widget.controller!.value.isPlaying) {
+                    widget.controller!.pause();
 
                     //   isPaused = true;
                   } else {
-                    widget.controller.play();
+                    widget.controller!.play();
 
                     // isPaused = false;
                   }
@@ -255,7 +274,7 @@ class _FeedVideoHolderPrivateState extends State<FeedVideoHolderPrivate> {
                   width: width,
                   height: height,
                   //  color: Colors.amber,
-                  child: !widget.controller.value.isPlaying && isTapped
+                  child: !widget.controller!.value.isPlaying && isTapped
                       ? Icon(
                           Icons.play_arrow,
                           size: 50,
@@ -269,7 +288,7 @@ class _FeedVideoHolderPrivateState extends State<FeedVideoHolderPrivate> {
             width: MediaQuery.of(context).size.width,
             height: 6,
             child: VideoProgressIndicator(
-              widget.controller,
+              widget.controller!,
               allowScrubbing: true,
               colors: VideoProgressColors(
                   backgroundColor: Colors.transparent,
@@ -284,7 +303,7 @@ class _FeedVideoHolderPrivateState extends State<FeedVideoHolderPrivate> {
   void didChangeDependencies() {
     if (mounted) {
       if (isTapped == false) {
-        widget.controller.play();
+        // widget.controller.play();
       }
     }
     super.didChangeDependencies();

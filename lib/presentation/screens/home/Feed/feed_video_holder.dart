@@ -19,10 +19,11 @@ import '../../../uiproviders/screen/tab_provider.dart';
 
 class FeedVideoHolder extends StatefulWidget {
   String file;
-  VideoPlayerController controller;
+  VideoPlayerController? controller;
   bool isHome;
   bool shouldPlay;
   String thumbLink;
+  bool isInView;
 
   FeedVideoHolder(
       {super.key,
@@ -30,7 +31,8 @@ class FeedVideoHolder extends StatefulWidget {
       required this.controller,
       required this.isHome,
       required this.shouldPlay,
-      required this.thumbLink});
+      required this.thumbLink,
+      required this.isInView});
 
   @override
   State<FeedVideoHolder> createState() => _FeedVideoHolderState();
@@ -67,11 +69,13 @@ class _FeedVideoHolderState extends State<FeedVideoHolder> {
     //   getThumbnail();
     if (widget.isHome) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        TabProvider tabs = Provider.of<TabProvider>(context, listen: false);
+        if (mounted) {
+          TabProvider tabs = Provider.of<TabProvider>(context, listen: false);
 
-        tabs.addControl(widget.controller);
+          tabs.addControl(widget.controller!);
 
-        tabs.tap(false);
+          tabs.tap(false);
+        }
       });
     }
   }
@@ -80,7 +84,7 @@ class _FeedVideoHolderState extends State<FeedVideoHolder> {
 
   @override
   void dispose() {
-    widget.controller.dispose();
+    widget.controller!.dispose();
 
     if (widget.isHome) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -108,7 +112,7 @@ class _FeedVideoHolderState extends State<FeedVideoHolder> {
     return Stack(
       alignment: Alignment.center,
       children: [
-        StreamBuilder<Object>(
+        StreamBuilder(
             stream: null,
             builder: (context, snapshot) {
               List<String> data = stream.thumbs.where((val) {
@@ -121,15 +125,30 @@ class _FeedVideoHolderState extends State<FeedVideoHolder> {
 
                 // emitter(val.first + "  Second" + val.last);
               }
-              if (widget.controller.value.isInitialized ||
-                  widget.controller.value.duration <
-                      const Duration(milliseconds: 500)) {
-                if (!widget.controller.value.isPlaying &&
-                    tabs.isTapped == false) {
-                  if (mounted) {
-                    // emitter("played");
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      widget.controller.play();
+              if (widget.isInView == true) {
+                //    log(" IN VIEW ${widget.data.user!.username}, ${widget.data.description}");
+                //  log("${widget.data.description} ${widget.isInView == true ? "is in view" : "null"}");
+
+                if (widget.controller != null) {
+                  if (widget.controller!.value.isInitialized) {
+                    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                      if (mounted) {
+                        if (tabs.isTapped == false) {
+                          widget.controller!.play();
+                        }
+                      }
+                    });
+                  }
+                }
+              } else {
+                //  log("NO LONGER IN VIEW ${widget.data.user!.username}, ${widget.data.description}");
+
+                if (widget.controller != null) {
+                  if (widget.controller!.value.isInitialized) {
+                    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                      if (mounted) {
+                        widget.controller!.pause();
+                      }
                     });
                   }
                 }
@@ -150,7 +169,7 @@ class _FeedVideoHolderState extends State<FeedVideoHolder> {
                                 File(data.first.split(widget.thumbLink).first)),
                             fit: BoxFit.contain,
                           )),
-                      child: widget.controller.value.duration <
+                      child: widget.controller!.value.duration <
                               Duration(milliseconds: 500)
                           ? null
                           : Container(
@@ -189,9 +208,9 @@ class _FeedVideoHolderState extends State<FeedVideoHolder> {
 
         //     }),
         widget.isHome
-            ? widget.controller.value.aspectRatio == null ||
-                    widget.controller.value.isInitialized == false ||
-                    widget.controller.value.duration <
+            ? widget.controller!.value.aspectRatio == null ||
+                    widget.controller!.value.isInitialized == false ||
+                    widget.controller!.value.duration <
                         Duration(milliseconds: 500)
                 ? Container(
                     width: width,
@@ -213,14 +232,14 @@ class _FeedVideoHolderState extends State<FeedVideoHolder> {
                     //     ? height
                     //     : null,
                     child: AspectRatio(
-                      aspectRatio: widget.controller.value.aspectRatio,
+                      aspectRatio: widget.controller!.value.aspectRatio,
                       // Use the VideoPlayer widget to display the video.
-                      child: VideoPlayer(widget.controller),
+                      child: VideoPlayer(widget.controller!),
                     ),
                   )
-            : widget.controller.value.aspectRatio == null ||
-                    widget.controller.value.isInitialized == false ||
-                    widget.controller.value.duration <
+            : widget.controller!.value.aspectRatio == null ||
+                    widget.controller!.value.isInitialized == false ||
+                    widget.controller!.value.duration <
                         Duration(milliseconds: 500)
                 ? Container(
                     width: width,
@@ -242,12 +261,12 @@ class _FeedVideoHolderState extends State<FeedVideoHolder> {
                     //     ? height
                     //     : null,
                     child: AspectRatio(
-                      aspectRatio: widget.controller.value.aspectRatio,
+                      aspectRatio: widget.controller!.value.aspectRatio,
                       // Use the VideoPlayer widget to display the video.
-                      child: VideoPlayer(widget.controller),
+                      child: VideoPlayer(widget.controller!),
                     ),
                   ),
-        widget.controller.value.duration < const Duration(milliseconds: 500) &&
+        widget.controller!.value.duration < const Duration(milliseconds: 500) &&
                 tabs.isTapped == false
             ? const SizedBox.shrink()
             : InkWell(
@@ -255,7 +274,7 @@ class _FeedVideoHolderState extends State<FeedVideoHolder> {
                 hoverColor: Colors.transparent,
                 highlightColor: Colors.transparent,
                 onTap: () {
-                  if (widget.controller.value.isInitialized == false) {
+                  if (widget.controller!.value.isInitialized == false) {
                     return;
                   }
                   if (tabs.isTapped) {
@@ -269,12 +288,12 @@ class _FeedVideoHolderState extends State<FeedVideoHolder> {
                     //   isTapped = true;
                     // });
                   }
-                  if (widget.controller.value.isPlaying) {
-                    widget.controller.pause();
+                  if (widget.controller!.value.isPlaying) {
+                    widget.controller!.pause();
 
                     //   isPaused = true;
                   } else {
-                    widget.controller.play();
+                    widget.controller!.play();
 
                     // isPaused = false;
                   }
@@ -284,7 +303,7 @@ class _FeedVideoHolderState extends State<FeedVideoHolder> {
                   width: width,
                   height: height,
                   //  color: Colors.amber,
-                  child: !widget.controller.value.isPlaying && tabs.isTapped
+                  child: !widget.controller!.value.isPlaying && tabs.isTapped
                       ? Icon(
                           Icons.play_arrow,
                           size: 50,
@@ -298,7 +317,7 @@ class _FeedVideoHolderState extends State<FeedVideoHolder> {
             width: MediaQuery.of(context).size.width,
             height: 6,
             child: VideoProgressIndicator(
-              widget.controller,
+              widget.controller!,
               allowScrubbing: true,
               colors: VideoProgressColors(
                   backgroundColor: Colors.transparent,
@@ -314,10 +333,11 @@ class _FeedVideoHolderState extends State<FeedVideoHolder> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         TabProvider tabs = Provider.of<TabProvider>(context, listen: false);
-        if (tabs.isTapped == false) {
-          widget.controller.play();
+        if (tabs.isTapped == true) {
+          
+          widget.controller!.pause();
         }
-      //  tabs.disposeHolldControl();
+        //  tabs.disposeHolldControl();
       }
       //   //tabs.tap(false);
     });

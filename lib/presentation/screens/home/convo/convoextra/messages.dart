@@ -32,6 +32,7 @@ class MessageList extends StatelessWidget {
     List<ChatData> peopleChat = stream.chatList
       ..sort((a, b) => b.conversations!.first.createdAt!
           .compareTo(a.conversations!.first.createdAt!));
+          
     return StreamBuilder(
         stream: null,
         builder: (context, snapshot) {
@@ -40,6 +41,7 @@ class MessageList extends StatelessWidget {
                   element.userOne!.contains(stream.searchName.toLowerCase()) ||
                   element.userTwo!.contains(stream.searchName.toLowerCase()))
               .toList();
+              
 
           return ListBody(
             //  reverse:  true,
@@ -103,6 +105,11 @@ class _MessageWidgetState extends State<MessageWidget> {
     return InkWell(
       onTap: () async {
         ChatWare ware = Provider.of<ChatWare>(context, listen: false);
+        ChatController.readAll(
+            context,
+            widget.people.conversations!.last.sender == temp.userName
+                ? widget.people.userTwoId!
+                : widget.people.userOneId!);
         final data = await Navigator.push(
           context,
           MaterialPageRoute(
@@ -121,6 +128,9 @@ class _MessageWidgetState extends State<MessageWidget> {
         // ignore: use_build_context_synchronously
         await ChatController.addToList(context, data);
         //  emitter("hello ${data.first.conversations.first.body}");
+
+        // ignore: use_build_context_synchronously
+        //  ChatController.retreiveUnread(context);
       },
       child: Container(
         height: 80,

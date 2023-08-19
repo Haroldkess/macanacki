@@ -22,6 +22,7 @@ class UserMultiplePost extends StatelessWidget {
   final bool isHome;
   final List<String>? thumbLinks;
   final String page;
+  bool? isInView;
 
   UserMultiplePost(
       {super.key,
@@ -29,7 +30,9 @@ class UserMultiplePost extends StatelessWidget {
       this.constraints,
       required this.data,
       required this.isHome,
-      required this.thumbLinks, required this.page});
+      required this.thumbLinks,
+      required this.page,
+      required this.isInView});
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +54,7 @@ class UserMultiplePost extends StatelessWidget {
               isHome: isHome,
               thumbLink: thumbLinks![index],
               page: page,
+              isInView: isInView,
             );
           },
         ),
@@ -87,6 +91,7 @@ class UserMultipleView extends StatefulWidget {
   final bool isHome;
   final String thumbLink;
   final String page;
+  bool? isInView;
 
   UserMultipleView(
       {super.key,
@@ -95,7 +100,9 @@ class UserMultipleView extends StatefulWidget {
       required this.data,
       required this.index,
       required this.isHome,
-      required this.thumbLink, required this.page});
+      required this.thumbLink,
+      required this.page,
+      required this.isInView});
 
   @override
   State<UserMultipleView> createState() => _UserMultipleViewState();
@@ -103,7 +110,7 @@ class UserMultipleView extends StatefulWidget {
 
 class _UserMultipleViewState extends State<UserMultipleView> {
   VideoPlayerController? _controller;
-
+  FeedPost? thisData;
   @override
   void initState() {
     super.initState();
@@ -113,15 +120,31 @@ class _UserMultipleViewState extends State<UserMultipleView> {
 
           //   videoPlayerOptions: VideoPlayerOptions()
           );
+      thisData = widget.data.copyWith(controller: _controller);
 
-      _controller!.initialize().whenComplete(() {
-        _controller!.play();
+      thisData!.controller!.initialize().whenComplete(() {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          TabProvider provide =
+              Provider.of<TabProvider>(context, listen: false);
+          if (provide.index == 0) {
+            //  thisData!.controller!.play();
+            // provide.tap(false);
+          } else {
+            if (provide.index == 4 && provide.isHome) {
+              emitter("heyyyyy");
+              //  thisData!.controller!.play();
+              //   provide.tap(false);
+            } else {
+              //   thisData!.controller!.pause();
+            }
+          }
+        });
         //_controller!.play();
         setState(() {});
       }).then((value) => {
-            _controller!.addListener(() {
-              if (_controller!.value.position.inSeconds > 7 &&
-                  _controller!.value.position.inSeconds < 10) {
+            thisData!.controller!.addListener(() {
+              if (thisData!.controller!.value.position.inSeconds > 7 &&
+                  thisData!.controller!.value.position.inSeconds < 10) {
                 ViewController.handleView(widget.data.id!);
                 //log("Watched more than 10 seconds");
               }
@@ -129,16 +152,12 @@ class _UserMultipleViewState extends State<UserMultipleView> {
           });
 
       // Use the controller to loop the video.
-      setState(() {});
-      _controller!.setLooping(true);
-    //  setState(() {});
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-      //  setState(() {});
 
+      thisData!.controller!.setLooping(true);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         TabProvider action = Provider.of<TabProvider>(context, listen: false);
 
-          action.addHoldControl(_controller!);
-
+        action.addHoldControl(thisData!.controller!);
         action.tap(true);
       });
     } else {
@@ -147,8 +166,10 @@ class _UserMultipleViewState extends State<UserMultipleView> {
     }
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      TabProvider action = Provider.of<TabProvider>(context, listen: false);
-      action.changeMultipleImage(widget.media!);
+      if (mounted) {
+        TabProvider action = Provider.of<TabProvider>(context, listen: false);
+        action.changeMultipleImage(widget.media!);
+      }
     });
   }
 
@@ -169,14 +190,15 @@ class _UserMultipleViewState extends State<UserMultipleView> {
     var width = MediaQuery.of(context).size.width;
 
     return !widget.media!.contains("https")
-        ? FeedVideoHolderPrivate(
-            file: "$muxStreamBaseUrl/${widget.media}.$videoExtension",
-            controller: _controller!,
-            shouldPlay: true,
-            isHome: widget.isHome,
-            thumbLink: widget.thumbLink,
-            page: widget.page,
-          )
+        ?  FeedVideoHolderPrivate(
+                file: "$muxStreamBaseUrl/${widget.media}.$videoExtension",
+                controller: thisData == null ? null : thisData!.controller!,
+                shouldPlay: true,
+                isHome: widget.isHome,
+                thumbLink: widget.thumbLink,
+                page: widget.page,
+                isInView: widget.isInView,
+              )
         : Stack(
             alignment: Alignment.center,
             children: [

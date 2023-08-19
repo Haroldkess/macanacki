@@ -1,9 +1,11 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
 import 'package:macanacki/presentation/screens/home/profile/profileextras/profile_info.dart';
@@ -36,6 +38,11 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen>
     with AutomaticKeepAliveClientMixin {
   final GlobalKey<ScaffoldState> key = GlobalKey();
+  bool showMore = false;
+  int seeMoreVal = 100;
+  // String myUsername = "";
+  TapGestureRecognizer tapGestureRecognizer = TapGestureRecognizer();
+
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -133,14 +140,65 @@ class _ProfileScreenState extends State<ProfileScreen>
                             child: Padding(
                           padding: const EdgeInsets.symmetric(
                               vertical: 20, horizontal: 20),
-                          child: AppText(
-                            text: user.userProfileModel.aboutMe!,
-                            align: TextAlign.center,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            fontWeight: FontWeight.w500,
-                            size: 12,
-                          ),
+                          child: RichText(
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: showMore ? 3 : 2,
+                              text: TextSpan(
+                                  text: user.userProfileModel.aboutMe!.length >=
+                                              seeMoreVal &&
+                                          showMore == false
+                                      ? user.userProfileModel.aboutMe!
+                                          .substring(0, seeMoreVal - 3)
+                                      : user.userProfileModel.aboutMe!,
+                                  style: GoogleFonts.spartan(
+                                      textStyle: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    color: HexColor(darkColor).withOpacity(0.6),
+                                    decorationStyle: TextDecorationStyle.solid,
+                                    fontSize: 10,
+                                    fontFamily: '',
+                                  )),
+                                  recognizer: tapGestureRecognizer
+                                    ..onTap = () async {
+                                      //    print("object");
+                                      if (showMore) {
+                                        setState(() {
+                                          showMore = false;
+                                        });
+                                      } else {
+                                        setState(() {
+                                          showMore = true;
+                                        });
+                                      }
+                                    },
+                                  children: [
+                                    user.userProfileModel.aboutMe!.length <
+                                            seeMoreVal
+                                        ? const TextSpan(text: "")
+                                        : TextSpan(
+                                            text: showMore ? "" : "...see more",
+                                            style: TextStyle(
+                                              fontSize: 10,
+                                              color: HexColor(darkColor)
+                                                  .withOpacity(0.6),
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                            recognizer: tapGestureRecognizer
+                                              ..onTap = () async {
+                                                //    print("object");
+                                                if (showMore) {
+                                                  setState(() {
+                                                    showMore = false;
+                                                  });
+                                                } else {
+                                                  setState(() {
+                                                    showMore = true;
+                                                  });
+                                                }
+                                              },
+                                          )
+                                  ])),
                         )),
                       ],
                     ),
@@ -186,7 +244,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   @override
   void initState() {
     super.initState();
-    _getUserPost(false);
+      _getUserPost(false);
     Operations.controlSystemColor();
   }
 

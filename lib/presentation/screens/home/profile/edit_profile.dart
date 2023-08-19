@@ -15,6 +15,8 @@ import 'package:macanacki/services/middleware/edit_profile_ware.dart';
 import 'package:macanacki/services/middleware/user_profile_ware.dart';
 import 'package:provider/provider.dart';
 
+import '../../../operations.dart';
+
 class EditProfile extends StatefulWidget {
   final String? aboutMe;
   final String? phone;
@@ -33,6 +35,7 @@ class _EditProfileState extends State<EditProfile> {
     super.initState();
     about = TextEditingController(text: widget.aboutMe ?? "");
     phone = TextEditingController(text: widget.phone ?? "");
+    Operations.controlSystemColor();
   }
 
   @override

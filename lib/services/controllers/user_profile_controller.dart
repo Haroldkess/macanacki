@@ -18,15 +18,15 @@ class UserProfileController {
       BuildContext context, bool isFirstLoad) async {
     UserProfileWare ware = Provider.of<UserProfileWare>(context, listen: false);
     //    ActionWare action =  Provider.of<ActionWare>(context, listen: false);
+   // log("here4");
 
     if (isFirstLoad == false) {
       ware.isLoading(true);
       log("true");
     }
 
-    bool isDone = await ware
-        .getUserProfileFromApi(context)
-        .whenComplete(() => emitter("everything from api and provider is done"));
+    bool isDone = await ware.getUserProfileFromApi(context).whenComplete(
+        () => emitter("everything from api and provider is done"));
 
     if (isDone) {
       //        await Future.forEach(ware.publicUserProfileModel., (element) async {
@@ -55,9 +55,8 @@ class UserProfileController {
 
     ware.isLoading2(true);
 
-    bool isDone = await ware
-        .getPublicUserProfileFromApi(username)
-        .whenComplete(() => emitter("everything from api and provider is done"));
+    bool isDone = await ware.getPublicUserProfileFromApi(username).whenComplete(
+        () => emitter("everything from api and provider is done"));
 
     if (isDone) {
       ware.isLoading2(false);
@@ -78,9 +77,8 @@ class UserProfileController {
     ware.isDeleting(true);
     progressIndicator(context, message: "Deleting account");
 
-    bool isDone = await ware
-        .deleteUserFromApi()
-        .whenComplete(() => emitter("everything from api and provider is done"));
+    bool isDone = await ware.deleteUserFromApi().whenComplete(
+        () => emitter("everything from api and provider is done"));
 
     if (isDone) {
       ware.isDeleting(false);

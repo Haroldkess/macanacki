@@ -155,7 +155,7 @@ class PlanBox2 extends StatelessWidget {
         ware.addAmount(plans.amountInNaira!.toInt());
       },
       child: Container(
-        height: 151,
+        height: 140,
         width: 103,
         decoration: BoxDecoration(
             color: plans.mostPopular == 1
@@ -196,7 +196,7 @@ class PlanBox2 extends StatelessWidget {
             ),
             Center(
               child: AppText(
-                text: "Annually",
+                text: "Monthly",
                 color: HexColor(primaryColor),
                 size: 14,
                 fontWeight: FontWeight.w600,

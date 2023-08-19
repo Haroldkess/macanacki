@@ -101,12 +101,14 @@ class ActionController {
   static Future<void> retrievAllUserLikedController(
       BuildContext context) async {
     ActionWare ware = Provider.of<ActionWare>(context, listen: false);
+    // if (ware.likeIds.isNotEmpty) {
+    //   return;
+    // }
 
     ware.isLoadingAllLikes(true);
 
-    bool isDone = await ware
-        .getlikeFromApi()
-        .whenComplete(() => emitter("everything from api and provider is done"));
+    bool isDone = await ware.getlikeFromApi().whenComplete(
+        () => emitter("everything from api and provider is done"));
 
     if (isDone) {
       await Future.forEach(ware.allLiked, (element) async {
@@ -129,12 +131,14 @@ class ActionController {
   static Future<void> retrievAllUserFollowingController(
       BuildContext context) async {
     ActionWare ware = Provider.of<ActionWare>(context, listen: false);
+    // if (ware.followIds.isNotEmpty) {
+    //   return;
+    // }
 
     ware.isLoadingAllFollowing(true);
 
-    bool isDone = await ware
-        .getFollowingFromApi()
-        .whenComplete(() => emitter("everything from api and provider is done"));
+    bool isDone = await ware.getFollowingFromApi().whenComplete(
+        () => emitter("everything from api and provider is done"));
 
     if (isDone) {
       await Future.forEach(ware.allFollowing, (element) async {
@@ -155,9 +159,8 @@ class ActionController {
 
     ware.isLoadingFollow(true);
 
-    bool isDone = await ware
-        .getFollowersFromApi()
-        .whenComplete(() => emitter("everything from api and provider is done"));
+    bool isDone = await ware.getFollowersFromApi().whenComplete(
+        () => emitter("everything from api and provider is done"));
 
     if (isDone) {
       // await Future.forEach(ware.allFollowing, (element) async {
@@ -175,12 +178,14 @@ class ActionController {
   static Future<void> retrievAllUserLikedCommentsController(
       BuildContext context) async {
     ActionWare ware = Provider.of<ActionWare>(context, listen: false);
+    // if (ware.commentId.isNotEmpty) {
+    //   return;
+    // }
 
     ware.isLoadingAllComments(true);
 
-    bool isDone = await ware
-        .getLikeCommentFromApi()
-        .whenComplete(() => emitter("everything from api and provider is done"));
+    bool isDone = await ware.getLikeCommentFromApi().whenComplete(
+        () => emitter("everything from api and provider is done"));
 
     if (isDone) {
       await Future.forEach(ware.allLikedComments, (element) async {

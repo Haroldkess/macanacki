@@ -377,6 +377,7 @@ class _BusinessInfoState extends State<BusinessInfo> {
           BusinessVerification(
             data: registerBusinessModel,
             gender: widget.data,
+            isBusiness: true,
           ));
     }
   }

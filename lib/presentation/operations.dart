@@ -184,45 +184,52 @@ class Operations {
       if (result != null) {
         List<File> file = result.paths.map((path) => File(path!)).toList();
 
-        if (user.userProfileModel.verified == null ||
-            (user.userProfileModel.verified == 0 &&
-                user.userProfileModel.gender != "Business")) {
-          emitter("selected file lenght ${file.length.toString()}");
-          if (file.length > 1) {
-            // ignore: use_build_context_synchronously
-            errors(context);
-
-            return;
-          }
-        } else {
-          if ((user.userProfileModel.verified == 1 &&
-              user.userProfileModel.gender == "Business")) {
-            if (file.length > 10) {
-              // ignore: use_build_context_synchronously
-              showToast2(
-                  context, "You can only select maximum of 10 media files",
-                  isError: true);
-              return;
-            }
-          } else if ((user.userProfileModel.verified == 0 &&
-              user.userProfileModel.gender == "Business")) {
-            if (file.length > 1) {
-              // ignore: use_build_context_synchronously
-              errors(context);
-
-              return;
-            }
-          } else {
-            if (file.length > 1) {
-              // ignore: use_build_context_synchronously
-              errors(context);
-
-              return;
-            }
-          }
+        if (file.length > 10) {
+          // ignore: use_build_context_synchronously
+          showToast2(context, "You can only select maximum of 10 media files",
+              isError: true);
+          return;
         }
 
-        emitter(file.first.path.toString());
+        // if (user.userProfileModel.verified == null ||
+        //     (user.userProfileModel.verified == 0 &&
+        //         user.userProfileModel.gender != "Business")) {
+        //   emitter("selected file lenght ${file.length.toString()}");
+        //   if (file.length > 1) {
+        //     // ignore: use_build_context_synchronously
+        //     errors(context);
+
+        //     return;
+        //   }
+        // } else {
+        //   if ((user.userProfileModel.verified == 1 &&
+        //       user.userProfileModel.gender == "Business")) {
+        //     if (file.length > 10) {
+        //       // ignore: use_build_context_synchronously
+        //       showToast2(
+        //           context, "You can only select maximum of 10 media files",
+        //           isError: true);
+        //       return;
+        //     }
+        //   } else if ((user.userProfileModel.verified == 0 &&
+        //       user.userProfileModel.gender == "Business")) {
+        //     if (file.length > 1) {
+        //       // ignore: use_build_context_synchronously
+        //       errors(context);
+
+        //       return;
+        //     }
+        //   } else {
+        //     if (file.length > 1) {
+        //       // ignore: use_build_context_synchronously
+        //       errors(context);
+
+        //       return;
+        //     }
+        //   }
+        // }
+
+        //  emitter(file.first.path.toString());
         picked.addFile(file);
         // ignore: use_build_context_synchronously
         PageRouting.pushToPage(context, const CreatePostScreen());

@@ -83,6 +83,7 @@ Future<http.Response?> getUnreadChat() async {
         HttpHeaders.authorizationHeader: "Bearer $token",
       },
     );
+    // log(response.body);
   } catch (e) {
     response = null;
   }
@@ -102,6 +103,7 @@ Future<http.Response?> readAllChats(int userId) async {
         HttpHeaders.authorizationHeader: "Bearer $token",
       },
     );
+    log("read this${response.body}");
   } catch (e) {
     response = null;
   }

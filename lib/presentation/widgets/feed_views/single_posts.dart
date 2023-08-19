@@ -19,26 +19,29 @@ class SinglePost extends StatelessWidget {
   final BoxConstraints? constraints;
   final bool isHome;
   final String thumbLink;
-  const SinglePost(
+  bool isInView;
+   SinglePost(
       {super.key,
       required this.media,
       required this.controller,
       required this.shouldPlay,
       required this.constraints,
-      required this.isHome, required this.thumbLink});
+      required this.isHome,
+      required this.thumbLink, required this.isInView});
 
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     return !media.contains("https")
-        ?   FeedVideoHolder(
+        ? FeedVideoHolder(
             file: "$muxStreamBaseUrl/$media.$videoExtension",
             controller: controller!,
             shouldPlay: true,
             isHome: isHome,
             thumbLink: thumbLink,
-          ) 
+            isInView: isInView,
+          )
         : Stack(
             alignment: Alignment.center,
             children: [
@@ -93,27 +96,32 @@ class UserSinglePost extends StatelessWidget {
   final bool isHome;
   final String thumbLink;
   final String page;
-  const UserSinglePost(
+  bool? isInView;
+  UserSinglePost(
       {super.key,
       required this.media,
       required this.controller,
       required this.shouldPlay,
       required this.constraints,
-      required this.isHome, required this.thumbLink, required this.page});
+      required this.isHome,
+      required this.thumbLink,
+      required this.page,
+      required this.isInView});
 
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     return !media.contains("https")
-        ?   FeedVideoHolderPrivate(
+        ? FeedVideoHolderPrivate(
             file: "$muxStreamBaseUrl/$media.$videoExtension",
             controller: controller!,
             shouldPlay: true,
             isHome: isHome,
             thumbLink: thumbLink,
             page: page,
-          ) 
+            isInView: isInView,
+          )
         : Stack(
             alignment: Alignment.center,
             children: [

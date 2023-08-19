@@ -30,7 +30,7 @@ class HexagonAvatar extends StatelessWidget {
             progressIndicatorBuilder: (context, url, downloadProgress) =>
                 Center(
                     child: Loader(
-              color: HexColor(primaryColor),
+              color: HexColor(primaryColor).withOpacity(.7),
             )),
             errorWidget: (context, url, error) => Icon(
               Icons.error,

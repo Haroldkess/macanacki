@@ -17,6 +17,7 @@ import '../../../../model/gender_model.dart';
 import '../../../../services/api_url.dart';
 import '../../../../services/controllers/plan_controller.dart';
 import '../../../../services/controllers/url_launch_controller.dart';
+import '../../../../services/controllers/verify_controller.dart';
 import '../../../../services/middleware/create_post_ware.dart';
 import '../../../allNavigation.dart';
 import '../../../constants/colors.dart';
@@ -28,10 +29,11 @@ import '../user_name.dart';
 import 'business_info.dart';
 
 class BusinessVerification extends StatefulWidget {
-  final RegisterBusinessModel data;
+  final RegisterBusinessModel? data;
   final GenderList gender;
+  final bool isBusiness;
   const BusinessVerification(
-      {super.key, required this.data, required this.gender});
+      {super.key, this.data, required this.gender, required this.isBusiness});
 
   @override
   State<BusinessVerification> createState() => _BusinessVerificationState();
@@ -61,7 +63,7 @@ class _BusinessVerificationState extends State<BusinessVerification> {
             height: 20,
           ),
           BusinessForm(
-            title: "Your Name",
+            title: "Your Full Name",
             hint: "Enter Your Real Name here",
             controller: name,
           ),
@@ -274,13 +276,15 @@ class _BusinessVerificationState extends State<BusinessVerification> {
   _submit(context) async {
     CreatePostWare picked = Provider.of<CreatePostWare>(context, listen: false);
     UserProfileWare user = Provider.of<UserProfileWare>(context, listen: false);
+    FocusScope.of(context).unfocus();
+    Operations.controlSystemColor();
     if (iAgree == false ||
         name.text.isEmpty ||
         address.text.isEmpty ||
         id.text.isEmpty ||
         user.id.isEmpty ||
         picked.idUser == null) {
-      showToast2(context, "iNCOMPLETE FORM");
+      showToast2(context, "INCOMPLETE FORM");
       return;
     } else {
       VerifyUserModel verify = VerifyUserModel(
@@ -289,13 +293,25 @@ class _BusinessVerificationState extends State<BusinessVerification> {
           idNumb: id.text,
           photo: picked.idUser,
           address: address.text);
-      user
-          .saveBusinessInfo(verify, widget.gender, widget.data)
-          .whenComplete(() => PageRouting.pushToPage(
-              context,
-              SelectUserName(
-                genderId: widget.gender.id!,
-              )));
+
+      if (widget.isBusiness) {
+        user
+            .saveBusinessInfo(verify, widget.gender, widget.data!)
+            .whenComplete(() => PageRouting.pushToPage(
+                context,
+                const SubscriptionPlansBusiness(
+                  isBusiness: true,
+                )));
+      } else {
+        user
+            .saveInfo(verify, widget.gender)
+            .whenComplete(() => PageRouting.pushToPage(
+                context,
+                const SubscriptionPlansBusiness(
+                  isBusiness: false,
+                )));
+        //   VerifyController.business(context)
+      }
     }
   }
 }

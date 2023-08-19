@@ -40,8 +40,16 @@ class FeedPostController {
       if (isPaginating == true) {
         ware.isLoading(false);
       }
+      //  List<FeedPost> data = [];
+      // for (var i = 0; i < 10; i++) {
+      //   data.add(ware.feedPosts[i]);
+      // }
 
       emitter("feed post stored");
+    // ignore: use_build_context_synchronously
+    // await  FeedPostController.downloadThumbs(
+    //       // ignore: use_build_context_synchronously
+    //       data, context, MediaQuery.of(context).size.height);
     } else {
       if (isPaginating == true) {
         ware.isLoading(false);
@@ -214,6 +222,7 @@ class FeedPostController {
 
   static Future<void> downloadThumbs(
       List<FeedPost> data, BuildContext context, height) async {
+      
     // emitter("-------------------------------------------------");
     FeedPostWare ware = Provider.of<FeedPostWare>(context, listen: false);
 
@@ -332,5 +341,12 @@ class FeedPostController {
       return true;
     }
     return false;
+  }
+
+  static Future<void> loadBeforeHand(context, FeedPost data) async {
+    FeedPostWare feed = Provider.of(context, listen: false);
+   await feed.initializeBeforeHand(data);
+
+
   }
 }

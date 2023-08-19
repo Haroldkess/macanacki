@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:macanacki/presentation/model/ui_model.dart';
+import 'package:macanacki/presentation/operations.dart';
 import 'package:macanacki/presentation/screens/home/subscription/plan_box.dart';
 import 'package:macanacki/presentation/screens/home/subscription/sub_successful.dart';
 import 'package:macanacki/presentation/screens/onboarding/business/success.dart';
@@ -24,6 +25,7 @@ import '../../../constants/colors.dart';
 import '../../../constants/params.dart';
 import '../../../uiproviders/screen/tab_provider.dart';
 import '../../../widgets/custom_paint.dart';
+import '../../../widgets/screen_loader.dart';
 import '../../../widgets/text.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter_paystack/flutter_paystack.dart';
@@ -35,7 +37,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../splash_screen.dart';
 
 class SubscriptionPlansBusiness extends StatefulWidget {
-  const SubscriptionPlansBusiness({super.key});
+  final bool isBusiness;
+  const SubscriptionPlansBusiness({super.key, required this.isBusiness});
 
   @override
   State<SubscriptionPlansBusiness> createState() =>
@@ -49,6 +52,7 @@ class _SubscriptionPlansBusinessState extends State<SubscriptionPlansBusiness> {
   void initState() {
     super.initState();
     plugin.initialize(publicKey: dotenv.get('PUBLIC_KEY').toString());
+    Operations.controlSystemColor();
   }
   // dotenv.get('PUBLIC_KEY').toString()
 
@@ -157,7 +161,7 @@ class _SubscriptionPlansBusinessState extends State<SubscriptionPlansBusiness> {
                   //   color: Colors.amber,
                   height: 450,
                   child: Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
+                    padding: const EdgeInsets.only(bottom: 10, top: 10),
                     child: Align(
                       alignment: Alignment.bottomCenter,
                       child: Column(
@@ -173,8 +177,9 @@ class _SubscriptionPlansBusinessState extends State<SubscriptionPlansBusiness> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     AppText(
-                                      text:
-                                          "Verified Businesses  have blue checkmarks",
+                                      text: widget.isBusiness
+                                          ? "Verified Businesses have blue checkmarks"
+                                          : "Verified accounts have blue checkmarks",
                                       color: HexColor(darkColor),
                                       size: 12,
                                       fontWeight: FontWeight.w700,
@@ -258,25 +263,68 @@ class _SubscriptionPlansBusinessState extends State<SubscriptionPlansBusiness> {
                                     onTap: () async {
                                       SharedPreferences pref =
                                           await SharedPreferences.getInstance();
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(SnackBar(
+                                        behavior: SnackBarBehavior.floating,
+                                        duration: const Duration(seconds: 5),
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(5)),
+                                        elevation: 10.0,
+                                        padding: const EdgeInsets.only(
+                                            top: 10,
+                                            bottom: 10,
+                                            left: 15,
+                                            right: 3),
+                                        content: Row(
+                                          children: [
+                                            Container(
+                                                constraints: const  BoxConstraints(
+                                                    maxWidth: 200),
+                                                child: AppText(
+                                                    text:
+                                                        "This action will log you out?",
+                                                    color: Colors.white,
+                                                    size: 15,
+                                                    fontWeight: FontWeight.w600,
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis))
+                                          ],
+                                        ),
+                                        backgroundColor: HexColor(primaryColor)
+                                            .withOpacity(.9),
+                                        action: SnackBarAction(
+                                            label: "Yes",
+                                            textColor: Colors.white,
+                                            onPressed: () async {
+                                              progressIndicator(context,
+                                                  message:
+                                                      "Logging you out...");
+                                              await Future.delayed(
+                                                  const Duration(seconds: 3));
+                                              await pref.remove(isLoggedInKey);
+                                              await pref.remove(tokenKey);
+                                              await pref.remove(passwordKey);
+                                              await pref.remove(emailKey);
+                                              await pref.remove(dobKey);
+                                              await pref.remove(isFirstTimeKey);
+                                              await pref.remove(photoKey);
+                                              await pref.remove(userNameKey);
 
-                                      await pref.remove(isLoggedInKey);
-                                      await pref.remove(tokenKey);
-                                      await pref.remove(passwordKey);
-                                      await pref.remove(emailKey);
-                                      await pref.remove(dobKey);
-                                      await pref.remove(isFirstTimeKey);
-                                      await pref.remove(photoKey);
-                                      await pref.remove(userNameKey);
+                                              await pref.clear();
 
-                                      await pref.clear();
+                                              // ignore: use_build_context_synchronously
+                                              await removeProviders(context);
 
-                                      // ignore: use_build_context_synchronously
-                                      await removeProviders(context);
-
-                                      // ignore: use_build_context_synchronously
-                                      PageRouting.removeAllToPage(
-                                          context, const Splash());
-                                      Restart.restartApp();
+                                              // ignore: use_build_context_synchronously
+                                              PageRouting.removeAllToPage(
+                                                  context, const Splash());
+                                              Restart.restartApp();
+                                              // PageRouting.popToPage(
+                                              //     cont);
+                                            }),
+                                      ));
                                     },
                                     child: AppText(
                                       text: "Switch Account",

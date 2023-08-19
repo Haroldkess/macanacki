@@ -249,7 +249,7 @@ class ChatController {
 
     socket.onConnect((_) {
       ware.addSocket(socket);
-   //   print('Connection established');
+      print('Connection established');
     });
     ware.addSocket(socket);
 // socket.on("getMessage", (data) {
@@ -264,7 +264,7 @@ class ChatController {
     socket.onConnectError((err) => print(err));
     socket.onError((err) => print(err));
     socket.onDisconnect((_) => print('Connection Disconnection'));
-   // print(socket.connected);
+    print(socket.connected);
 
     // ignore: use_build_context_synchronously
   }

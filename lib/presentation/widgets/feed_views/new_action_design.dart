@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hexagon/hexagon.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:like_button/like_button.dart';
@@ -43,7 +44,7 @@ class NewDesignTest extends StatefulWidget {
 class _NewDesignTestState extends State<NewDesignTest> {
   bool showMore = false;
   late SharedPreferences pref;
-  String myUsername = "";
+  // String myUsername = "";
   TapGestureRecognizer tapGestureRecognizer = TapGestureRecognizer();
   String test =
       "Users description will appear here eg. Video description here. description should be two lines before...see moreUsers description will appear here eg. Video description here. description should be two lines before...see more";
@@ -51,13 +52,13 @@ class _NewDesignTestState extends State<NewDesignTest> {
   @override
   void initState() {
     super.initState();
-    initPref();
+    // initPref();
   }
 
   initPref() async {
     pref = await SharedPreferences.getInstance();
     setState(() {
-      myUsername = pref.getString(userNameKey)!;
+      //   myUsername = pref.getString(userNameKey)!;
     });
   }
 
@@ -79,11 +80,11 @@ class _NewDesignTestState extends State<NewDesignTest> {
       padding: const EdgeInsets.only(left: 8.0),
       child: Container(
         height: showMore
-            ? null
+            ? height / 1.4
             : widget.data.user!.gender == "Business"
                 ? 119
                 : 90,
-        width: double.infinity,
+        width: width,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
@@ -161,9 +162,10 @@ class _NewDesignTestState extends State<NewDesignTest> {
                           }
 
                           if (widget.data.user!.username! ==
-                                  pref.getString(userNameKey) ||
-                              widget.data.user!.username! ==
-                                  user.userProfileModel.username) {
+                              user.userProfileModel.username) {
+                            action.tap(true);
+                            action.pauseControl();
+
                             action.tapTrack(0);
                             action.changeIndex(4);
                             action.pageController!.animateToPage(
@@ -216,7 +218,8 @@ class _NewDesignTestState extends State<NewDesignTest> {
                               children: [
                                 Container(
                                   constraints: const BoxConstraints(
-                                      maxWidth: 139,),
+                                    maxWidth: 139,
+                                  ),
                                   //   color: Colors.amber,
                                   child: AppText(
                                     text: widget.data.user!.username!,
@@ -335,7 +338,7 @@ class _NewDesignTestState extends State<NewDesignTest> {
               ],
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 36, top: 0),
+              padding: const EdgeInsets.only(left: 36, top: 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -356,12 +359,15 @@ class _NewDesignTestState extends State<NewDesignTest> {
                                   ? widget.data.description!
                                       .substring(0, seeMoreVal - 3)
                                   : widget.data.description!,
-                              style: TextStyle(
+                              style: GoogleFonts.spartan(
+                                  textStyle: TextStyle(
                                 fontWeight: FontWeight.w600,
-                                fontSize: 13,
                                 color:
                                     HexColor(backgroundColor).withOpacity(0.9),
-                              ),
+                                decorationStyle: TextDecorationStyle.solid,
+                                fontSize: 10,
+                                fontFamily: '',
+                              )),
                               recognizer: tapGestureRecognizer
                                 ..onTap = () async {
                                   //    print("object");
@@ -401,6 +407,7 @@ class _NewDesignTestState extends State<NewDesignTest> {
                                           },
                                       )
                               ])),
+                    
                     ),
                   ),
                 ],

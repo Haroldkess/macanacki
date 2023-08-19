@@ -172,10 +172,15 @@ class _SelectGenderState extends State<SelectGender> {
     Temp temp = Provider.of<Temp>(context, listen: false);
     print(data.name);
     if (data.name == "Business") {
+      // temp.addGenderIdTemp(data.id!).whenComplete(() => PageRouting.pushToPage(
+      //     context,
+      //     BusinessInfo(
+      //       data: data,
+      //     )));
       temp.addGenderIdTemp(data.id!).whenComplete(() => PageRouting.pushToPage(
           context,
-          BusinessInfo(
-            data: data,
+          SelectUserName(
+            genderId: data.id!,
           )));
     } else {
       temp.addGenderIdTemp(data.id!).whenComplete(() => PageRouting.pushToPage(

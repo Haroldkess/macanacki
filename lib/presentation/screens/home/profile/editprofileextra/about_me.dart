@@ -34,7 +34,7 @@ class EditAboutMe extends StatelessWidget {
               shape: BoxShape.rectangle,
               borderRadius: const BorderRadius.all(Radius.circular(0))),
           child: Padding(
-            padding: const EdgeInsets.only(left: 10, right: 10, bottom: 30),
+            padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
             child: TextFormField(
               controller: about,
               maxLength: 120,

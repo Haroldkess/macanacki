@@ -46,7 +46,7 @@ class _EmailScreenState extends State<EmailScreen> {
                 children: const [
                   AppIcon(
                     width: 22.3,
-                    height: 35,
+                    height: 20,
                   ),
                 ],
               ),

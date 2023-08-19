@@ -20,7 +20,7 @@ Future<http.Response?> getUserProfile() async {
       },
     );
 
-    //  log(response.body.toString());
+    log(response.body.toString());
   } catch (e) {
     response = null;
   }

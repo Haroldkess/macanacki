@@ -57,12 +57,13 @@ class _FeedHomeState extends State<FeedHome>
   callFeedPost(bool isRefreshed) async {
     FeedPostWare provide = Provider.of<FeedPostWare>(context, listen: false);
     if (isRefreshed == false) {
-      if (provide.feedPosts.isNotEmpty) {
-        return;
-      }
-      SchedulerBinding.instance.addPostFrameCallback((_) async {
+      if (provide.feedPosts.isEmpty) {
+        SchedulerBinding.instance.addPostFrameCallback((_) async {
         await FeedPostController.getFeedPostController(context, 1, false);
       });
+        
+      }
+      
       SchedulerBinding.instance.addPostFrameCallback((_) {
         ActionController.retrievAllUserLikedController(context);
       });

@@ -3,6 +3,8 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:macanacki/presentation/allNavigation.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
 import 'package:macanacki/presentation/screens/home/settings/settingextra/logout.dart';
+import 'package:macanacki/presentation/screens/onboarding/business/business_info.dart';
+import 'package:macanacki/presentation/screens/onboarding/business/business_verification.dart';
 import 'package:macanacki/presentation/screens/onboarding/splash_screen.dart';
 import 'package:macanacki/presentation/widgets/screen_loader.dart';
 import 'package:macanacki/presentation/widgets/text.dart';
@@ -11,7 +13,9 @@ import 'package:provider/provider.dart';
 import 'package:restart_app/restart_app.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../model/gender_model.dart';
 import '../../services/controllers/plan_controller.dart';
+import '../../services/middleware/user_profile_ware.dart';
 import '../../services/temps/temps_id.dart';
 import '../screens/onboarding/business/sub_plan.dart';
 
@@ -26,6 +30,7 @@ class DrawerSide extends StatefulWidget {
 class _DrawerSideState extends State<DrawerSide> {
   @override
   Widget build(BuildContext context) {
+    UserProfileWare user = context.watch<UserProfileWare>();
     return Drawer(
       backgroundColor: HexColor(primaryColor),
       child: SizedBox(
@@ -90,14 +95,59 @@ class _DrawerSideState extends State<DrawerSide> {
 
                           // ignore: use_build_context_synchronously
                           PageRouting.removeAllToPage(context, const Splash());
-                          Restart.restartApp();
+                         Restart.restartApp();
                           // PageRouting.popToPage(
                           //     cont);
                         }),
                   ));
+               
+               
                 },
                 title: AppText(
                   text: "Logout",
+                  color: HexColor(backgroundColor),
+                  fontWeight: FontWeight.w400,
+                  size: 16,
+                ),
+                trailing: const Icon(
+                  Icons.arrow_forward_ios,
+                  color: Colors.white,
+                  size: 15,
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              ListTile(
+                onTap: () async {
+                  GenderList gender =
+                      GenderList(id: 2, name: "Business", selected: true);
+                  PlanController.retrievPlanController(context, true);
+                  if (user.userProfileModel.gender == "Business" &&
+                      user.userProfileModel.activePlan ==
+                          "inactive subscription") {
+                    PageRouting.pushToPage(
+                        context,
+                        BusinessInfo(
+                          data: gender,
+                        ));
+
+                    // ignore: use_build_context_synchronously
+                    // PageRouting.pushToPage(
+                    //     context, const SubscriptionPlansBusiness());
+                  } else if (user.userProfileModel.gender != "Business" &&
+                      user.userProfileModel.activePlan ==
+                          "inactive subscription") {
+                    PageRouting.pushToPage(
+                        context,
+                        BusinessVerification(
+                          gender: gender,
+                          isBusiness: false,
+                        ));
+                  }
+                },
+                title: AppText(
+                  text: "Verify account",
                   color: HexColor(backgroundColor),
                   fontWeight: FontWeight.w400,
                   size: 16,

@@ -83,7 +83,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   : widget.user.userOneId!);
     });
 
-    ModeController.handleMode("online");
+    // ModeController.handleMode("online");
 
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       UserProfileWare user =
@@ -217,6 +217,8 @@ class _ChatScreenState extends State<ChatScreen> {
         if (myChat.chatPage != 0) {
           ChatController.changeChatPage(context, 0);
         }
+
+        
 
         Navigator.pop(context, [widget.user, ware.newConversationData]);
         return Future.value(false);
@@ -396,7 +398,7 @@ class _ChatScreenState extends State<ChatScreen> {
             leading: BackButton(
               color: HexColor("#322929"),
               onPressed: () async {
-                  ChatWare ware = Provider.of<ChatWare>(context, listen: false);
+                ChatWare ware = Provider.of<ChatWare>(context, listen: false);
                 setState(() {
                   leaving = true;
                 });

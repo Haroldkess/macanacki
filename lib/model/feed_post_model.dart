@@ -5,6 +5,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:video_player/video_player.dart';
+
 FeedPostModel feedPostModelFromJson(String str) =>
     FeedPostModel.fromJson(json.decode(str));
 
@@ -123,7 +125,7 @@ class FeedPost {
       this.viewCount,
       this.button,
       this.user,
-      this.media2});
+      this.media2, this.controller});
 
   int? id;
   String? description;
@@ -140,6 +142,7 @@ class FeedPost {
   int? viewCount;
   String? button;
   User? user;
+  VideoPlayerController? controller;
 
   FeedPost copyWith({
     int? id,
@@ -157,6 +160,7 @@ class FeedPost {
     int? viewCount,
     String? button,
     User? user,
+    VideoPlayerController? controller,
   }) =>
       FeedPost(
           id: id ?? this.id,
@@ -173,7 +177,7 @@ class FeedPost {
           noOfLikes: noOfLikes ?? this.noOfLikes,
           viewCount: viewCount ?? this.viewCount,
           button: button ?? this.button,
-          user: user ?? this.user);
+          user: user ?? this.user, controller: controller ?? this.controller);
 
   factory FeedPost.fromJson(Map<String, dynamic> json) => FeedPost(
         id: json["id"],
@@ -263,7 +267,7 @@ class Comment {
         profilePhoto: json["profile_photo"],
         noOfLikes: json["no_of_likes"],
         postId: json["post_id"],
-         isVerified: json["user_verified"],
+        isVerified: json["user_verified"],
       );
 
   Map<String, dynamic> toJson() => {

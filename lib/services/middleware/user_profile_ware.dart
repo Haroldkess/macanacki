@@ -57,6 +57,17 @@ class UserProfileWare extends ChangeNotifier {
 
     notifyListeners();
   }
+    Future<void> saveInfo(
+    VerifyUserModel v,
+    GenderList g,
+
+  ) async {
+    verifyUserModel = v;
+    genderData = g;
+
+
+    notifyListeners();
+  }
 
   void disposeValue() async {
     _userProfileModel = UserData();

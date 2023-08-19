@@ -8,6 +8,8 @@ class TabProvider extends ChangeNotifier {
   String image = "";
   VideoPlayerController? controller;
   VideoPlayerController? controllerHolder;
+   VideoPlayerController? previousController;
+  VideoPlayerController? nextController;
   bool isTapped = false;
   bool isHome = false;
   PageController? pageController = PageController();
@@ -43,6 +45,16 @@ class TabProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+   Future addNextControl(VideoPlayerController control) async {
+    nextController = control;
+    notifyListeners();
+  }
+
+     Future addPreviousControl(VideoPlayerController control) async {
+    previousController = control;
+    notifyListeners();
+  }
+
   Future addControl(VideoPlayerController control) async {
     controller = control;
     notifyListeners();
@@ -70,6 +82,25 @@ class TabProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+ Future disposeNextControl() async {
+    if (nextController != null) {
+      nextController!.dispose();
+      nextController = null;
+    }
+
+    notifyListeners();
+  }
+
+
+ Future disposePreviousControl() async {
+    if (previousController != null) {
+      previousController!.dispose();
+      previousController = null;
+    }
+
+    notifyListeners();
+  }
+
   Future pauseControl() async {
     controller!.pause();
     notifyListeners();
@@ -77,6 +108,26 @@ class TabProvider extends ChangeNotifier {
 
   Future playControl() async {
     controller!.play();
+    notifyListeners();
+  }
+
+  Future pauseNextControl() async {
+    nextController!.pause();
+    notifyListeners();
+  }
+
+  Future playNextControl() async {
+    nextController!.play();
+    notifyListeners();
+  }
+
+   Future pausePreviousControl() async {
+    previousController!.pause();
+    notifyListeners();
+  }
+
+  Future playPreviousControl() async {
+    previousController!.play();
     notifyListeners();
   }
 

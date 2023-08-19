@@ -55,7 +55,8 @@ class ProfilePicture extends StatelessWidget {
                     child: Center(
                         child: facial.addedDp == null
                             ? CachedNetworkImage(
-                                imageUrl: user.userProfileModel.profilephoto!)
+                                imageUrl: user.userProfileModel.profilephoto ??
+                                    "https://icon-library.com/images/no-profile-pic-icon/no-profile-pic-icon-27.jpg")
                             : Image.file(File(facial.addedDp!.path)))),
               ),
               Align(

@@ -14,10 +14,12 @@ import 'package:macanacki/services/backoffice/user_profile_office.dart';
 import 'package:macanacki/services/controllers/feed_post_controller.dart';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
+import 'package:video_player/video_player.dart';
 
 import '../../model/asset_data.dart';
 import '../../model/profile_feed_post.dart';
 import '../../model/user_profile_model.dart';
+import '../../presentation/constants/string.dart';
 import '../../presentation/widgets/debug_emitter.dart';
 import '../backoffice/db.dart';
 import '../backoffice/mux_client.dart';
@@ -34,6 +36,7 @@ class FeedPostWare extends ChangeNotifier {
   List<File> cachedFilePosts = [];
   List<FeedPost> cachedPosts = [];
   List<String> thumbs = [];
+  bool? isVisible;
 
   ProfileFeedModel _profileFeedData = ProfileFeedModel();
   List<ProfileFeedDatum> _profileFeedPosts = [];
@@ -47,6 +50,11 @@ class FeedPostWare extends ChangeNotifier {
 
   ProfileFeedModel get profileFeedData => _profileFeedData;
   List<ProfileFeedDatum> get profileFeedPosts => _profileFeedPosts;
+
+  void changeVisibility(bool val) {
+    isVisible = val;
+    notifyListeners();
+  }
 
   Future<void> addCached(FeedPost post) async {
     List<FeedPost> check =
@@ -120,7 +128,7 @@ class FeedPostWare extends ChangeNotifier {
     notifyListeners();
   }
 
-   Future<void> isLoadingReferesh(bool isLoad) async {
+  Future<void> isLoadingReferesh(bool isLoad) async {
     _loadStatusReferesh = isLoad;
     notifyListeners();
   }
@@ -151,7 +159,7 @@ class FeedPostWare extends ChangeNotifier {
         var incomingData = FeedData.fromJson(jsonData["data"]);
         _feedData = incomingData;
         //  _feedData.data!.shuffle();
-        emitter(pageNum.toString());
+        //emitter(pageNum.toString());
 
         if (pageNum == 1) {
           _feedPosts = _feedData.data!;
@@ -186,6 +194,19 @@ class FeedPostWare extends ChangeNotifier {
     notifyListeners();
 
     return isSuccessful;
+  }
+
+  Future<void> initializeBeforeHand(FeedPost post) async {
+    List<FeedPost> data = _feedPosts.where((val) => val.id == post.id).toList();
+    if (data.isNotEmpty) {
+      if(_feedPosts.where((val) => val.id == post.id).toList().first.controller == null){
+        _feedPosts.where((val) => val.id == post.id).toList().first.controller=
+          post.controller;
+
+      }
+    }
+
+    notifyListeners();
   }
 
   Future<void> remove(id) async {
