@@ -4,7 +4,9 @@ import 'package:macanacki/presentation/uiproviders/screen/comment_provider.dart'
 import 'package:macanacki/presentation/uiproviders/screen/find_people_provider.dart';
 import 'package:macanacki/presentation/uiproviders/screen/tab_provider.dart';
 import 'package:macanacki/services/middleware/action_ware.dart';
+import 'package:macanacki/services/middleware/ads_ware.dart';
 import 'package:macanacki/services/middleware/button_ware.dart';
+import 'package:macanacki/services/middleware/category_ware.dart';
 import 'package:macanacki/services/middleware/chat_ware.dart';
 import 'package:macanacki/services/middleware/create_post_ware.dart';
 import 'package:macanacki/services/middleware/edit_profile_ware.dart';
@@ -104,6 +106,12 @@ class InitProvider {
       ),
       ChangeNotifierProvider(
         create: (context) => EditProfileWare(),
+      ),
+      ChangeNotifierProvider(
+        create: (context) => CategoryWare(),
+      ),
+         ChangeNotifierProvider(
+        create: (context) => AdsWare(),
       ),
     ];
 

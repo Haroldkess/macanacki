@@ -1,7 +1,5 @@
 import 'dart:io';
 
-
-
 class CreatePostModel {
   String? description;
   int? published;
@@ -44,11 +42,13 @@ class EditProfileModel {
   String? description;
   String? phone;
   String? media;
+  String? country, state, city;
 
   EditProfileModel({
     this.description,
     this.phone,
     this.media,
+    this.country,this.state, this.city
   });
 
   Future<Map<String, dynamic>> toJson() async => {

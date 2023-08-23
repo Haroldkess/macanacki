@@ -71,7 +71,7 @@ Future<http.StreamedResponse?> verifyBusiness(
   String? token = pref.getString(tokenKey);
 
   final filePhotoName = basename(data.evidence!.path);
-  final filePhotoName1 = basename(data.photo!.path);
+  // final filePhotoName1 = basename(data.photo!.path);
 
   var request = http.MultipartRequest(
       "POST", Uri.parse("$baseUrl/public/api/user/verification"));
@@ -82,11 +82,11 @@ Future<http.StreamedResponse?> verifyBusiness(
   var filePhoto = await http.MultipartFile.fromPath(
       'evidence', data.evidence!.path,
       filename: filePhotoName);
-  var filePhoto1 = await http.MultipartFile.fromPath('photo', data.photo!.path,
-      filename: filePhotoName1);
+  // var filePhoto1 = await http.MultipartFile.fromPath('photo', data.photo!.path,
+  //     filename: filePhotoName1);
 
   request.headers.addAll(headers);
-  request.fields["name"] = data.name!.toString();
+  // request.fields["name"] = data.name!.toString();
   request.fields["business_name"] = data.busName!.toString();
   request.fields["business_email"] = data.email!.toString();
   request.fields["phone"] = data.phone!.toString();
@@ -94,10 +94,10 @@ Future<http.StreamedResponse?> verifyBusiness(
   request.fields["is_registered"] = data.isReg!.toString();
   request.fields["country"] = data.country!.toString();
   request.fields["registration_no"] = data.regNo!.toString();
-  request.fields["address"] = data.address!.toString();
-  request.fields["id_type"] = data.idType!.toString();
-  request.fields["id_no"] = data.idNumb!.toString();
-  request.files.add(filePhoto1);
+//  request.fields["address"] = data.address!.toString();
+  // request.fields["id_type"] = data.idType!.toString();
+//  request.fields["id_no"] = data.idNumb!.toString();
+//  request.files.add(filePhoto1);
   request.files.add(filePhoto);
   request.fields["business_address"] = data.businessAddress!.toString();
 
@@ -116,13 +116,18 @@ Future<http.StreamedResponse?> verifyUser(
   VerifyUserModel data,
 ) async {
   http.StreamedResponse? response;
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  String? token = pref.getString(tokenKey);
 
   final filePhotoName = basename(data.photo!.path);
   List<dynamic> photo = [filePhotoName];
 
   var request = http.MultipartRequest(
       "POST", Uri.parse("$baseUrl/public/api/user/verification"));
-  Map<String, String> headers = {'Accept': 'application/json'};
+  Map<String, String> headers = {
+    'Accept': 'application/json',
+    'authorization': 'Bearer $token',
+  };
   var filePhoto = await http.MultipartFile.fromPath('photo', data.photo!.path,
       filename: filePhotoName);
 
@@ -163,6 +168,10 @@ Future<http.StreamedResponse?> completeRegisteration(
   request.fields["dob"] = data.dob!.toString();
   request.files.add(filePhoto);
   request.fields["password"] = data.password!;
+  request.fields["category_id"] = data.catId!;
+  request.fields["country"] = data.country!.toString();
+  request.fields["state"] = data.state!.toString();
+  request.fields["city"] = data.city!.toString();
 
   try {
     response = await request.send();

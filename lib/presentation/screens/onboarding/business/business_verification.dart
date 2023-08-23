@@ -9,6 +9,7 @@ import 'package:macanacki/presentation/operations.dart';
 import 'package:macanacki/presentation/screens/onboarding/business/business_modal.dart';
 import 'package:macanacki/presentation/screens/onboarding/business/id_type.dart';
 import 'package:macanacki/presentation/screens/onboarding/business/sub_plan.dart';
+import 'package:macanacki/presentation/widgets/loader.dart';
 import 'package:macanacki/services/middleware/user_profile_ware.dart';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
@@ -19,6 +20,7 @@ import '../../../../services/controllers/plan_controller.dart';
 import '../../../../services/controllers/url_launch_controller.dart';
 import '../../../../services/controllers/verify_controller.dart';
 import '../../../../services/middleware/create_post_ware.dart';
+import '../../../../services/middleware/registeration_ware.dart';
 import '../../../allNavigation.dart';
 import '../../../constants/colors.dart';
 import '../../../constants/params.dart';
@@ -32,8 +34,13 @@ class BusinessVerification extends StatefulWidget {
   final RegisterBusinessModel? data;
   final GenderList gender;
   final bool isBusiness;
+  final String action;
   const BusinessVerification(
-      {super.key, this.data, required this.gender, required this.isBusiness});
+      {super.key,
+      this.data,
+      required this.gender,
+      required this.isBusiness,
+      required this.action});
 
   @override
   State<BusinessVerification> createState() => _BusinessVerificationState();
@@ -49,6 +56,7 @@ class _BusinessVerificationState extends State<BusinessVerification> {
   Widget build(BuildContext context) {
     CreatePostWare picked = context.watch<CreatePostWare>();
     UserProfileWare user = context.watch<UserProfileWare>();
+    RegisterationWare stream = context.watch<RegisterationWare>();
     var width = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Colors.white,
@@ -251,20 +259,22 @@ class _BusinessVerificationState extends State<BusinessVerification> {
           const SizedBox(
             height: 20,
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: AppButton(
-                width: 0.8,
-                height: 0.06,
-                color: backgroundColor,
-                text: "Continue",
-                backColor: primaryColor,
-                curves: buttonCurves * 5,
-                textColor: backgroundColor,
-                onTap: () async {
-                  _submit(context);
-                }),
-          ),
+          stream.loadUser
+              ? Loader(color: HexColor(primaryColor))
+              : Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: AppButton(
+                      width: 0.8,
+                      height: 0.06,
+                      color: backgroundColor,
+                      text: "Continue",
+                      backColor: primaryColor,
+                      curves: buttonCurves * 5,
+                      textColor: backgroundColor,
+                      onTap: () async {
+                        _submit(context);
+                      }),
+                ),
           const SizedBox(
             height: 50,
           ),
@@ -293,25 +303,27 @@ class _BusinessVerificationState extends State<BusinessVerification> {
           idNumb: id.text,
           photo: picked.idUser,
           address: address.text);
-
-      if (widget.isBusiness) {
+      if (widget.action == "both") {
         user
-            .saveBusinessInfo(verify, widget.gender, widget.data!)
+            .saveInfoIndi(
+              verify,
+            )
             .whenComplete(() => PageRouting.pushToPage(
                 context,
-                const SubscriptionPlansBusiness(
-                  isBusiness: true,
-                )));
-      } else {
-        user
-            .saveInfo(verify, widget.gender)
-            .whenComplete(() => PageRouting.pushToPage(
-                context,
-                const SubscriptionPlansBusiness(
+                SubscriptionPlansBusiness(
                   isBusiness: false,
+                  isSubmiting: widget.action,
                 )));
-        //   VerifyController.business(context)
+      } else if (widget.action == "upload") {
+        user
+            .saveInfoIndi(
+              verify,
+            )
+            .whenComplete(() => VerifyController.userVerify(context,true));
       }
+
+      //   VerifyController.business(context)
+
     }
   }
 }

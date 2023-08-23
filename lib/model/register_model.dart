@@ -10,6 +10,10 @@ class RegisterUserModel {
   String? dob;
   String? email;
   String? password;
+  String? country;
+  String? state;
+  String? city;
+  String? catId;
 
   RegisterUserModel({
     this.username,
@@ -18,6 +22,10 @@ class RegisterUserModel {
     this.email,
     this.password,
     this.photo,
+    this.catId,
+    this.country,
+    this.state,
+    this.city
   });
 
   Future<Map<String, dynamic>> toJson() async => {

@@ -10,6 +10,7 @@ import 'package:macanacki/presentation/constants/params.dart';
 import 'package:macanacki/presentation/model/ui_model.dart';
 import 'package:macanacki/presentation/operations.dart';
 import 'package:macanacki/presentation/screens/kyc/kyc_notification.dart';
+import 'package:macanacki/presentation/screens/onboarding/location_screen.dart';
 import 'package:macanacki/presentation/screens/onboarding/user_name.dart';
 import 'package:macanacki/presentation/widgets/buttons.dart';
 import 'package:macanacki/presentation/widgets/loader.dart';
@@ -179,14 +180,14 @@ class _SelectGenderState extends State<SelectGender> {
       //     )));
       temp.addGenderIdTemp(data.id!).whenComplete(() => PageRouting.pushToPage(
           context,
-          SelectUserName(
-            genderId: data.id!,
+          SelectLocation(
+            data: data,
           )));
     } else {
       temp.addGenderIdTemp(data.id!).whenComplete(() => PageRouting.pushToPage(
           context,
-          SelectUserName(
-            genderId: data.id!,
+          SelectLocation(
+            data: data,
           )));
     }
   }

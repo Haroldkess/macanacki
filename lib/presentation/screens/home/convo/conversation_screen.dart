@@ -97,7 +97,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
             backgroundColor: HexColor(primaryColor),
             color: HexColor(backgroundColor),
             child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
+              physics: const AlwaysScrollableScrollPhysics(),
               child: Column(
                 children: [
                   Padding(

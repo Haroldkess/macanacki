@@ -10,17 +10,22 @@ import 'package:provider/provider.dart';
 
 import '../../presentation/widgets/debug_emitter.dart';
 import '../../presentation/widgets/snack_msg.dart';
+import '../middleware/user_profile_ware.dart';
 
 class EditProfileController {
   static Future<EditProfileModel> regData(
-      BuildContext context, String description, String phone) async {
+      BuildContext context, String description, String phone, [String? country, state, city]) async {
     EditProfileWare pic = Provider.of<EditProfileWare>(context, listen: false);
     FacialWare img = Provider.of<FacialWare>(context, listen: false);
+     UserProfileWare user = Provider.of<UserProfileWare>(context, listen: false);
 
     EditProfileModel data = EditProfileModel(
       description: description,
       phone: phone,
       media: img.addedDp == null ? "" : img.addedDp!.path,
+      country: country ?? user.userProfileModel.country ,
+      state:  state ?? user.userProfileModel.state,
+      city: city ?? user.userProfileModel.city ,
     );
     return data;
   }
@@ -29,10 +34,11 @@ class EditProfileController {
     BuildContext context,
     String description,
     String phone,
+    [String? country, state, city]
   ) async {
     EditProfileWare ware = Provider.of<EditProfileWare>(context, listen: false);
 
-    EditProfileModel data = await regData(context, description, phone);
+    EditProfileModel data = await regData(context, description, phone,country,state,city);
     ware.isLoading(true);
 
     bool isDone = await ware

@@ -6,6 +6,7 @@ import 'package:hexagon/hexagon.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:macanacki/presentation/allNavigation.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/constants/params.dart';
 import 'package:macanacki/presentation/widgets/text.dart';
 import 'package:macanacki/services/middleware/user_profile_ware.dart';
 import 'package:macanacki/services/temps/temps_id.dart';
@@ -119,10 +120,11 @@ class UserResultTile extends StatelessWidget {
                                       // )
                                     ])),
                           ),
-                          data.verified == 0 || data.verified == null
-                              ? const SizedBox.shrink()
-                              : SvgPicture.asset("assets/icon/badge.svg",
+                          data.verified == 1 &&
+                                  data.activePlan != sub
+                              ? SvgPicture.asset("assets/icon/badge.svg",
                                   height: 15, width: 15)
+                              : const SizedBox.shrink()
                         ],
                       ),
                       const SizedBox(

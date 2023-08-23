@@ -58,6 +58,7 @@ class UserSearchData {
       this.profilephoto,
       this.noOfFollowers,
       this.noOfFollowing,
+      this.activePlan,
       this.verification});
 
   int? id;
@@ -72,10 +73,11 @@ class UserSearchData {
   DateTime? updatedAt;
   int? followingStatus;
   String? gender;
-    dynamic verified;
+  dynamic verified;
   String? profilephoto;
   int? noOfFollowers;
   int? noOfFollowing;
+   dynamic activePlan;
   Verification? verification;
 
   factory UserSearchData.fromJson(Map<String, dynamic> json) => UserSearchData(
@@ -104,6 +106,7 @@ class UserSearchData {
         verification: json["verification"] == null
             ? null
             : Verification.fromJson(json["verification"]),
+                activePlan: json["active_plan"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -124,6 +127,7 @@ class UserSearchData {
         "no_of_followers": noOfFollowers,
         "no_of_following": noOfFollowing,
         "verification": verification?.toJson(),
+          "active_plan": activePlan,
       };
 }
 

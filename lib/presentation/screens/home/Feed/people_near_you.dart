@@ -62,7 +62,7 @@ class _PeopleHomeState extends State<PeopleHome> {
                             textColor: backgroundColor,
                             onTap: () async {
                               await FeedPostController.getFeedPostController(
-                                  context, 1, false);
+                                  context, 1, true);
                               //  PageRouting.pushToPage(context, const BusinessVerification());
                             }),
                   ],

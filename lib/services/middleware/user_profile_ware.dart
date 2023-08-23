@@ -3,8 +3,11 @@ import 'package:macanacki/model/public_profile_model.dart';
 import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
+import 'package:macanacki/presentation/constants/params.dart';
 import 'package:macanacki/services/backoffice/user_profile_office.dart';
+import 'package:macanacki/services/temps/temp.dart';
 import 'package:macanacki/services/temps/temps_id.dart';
+import 'package:provider/provider.dart';
 
 import '../../model/gender_model.dart';
 import '../../model/register_model.dart';
@@ -57,14 +60,29 @@ class UserProfileWare extends ChangeNotifier {
 
     notifyListeners();
   }
-    Future<void> saveInfo(
+
+  Future<void> saveBusinessInfoOnly(
+    RegisterBusinessModel r,
+  ) async {
+    registerBusinessModel = r;
+
+    notifyListeners();
+  }
+
+  Future<void> saveInfo(
     VerifyUserModel v,
     GenderList g,
-
   ) async {
     verifyUserModel = v;
     genderData = g;
 
+    notifyListeners();
+  }
+
+  Future<void> saveInfoIndi(
+    VerifyUserModel v,
+  ) async {
+    verifyUserModel = v;
 
     notifyListeners();
   }
@@ -139,6 +157,19 @@ class UserProfileWare extends ChangeNotifier {
             _userProfileModel.profilephoto);
 
         // log("get user profile data  request success");
+        try {
+          if (incomingData.data!.verified == 1 &&
+              incomingData.data!.activePlan != sub) {
+            Temp temp = Provider.of(context, listen: false);
+            temp.addSubStatusTemp(true);
+          } else {
+            Temp temp = Provider.of(context, listen: false);
+            temp.addSubStatusTemp(false);
+          }
+        } catch (e) {
+          emitter(e.toString());
+        }
+
         isSuccessful = true;
       } else {
         //  log("get user profile data  request failed");

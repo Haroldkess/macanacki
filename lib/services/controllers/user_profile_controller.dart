@@ -18,7 +18,7 @@ class UserProfileController {
       BuildContext context, bool isFirstLoad) async {
     UserProfileWare ware = Provider.of<UserProfileWare>(context, listen: false);
     //    ActionWare action =  Provider.of<ActionWare>(context, listen: false);
-   // log("here4");
+    // log("here4");
 
     if (isFirstLoad == false) {
       ware.isLoading(true);
@@ -41,7 +41,9 @@ class UserProfileController {
       }
 
       // ignore: use_build_context_synchronously
-      showToast2(context, "An error occured", isError: true);
+      if (isFirstLoad == false) {
+        showToast2(context, "An error occured", isError: true);
+      }
     }
     if (isFirstLoad == false) {
       ware.isLoading(false);

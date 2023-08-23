@@ -37,22 +37,22 @@ class PublicProfileModel {
 }
 
 class PublicUserPost {
-  PublicUserPost({
-    this.id,
-    this.description,
-    this.published,
-    this.createdAt,
-    this.updatedAt,
-    this.btnLink,
-    this.creator,
-    this.media,
-    this.mux,
-    this.comments,
-    this.noOfLikes,
-    this.viewCount,
-    this.button,
-    this.user,
-  });
+  PublicUserPost(
+      {this.id,
+      this.description,
+      this.published,
+      this.createdAt,
+      this.updatedAt,
+      this.btnLink,
+      this.creator,
+      this.media,
+      this.mux,
+      this.comments,
+      this.noOfLikes,
+      this.viewCount,
+      this.button,
+      this.user,
+      this.promoted});
 
   int? id;
   String? description;
@@ -68,6 +68,7 @@ class PublicUserPost {
   int? viewCount;
   String? button;
   PublicUserData? user;
+  String? promoted;
 
   factory PublicUserPost.fromJson(Map<String, dynamic> json) => PublicUserPost(
         id: json["id"],
@@ -96,6 +97,7 @@ class PublicUserPost {
         button: json["button"],
         user:
             json["user"] == null ? null : PublicUserData.fromJson(json["user"]),
+        promoted: json["promoted"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -115,53 +117,54 @@ class PublicUserPost {
         "view_count": viewCount,
         "button": button,
         "user": user?.toJson(),
+        "promoted": promoted,
       };
 }
 
 class PublicUserData {
-  PublicUserData({
-    this.id,
-    this.email,
-    this.username,
-    this.faceVerification,
-    this.dob,
-    this.emailVerified,
-    this.registrationComplete,
-    this.emailVerifiedAt,
-    this.createdAt,
-    this.updatedAt,
-    this.firebaseId,
-    this.longitude,
-    this.latitude,
-    this.mode,
-    this.ageLowerBound,
-    this.ageUpperBound,
-    this.useCurrentLocation,
-    this.useGlobalLocationSearch,
-    this.enablePushNotification,
-    this.enableEmailNotification,
-    this.setMaxDistSearch,
-    this.twitter,
-    this.facebook,
-    this.instagram,
-    this.linkedin,
-    this.telegram,
-    this.fullName,
-    this.nationality,
-    this.idType,
-    this.idNumber,
-    this.verified,
-    this.aboutMe,
-    this.phone,
-    this.posts,
-    this.followers,
-    this.followings,
-    this.gender,
-    this.profilephoto,
-    this.noOfFollowers,
-    this.noOfFollowing,
-    this.verification,
-  });
+  PublicUserData(
+      {this.id,
+      this.email,
+      this.username,
+      this.faceVerification,
+      this.dob,
+      this.emailVerified,
+      this.registrationComplete,
+      this.emailVerifiedAt,
+      this.createdAt,
+      this.updatedAt,
+      this.firebaseId,
+      this.longitude,
+      this.latitude,
+      this.mode,
+      this.ageLowerBound,
+      this.ageUpperBound,
+      this.useCurrentLocation,
+      this.useGlobalLocationSearch,
+      this.enablePushNotification,
+      this.enableEmailNotification,
+      this.setMaxDistSearch,
+      this.twitter,
+      this.facebook,
+      this.instagram,
+      this.linkedin,
+      this.telegram,
+      this.fullName,
+      this.nationality,
+      this.idType,
+      this.idNumber,
+      this.verified,
+      this.aboutMe,
+      this.phone,
+      this.posts,
+      this.followers,
+      this.followings,
+      this.gender,
+      this.profilephoto,
+      this.noOfFollowers,
+      this.noOfFollowing,
+      this.verification,
+      this.activePlan});
 
   int? id;
   String? email;
@@ -201,6 +204,7 @@ class PublicUserData {
   List<PublicUserData>? followings;
   String? gender;
   String? profilephoto;
+  dynamic activePlan;
   int? noOfFollowers;
   int? noOfFollowing;
   Verification? verification;
@@ -264,6 +268,7 @@ class PublicUserData {
         verification: json["verification"] == null
             ? null
             : Verification.fromJson(json["verification"]),
+        activePlan: json["active_plan"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -314,6 +319,7 @@ class PublicUserData {
         "no_of_followers": noOfFollowers,
         "no_of_following": noOfFollowing,
         "verification": verification?.toJson(),
+        "active_plan": activePlan,
       };
 }
 

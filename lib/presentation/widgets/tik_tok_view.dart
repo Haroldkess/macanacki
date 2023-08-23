@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:macanacki/presentation/allNavigation.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
 import 'package:macanacki/presentation/operations.dart';
+import 'package:macanacki/presentation/screens/home/profile/promote_post/promote_screen.dart';
+import 'package:macanacki/presentation/widgets/ads_display.dart';
 import 'package:macanacki/presentation/widgets/debug_emitter.dart';
 import 'package:macanacki/presentation/widgets/feed_views/follow_section.dart';
 import 'package:macanacki/presentation/widgets/feed_views/like_section.dart';
@@ -144,23 +147,10 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
                   }
 
                   viewed = true;
-
-                  //log("Watched more than 10 seconds");
                 }
               })
             });
         thisData!.controller!.setLooping(true);
-
-        // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        //   FeedPostController.loadBeforeHand(context, thisData!);
-        // });
-
-        // widget.data.copyWith(controller: _controller);
-
-        //  }
-
-        // Use the controller to loop the video.
-
       } else {
         Future.delayed(const Duration(seconds: 2))
             .whenComplete(() => ViewController.handleView(widget.data.id!));
@@ -186,42 +176,7 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
         }
       }
     });
-
-    // SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-    //   FeedPostWare postLenght =
-    //       Provider.of<FeedPostWare>(context, listen: false);
-    //   if (widget.index1! % 2 == 0) {
-    //     List<FeedPost> toSend = [];
-
-    //     for (var i = widget.index1!;
-    //         i <
-    //             (widget.index1! +
-    //                 (postLenght.feedPosts.length - widget.index1!));
-    //         i++) {
-    //       toSend.add(postLenght.feedPosts[i]);
-    //     }
-    //     FeedPostController.downloadThumbs(
-    //         toSend, context, MediaQuery.of(context).size.height);
-    //     emitter('caching next ${toSend.length} sent');
-    //   }
-    // });
   }
-
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-  //   emitter("changed oooo");
-  //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-  //     TabProvider tabs = Provider.of<TabProvider>(context, listen: false);
-  //     if (_controller!.value.isInitialized) {
-  //       tabs.tap(true);
-  //       setState(() {
-  //         _controller!.pause();
-  //       });
-  //       _controller!.pause();
-  //     }
-  //   });
-  // }
 
   @override
   void dispose() {
@@ -229,20 +184,11 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
     controller.dispose();
   }
 
-  initPref() async {
-    // pref = await SharedPreferences.getInstance();
-    // setState(() {
-    //   myUsername = pref.getString(userNameKey)!;
-    // });
-  }
-
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     ActionWare action = Provider.of<ActionWare>(context, listen: false);
-    ActionWare stream = context.watch<ActionWare>();
-    TabProvider tabs = context.watch<TabProvider>();
     return GestureDetector(
       onDoubleTap: () async {
         if (controller.value == 1) {
@@ -381,6 +327,58 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
                 //   ),
                 ),
           ),
+          widget.data.promoted == "yes"
+              ? Positioned(
+                  bottom: 140,
+                  left: 0,
+                  child: Align(
+                      alignment: Alignment.bottomLeft,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // AdsDisplay(
+                          //   sponsored: false,
+                          //   color: HexColor('#00B074'),
+                          //   title: '\$10.000.00',
+                          // ),
+                          // SizedBox(
+                          //   height: 10,
+                          // ),
+                          AdsDisplay(
+                            sponsored: true,
+                            //  color: HexColor('#00B074'),
+                            color: HexColor('#C0C0C0').withOpacity(.5),
+                            title: 'Sponsored Ad',
+                          ),
+                        ],
+                      )),
+                )
+              : SizedBox.shrink(),
+
+          widget.page == "user"
+              ? Positioned(
+                  bottom: 120,
+                  right: 0,
+                  child: Align(
+                      alignment: Alignment.bottomRight,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          AdsDisplay(
+                            action: () {
+                              PageRouting.pushToPage(
+                                  context,
+                                  PromoteScreen(
+                                      postId: widget.data.id.toString()));
+                            },
+                            sponsored: false,
+                            color: HexColor('#00B074'),
+                            title: 'PROMOTE',
+                          ),
+                        ],
+                      )),
+                )
+              : SizedBox.shrink(),
 
           flag
               ? Center(
@@ -408,9 +406,8 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
                   ),
                 )
               : const SizedBox.shrink(),
-          widget.data.user!.gender == "Business" &&
-                  widget.data.btnLink != null &&
-                  widget.data.button != null
+
+          widget.data.btnLink != null && widget.data.button != null
               ? Positioned(
                   bottom: 0.1,
                   child: Align(

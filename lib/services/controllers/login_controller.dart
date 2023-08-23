@@ -44,6 +44,9 @@ class LoginController {
     if (!pref.containsKey(lastMsgKey)) {
       pref.setString(lastMsgKey, "");
     }
+    if (!pref.containsKey(isVerifiedFirstKey)) {
+      pref.setBool(isVerifiedFirstKey, false);
+    }
     // ignore: use_build_context_synchronously
     await requestPermission();
     // String? _token = await FirebaseMessaging.instance.getToken();
@@ -90,7 +93,7 @@ class LoginController {
       await temp.addPasswordTemp(password);
       await temp.addIsLoggedInTemp(true);
 
-       await UserProfileController.retrievProfileController(context, true);
+      await UserProfileController.retrievProfileController(context, true);
       // ModeController.handleMode("online");
 
       await runTask(
@@ -126,11 +129,11 @@ class LoginController {
 
   static Future callFeedPost(BuildContext context) async {
     await FeedPostController.getFeedPostController(context, 1, false);
-  //  await UserProfileController.retrievProfileController(context, true);
+    //  await UserProfileController.retrievProfileController(context, true);
     ChatController.retreiveUnread(context);
     ChatController.retrievChatController(context, false);
     FeedPostController.getUserPostController(context);
-  //  ActionController.retrievAllUserFollowingController(context);
+    //  ActionController.retrievAllUserFollowingController(context);
     // ActionController.retrievAllUserLikedCommentsController(context);
   }
 

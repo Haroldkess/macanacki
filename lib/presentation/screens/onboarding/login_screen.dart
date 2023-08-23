@@ -6,6 +6,7 @@ import 'package:hexagon/hexagon.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:macanacki/presentation/allNavigation.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/screens/onboarding/add_category.dart';
 import 'package:macanacki/presentation/screens/onboarding/email_screen.dart';
 import 'package:macanacki/presentation/screens/onboarding/user_name.dart';
 import 'package:macanacki/presentation/widgets/app_icon.dart';

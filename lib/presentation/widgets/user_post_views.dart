@@ -22,9 +22,12 @@ import '../../model/feed_post_model.dart';
 import '../../services/controllers/feed_post_controller.dart';
 import '../../services/controllers/url_launch_controller.dart';
 import '../../services/temps/temps_id.dart';
+import '../allNavigation.dart';
 import '../constants/string.dart';
+import '../screens/home/profile/promote_post/promote_screen.dart';
 import '../uiproviders/screen/comment_provider.dart';
 import '../uiproviders/screen/tab_provider.dart';
+import 'ads_display.dart';
 import 'feed_views/new_action_design.dart';
 import 'feed_views/user_multiple_post.dart';
 import 'option_modal.dart';
@@ -260,255 +263,7 @@ class _UserTikTokViewState extends State<UserTikTokView>
           controller.reset();
           controller.forward();
         } else {
-          controller.forward();GestureDetector(
-            onDoubleTap: () async {
-              if (controller.value == 1) {
-                controller.reset();
-                controller.forward();
-              } else {
-                controller.forward();
-              }
-
-              if (action.likeIds.contains(widget.data.id!)) {
-                setState(() {
-                  flag = true;
-                });
-                await Future.delayed(const Duration(seconds: 2));
-
-                setState(() {
-                  flag = false;
-                });
-
-                return;
-              }
-              setState(() {
-                flag = true;
-              });
-
-              await likeAction(context, true);
-
-              await Future.delayed(const Duration(seconds: 2));
-
-              setState(() {
-                flag = false;
-              });
-            },
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Container(
-                  width: width,
-                  height: height,
-                  child: Flex(
-                    //  mainAxisSize: MainAxisSize.max,
-                    //   mainAxisSize: MainAxisSize.min,
-                    direction: Axis.vertical,
-                    // clipBehavior: Clip.hardEdge,
-                    children: <Widget>[
-                      Expanded(
-                          child: LayoutBuilder(
-                              builder: (_, constraints) =>
-                                  widget.media.length < 2
-                                      ? SinglePost(
-                                          media: widget.media.first,
-                                          controller: thisData == null
-                                              ? null
-                                              : thisData!.controller,
-                                          shouldPlay: true,
-                                          constraints: constraints,
-                                          isHome: widget.isHome,
-                                          thumbLink: widget.urls.first,
-                                          isInView: widget.isInView!,
-                                        )
-                                      : MultiplePost(
-                                          media: widget.media,
-                                          constraints: constraints,
-                                          data: widget.data,
-                                          isHome: widget.isHome,
-                                          thumbLinks: widget.urls,
-                                          isInView: widget.isInView,
-                                        )))
-                    ],
-                  ),
-                ),
-                // Align(
-                //     alignment: Alignment.bottomRight,
-                //     child: LikeSection(
-                //       data: widget.data,
-                //       page: widget.page,
-                //       media: widget.media,
-                //       urls: widget.urls,
-                //     )),
-                Positioned(
-                  right: 1,
-                  top: 0.1,
-                  child: Align(
-                    alignment: Alignment.topCenter,
-                    child: Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 30),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          // myUsername == widget.data.user!.username!
-                          //     ? const SizedBox.shrink()
-                          //     : Expanded(
-                          //         child: Row(
-                          //           children: [
-                          //             followButton(() async {
-                          //               followAction(
-                          //                 context,
-                          //               );
-                          //             },
-                          //                 stream.followIds
-                          //                         .contains(widget.data.user!.id!)
-                          //                     ? "Following"
-                          //                     : "Follow"),
-                          //           ],
-                          //         ),
-                          //       ),
-
-                          InkWell(
-                              onTap: () => optionModal(context, widget.urls,
-                                  widget.data.user!.id, widget.data.id),
-                              child: SvgPicture.asset(
-                                "assets/icon/new_option.svg",
-                                height: 15,
-                                width: 20,
-                                color: HexColor(backgroundColor),
-                              )),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  bottom: 1,
-                  child: Align(
-                      alignment: Alignment.bottomLeft,
-                      child: NewDesignTest(
-                        data: widget.data,
-                        page: widget.page,
-                        media: widget.urls,
-                        controller: _controller,
-                      )
-                      // : FollowSection(
-                      //     data: widget.data,
-                      //     page: widget.page,
-                      //     media: widget.media,
-                      //     controller: _controller,
-                      //   ),
-                      ),
-                ),
-
-                flag
-                    ? Center(
-                        child: Align(
-                          alignment: Alignment.center,
-                          child: AnimatedContainer(
-                            duration: const Duration(seconds: 3),
-                            curve: Curves.bounceInOut,
-                            onEnd: () {
-                              setState(() {
-                                flag = false;
-                              });
-                            },
-                            child: // Lottie.asset('assets/icon/like2.json',
-                                //     // height: MediaQuery.of(context).size.width * 0.5,
-                                //     // width: MediaQuery.of(context).size.width * 0.5,
-                                //     repeat: false,
-                                //     fit: BoxFit.fill),
-                                Icon(
-                              Icons.favorite,
-                              size: MediaQuery.of(context).size.width * 0.4,
-                              color: animation.value,
-                            ),
-                          ),
-                        ),
-                      )
-                    : const SizedBox.shrink(),
-                widget.data.user!.gender == "Business" &&
-                        widget.data.btnLink != null &&
-                        widget.data.button != null
-                    ? Positioned(
-                        bottom: 0.1,
-                        child: Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Row(
-                            children: [
-                              SizedBox(
-                                width: width,
-                                child: InkWell(
-                                  onTap: () async {
-                                    if (widget.data.button == "Call Now") {
-                                      await UrlLaunchController.makePhoneCall(
-                                          widget.data.btnLink!);
-                                    }
-                                    if (widget.data.button == "Whatsapp") {
-                                      //   print(widget.data.btnLink!);
-
-                                      if (widget.data.btnLink!
-                                          .contains("https://wa.me/https://")) {
-                                        var start = widget.data.btnLink!
-                                            .split("https://wa.me/https://");
-
-                                        String newVal =
-                                            "https://${start.last}".toString();
-                                        emitter(newVal);
-                                        await UrlLaunchController
-                                            .launchWebViewOrVC(
-                                                Uri.parse(newVal));
-                                      } else {
-                                        await UrlLaunchController
-                                            .launchWebViewOrVC(Uri.parse(
-                                                widget.data.btnLink!));
-                                      }
-                                    } else {
-                                      await UrlLaunchController
-                                          .launchInWebViewOrVC(
-                                              Uri.parse(widget.data.btnLink!));
-                                    }
-                                  },
-                                  child: Container(
-                                    height: 35,
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.zero,
-                                        color: HexColor("#00B074")),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 10),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          AppText(
-                                            text: widget.data.button!,
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w500,
-                                            size: 12,
-                                          ),
-                                          // SvgPicture.asset(
-                                          //   "assets/icon/Send.svg",
-                                          //   color: Colors.white,
-                                          //   height: 15,
-                                          //   width: 12,
-                                          // )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      )
-                    : const SizedBox.shrink(),
-              ],
-            ),
-          );
-        
+          controller.forward();
         }
 
         if (action.likeIds.contains(widget.data.id!)) {
@@ -643,6 +398,60 @@ class _UserTikTokViewState extends State<UserTikTokView>
                 //   ),
                 ),
           ),
+          widget.data.promoted == "yes"
+              ? Positioned(
+                  bottom: 150,
+                  left: 0,
+                  child: Align(
+                      alignment: Alignment.bottomLeft,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // AdsDisplay(
+                          //   sponsored: false,
+                          //   color: HexColor('#00B074'),
+                          //   title: '\$10.000.00',
+                          // ),
+                          // SizedBox(
+                          //   height: 10,
+                          // ),
+                          AdsDisplay(
+                            sponsored: true,
+                            //  color: HexColor('#00B074'),
+                            color: HexColor('#C0C0C0').withOpacity(.5),
+                            title: 'Sponsored Ad',
+                          ),
+                        ],
+                      )),
+                )
+              : SizedBox.shrink(),
+          widget.page == "user"
+              ? Positioned(
+                  bottom: 150,
+                  right: 0,
+                  child: widget.data.promoted == "yes"
+                      ? SizedBox.shrink()
+                      : Align(
+                          alignment: Alignment.bottomRight,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              AdsDisplay(
+                                action: () {
+                                  PageRouting.pushToPage(
+                                      context,
+                                      PromoteScreen(
+                                        postId: widget.data.id.toString(),
+                                      ));
+                                },
+                                sponsored: false,
+                                color: HexColor('#00B074'),
+                                title: 'PROMOTE',
+                              ),
+                            ],
+                          )),
+                )
+              : SizedBox.shrink(),
 
           flag
               ? Center(
@@ -670,9 +479,8 @@ class _UserTikTokViewState extends State<UserTikTokView>
                   ),
                 )
               : const SizedBox.shrink(),
-          widget.data.user!.gender == "Business" &&
-                  widget.data.btnLink != null &&
-                  widget.data.button != null
+
+          widget.data.btnLink != null && widget.data.button != null
               ? Positioned(
                   bottom: 0.1,
                   child: Align(

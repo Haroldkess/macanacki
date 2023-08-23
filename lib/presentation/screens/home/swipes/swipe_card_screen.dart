@@ -112,11 +112,33 @@ class _SwipeCardScreenState extends State<SwipeCardScreen> {
   }
 
   Widget buildCards(List<SwipedUser> data) {
-    return Stack(children: [TinderCard(users: data)]);
+    return Stack(children: [
+      data.isEmpty
+          ? Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(
+                  child: AppText(
+                    text: "Not found!!",
+                    size: 17,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black38,
+                  ),
+                )
+              ],
+            )
+          : TinderCard(users: data)
+    ]);
   }
 }
 
-List<String> cat = ["All", "Women", "Men", "Business"];
+List<String> cat = [
+  "All",
+  "Verified",
+  "Women",
+  "Men",
+  "Business",
+];
 
 class MenuCategory extends StatelessWidget {
   const MenuCategory({super.key});

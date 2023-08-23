@@ -27,6 +27,13 @@ const String deviceTokenKey = "deviceTokenKey";
 const String latitudeKey = "latitudeKey";
 const String longitudeKey = "longitudeKey";
 const String isFirstTimeKey = "isFirstTime";
+const String countryKey = "countryKey";
+const String stateKey = "stateKey";
+const String cityKey = "cityKey";
+const String categoryKey = "categoryKey";
+const String categoryIdKey = "categoryIdKey";
+const String isVerifiedKey = "isVerifiedKey";
+const String isVerifiedFirstKey = "isVerifiedFirstKey";
 
 Future runTask(context, [String? name, String? dp]) async {
   SharedPreferences pref = await SharedPreferences.getInstance();

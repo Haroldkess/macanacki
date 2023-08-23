@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:async';
+import 'dart:io';
 
 import 'package:async/async.dart';
 import 'package:flutter/cupertino.dart';
@@ -29,6 +30,7 @@ import 'package:macanacki/services/controllers/swipe_users_controller.dart';
 import 'package:macanacki/services/controllers/update_app.dart';
 import 'package:macanacki/services/controllers/user_profile_controller.dart';
 import 'package:provider/provider.dart';
+import 'package:upgrader/upgrader.dart';
 
 import '../../../model/feed_post_model.dart';
 import '../../../services/controllers/action_controller.dart';
@@ -302,7 +304,7 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
                   'assets/icon/profile.svg', tabs.index == 4 ? true : false),
             ],
             activeColor: HexColor(primaryColor),
-            backgroundColor: HexColor(backgroundColor),
+            backgroundColor:  Platform.isIOS ? Colors.black : HexColor(backgroundColor),
           ),
         ),
       ),
@@ -384,6 +386,7 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       NotificationController.checkNotification(context);
     });
+    Operations.checkNewlyVerified();
     // SystemChrome.setPreferredOrientations(
     //       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     //    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);

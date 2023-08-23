@@ -15,10 +15,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../presentation/allNavigation.dart';
 import '../../presentation/widgets/debug_emitter.dart';
+import '../middleware/category_ware.dart';
 
 class CompleteRegisterationController {
   static Future<RegisterUserModel> regData(BuildContext context) async {
     FacialWare pic = Provider.of<FacialWare>(context, listen: false);
+       CategoryWare cat =
+                              Provider.of<CategoryWare>(context, listen: false);
     SharedPreferences pref = await SharedPreferences.getInstance();
     RegisterUserModel data = RegisterUserModel(
         username: pref.getString(userNameKey),
@@ -26,7 +29,11 @@ class CompleteRegisterationController {
         dob: pref.getString(dobKey),
         email: pref.getString(emailKey),
         password: pref.getString(passwordKey),
-        photo: pic.addedPhoto);
+        photo: pic.addedPhoto,
+        country: pref.getString(countryKey),
+        state: pref.getString(stateKey) ,
+        city:  pref.getString(cityKey),
+        catId: cat.selected.id.toString(),);
     return data;
   }
 

@@ -16,6 +16,7 @@ import 'package:numeral/numeral.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../model/public_profile_model.dart';
+import '../../../constants/params.dart';
 import '../../../widgets/loader.dart';
 
 class PublicFollowTile extends StatelessWidget {
@@ -92,10 +93,10 @@ class PublicFollowTile extends StatelessWidget {
                                       // )
                                     ])),
                           ),
-                          data.verified == 0 || data.verified == null
-                              ? const SizedBox.shrink()
-                              : SvgPicture.asset("assets/icon/badge.svg",
+                          data.verified == 1 && data.activePlan == sub
+                              ? SvgPicture.asset("assets/icon/badge.svg",
                                   height: 15, width: 15)
+                              : const SizedBox.shrink()
                         ],
                       ),
                       const SizedBox(

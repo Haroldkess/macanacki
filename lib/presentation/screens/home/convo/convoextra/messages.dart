@@ -32,7 +32,7 @@ class MessageList extends StatelessWidget {
     List<ChatData> peopleChat = stream.chatList
       ..sort((a, b) => b.conversations!.first.createdAt!
           .compareTo(a.conversations!.first.createdAt!));
-          
+
     return StreamBuilder(
         stream: null,
         builder: (context, snapshot) {
@@ -41,7 +41,6 @@ class MessageList extends StatelessWidget {
                   element.userOne!.contains(stream.searchName.toLowerCase()) ||
                   element.userTwo!.contains(stream.searchName.toLowerCase()))
               .toList();
-              
 
           return ListBody(
             //  reverse:  true,

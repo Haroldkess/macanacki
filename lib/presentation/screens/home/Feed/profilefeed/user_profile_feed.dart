@@ -244,7 +244,9 @@ class _UserProfileFeedState extends State<UserProfileFeed> {
                     btnLink: post.btnLink,
                     button: post.button,
                     viewCount: post.viewCount,
-                    mux: post.mux);
+                    
+                    mux: post.mux,
+                    promoted: post.promoted );
                 return InViewNotifierWidget(
                     id: '$index',
                     builder:

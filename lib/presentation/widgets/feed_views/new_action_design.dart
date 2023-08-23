@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hexagon/hexagon.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:like_button/like_button.dart';
+import 'package:macanacki/presentation/constants/params.dart';
 import 'package:macanacki/services/middleware/user_profile_ware.dart';
 import 'package:numeral/numeral.dart';
 import 'package:provider/provider.dart';
@@ -83,7 +84,7 @@ class _NewDesignTestState extends State<NewDesignTest> {
             ? height / 1.4
             : widget.data.user!.gender == "Business"
                 ? 119
-                : 90,
+                : 119,
         width: width,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -233,11 +234,12 @@ class _NewDesignTestState extends State<NewDesignTest> {
                                     color: HexColor(backgroundColor),
                                   ),
                                 ),
-                                widget.data.user!.verified == 0 ||
-                                        widget.data.user!.verified == null
-                                    ? const SizedBox.shrink()
-                                    : SvgPicture.asset("assets/icon/badge.svg",
+                                widget.data.user!.verified == 1 &&
+                                        widget.data.user!.activePlan !=
+                                            sub
+                                    ? SvgPicture.asset("assets/icon/badge.svg",
                                         height: 13, width: 13)
+                                    : const SizedBox.shrink()
                               ],
                             ),
                           ],
@@ -407,19 +409,16 @@ class _NewDesignTestState extends State<NewDesignTest> {
                                           },
                                       )
                               ])),
-                    
                     ),
                   ),
                 ],
               ),
             ),
             SizedBox(
-              height: widget.data.user!.gender == "Business" ? 10 : 0,
+              height: widget.data.user!.gender == "Business" ? 10 : 10,
             ),
             SizedBox(
-              height: widget.data.user!.gender == "Business" &&
-                      widget.data.btnLink != null &&
-                      widget.data.button != null
+              height: widget.data.btnLink != null && widget.data.button != null
                   ? 40
                   : 10,
             )

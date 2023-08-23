@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
 import 'package:macanacki/presentation/screens/onboarding/splash_screen.dart';
@@ -9,6 +12,7 @@ import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:upgrader/upgrader.dart';
 
 void main() async {
   dotenv.load(fileName: "secret.env");
@@ -30,14 +34,16 @@ class MyApp extends StatelessWidget {
         providers: InitProvider.providerInit(),
         child: OverlaySupport(
           toastTheme: ToastThemeData(alignment: Alignment.center),
-          child: MaterialApp(
+          child: GetMaterialApp (
             debugShowCheckedModeBanner: false,
             title: 'Macanacki',
             theme: ThemeData(
               primaryColor: HexColor(primaryColor),
               brightness: Brightness.light,
             ),
-            home: const Splash(),
+            home: UpgradeAlert(
+                  upgrader: Upgrader(dialogStyle: Platform.isIOS ? UpgradeDialogStyle.cupertino :
+                UpgradeDialogStyle.material,debugLogging:  false),child: const Splash()),
           ),
         ));
   }

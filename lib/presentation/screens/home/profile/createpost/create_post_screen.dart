@@ -23,6 +23,8 @@ import 'package:provider/provider.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 import 'package:path_provider/path_provider.dart';
 import '../../../../../services/middleware/button_ware.dart';
+import '../../../../operations.dart';
+import 'add_button_individual.dart';
 
 class CreatePostScreen extends StatefulWidget {
   const CreatePostScreen({super.key});
@@ -37,6 +39,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   @override
   void initState() {
     super.initState();
+    Operations.controlSystemColor();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       await ButtonController.retrievButtonsController(context);
     });
@@ -126,7 +129,25 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                                   color: HexColor(backgroundColor),
                                   fontWeight: FontWeight.w600,
                                 ))
-                            : const SizedBox.shrink(),
+                            : OutlinedButton(
+                                style: OutlinedButton.styleFrom(
+                                    backgroundColor: HexColor("#00B074"),
+                                    fixedSize: Size(86, 0),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                    side: BorderSide(
+                                        color: HexColor("#00B074"),
+                                        width: 1.0,
+                                        style: BorderStyle.solid)),
+                                onPressed: () => buttonIndividualModal(
+                                    context, buttonController),
+                                child: AppText(
+                                  text: "Add Button",
+                                  scaleFactor: 0.6,
+                                  color: HexColor(backgroundColor),
+                                  fontWeight: FontWeight.w600,
+                                )),
                         const SizedBox(
                           width: 5,
                         ),
@@ -284,8 +305,8 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
         await CreatePostController.createPostController(context, caption.text);
       }
     } else {
-      button.addIndex(0);
-      button.addUrl("");
+      // button.addIndex(0);
+      // button.addUrl("");
       await CreatePostController.createPostController(context, caption.text);
     }
   }

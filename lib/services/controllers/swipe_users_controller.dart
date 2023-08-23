@@ -4,18 +4,17 @@ import 'package:macanacki/presentation/widgets/snack_msg.dart';
 import 'package:macanacki/services/middleware/gender_ware.dart';
 import 'package:macanacki/services/middleware/swipe_ware.dart';
 import 'package:provider/provider.dart';
-
 import '../../presentation/widgets/debug_emitter.dart';
 
 class SwipeController {
   static Future<void> retrievSwipeController(
-      BuildContext context, String type) async {
+      BuildContext context, String type,[String? country, state, city]) async {
     SwipeWare ware = Provider.of<SwipeWare>(context, listen: false);
 
     ware.isLoading(true);
 
     bool isDone = await ware
-        .getSwipeFromApi(type)
+        .getSwipeFromApi(type, country, state, city)
         .whenComplete(() => emitter("everything from api and provider is done"));
 
     if (isDone) {

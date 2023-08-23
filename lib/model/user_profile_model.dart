@@ -36,47 +36,49 @@ class UserProfileModel {
 }
 
 class UserData {
-  UserData({
-    this.id,
-    this.email,
-    this.username,
-    this.faceVerification,
-    this.dob,
-    this.emailVerified,
-    this.registrationComplete,
-    this.emailVerifiedAt,
-    this.createdAt,
-    this.updatedAt,
-    this.firebaseId,
-    this.longitude,
-    this.latitude,
-    this.mode,
-    this.ageLowerBound,
-    this.ageUpperBound,
-    this.useCurrentLocation,
-    this.useGlobalLocationSearch,
-    this.enablePushNotification,
-    this.enableEmailNotification,
-    this.setMaxDistSearch,
-    this.twitter,
-    this.facebook,
-    this.instagram,
-    this.linkedin,
-    this.telegram,
-    this.fullName,
-    this.nationality,
-    this.idType,
-    this.idNumber,
-    this.verified,
-    this.aboutMe,
-    this.phone,
-    this.gender,
-    this.profilephoto,
-    this.noOfFollowers,
-    this.noOfFollowing,
-    this.activePlan,
-    this.verification,
-  });
+  UserData(
+      {this.id,
+      this.email,
+      this.username,
+      this.faceVerification,
+      this.dob,
+      this.emailVerified,
+      this.registrationComplete,
+      this.emailVerifiedAt,
+      this.createdAt,
+      this.updatedAt,
+      this.firebaseId,
+      this.longitude,
+      this.latitude,
+      this.mode,
+      this.ageLowerBound,
+      this.ageUpperBound,
+      this.useCurrentLocation,
+      this.useGlobalLocationSearch,
+      this.enablePushNotification,
+      this.enableEmailNotification,
+      this.setMaxDistSearch,
+      this.twitter,
+      this.facebook,
+      this.instagram,
+      this.linkedin,
+      this.telegram,
+      this.fullName,
+      this.nationality,
+      this.idType,
+      this.idNumber,
+      this.verified,
+      this.aboutMe,
+      this.phone,
+      this.gender,
+      this.profilephoto,
+      this.noOfFollowers,
+      this.noOfFollowing,
+      this.activePlan,
+      this.verification,
+      this.country,
+      this.state,
+      this.city});
 
   int? id;
   String? email;
@@ -108,15 +110,16 @@ class UserData {
   String? nationality;
   String? idType;
   String? idNumber;
-  int? verified;
+  dynamic verified;
   String? aboutMe;
   String? phone;
   String? gender;
   String? profilephoto;
   int? noOfFollowers;
   int? noOfFollowing;
-  String? activePlan;
+  dynamic activePlan;
   Verification? verification;
+  String? country, state, city;
   factory UserData.fromJson(Map<String, dynamic> json) => UserData(
         id: json["id"],
         email: json["email"],
@@ -162,9 +165,12 @@ class UserData {
         noOfFollowers: json["no_of_followers"],
         noOfFollowing: json["no_of_following"],
         activePlan: json["active_plan"],
-          verification: json["verification"] == null
+        verification: json["verification"] == null
             ? null
             : Verification.fromJson(json["verification"]),
+        country: json["country"],
+        state: json["state"],
+        city: json["city"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -179,10 +185,10 @@ class UserData {
         "created_at": createdAt?.toIso8601String(),
         "updated_at": updatedAt?.toIso8601String(),
         "firebase_id": firebaseId,
-         "longitude": longitude,
+        "longitude": longitude,
         "latitude": latitude,
         "mode": mode,
-         "age_lower_bound": ageLowerBound,
+        "age_lower_bound": ageLowerBound,
         "age_upper_bound": ageUpperBound,
         "use_current_location": useCurrentLocation,
         "use_global_location_search": useGlobalLocationSearch,
@@ -206,10 +212,9 @@ class UserData {
         "no_of_followers": noOfFollowers,
         "no_of_following": noOfFollowing,
         "active_plan": activePlan,
-         "verification": verification?.toJson(),
+        "verification": verification?.toJson(),
       };
 }
-
 
 class Verification {
   int? id;

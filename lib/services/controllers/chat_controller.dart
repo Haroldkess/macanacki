@@ -60,7 +60,7 @@ class ChatController {
       // if (isForm) {
       //   ware.isLoading(false);
       // }
-   //   debugPrint("we  have fetched all Chat");
+      //   debugPrint("we  have fetched all Chat");
 
       // if (isForm) {
       //   ware.isLoading(false);
@@ -68,7 +68,7 @@ class ChatController {
       // ignore: use_build_context_synchronously
       //  showToast2(context, ware.message, isError: false);
     } else {
-   //   debugPrint("we  have fetched all Chat");
+      //   debugPrint("we  have fetched all Chat");
     }
 
     // if (isForm) {
@@ -91,7 +91,7 @@ class ChatController {
       if (isForm) {
         ware.isLoading(false);
       }
-    //  debugPrint("we  have fetched all Chat");
+      //  debugPrint("we  have fetched all Chat");
     } else {
       if (isForm) {
         ware.isLoading(false);
@@ -132,9 +132,9 @@ class ChatController {
     if (isDone) {
       // ignore: use_build_context_synchronously
       //  await retreiveUnread(context);
-  //    emitter("we read all unread messages");
+      //    emitter("we read all unread messages");
     } else {
-  //    emitter(" read all unread messages FAILED");
+      //    emitter(" read all unread messages FAILED");
       // ignore: use_build_context_synchronously
       // showToast2(context, "something went wrong", isError: false);
 
@@ -200,7 +200,7 @@ class ChatController {
         // if (isForm) {
         //   ware.isLoading(false);
         // }
-      //  debugPrint("we  have fetched all Chat");
+        //  debugPrint("we  have fetched all Chat");
       } else {
         // if (isForm) {
         //   ware.isLoading(false);
@@ -284,7 +284,7 @@ class ChatController {
 
         // print(data);
       } else {
-      //  print("null");
+        //  print("null");
       }
     });
   }
@@ -295,6 +295,9 @@ class ChatController {
     // SockerUserModel sockerUserModel = SockerUserModel(data: );
 
     emitter(data.toString());
+    if (data == "user disconnected") {
+      return;
+    }
 
     final val = sockerUserModelFromJson(data);
 
@@ -311,15 +314,16 @@ class ChatController {
 
         // handleMessage(context, data);
       } else {
-      //  print("null");
+        //  print("null");
       }
     });
   }
 
   static void handleMessage(context, data) async {
+    //   emitter(data.toString());
     ChatWare ware = Provider.of<ChatWare>(context, listen: false);
     final jsonData = jsonDecode(data);
-    emitter(jsonData.toString());
+    //  emitter(jsonData.toString());
 
     var val = AllConversationModel.fromJson(jsonData);
 
@@ -393,11 +397,11 @@ class ChatController {
         conversations: newConvo,
       );
 
-    //  emitter("Lets try this");
+      //  emitter("Lets try this");
 
       ware.replaceChatData(chatData);
     } else {
-   //   emitter("did not work");
+      //   emitter("did not work");
     }
     ware.addNewChatData(null);
     ware.addNewConvoData(null);
@@ -467,7 +471,7 @@ class ChatController {
     ChatWare ware = Provider.of<ChatWare>(context, listen: false);
     ware.chatPageChange(id);
 
-   // emitter("Chat page id ${ware.chatPage}");
+    // emitter("Chat page id ${ware.chatPage}");
   }
 }
 

@@ -84,7 +84,7 @@ class _PublicUserProfileFeedState extends State<PublicUserProfileFeed> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       UserProfileWare provide =
           Provider.of<UserProfileWare>(context, listen: false);
-      print("hey");
+    //  print("hey");
       provide.changePublicIndex(widget.index);
     });
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -204,6 +204,7 @@ class _PublicUserProfileFeedState extends State<PublicUserProfileFeed> {
                   button: post.button,
                   viewCount: post.viewCount,
                   user: user,
+                  promoted: post.promoted 
                 );
 
                 return InViewNotifierWidget(

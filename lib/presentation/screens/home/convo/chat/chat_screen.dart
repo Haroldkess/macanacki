@@ -218,8 +218,6 @@ class _ChatScreenState extends State<ChatScreen> {
           ChatController.changeChatPage(context, 0);
         }
 
-        
-
         Navigator.pop(context, [widget.user, ware.newConversationData]);
         return Future.value(false);
       },
@@ -495,33 +493,34 @@ class _ChatScreenState extends State<ChatScreen> {
                               ? ChatForm(
                                   controller: controiller!,
                                   msgController: msgController,
-                                  sendTo: ware.publicUserProfileModel.username!,
+                                  sendTo:
+                                      ware.publicUserProfileModel.username!,
                                   chat: widget.user,
                                   socket: myChat.socket == null
                                       ? null
                                       : myChat.socket!,
-                                  toId:
-                                      ware.publicUserProfileModel.id!.toString()
+                                  toId: ware.publicUserProfileModel.id!
+                                      .toString()
 
                                   //  val: controiller!.position.maxScrollExtent,
                                   )
                               : ChatForm(
                                   controller: controiller!,
                                   msgController: msgController,
-                                  sendTo:
-                                      widget.user.conversations!.last.sender ==
-                                              stream.userName
-                                          ? widget.user.userTwo!
-                                          : widget.user.userOne!,
+                                  sendTo: widget.user.conversations!.last
+                                              .sender ==
+                                          stream.userName
+                                      ? widget.user.userTwo!
+                                      : widget.user.userOne!,
                                   chat: widget.user,
                                   socket: myChat.socket == null
                                       ? null
                                       : myChat.socket!,
-                                  toId:
-                                      widget.user.conversations!.last.sender ==
-                                              stream.userName
-                                          ? widget.user.userTwoId.toString()
-                                          : widget.user.userOneId.toString(),
+                                  toId: widget.user.conversations!.last
+                                              .sender ==
+                                          stream.userName
+                                      ? widget.user.userTwoId.toString()
+                                      : widget.user.userOneId.toString(),
                                   //  val: controiller!.position.maxScrollExtent,
                                 ))
                     ],

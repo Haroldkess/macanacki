@@ -98,19 +98,23 @@ class PublicProfileImageAndName extends StatelessWidget {
                         fontWeight: FontWeight.w800,
                         align: TextAlign.center,
                         maxLines: 1,
-                        overflow: stream.publicUserProfileModel.username.toString().length >
-                                    20
-                                ? TextOverflow.ellipsis
-                                : TextOverflow.fade,
+                        overflow: stream.publicUserProfileModel.username
+                                    .toString()
+                                    .length >
+                                20
+                            ? TextOverflow.ellipsis
+                            : TextOverflow.fade,
                       ),
                     ),
-                    stream.publicUserProfileModel.verified == 0
-                        ? const SizedBox.shrink()
-                        : SvgPicture.asset(
+                    stream.publicUserProfileModel.verified == 1 &&
+                            stream.publicUserProfileModel.activePlan !=
+                                sub
+                        ? SvgPicture.asset(
                             "assets/icon/badge.svg",
                             height: 15,
                             width: 15,
                           )
+                        : const SizedBox.shrink()
                   ],
                 ),
         )

@@ -56,6 +56,7 @@ class ProfileFeedDatum {
     this.viewCount,
     this.button,
     this.user,
+     this.promoted,
   });
 
   int? id;
@@ -72,6 +73,7 @@ class ProfileFeedDatum {
   int? viewCount;
   String? button;
   ProfileUser? user;
+    String? promoted;
 
   factory ProfileFeedDatum.fromJson(Map<String, dynamic> json) =>
       ProfileFeedDatum(
@@ -96,6 +98,7 @@ class ProfileFeedDatum {
         viewCount: json["view_count"],
         button: json["button"],
         user: json["user"] == null ? null : ProfileUser.fromJson(json["user"]),
+         promoted: json["promoted"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -115,6 +118,7 @@ class ProfileFeedDatum {
         "view_count": viewCount,
         "button": button,
         "user": user?.toJson(),
+         "promoted": promoted,
       };
 }
 

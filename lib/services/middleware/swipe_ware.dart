@@ -12,13 +12,28 @@ import '../../presentation/widgets/debug_emitter.dart';
 class SwipeWare extends ChangeNotifier {
   bool _loadStatus = false;
   String message = "Cant get people at the moment";
-
   SwipeData swipeData = SwipeData();
   String filterName = "All";
-
   List<SwipedUser> swipedUser = [];
-
   bool get loadStatus => _loadStatus;
+  String country = "";
+  String state = "";
+    String city = "";
+
+  void filterByCountry(String c) {
+    country = c;
+
+    notifyListeners();
+  }
+
+  void filterByState(String s) {
+    state = s;
+    notifyListeners();
+  }
+    void filterByCity(String ci) {
+    city = ci;
+    notifyListeners();
+  }
 
   void changeFilter(String filter) {
     filterName = filter;
@@ -39,10 +54,10 @@ class SwipeWare extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> getSwipeFromApi(String type) async {
+  Future<bool> getSwipeFromApi(String type,[String? country, state, city]) async {
     late bool isSuccessful;
     try {
-      http.Response? response = await getSwipedUsers(type)
+      http.Response? response = await getSwipedUsers(type, country,state, city)
           .whenComplete(() => emitter("swwipe users gotten successfully"));
       if (response == null) {
         isSuccessful = false;

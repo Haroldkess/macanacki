@@ -21,7 +21,7 @@ dependencies:
   provider: ^6.0.1
   shared_preferences: 2.0.6
   intl:
-  google_fonts:
+  google_fonts: 2.2.0
   animate_do:
   hexcolor: ^2.0.5
   hexagon: ^0.2.0-nullsafety.1
@@ -80,6 +80,9 @@ dependencies:
   auto_size_text: ^3.0.0
   new_version: ^0.3.1
   country_state_picker: null
+  csc_picker: ^0.2.7
+  get: ^4.6.5
+  upgrader:
   # visibility_detector: ^0.4.0+2
   # change_app_package_name: 1.0.0
   

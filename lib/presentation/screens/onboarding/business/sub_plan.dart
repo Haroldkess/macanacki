@@ -38,7 +38,9 @@ import '../splash_screen.dart';
 
 class SubscriptionPlansBusiness extends StatefulWidget {
   final bool isBusiness;
-  const SubscriptionPlansBusiness({super.key, required this.isBusiness});
+  final String isSubmiting;
+  const SubscriptionPlansBusiness(
+      {super.key, required this.isBusiness, required this.isSubmiting});
 
   @override
   State<SubscriptionPlansBusiness> createState() =>
@@ -50,8 +52,9 @@ class _SubscriptionPlansBusinessState extends State<SubscriptionPlansBusiness> {
 
   @override
   void initState() {
+    // dotenv.get('PUBLIC_KEY').toString()
     super.initState();
-    plugin.initialize(publicKey: dotenv.get('PUBLIC_KEY').toString());
+    plugin.initialize(publicKey: publicKey);
     Operations.controlSystemColor();
   }
   // dotenv.get('PUBLIC_KEY').toString()
@@ -220,7 +223,7 @@ class _SubscriptionPlansBusinessState extends State<SubscriptionPlansBusiness> {
                                   physics: NeverScrollableScrollPhysics(),
                                   itemCount: 1,
                                   itemBuilder: ((context, index) {
-                                    PlanData plan = plans.plans[2];
+                                    PlanData plan = plans.plans[index];
                                     return Padding(
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 100),
@@ -247,9 +250,15 @@ class _SubscriptionPlansBusinessState extends State<SubscriptionPlansBusiness> {
                                   textColor: backgroundColor,
                                   onTap: () async {
                                     setState(() {
-                                      myPlan = plans.plans[2];
+                                      myPlan = plans.plans[0];
                                     });
-                                    payModal(context, myPlan!);
+                                    payModal(
+                                        context,
+                                        myPlan!,
+                                        widget.isBusiness,
+                                        widget.isSubmiting == "pay"
+                                            ? true
+                                            : false);
                                   }),
                               const SizedBox(
                                 height: 20,
@@ -279,8 +288,9 @@ class _SubscriptionPlansBusinessState extends State<SubscriptionPlansBusiness> {
                                         content: Row(
                                           children: [
                                             Container(
-                                                constraints: const  BoxConstraints(
-                                                    maxWidth: 200),
+                                                constraints:
+                                                    const BoxConstraints(
+                                                        maxWidth: 200),
                                                 child: AppText(
                                                     text:
                                                         "This action will log you out?",
@@ -349,7 +359,8 @@ class _SubscriptionPlansBusinessState extends State<SubscriptionPlansBusiness> {
   }
 }
 
-payModal(BuildContext context, PlanData plan) async {
+payModal(BuildContext context, PlanData plan, bool? isBusiness,
+    bool isPayOnly,[String? id]) async {
   var width = MediaQuery.of(context).size.width;
   return showModalBottomSheet(
       context: context,
@@ -396,7 +407,10 @@ payModal(BuildContext context, PlanData plan) async {
                               width: 1.0,
                               style: BorderStyle.solid)),
                       onPressed: () async {
-                        print(plan.amount);
+                        // plugin.initialize(
+                        //     publicKey:
+                        //         "pk_test_66374a59ec66f6c94391ed9b6a405cbf94432d5f");
+                        //   print(plan.amount);
                         // PageRouting.pushToPage(
                         //     context, const SubSuccessfullBusinessSignUp());
                         // PlanWare plan =
@@ -409,7 +423,7 @@ payModal(BuildContext context, PlanData plan) async {
                         // } else {
                         int amount = plan.amountInNaira!.toInt() * 100;
                         await PaymentController.chargeCard(
-                            context, amount, true);
+                            context, amount, isBusiness, isPayOnly,id);
 
                         //   plan.addAmount(0);
                         // }
@@ -438,4 +452,8 @@ payModal(BuildContext context, PlanData plan) async {
           ),
         );
       });
+
+
+
+
 }

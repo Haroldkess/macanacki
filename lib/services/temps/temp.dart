@@ -44,6 +44,11 @@ class Temp extends ChangeNotifier {
         .whenComplete(() => _pref!.setString(userNameKey, userName));
     notifyListeners();
   }
+    Future<void> addSubStatusTemp(bool s) async {
+    await initPref()
+        .whenComplete(() => _pref!.setBool(isVerifiedKey, s));
+    notifyListeners();
+  }
 
   Future<void> addPasswordTemp(String password) async {
     await initPref()
@@ -53,6 +58,23 @@ class Temp extends ChangeNotifier {
 
   Future<void> addGenderIdTemp(int id) async {
     await initPref().whenComplete(() => _pref!.setInt(genderId, id));
+    notifyListeners();
+  }
+
+  Future<void> addCategoryTemp(int id, String name) async {
+    await initPref().whenComplete(() {
+      _pref!.setInt(categoryIdKey, id);
+      _pref!.setString(categoryKey, name);
+    });
+    notifyListeners();
+  }
+
+  Future<void> addLocationTemp(String country, state, city) async {
+    await initPref().whenComplete(() async {
+      _pref!.setString(countryKey, country);
+      _pref!.setString(stateKey, state);
+      _pref!.setString(cityKey, city);
+    });
     notifyListeners();
   }
 

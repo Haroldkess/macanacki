@@ -1,3 +1,4 @@
+import 'package:csc_picker/csc_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
@@ -27,6 +28,10 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
+  final _cscPickerKey = GlobalKey<CSCPickerState>();
+  String selectedCity = "";
+  String selectedCountry = "";
+  String selectedState = "";
   late TextEditingController about;
 
   late TextEditingController phone;
@@ -35,6 +40,16 @@ class _EditProfileState extends State<EditProfile> {
     super.initState();
     about = TextEditingController(text: widget.aboutMe ?? "");
     phone = TextEditingController(text: widget.phone ?? "");
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      UserProfileWare user =
+          Provider.of<UserProfileWare>(context, listen: false);
+      setState(() {
+        selectedCountry = user.userProfileModel.country ?? "";
+        selectedState = user.userProfileModel.state ?? "";
+        selectedCity = user.userProfileModel.city ?? "";
+      });
+    });
+
     Operations.controlSystemColor();
   }
 
@@ -82,9 +97,64 @@ class _EditProfileState extends State<EditProfile> {
                       phone: phone,
                     ),
                     // EditSelectGender(),
-                    // SizedBox(
-                    //   height: 30,
-                    // ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 16, left: 30),
+                          child: Row(
+                            children: [
+                              AppText(
+                                text: "Your Location",
+                                fontWeight: FontWeight.w600,
+                                size: 17,
+                                color: HexColor("#0C0C0C"),
+                              )
+                            ],
+                          ),
+                        ),
+                        CSCPicker(
+                          key: _cscPickerKey,
+                          layout: Layout.vertical,
+                          countryDropdownLabel: "Select country",
+                          stateDropdownLabel: "Select state",
+                          cityDropdownLabel: "Select city",
+                          currentCity:
+                              user.userProfileModel.city ?? "Select city",
+                          currentState:
+                              user.userProfileModel.state ?? "Select state",
+                          currentCountry:
+                              user.userProfileModel.country ?? "Select country",
+                          flagState: CountryFlag.DISABLE,
+                          onCountryChanged: (country) {
+                            //  if(country != null){
+                            setState(() {
+                              selectedCountry = country;
+                            });
+                            //  }
+
+                            // log(country);
+                          },
+                          onStateChanged: (state) {
+                            if (state != null) {
+                              setState(() {
+                                selectedState = state;
+                              });
+                            }
+                          },
+                          onCityChanged: (city) {
+                            if (city != null) {
+                              setState(() {
+                                selectedCity = city;
+                              });
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+
                     //  EditStudies(),
                     // SizedBox(
                     //   height: 30,
@@ -123,7 +193,7 @@ class _EditProfileState extends State<EditProfile> {
     //   phone.text = "";
     // }
 
-    EditProfileController.editProfileController(
-        context, about.text, phone.text);
+    EditProfileController.editProfileController(context, about.text, phone.text,
+        selectedCountry, selectedState, selectedCity);
   }
 }

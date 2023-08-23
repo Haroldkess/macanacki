@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:macanacki/presentation/allNavigation.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
@@ -12,11 +13,13 @@ import 'package:macanacki/presentation/uiproviders/screen/comment_provider.dart'
 import 'package:macanacki/presentation/uiproviders/screen/find_people_provider.dart';
 import 'package:macanacki/presentation/uiproviders/screen/gender_provider.dart';
 import 'package:macanacki/presentation/widgets/debug_emitter.dart';
+import 'package:macanacki/presentation/widgets/dialogue.dart';
 import 'package:macanacki/presentation/widgets/snack_msg.dart';
 import 'package:macanacki/presentation/widgets/text.dart';
 import 'package:macanacki/services/controllers/login_controller.dart';
 import 'package:macanacki/services/controllers/mode_controller.dart';
 import 'package:macanacki/services/middleware/gender_ware.dart';
+import 'package:macanacki/services/middleware/swipe_ware.dart';
 import 'package:macanacki/services/middleware/user_profile_ware.dart';
 import 'package:macanacki/services/temps/temps_id.dart';
 import 'package:provider/provider.dart';
@@ -177,8 +180,8 @@ class Operations {
     UserProfileWare user = Provider.of<UserProfileWare>(context, listen: false);
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
-          type: FileType.media,
-          // allowedExtensions: ['jpg', 'mp4'],
+          type: FileType.image,
+          //   allowedExtensions: ['jpg','png','jpeg'],
           allowMultiple: true);
 
       if (result != null) {
@@ -385,5 +388,47 @@ class Operations {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
         systemNavigationBarIconBrightness: Brightness.dark,
         systemNavigationBarColor: HexColor(backgroundColor)));
+  }
+
+  static Future<void> filterLocaton(context,
+      [String? country, state, city]) async {
+    SwipeWare ware = Provider.of<SwipeWare>(context, listen: false);
+    if (country != null) {
+      ware.filterByCountry(country);
+    }
+    if (state != null) {
+      ware.filterByState(state);
+    }
+    if (city != null) {
+      ware.filterByCity(city);
+    }
+  }
+
+  static Future checkNewlyVerified() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    if (pref.containsKey(isVerifiedKey)) {
+      if (pref.getBool(isVerifiedKey) == true &&
+          pref.getBool(isVerifiedFirstKey) == false) {
+        Get.dialog(
+            verifiedDialog(
+                title: "Congratulations",
+                message: "Your account has been verified.",
+                confirmText: "Okay",
+                cancelText: "Go back",
+                onPressedCancel: () {
+                  pref.setBool(isVerifiedFirstKey, true);
+                  Get.back();
+                },
+                onPressed: () {
+                  pref.setBool(isVerifiedFirstKey, true);
+                  Get.back();
+                }),
+            barrierDismissible: false);
+      } else {
+        return;
+      }
+    } else {
+      return;
+    }
   }
 }

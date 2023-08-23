@@ -11,6 +11,7 @@ import 'package:macanacki/presentation/allNavigation.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
 import 'package:macanacki/presentation/constants/params.dart';
 import 'package:macanacki/presentation/screens/userprofile/user_profile_screen.dart';
+import 'package:macanacki/presentation/widgets/debug_emitter.dart';
 import 'package:macanacki/presentation/widgets/text.dart';
 import 'package:macanacki/services/middleware/swipe_ware.dart';
 import 'package:macanacki/services/temps/temps_id.dart';
@@ -26,6 +27,7 @@ import '../../../../../services/controllers/swipe_users_controller.dart';
 import '../../../../../services/middleware/action_ware.dart';
 import '../../../../../services/middleware/chat_ware.dart';
 import '../../../../uiproviders/screen/card_provider.dart';
+import '../../../../widgets/filter_address_modal.dart';
 import '../../../../widgets/snack_msg.dart';
 import '../../profile/profileextras/not_mine_buttons.dart';
 
@@ -266,131 +268,165 @@ class _TinderCardState extends State<TinderCard> {
           padding: const EdgeInsets.only(left: 16),
           child: Container(
             alignment: Alignment.topLeft,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Stack(
               children: [
-                const SizedBox(
-                  height: 15,
-                ),
-                GestureDetector(
-                  onTap: () async {
-                    SharedPreferences pref =
-                        await SharedPreferences.getInstance();
-                    if (pref.getString(userNameKey) ==
-                        widget.users[indexer].username!) {
-                      // ignore: use_build_context_synchronously
-                      showToast2(context, "This is your page", isError: true);
-                    } else {
-                      if (widget.users[indexer].username == null) {
-                        return;
-                      }
-                      // ignore: use_build_context_synchronously
-                      PageRouting.pushToPage(
-                          context,
-                          UsersProfile(
-                              username: widget.users[indexer].username!));
-                    }
-                  },
-                  child: Row(
-                    children: [
-                      Container(
-                        constraints: BoxConstraints(maxWidth: 250),
-                        child: RichText(
-                            maxLines: 1,
-                            overflow: TextOverflow.visible,
-                            text: TextSpan(
-                                text: widget.users[indexer].username ?? "",
-                                style: GoogleFonts.spartan(
-                                  color: HexColor(darkColor),
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                                children: [
-                                  TextSpan(
-                                    text: "",
-                                    style: GoogleFonts.spartan(
-                                        color: HexColor("#C0C0C0"),
-                                        fontSize: 20),
-                                  )
-                                ])),
-                      ),
-                      widget.users[indexer].verified == 0 ||
-                              widget.users[indexer].verified == null
-                          ? const SizedBox.shrink()
-                          : SvgPicture.asset(
-                              "assets/icon/badge.svg",
-                              height: 15,
-                              width: 15,
-                            )
-                      // Image.asset(
-                      //   "assets/pic/verified.png",
-                      //   height: 27,
-                      //   width: 27,
-                      // )
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
                 Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    const SizedBox(
+                      height: 15,
+                    ),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        CircleAvatar(
-                          radius: 5,
-                          backgroundColor: myChat.allSocketUsers
-                                  .where((element) =>
-                                      element.userId.toString() ==
-                                      widget.users[indexer].id.toString())
-                                  .toList()
-                                  .isEmpty
-                              ? Colors.red
-                              : HexColor("#00B074"),
+                        GestureDetector(
+                          onTap: () async {
+                            SharedPreferences pref =
+                                await SharedPreferences.getInstance();
+                            if (pref.getString(userNameKey) ==
+                                widget.users[indexer].username!) {
+                              // ignore: use_build_context_synchronously
+                              showToast2(context, "This is your page",
+                                  isError: true);
+                            } else {
+                              if (widget.users[indexer].username == null) {
+                                return;
+                              }
+                              // ignore: use_build_context_synchronously
+                              PageRouting.pushToPage(
+                                  context,
+                                  UsersProfile(
+                                      username:
+                                          widget.users[indexer].username!));
+                            }
+                          },
+                          child: Row(
+                            children: [
+                              Container(
+                                constraints: BoxConstraints(maxWidth: 250),
+                                child: RichText(
+                                    maxLines: 1,
+                                    overflow: TextOverflow.visible,
+                                    text: TextSpan(
+                                        text: widget.users[indexer].username ??
+                                            "",
+                                        style: GoogleFonts.spartan(
+                                          color: HexColor(darkColor),
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                        children: [
+                                          TextSpan(
+                                            text: "",
+                                            style: GoogleFonts.spartan(
+                                                color: HexColor("#C0C0C0"),
+                                                fontSize: 20),
+                                          )
+                                        ])),
+                              ),
+
+                              widget.users[indexer].verified == 1 &&
+                                      widget.users[indexer].activePlan !=
+                                          sub
+                                  ? SvgPicture.asset(
+                                      "assets/icon/badge.svg",
+                                      height: 15,
+                                      width: 15,
+                                    )
+                                  : const SizedBox.shrink()
+                              // Image.asset(
+                              //   "assets/pic/verified.png",
+                              //   height: 27,
+                              //   width: 27,
+                              // )
+                            ],
+                          ),
                         ),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        AppText(
-                          text: myChat.allSocketUsers
-                                  .where((element) =>
-                                      element.userId.toString() ==
-                                      widget.users[indexer].id.toString())
-                                  .toList()
-                                  .isEmpty
-                              ? "offline"
-                              : "online",
-                          size: 12,
-                          fontWeight: FontWeight.w500,
-                        )
                       ],
                     ),
                     const SizedBox(
-                      height: 5,
+                      height: 10,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 5),
-                      child: Row(
-                        children: [
-                          AppText(
-                            text: "Suggested account",
-                            size: 12,
-                            fontWeight: FontWeight.w500,
-                          )
-                          // SvgPicture.asset("assets/icon/location.svg"),
-                          // const SizedBox(
-                          //   width: 5,
-                          // ),
-                          // AppText(
-                          //   text:
-                          //       "${Numeral(widget.users[indexer].distance == null ? 0 : widget.users[indexer].distance!)} km away",
-                          //   size: 12,
-                          //   fontWeight: FontWeight.w500,
-                          // )
-                        ],
-                      ),
+                    Column(
+                      children: [
+                        Row(
+                          children: [
+                            CircleAvatar(
+                              radius: 5,
+                              backgroundColor: myChat.allSocketUsers
+                                      .where((element) =>
+                                          element.userId.toString() ==
+                                          widget.users[indexer].id.toString())
+                                      .toList()
+                                      .isEmpty
+                                  ? Colors.red
+                                  : HexColor("#00B074"),
+                            ),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            AppText(
+                              text: myChat.allSocketUsers
+                                      .where((element) =>
+                                          element.userId.toString() ==
+                                          widget.users[indexer].id.toString())
+                                      .toList()
+                                      .isEmpty
+                                  ? "offline"
+                                  : "online",
+                              size: 12,
+                              fontWeight: FontWeight.w500,
+                            )
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: Row(
+                            children: [
+                              AppText(
+                                text: "Suggested account",
+                                size: 12,
+                                fontWeight: FontWeight.w500,
+                              )
+                              // SvgPicture.asset("assets/icon/location.svg"),
+                              // const SizedBox(
+                              //   width: 5,
+                              // ),
+                              // AppText(
+                              //   text:
+                              //       "${Numeral(widget.users[indexer].distance == null ? 0 : widget.users[indexer].distance!)} km away",
+                              //   size: 12,
+                              //   fontWeight: FontWeight.w500,
+                              // )
+                            ],
+                          ),
+                        )
+                      ],
                     )
                   ],
+                ),
+                Align(
+                  alignment: Alignment.topRight,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: InkWell(
+                      onTap: () => filterAdressModals(context),
+                      child: Container(
+                        height: 40,
+                        width: 40,
+                        decoration: BoxDecoration(
+                            color: HexColor(primaryColor),
+                            shape: BoxShape.circle),
+                        child: Icon(
+                          Icons.filter_list_alt,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
                 )
               ],
             ),
@@ -458,7 +494,7 @@ class _TinderCardState extends State<TinderCard> {
                           await SharedPreferences.getInstance();
                       _matchEngine!.currentItem!.like();
                       if (username == pref.getString(userNameKey)) {
-                        print("can n ot follow your self");
+                        emitter("can n ot follow your self");
                       } else {
                         // ignore: use_build_context_synchronously
                         await followAction(

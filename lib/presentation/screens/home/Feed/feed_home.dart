@@ -16,7 +16,8 @@ import 'package:macanacki/services/controllers/mode_controller.dart';
 import 'package:macanacki/services/middleware/action_ware.dart';
 import 'package:macanacki/services/middleware/feed_post_ware.dart';
 import 'package:provider/provider.dart';
-
+import 'package:upgrader/upgrader.dart';
+import 'dart:io';
 import '../../../uiproviders/screen/find_people_provider.dart';
 
 class FeedHome extends StatefulWidget {
@@ -51,7 +52,7 @@ class _FeedHomeState extends State<FeedHome>
                 child: ScanningPerimeter(
                 msg: "Getting new posts for you...",
               ))
-            : const PeopleHome());
+            : const PeopleHome() );
   }
 
   callFeedPost(bool isRefreshed) async {

@@ -22,12 +22,16 @@ class RegisterationWare extends ChangeNotifier {
   bool loadUser = false;
   String _message = 'Something went wrong';
   String _message2 = 'Something went wrong';
+  String _busMsg = 'Something went wrong';
+  String _IndividualMsg = 'Something went wrong';
   String _token = "";
 
   bool _verifyName = false;
 
   String get message => _message;
   String get message2 => _message2;
+  String get busMsg => _busMsg;
+  String get IndividualMsg => _IndividualMsg;
 
   bool get loadStatus => _loadStatus;
 
@@ -213,20 +217,28 @@ class RegisterationWare extends ChangeNotifier {
         isSuccessful = false;
       } else if (response.statusCode == 200) {
         final res = await http.Response.fromStream(response);
-        // var jsonData = jsonDecode(res.body);
-        //    _token = jsonData["data"]["accessToken"].toString();
-        //   await pref.setString(tokenKey, _token);
-        emitter("verification done");
-        //   _message2 = jsonData["message"];
+        try {
+          var jsonData = jsonDecode(res.body);
+          //    _token = jsonData["data"]["accessToken"].toString();
+          //   await pref.setString(tokenKey, _token);
+          //  emitter("verification done");
+          _busMsg = jsonData["message"];
+        } catch (e) {}
         isSuccessful = true;
-        //   log("this user is registered");
+        log(res.body);
 
         //  var res = http.Response.fromStream(response);
 
       } else {
         final res = await http.Response.fromStream(response);
         //  var jsonData = jsonDecode(res.body);
-        // log(jsonData);
+        try {
+          var jsonData = jsonDecode(res.body);
+          _busMsg = jsonData["message"];
+        } catch (e) {
+          _busMsg = "Something went wrong";
+        }
+//log(res.body);
         // _message2 = jsonData["message"];
         isSuccessful = false;
       }
@@ -253,10 +265,16 @@ class RegisterationWare extends ChangeNotifier {
         isSuccessful = false;
       } else if (response.statusCode == 200) {
         final res = await http.Response.fromStream(response);
-        var jsonData = jsonDecode(res.body);
+        // var jsonData = jsonDecode(res.body);
         //    _token = jsonData["data"]["accessToken"].toString();
         //   await pref.setString(tokenKey, _token);
-        emitter(jsonData.toString());
+        try {
+          var jsonData = jsonDecode(res.body);
+          //    _token = jsonData["data"]["accessToken"].toString();
+          //   await pref.setString(tokenKey, _token);
+          //  emitter("verification done");
+          _IndividualMsg = jsonData["message"];
+        } catch (e) {}
         //   _message2 = jsonData["message"];
         isSuccessful = true;
         //   log("this user is registered");
@@ -265,8 +283,13 @@ class RegisterationWare extends ChangeNotifier {
 
       } else {
         final res = await http.Response.fromStream(response);
-        var jsonData = jsonDecode(res.body);
-        emitter(jsonData.toString());
+        try {
+          var jsonData = jsonDecode(res.body);
+          _IndividualMsg = jsonData["message"];
+        } catch (e) {
+          _IndividualMsg = "Something went wrong";
+        }
+        emitter(res.body.toString());
         // _message2 = jsonData["message"];
         isSuccessful = false;
       }

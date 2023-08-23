@@ -99,14 +99,23 @@ class ProfileImageAndName extends StatelessWidget {
                                 : TextOverflow.fade,
                       ),
                     ),
-                    stream.userProfileModel.verified == 0 ||
-                            stream.userProfileModel.verified == null
-                        ? const SizedBox.shrink()
-                        : SvgPicture.asset(
+                    stream.userProfileModel.verified == 1 &&
+                            stream.userProfileModel.activePlan !=
+                               sub
+                        ? SvgPicture.asset(
                             "assets/icon/badge.svg",
                             height: 15,
                             width: 15,
                           )
+                        : const SizedBox.shrink()
+                    // stream.userProfileModel.verified == 0 ||
+                    //         stream.userProfileModel.verified == null
+                    //     ? const SizedBox.shrink()
+                    //     : SvgPicture.asset(
+                    //         "assets/icon/badge.svg",
+                    //         height: 15,
+                    //         width: 15,
+                    //       )
                   ],
                 ),
         )

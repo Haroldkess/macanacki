@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_paystack/flutter_paystack.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'dart:async';
 import 'dart:io';
@@ -14,13 +15,17 @@ import 'package:macanacki/presentation/allNavigation.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
 import 'package:macanacki/presentation/screens/home/subscription/sub_successful.dart';
 import 'package:macanacki/presentation/widgets/snack_msg.dart';
+import 'package:macanacki/services/controllers/verify_controller.dart';
 import 'package:macanacki/services/middleware/user_profile_ware.dart';
 import 'package:provider/provider.dart';
 
 import '../../presentation/screens/onboarding/business/success.dart';
 import '../../presentation/widgets/debug_emitter.dart';
+import '../../presentation/widgets/dialogue.dart';
 
-String sk = dotenv.get('SECRET_KEY').toString();
+String sk = "sk_test_1a9e1524621e4c91e3489926ef37db7337b4c68f";
+
+//dotenv.get('SECRET_KEY').toString();
 final plugin = PaystackPlugin();
 
 class PaymentController {
@@ -28,7 +33,7 @@ class PaymentController {
     // Using just the must-required parameters.
     //4084084084084081
     return PaymentCard(
-      number: "",
+      number: "4084084084084081",
       cvc: "408",
       expiryMonth: 4,
       expiryYear: 24,
@@ -36,15 +41,18 @@ class PaymentController {
   }
 
   static Future chargeCard(BuildContext context, int amount,
-      [bool? isFirst]) async {
+      [bool? isFirst, isPayOnly, String? id]) async {
     //  log(sk);
     UserProfileWare user = Provider.of<UserProfileWare>(context, listen: false);
     final String ref = await getReference();
     // ignore: use_build_context_synchronously
-    String access = await createAccessCode(ref, context, amount.toString());
+    String access =
+        // ignore: use_build_context_synchronously
+        await createAccessCode(ref, context, amount.toString(), id);
     Charge charge = Charge();
 
     PaymentCard myCard = getCardFromUI();
+    emitter("access code " + access + "  ref  " + ref);
 
     charge
       ..amount = amount // In base currency
@@ -68,14 +76,15 @@ class PaymentController {
       );
 
       if (response.status == true) {
+        //    emitter("you clicked on pay");
         // ignore: use_build_context_synchronously
-        verifyOnServer(response.reference!, context, isFirst!);
+        verifyOnServer(response.reference!, context, isFirst, isPayOnly);
       } else {
         emitter('Response = $response');
         //  showToast2(context, message)
       }
     } catch (e) {
-      emitter("Check console for error");
+      emitter("Check console for error $e");
       return;
       //'rethrow;
     }
@@ -84,8 +93,8 @@ class PaymentController {
     // Use the response
   }
 
-  static Future<String> createAccessCode(
-      reference, context, String amount) async {
+  static Future<String> createAccessCode(reference, context, String amount,
+      [String? id]) async {
     UserProfileWare user = Provider.of<UserProfileWare>(context, listen: false);
     // skTest -> Secret key
     Map<String, String> headers = {
@@ -96,9 +105,16 @@ class PaymentController {
     Map data = {
       "amount": amount,
       "email": "${user.userProfileModel.email}",
-      "reference": reference
+      "reference": reference,
     };
-    String payload = json.encode(data);
+
+    Map promoteData = {
+      "amount": amount,
+      "email": "${user.userProfileModel.email}",
+      "reference": reference,
+      "metadata": {"post_id": id}
+    };
+    String payload = id == null ? json.encode(data) : json.encode(promoteData);
     http.Response response = await http
         .post(Uri.parse('https://api.paystack.co/transaction/initialize'),
             headers: headers, body: payload)
@@ -109,7 +125,8 @@ class PaymentController {
     return accessCode;
   }
 
-  static void verifyOnServer(String reference, context, bool isFirst) async {
+  static void verifyOnServer(
+      String reference, context, bool? isFirst, bool isPayOnly) async {
     try {
       Map<String, String> headers = {
         'Content-Type': 'application/json',
@@ -125,11 +142,43 @@ class PaymentController {
       final Map body = json.decode(response.body);
       if (body['data']['status'] == 'success') {
         // log("paid");
-        PageRouting.popToPage(context);
-        if (isFirst == true) {
-          PageRouting.pushToPage(context, const SubSuccessfullBusinessSignUp());
+
+        if (isFirst != null) {
+          if (isFirst == true) {
+            if (isPayOnly == false) {
+              VerifyController.business(context);
+            }
+
+            //  PageRouting.popToPage(context);
+            PageRouting.pushToPage(
+                context, const SubSuccessfullBusinessSignUp());
+          } else {
+            if (isPayOnly == false) {
+              VerifyController.userVerify(context);
+            }
+
+            PageRouting.pushToPage(context, const SubSuccessfull());
+          }
         } else {
-          PageRouting.pushToPage(context, const SubSuccessfull());
+          //  Get.off(2);
+          Get.back();
+          Get.back();
+          Get.dialog(
+            confirmationDialog(
+                title: "Promotion Successful",
+                message: "You just promoted a post",
+                confirmText: "Okay",
+                cancelText: "Go back",
+                icon: Icons.donut_small_outlined,
+                iconColor: [HexColor(primaryColor), Colors.green],
+                onPressedCancel: () {
+                  Get.back();
+                },
+                onPressed: () {
+                  Get.back();
+                }),
+          );
+          emitter("tidy");
         }
 
         //do something with the response. show success}
