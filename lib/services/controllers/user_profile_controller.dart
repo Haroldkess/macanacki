@@ -1,5 +1,7 @@
 import 'dart:developer';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:macanacki/presentation/allNavigation.dart';
 import 'package:macanacki/presentation/widgets/snack_msg.dart';
 import 'package:macanacki/services/middleware/user_profile_ware.dart';
@@ -102,7 +104,11 @@ class UserProfileController {
 
       // ignore: use_build_context_synchronously
       PageRouting.removeAllToPage(context, const Splash());
-      Restart.restartApp();
+      if (Platform.isAndroid) {
+        Restart.restartApp();
+      } else {
+        Phoenix.rebirth(context);
+      }
     } else {
       ware.isDeleting(false);
       PageRouting.popToPage(context);

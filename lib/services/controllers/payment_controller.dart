@@ -23,7 +23,7 @@ import '../../presentation/screens/onboarding/business/success.dart';
 import '../../presentation/widgets/debug_emitter.dart';
 import '../../presentation/widgets/dialogue.dart';
 
-String sk = "sk_test_1a9e1524621e4c91e3489926ef37db7337b4c68f";
+String sk = dotenv.get('SECRET_KEY').toString();
 
 //dotenv.get('SECRET_KEY').toString();
 final plugin = PaystackPlugin();
@@ -33,7 +33,7 @@ class PaymentController {
     // Using just the must-required parameters.
     //4084084084084081
     return PaymentCard(
-      number: "4084084084084081",
+      number: "",
       cvc: "408",
       expiryMonth: 4,
       expiryYear: 24,

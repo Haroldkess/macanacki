@@ -54,7 +54,7 @@ class _SubscriptionPlansBusinessState extends State<SubscriptionPlansBusiness> {
   void initState() {
     // dotenv.get('PUBLIC_KEY').toString()
     super.initState();
-    plugin.initialize(publicKey: publicKey);
+    plugin.initialize(publicKey: dotenv.get('PUBLIC_KEY').toString());
     Operations.controlSystemColor();
   }
   // dotenv.get('PUBLIC_KEY').toString()
@@ -161,10 +161,10 @@ class _SubscriptionPlansBusinessState extends State<SubscriptionPlansBusiness> {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
-                  //   color: Colors.amber,
-                  height: 450,
+                  //  color: Colors.amber,
+                  height: 420,
                   child: Padding(
-                    padding: const EdgeInsets.only(bottom: 10, top: 10),
+                    padding: const EdgeInsets.only(bottom: 0, top: 10),
                     child: Align(
                       alignment: Alignment.bottomCenter,
                       child: Column(
@@ -282,7 +282,7 @@ class _SubscriptionPlansBusinessState extends State<SubscriptionPlansBusiness> {
                                         elevation: 10.0,
                                         padding: const EdgeInsets.only(
                                             top: 10,
-                                            bottom: 10,
+                                            bottom: 0,
                                             left: 15,
                                             right: 3),
                                         content: Row(
@@ -359,8 +359,8 @@ class _SubscriptionPlansBusinessState extends State<SubscriptionPlansBusiness> {
   }
 }
 
-payModal(BuildContext context, PlanData plan, bool? isBusiness,
-    bool isPayOnly,[String? id]) async {
+payModal(BuildContext context, PlanData plan, bool? isBusiness, bool isPayOnly,
+    [String? id]) async {
   var width = MediaQuery.of(context).size.width;
   return showModalBottomSheet(
       context: context,
@@ -423,7 +423,7 @@ payModal(BuildContext context, PlanData plan, bool? isBusiness,
                         // } else {
                         int amount = plan.amountInNaira!.toInt() * 100;
                         await PaymentController.chargeCard(
-                            context, amount, isBusiness, isPayOnly,id);
+                            context, amount, isBusiness, isPayOnly, id);
 
                         //   plan.addAmount(0);
                         // }
@@ -452,8 +452,4 @@ payModal(BuildContext context, PlanData plan, bool? isBusiness,
           ),
         );
       });
-
-
-
-
 }

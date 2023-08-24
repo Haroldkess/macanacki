@@ -83,6 +83,7 @@ dependencies:
   csc_picker: ^0.2.7
   get: ^4.6.5
   upgrader:
+  flutter_phoenix:
   # visibility_detector: ^0.4.0+2
   # change_app_package_name: 1.0.0
   

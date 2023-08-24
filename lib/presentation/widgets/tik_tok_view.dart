@@ -347,7 +347,7 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
                           AdsDisplay(
                             sponsored: true,
                             //  color: HexColor('#00B074'),
-                            color: HexColor('#C0C0C0').withOpacity(.5),
+                            color: Colors.grey.shade400,
                             title: 'Sponsored Ad',
                           ),
                         ],

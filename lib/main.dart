@@ -13,6 +13,7 @@ import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:upgrader/upgrader.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 
 void main() async {
   dotenv.load(fileName: "secret.env");
@@ -23,7 +24,7 @@ void main() async {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       systemNavigationBarIconBrightness: Brightness.dark,
       systemNavigationBarColor: HexColor(backgroundColor)));
-  runApp(const MyApp());
+  runApp( Phoenix(child: const  MyApp() ));
 }
 
 class MyApp extends StatelessWidget {

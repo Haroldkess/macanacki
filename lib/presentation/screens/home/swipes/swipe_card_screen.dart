@@ -112,15 +112,24 @@ class _SwipeCardScreenState extends State<SwipeCardScreen> {
   }
 
   Widget buildCards(List<SwipedUser> data) {
+    SwipeWare swipe = context.watch<SwipeWare>();
     return Stack(children: [
       data.isEmpty
           ? Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                Icon(
+                  Icons.person_off_outlined,
+                  size: 30,
+                  color: HexColor(primaryColor),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
                 Center(
                   child: AppText(
-                    text: "Not found!!",
-                    size: 17,
+                    text: "No ${swipe.filterName} user found",
+                    size: 14,
                     fontWeight: FontWeight.w600,
                     color: Colors.black38,
                   ),
@@ -133,7 +142,6 @@ class _SwipeCardScreenState extends State<SwipeCardScreen> {
 }
 
 List<String> cat = [
-  "All",
   "Verified",
   "Women",
   "Men",

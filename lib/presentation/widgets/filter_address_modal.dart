@@ -52,10 +52,31 @@ class _FilterAddressModalState extends State<FilterAddressModal> {
                 const SizedBox(
                   height: 11,
                 ),
-                AppText(
-                  text: "Filter by location",
-                  fontWeight: FontWeight.w500,
-                  size: 15,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      width: 0,
+                    ),
+                    AppText(
+                      text: "Filter by location",
+                      fontWeight: FontWeight.w500,
+                      size: 15,
+                    ),
+                    GestureDetector(
+                        onTap: () async {
+                          SwipeWare swipe =
+                              Provider.of<SwipeWare>(context, listen: false);
+                          swipe.clearFilter();
+                          PageRouting.popToPage(context);
+                        },
+                        child: AppText(
+                          text: "Clear filter",
+                          size: 11,
+                          color: Colors.redAccent,
+                          fontWeight: FontWeight.w500,
+                        ))
+                  ],
                 ),
                 const SizedBox(
                   height: 10,
@@ -79,24 +100,36 @@ class _FilterAddressModalState extends State<FilterAddressModal> {
                       filter.city.isEmpty ? "Select city" : filter.city,
                   currentState:
                       filter.state.isEmpty ? "Select state" : filter.state,
-                  currentCountry:
-                      filter.country.isEmpty ? "Select country " : filter.country,
+                  currentCountry: filter.country.isEmpty
+                      ? "Select country"
+                      : filter.country,
                   // showCities: false,
                   onCountryChanged: (country) {
-                    Operations.filterLocaton(context, country);
+                    if (country != "Select country") {
+                      Operations.filterLocaton(context, country);
+                    } else if (country == "Nigeria") {
+                      Operations.filterLocaton(context, country);
+                    }
+
                     // setState(() {
                     //   selectedCountry = country;
                     // });
                     // log(country);
                   },
                   onStateChanged: (state) {
-                    Operations.filterLocaton(context, null, state);
+                    if (state != "Select state") {
+                      Operations.filterLocaton(context, null, state);
+                    }
+
                     // setState(() {
                     //   selectedState = state!;
                     // });
                   },
                   onCityChanged: (city) {
-                    Operations.filterLocaton(context, null, null, city);
+                    if (city != "Select city") {
+                      Operations.filterLocaton(context, null, null, city);
+                    }
+
                     // setState(() {
                     //   selectedCity = city!;
                     // });
@@ -119,9 +152,14 @@ class _FilterAddressModalState extends State<FilterAddressModal> {
                       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
                         SwipeController.retrievSwipeController(
                           context,
-                          swipe.filterName.toLowerCase(),
+                          swipe.filterName == "Women"
+                              ? "female"
+                              : swipe.filterName == "Men"
+                                  ? "male"
+                                  : swipe.filterName.toLowerCase(),
                           swipe.country,
                           swipe.state,
+                          swipe.city,
                         );
                       });
                       PageRouting.popToPage(context);

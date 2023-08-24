@@ -1,6 +1,7 @@
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -36,7 +37,7 @@ class _PromoteScreenState extends State<PromoteScreen> {
   @override
   void initState() {
     super.initState();
-    plugin.initialize(publicKey: publicKey);
+    plugin.initialize(publicKey: dotenv.get('PUBLIC_KEY').toString());
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       AdsController.retrievAdsController(context);
     });

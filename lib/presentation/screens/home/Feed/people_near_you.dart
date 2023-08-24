@@ -14,7 +14,6 @@ import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:video_player/video_player.dart';
-
 import '../../../../services/backoffice/mux_client.dart';
 import '../../../../services/controllers/feed_post_controller.dart';
 import '../../../../services/middleware/feed_post_ware.dart';
@@ -80,8 +79,8 @@ class _PeopleHomeState extends State<PeopleHome> {
             controller: controller,
             scrollDirection: Axis.vertical,
             initialInViewIds: ["0"],
-            onListEndReached: () async {
-              await paginateFeed(context);
+            onListEndReached: () {
+              paginateFeed(context);
             },
             //    padding: EdgeInsets.only(bottom: 30),
             // padEnds: true,
@@ -90,6 +89,11 @@ class _PeopleHomeState extends State<PeopleHome> {
             builder: ((context, index) {
               FeedPost post = stream.feedPosts[index];
               if (mounted) {
+                if (index > stream.feedPosts.length - 3) {
+                  SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+                    paginateFeed(context);
+                  });
+                }
                 // SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
                 //   FeedPostWare postLenght =
                 //       Provider.of<FeedPostWare>(context, listen: false);

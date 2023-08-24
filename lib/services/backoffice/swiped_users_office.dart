@@ -9,8 +9,10 @@ import '../temps/temps_id.dart';
 Future<http.Response?> getSwipedUsers(String type,
     [String? country, state, city]) async {
   http.Response? response;
+
   SharedPreferences pref = await SharedPreferences.getInstance();
 
+  print("$country " + "$state " + "$city ");
   String? token = pref.getString(tokenKey);
   try {
     response = await http.get(
@@ -22,7 +24,7 @@ Future<http.Response?> getSwipedUsers(String type,
       },
     );
 
-    //  log(response.body.toString());
+    log(response.statusCode.toString());
   } catch (e) {
     response = null;
   }

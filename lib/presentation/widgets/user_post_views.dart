@@ -418,7 +418,7 @@ class _UserTikTokViewState extends State<UserTikTokView>
                           AdsDisplay(
                             sponsored: true,
                             //  color: HexColor('#00B074'),
-                            color: HexColor('#C0C0C0').withOpacity(.5),
+                            color: HexColor('#C0C0C0'),
                             title: 'Sponsored Ad',
                           ),
                         ],

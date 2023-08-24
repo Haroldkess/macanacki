@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -107,7 +109,12 @@ class _DrawerSideState extends State<DrawerSide> {
 
                           // ignore: use_build_context_synchronously
                           PageRouting.removeAllToPage(context, const Splash());
-                          Restart.restartApp();
+                          if (Platform.isAndroid) {
+                            Restart.restartApp();
+                          } else {
+                            Phoenix.rebirth(context);
+                          }
+
                           // PageRouting.popToPage(
                           //     cont);
                         }),

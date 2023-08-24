@@ -13,12 +13,12 @@ class SwipeWare extends ChangeNotifier {
   bool _loadStatus = false;
   String message = "Cant get people at the moment";
   SwipeData swipeData = SwipeData();
-  String filterName = "All";
+  String filterName = "verified";
   List<SwipedUser> swipedUser = [];
   bool get loadStatus => _loadStatus;
   String country = "";
   String state = "";
-    String city = "";
+  String city = "";
 
   void filterByCountry(String c) {
     country = c;
@@ -30,7 +30,15 @@ class SwipeWare extends ChangeNotifier {
     state = s;
     notifyListeners();
   }
-    void filterByCity(String ci) {
+
+  void clearFilter() {
+    country = "";
+    state = "";
+    city = "";
+    notifyListeners();
+  }
+
+  void filterByCity(String ci) {
     city = ci;
     notifyListeners();
   }
@@ -54,14 +62,15 @@ class SwipeWare extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> getSwipeFromApi(String type,[String? country, state, city]) async {
+  Future<bool> getSwipeFromApi(String type,
+      [String? country, state, city]) async {
     late bool isSuccessful;
     try {
-      http.Response? response = await getSwipedUsers(type, country,state, city)
+      http.Response? response = await getSwipedUsers(type, country, state, city)
           .whenComplete(() => emitter("swwipe users gotten successfully"));
       if (response == null) {
         isSuccessful = false;
-        //  log("swwipe users request failed");
+        log("swwipe users request failed");
       } else if (response.statusCode == 200) {
         emitter("200");
         var jsonData = jsonDecode(response.body);
@@ -69,10 +78,10 @@ class SwipeWare extends ChangeNotifier {
         var incomingData = SwipeUserModel.fromJson(jsonData);
         swipedUser = incomingData.data!;
 
-        //  log("swipe users request success");
+        log("swipe users request success");
         isSuccessful = true;
       } else {
-        //  log("swipe users  request failed");
+        log("swipe users  request failed");
         isSuccessful = false;
       }
     } catch (e) {
