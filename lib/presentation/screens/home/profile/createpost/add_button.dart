@@ -2,6 +2,7 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:macanacki/presentation/allNavigation.dart';
 import 'package:macanacki/presentation/widgets/snack_msg.dart';
 import 'package:macanacki/services/controllers/create_post_controller.dart';
 import 'package:macanacki/services/middleware/action_ware.dart';
@@ -36,6 +37,20 @@ buttonModal(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                const SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    IconButton(
+                        onPressed: () => PageRouting.popToPage(context),
+                        icon: const Icon(
+                          Icons.close,
+                          color: Colors.red,
+                        ))
+                  ],
+                ),
                 const SizedBox(
                   height: 10,
                 ),

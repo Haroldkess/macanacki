@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 
 import '../../../../../model/button_model.dart';
+import '../../../../allNavigation.dart';
 import '../../../../constants/colors.dart';
 import '../../../../widgets/text.dart';
 
@@ -36,6 +37,20 @@ buttonIndividualModal(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                const SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    IconButton(
+                        onPressed: () => PageRouting.popToPage(context),
+                        icon: const Icon(
+                          Icons.close,
+                          color: Colors.red,
+                        ))
+                  ],
+                ),
                 const SizedBox(
                   height: 10,
                 ),

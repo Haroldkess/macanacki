@@ -107,7 +107,13 @@ class UserProfileController {
       if (Platform.isAndroid) {
         Restart.restartApp();
       } else {
-        Phoenix.rebirth(context);
+         try {
+                              Phoenix.rebirth(context);
+                            } catch (e) {
+                              PageRouting.removeAllToPage(
+                                  context, const Splash());
+                              Restart.restartApp();
+                            }
       }
     } else {
       ware.isDeleting(false);

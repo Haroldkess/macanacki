@@ -129,23 +129,23 @@ class _EditProfileState extends State<EditProfile> {
                               user.userProfileModel.country ?? "Select country",
                           flagState: CountryFlag.DISABLE,
                           onCountryChanged: (country) {
-                            //  if(country != null){
+                             if(country  != "Select country"){
                             setState(() {
                               selectedCountry = country;
                             });
-                            //  }
+                              }
 
                             // log(country);
                           },
                           onStateChanged: (state) {
-                            if (state != null) {
+                            if (state != null && state != "Select state") {
                               setState(() {
                                 selectedState = state;
                               });
                             }
                           },
                           onCityChanged: (city) {
-                            if (city != null) {
+                            if (city != null && city != "Select city") {
                               setState(() {
                                 selectedCity = city;
                               });

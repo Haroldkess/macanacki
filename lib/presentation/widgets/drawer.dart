@@ -3,6 +3,7 @@ import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:macanacki/main.dart';
 import 'package:macanacki/presentation/allNavigation.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
 import 'package:macanacki/presentation/constants/params.dart';
@@ -112,7 +113,13 @@ class _DrawerSideState extends State<DrawerSide> {
                           if (Platform.isAndroid) {
                             Restart.restartApp();
                           } else {
-                            Phoenix.rebirth(context);
+                            try {
+                              Phoenix.rebirth(context);
+                            } catch (e) {
+                              PageRouting.removeAllToPage(
+                                  context, const Splash());
+                              Restart.restartApp();
+                            }
                           }
 
                           // PageRouting.popToPage(
