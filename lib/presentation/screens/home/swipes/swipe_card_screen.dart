@@ -184,41 +184,48 @@ class CategoryView extends StatelessWidget {
           SwipeWare swipe = Provider.of<SwipeWare>(context, listen: false);
           swipe.changeFilter(name);
           if (swipe.filterName == "Women") {
-            SwipeController.retrievSwipeController(context, "female");
+            SwipeController.retrievSwipeController(
+                context, "female", swipe.country, swipe.state, swipe.city);
           } else if (swipe.filterName == "Men") {
-            SwipeController.retrievSwipeController(context, "male");
+            SwipeController.retrievSwipeController(
+                context, "male", swipe.country, swipe.state, swipe.city);
           } else {
             SwipeController.retrievSwipeController(
-                context, swipe.filterName.toLowerCase());
+                context,
+                swipe.filterName.toLowerCase(),
+                swipe.country,
+                swipe.state,
+                swipe.city);
           }
         },
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
           width: 85,
           decoration: BoxDecoration(
-              color: swipe.filterName == name
+              color: swipe.filterName.toLowerCase() == name.toLowerCase()
                   ? HexColor(primaryColor)
                   : HexColor(backgroundColor),
               border: Border.all(
-                color: swipe.filterName == name
+                color: swipe.filterName.toLowerCase() == name.toLowerCase()
                     ? HexColor(primaryColor)
                     : HexColor("#EBEBEB"),
               ),
               borderRadius: BorderRadius.circular(50)),
           child: Row(
-            mainAxisAlignment: swipe.filterName == name
-                ? MainAxisAlignment.spaceBetween
-                : MainAxisAlignment.center,
+            mainAxisAlignment:
+                swipe.filterName.toLowerCase() == name.toLowerCase()
+                    ? MainAxisAlignment.spaceBetween
+                    : MainAxisAlignment.center,
             children: [
               AppText(
                 text: name,
-                color: swipe.filterName == name
+                color: swipe.filterName.toLowerCase() == name.toLowerCase()
                     ? HexColor(backgroundColor)
                     : HexColor("#979797"),
                 size: 12,
                 fontWeight: FontWeight.w400,
               ),
-              swipe.filterName == name
+              swipe.filterName.toLowerCase() == name.toLowerCase()
                   ? CircleAvatar(
                       backgroundColor: HexColor(backgroundColor),
                       radius: 7,

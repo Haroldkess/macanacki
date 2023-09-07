@@ -12,6 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../model/register_model.dart';
 import '../../presentation/widgets/debug_emitter.dart';
 import '../../presentation/widgets/snack_msg.dart';
+import '../backoffice/forget_pass_office.dart';
 import '../temps/temps_id.dart';
 
 class RegisterationWare extends ChangeNotifier {
@@ -20,6 +21,7 @@ class RegisterationWare extends ChangeNotifier {
   bool _loadStatus3 = false;
   bool loadBus = false;
   bool loadUser = false;
+  String optMsg = "Something went wrong. Please try again";
   String _message = 'Something went wrong';
   String _message2 = 'Something went wrong';
   String _busMsg = 'Something went wrong';
@@ -27,6 +29,8 @@ class RegisterationWare extends ChangeNotifier {
   String _token = "";
 
   bool _verifyName = false;
+  bool sendForgetOtp = false;
+  bool sendPass = false;
 
   String get message => _message;
   String get message2 => _message2;
@@ -38,6 +42,16 @@ class RegisterationWare extends ChangeNotifier {
   bool get loadStatus2 => _loadStatus2;
   bool get loadStatus3 => _loadStatus3;
   bool get verifyName => _verifyName;
+
+  Future<void> isLoadSendOtp(bool isLoad) async {
+    sendForgetOtp = isLoad;
+    notifyListeners();
+  }
+
+  Future<void> forgetLoad(bool isLoad) async {
+    sendPass = isLoad;
+    notifyListeners();
+  }
 
   Future<void> isLoading(bool isLoad) async {
     _loadStatus = isLoad;
@@ -276,6 +290,7 @@ class RegisterationWare extends ChangeNotifier {
           _IndividualMsg = jsonData["message"];
         } catch (e) {}
         //   _message2 = jsonData["message"];
+        log(res.body);
         isSuccessful = true;
         //   log("this user is registered");
 
@@ -296,6 +311,89 @@ class RegisterationWare extends ChangeNotifier {
     } catch (e) {
       isSuccessful = false;
       emitter(e.toString());
+    }
+
+    notifyListeners();
+
+    return isSuccessful;
+  }
+
+  Future<bool> sendForgetOtpFromApi(String email) async {
+    late bool isSuccessful;
+    try {
+      http.Response? response = await forgetSendOtp(email)
+          .whenComplete(() => emitter("otp sent gotten successfully"));
+      if (response == null) {
+        isSuccessful = false;
+      } else if (response.statusCode == 201) {
+        var jsonData = jsonDecode(response.body);
+
+        try {
+          optMsg = jsonData["message"];
+        } catch (e) {
+          emitter(e.toString());
+        }
+
+        //  var incomingData = CategoryModel.fromJson(jsonData);
+        //category = incomingData.data!;
+
+        isSuccessful = true;
+      } else {
+        var jsonData = jsonDecode(response.body);
+
+        try {
+          optMsg = jsonData["message"];
+        } catch (e) {
+          optMsg = "Can't send otp for password at the moment please try again";
+          emitter(e.toString());
+        }
+
+        isSuccessful = false;
+      }
+    } catch (e) {
+      isSuccessful = false;
+    }
+
+    notifyListeners();
+
+    return isSuccessful;
+  }
+
+  Future<bool> changePasswordFromApi(
+      String email, String otp, String pass) async {
+    late bool isSuccessful;
+    try {
+      http.Response? response = await forgeetPasswordSend(email, otp, pass)
+          .whenComplete(() => emitter("forget pass sent gotten successfully"));
+      if (response == null) {
+        isSuccessful = false;
+      } else if (response.statusCode == 200) {
+        var jsonData = jsonDecode(response.body);
+
+        try {
+          optMsg = jsonData["message"];
+        } catch (e) {
+          emitter(e.toString());
+        }
+
+        //  var incomingData = CategoryModel.fromJson(jsonData);
+        //category = incomingData.data!;
+
+        isSuccessful = true;
+      } else {
+        var jsonData = jsonDecode(response.body);
+
+        try {
+          optMsg = jsonData["message"];
+        } catch (e) {
+          optMsg = "Can't change password at the moment please try again";
+          emitter(e.toString());
+        }
+
+        isSuccessful = false;
+      }
+    } catch (e) {
+      isSuccessful = false;
     }
 
     notifyListeners();

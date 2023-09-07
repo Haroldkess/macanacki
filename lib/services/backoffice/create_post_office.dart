@@ -16,6 +16,7 @@ Future<http.StreamedResponse?> createPost(
   http.StreamedResponse? response;
   SharedPreferences pref = await SharedPreferences.getInstance();
   String? token = pref.getString(tokenKey);
+  emitter(data.media!.first.path);
   // final filePhotoName = basename(data.media!.path);
   var request = http.MultipartRequest(
       "POST", Uri.parse("$baseUrl/public/api/post/create"));

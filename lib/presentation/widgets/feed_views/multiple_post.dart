@@ -55,25 +55,28 @@ class MultiplePost extends StatelessWidget {
             );
           },
         ),
-        Column(
-          children: [
-            const SizedBox(
-              height: 40,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ...media!.map((e) => Container(
-                      color: e.replaceAll('\\', '/') ==
-                              stream.image.replaceAll('\\', '/')
-                          ? HexColor(primaryColor)
-                          : HexColor("#6A6A6A"),
-                      width: 25,
-                      height: 3,
-                    ))
-              ],
-            ),
-          ],
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 40,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ...media!.map((e) => Container(
+                        color: e.replaceAll('\\', '/') ==
+                                stream.image.replaceAll('\\', '/')
+                            ? HexColor(primaryColor)
+                            : HexColor("#6A6A6A"),
+                        width: 25,
+                        height: 3,
+                      ))
+                ],
+              ),
+            ],
+          ),
         )
       ],
     );
@@ -187,35 +190,49 @@ class _MultipleViewState extends State<MultipleView> {
 
     return !widget.media!.contains("https")
         ? FeedVideoHolder(
-                file: "$muxStreamBaseUrl/${widget.media}.$videoExtension",
-                controller: thisData == null ? null : thisData!.controller!,
-                shouldPlay: true,
-                isHome: widget.isHome,
-                thumbLink: widget.thumbLink,
-                isInView: widget.isInView!,
-              )
+            file: "$muxStreamBaseUrl/${widget.media}.$videoExtension",
+            controller: thisData == null ? null : thisData!.controller!,
+            shouldPlay: true,
+            isHome: widget.isHome,
+            thumbLink: widget.thumbLink,
+            isInView: widget.isInView!,
+          )
         : Stack(
             alignment: Alignment.center,
             children: [
               Container(
+                width: width,
+                height: height,
+                decoration: BoxDecoration(color: Colors.black),
+              ),
+              // Container(
+              //     width: width,
+              //     height: height,
+              //     decoration: BoxDecoration(
+              //         image: DecorationImage(
+              //       image: CachedNetworkImageProvider(
+              //         widget.media!.replaceAll('\\', '/'),
+              //       ),
+              //       fit: BoxFit.fill,
+              //     )),
+              //     child: BackdropFilter(
+              //       filter: ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0),
+              //       child: Container(
+              //         decoration:
+              //             BoxDecoration(color: Colors.black.withOpacity(0.0)),
+              //       ),
+              //     )),
+              CachedNetworkImage(
+                imageUrl: widget.media!.replaceAll('\\', '/'),
+                imageBuilder: (context, imageProvider) => Container(
                   width: width,
                   height: height,
                   decoration: BoxDecoration(
                       image: DecorationImage(
-                    image: CachedNetworkImageProvider(
-                      widget.media!.replaceAll('\\', '/'),
-                    ),
-                    fit: BoxFit.fill,
+                    image: imageProvider,
+                    //  fit: BoxFit.fill,
                   )),
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0),
-                    child: Container(
-                      decoration:
-                          BoxDecoration(color: Colors.white.withOpacity(0.0)),
-                    ),
-                  )),
-              CachedNetworkImage(
-                imageUrl: widget.media!.replaceAll('\\', '/'),
+                ),
                 progressIndicatorBuilder: (context, url, downloadProgress) =>
                     Center(
                         child: Loader(
@@ -226,6 +243,18 @@ class _MultipleViewState extends State<MultipleView> {
                   color: HexColor(primaryColor),
                 ),
               ),
+              // CachedNetworkImage(
+              //   imageUrl: widget.media!.replaceAll('\\', '/'),
+              //   progressIndicatorBuilder: (context, url, downloadProgress) =>
+              //       Center(
+              //           child: Loader(
+              //     color: HexColor(primaryColor),
+              //   )),
+              //   errorWidget: (context, url, error) => Icon(
+              //     Icons.error,
+              //     color: HexColor(primaryColor),
+              //   ),
+              // ),
               // Image(
               //   //  fit: BoxFit.fitWidth,
               //   width: widget.constraints!.maxWidth,
@@ -237,7 +266,5 @@ class _MultipleViewState extends State<MultipleView> {
               // ),
             ],
           );
- 
- 
   }
 }

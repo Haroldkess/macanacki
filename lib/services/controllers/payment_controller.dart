@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:developer';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -18,12 +17,13 @@ import 'package:macanacki/presentation/widgets/snack_msg.dart';
 import 'package:macanacki/services/controllers/verify_controller.dart';
 import 'package:macanacki/services/middleware/user_profile_ware.dart';
 import 'package:provider/provider.dart';
-
 import '../../presentation/screens/onboarding/business/success.dart';
 import '../../presentation/widgets/debug_emitter.dart';
 import '../../presentation/widgets/dialogue.dart';
+ //"sk_test_1a9e1524621e4c91e3489926ef37db7337b4c68f"; 
 
-String sk = dotenv.get('SECRET_KEY').toString();
+String sk =
+   dotenv.get('SECRET_KEY').toString();
 
 //dotenv.get('SECRET_KEY').toString();
 final plugin = PaystackPlugin();

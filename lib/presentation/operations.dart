@@ -8,6 +8,9 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:macanacki/presentation/allNavigation.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
 import 'package:macanacki/presentation/screens/home/profile/createpost/create_post_screen.dart';
+import 'package:macanacki/presentation/screens/onboarding/business/business_info.dart';
+import 'package:macanacki/presentation/screens/onboarding/business/business_verification.dart';
+import 'package:macanacki/presentation/screens/onboarding/business/sub_plan.dart';
 import 'package:macanacki/presentation/uiproviders/dob/dob_provider.dart';
 import 'package:macanacki/presentation/uiproviders/screen/comment_provider.dart';
 import 'package:macanacki/presentation/uiproviders/screen/find_people_provider.dart';
@@ -29,9 +32,13 @@ import '../model/feed_post_model.dart';
 import '../model/gender_model.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../services/controllers/plan_controller.dart';
+import '../services/controllers/user_profile_controller.dart';
 import '../services/middleware/chat_ware.dart';
 import '../services/middleware/create_post_ware.dart';
 import '../services/middleware/facial_ware.dart';
+import '../services/middleware/plan_ware.dart';
+import 'constants/params.dart';
 
 class Operations {
   static Future delayScreen(BuildContext context, Widget page) async {
@@ -146,7 +153,7 @@ class Operations {
 
       if (file != null) {
         imageFile = file;
-        emitter(imageFile.path);
+       // emitter(imageFile.path);
         facial.addPhoto(imageFile);
         // facial.isLoading(true);
       }
@@ -166,7 +173,7 @@ class Operations {
 
       if (file != null) {
         imageFile = file;
-        emitter(imageFile.path);
+       // emitter(imageFile.path);
         facial.addDp(imageFile);
         // facial.isLoading(true);
       }
@@ -181,6 +188,7 @@ class Operations {
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
           type: FileType.image,
+
           //   allowedExtensions: ['jpg','png','jpeg'],
           allowMultiple: true);
 
@@ -359,7 +367,7 @@ class Operations {
           return;
         }
 
-        emitter(file.first.path.toString());
+      //  emitter(file.first.path.toString());
         if (isUser) {
           picked.addIdUser(file.first);
         } else {
@@ -429,6 +437,120 @@ class Operations {
       }
     } else {
       return;
+    }
+  }
+
+  static Future verifyOperation(context) async {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      UserProfileController.retrievProfileController(context, true);
+    });
+    PlanWare ware = Provider.of<PlanWare>(context, listen: false);
+    UserProfileWare user = Provider.of<UserProfileWare>(context, listen: false);
+    GenderList gender = GenderList(id: 2, name: "Business", selected: true);
+    PlanController.retrievPlanController(context, true);
+    if (ware.plans.isEmpty) {
+      PlanController.retrievPlanController(context, true);
+    }
+    if (user.userProfileModel.gender == "Business" &&
+        user.userProfileModel.verified == 0 &&
+        user.userProfileModel.verification == null) {
+      PageRouting.pushToPage(
+          context,
+          BusinessInfo(
+            data: gender,
+            action: "both",
+          ));
+
+      // ignore: use_build_context_synchronously
+      // PageRouting.pushToPage(
+      //     context, const SubscriptionPlansBusiness());
+    } else if (user.userProfileModel.gender != "Business" &&
+        user.userProfileModel.verified == 0 &&
+        user.userProfileModel.verification == null) {
+      PageRouting.pushToPage(
+          context,
+          BusinessVerification(
+            gender: gender,
+            isBusiness: false,
+            action: "both",
+          ));
+    } else if (user.userProfileModel.gender != "Business" &&
+        user.userProfileModel.verified == 2 &&
+        user.userProfileModel.verification != null) {
+      emitter("upload without payment");
+      PageRouting.pushToPage(
+          context,
+          BusinessVerification(
+            gender: gender,
+            isBusiness: false,
+            action: "upload",
+          ));
+      //upload without payment
+    } else if (user.userProfileModel.gender == "Business" &&
+        user.userProfileModel.verified == 2 &&
+        user.userProfileModel.verification != null) {
+      //upload without payment
+      PageRouting.pushToPage(
+          context,
+          BusinessInfo(
+            data: gender,
+            action: "upload",
+          ));
+      emitter("upload without payment");
+    } else if (user.userProfileModel.gender == "Business" &&
+        user.userProfileModel.verified == 1 &&
+        user.userProfileModel.activePlan == sub) {
+      // payment only
+      emitter("payment only");
+      PageRouting.pushToPage(
+          context,
+          const SubscriptionPlansBusiness(
+            isBusiness: true,
+            isSubmiting: "pay",
+          ));
+    } else if (user.userProfileModel.gender != "Business" &&
+        user.userProfileModel.verified == 1 &&
+        user.userProfileModel.activePlan == sub) {
+      // payment only
+      PageRouting.pushToPage(
+          context,
+          const SubscriptionPlansBusiness(
+            isBusiness: false,
+            isSubmiting: "pay",
+          ));
+      emitter("payment only");
+    } else {
+      if (user.userProfileModel.verified == 1 &&
+          user.userProfileModel.activePlan != sub) {
+        Get.back();
+        Get.dialog(
+          verifiedDialog(
+              title: "Congratulations",
+              message: "Your account has been verified.",
+              confirmText: "Okay",
+              cancelText: "Go back",
+              onPressedCancel: () {
+                Get.back();
+              },
+              onPressed: () {
+                Get.back();
+              }),
+        );
+      } else {
+        Get.back();
+        Get.dialog(confirmationDialog(
+            title: "Verification",
+            message:
+                "Your documenets are under review. This will take 48 hours or 5 working days to be confirmed.",
+            confirmText: "Okay",
+            cancelText: "Go back",
+            onPressedCancel: () {
+              Get.back();
+            },
+            onPressed: () {
+              Get.back();
+            }));
+      }
     }
   }
 }

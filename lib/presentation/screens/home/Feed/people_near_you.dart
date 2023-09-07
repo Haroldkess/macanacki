@@ -1,5 +1,5 @@
 import 'dart:developer';
-import 'package:inview_notifier_list/inview_notifier_list.dart';
+// import 'package:inview_notifier_list/inview_notifier_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -69,24 +69,12 @@ class _PeopleHomeState extends State<PeopleHome> {
               )
             ],
           )
-        : InViewNotifierList(
-            isInViewPortCondition:
-                (double deltaTop, double deltaBottom, double vpHeight) {
-              return deltaTop < (0.3 * vpHeight) &&
-                  deltaBottom > (0.3 * vpHeight);
-            },
+        : PageView.builder(
             itemCount: stream.feedPosts.length,
             controller: controller,
             scrollDirection: Axis.vertical,
-            initialInViewIds: ["0"],
-            onListEndReached: () {
-              paginateFeed(context);
-            },
-            //    padding: EdgeInsets.only(bottom: 30),
-            // padEnds: true,
-            // pageSnapping: true,
-            // scrollBehavior:ScrollBehavior(),
-            builder: ((context, index) {
+            padEnds: false,
+            itemBuilder: ((context, index) {
               FeedPost post = stream.feedPosts[index];
               if (mounted) {
                 if (index > stream.feedPosts.length - 3) {
@@ -94,61 +82,112 @@ class _PeopleHomeState extends State<PeopleHome> {
                     paginateFeed(context);
                   });
                 }
-                // SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-                //   FeedPostWare postLenght =
-                //       Provider.of<FeedPostWare>(context, listen: false);
-                //   if (index % 2 == 0) {
-                //     List<FeedPost> toSend = [];
-
-                //     for (var i = index; i < (index + (7)); i++) {
-                //       toSend.add(postLenght.feedPosts[i]);
-                //     }
-                //     FeedPostController.downloadThumbs(
-                //         toSend, context, MediaQuery.of(context).size.height);
-                //     //  emitter('caching next ${toSend.length} sent');
-                //   }
-                // });
               }
-
-              return InViewNotifierWidget(
-                  id: '$index',
-                  builder:
-                      (BuildContext context, bool isInView, Widget? child) {
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 0),
-                      child: TikTokView(
-                        media: post.mux!,
-                        data: post,
-                        page: "feed",
-                        feedPosts: stream.feedPosts,
-                        index1: index,
-                        index2: index + 1,
-                        urls: post.media!,
-                        isHome: true,
-                        isInView: isInView,
-                      ),
-                    );
-                  });
+              return TikTokView(
+                media: post.mux!,
+                data: post,
+                page: "feed",
+                feedPosts: stream.feedPosts,
+                index1: index,
+                index2: index + 1,
+                urls: post.media!,
+                isHome: true,
+                isInView: true,
+              );
             }),
-
-            // onPageChanged: (index) async {
-            //   FeedPostWare postLenght =
-            //       Provider.of<FeedPostWare>(context, listen: false);
-            //   if (index % 2 == 0) {
-            //     List<FeedPost> toSend = [];
-
-            //     for (var i = index;
-            //         i < (index + (postLenght.feedPosts.length - index));
-            //         i++) {
-            //       toSend.add(postLenght.feedPosts[i]);
-            //     }
-            //     FeedPostController.downloadThumbs(
-            //         toSend, context, MediaQuery.of(context).size.height);
-            //     emitter('caching next ${toSend.length} sent');
-            //   }
-            //   await paginateFeed(context, index);
-            // },
+            onPageChanged: (index) {
+              if (mounted) {
+                if (index > stream.feedPosts.length - 3) {
+                  SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+                    paginateFeed(context);
+                  });
+                }
+              }
+              // paginateFeed(context);
+              // provide.changeIndex(index);
+            },
           );
+
+    // InViewNotifierList(
+    //     isInViewPortCondition:
+    //         (double deltaTop, double deltaBottom, double vpHeight) {
+    //       return deltaTop < (0.3 * vpHeight) &&
+    //           deltaBottom > (0.3 * vpHeight);
+    //     },
+    //     itemCount: stream.feedPosts.length,
+    //     controller: controller,
+    //     scrollDirection: Axis.vertical,
+    //     initialInViewIds: ["0"],
+    //     onListEndReached: () {
+    //       paginateFeed(context);
+    //     },
+    //     //    padding: EdgeInsets.only(bottom: 30),
+    //     // padEnds: true,
+    //     // pageSnapping: true,
+    //     // scrollBehavior:ScrollBehavior(),
+    //     builder: ((context, index) {
+    //       FeedPost post = stream.feedPosts[index];
+    //       if (mounted) {
+    //         if (index > stream.feedPosts.length - 3) {
+    //           SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+    //             paginateFeed(context);
+    //           });
+    //         }
+    //         // SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+    //         //   FeedPostWare postLenght =
+    //         //       Provider.of<FeedPostWare>(context, listen: false);
+    //         //   if (index % 2 == 0) {
+    //         //     List<FeedPost> toSend = [];
+
+    //         //     for (var i = index; i < (index + (7)); i++) {
+    //         //       toSend.add(postLenght.feedPosts[i]);
+    //         //     }
+    //         //     FeedPostController.downloadThumbs(
+    //         //         toSend, context, MediaQuery.of(context).size.height);
+    //         //     //  emitter('caching next ${toSend.length} sent');
+    //         //   }
+    //         // });
+    //       }
+
+    //       return InViewNotifierWidget(
+    //           id: '$index',
+    //           builder:
+    //               (BuildContext context, bool isInView, Widget? child) {
+    //             return Padding(
+    //               padding: const EdgeInsets.only(bottom: 0),
+    //               child: TikTokView(
+    //                 media: post.mux!,
+    //                 data: post,
+    //                 page: "feed",
+    //                 feedPosts: stream.feedPosts,
+    //                 index1: index,
+    //                 index2: index + 1,
+    //                 urls: post.media!,
+    //                 isHome: true,
+    //                 isInView: isInView,
+    //               ),
+    //             );
+    //           });
+    //     }),
+
+    //     // onPageChanged: (index) async {
+    //     //   FeedPostWare postLenght =
+    //     //       Provider.of<FeedPostWare>(context, listen: false);
+    //     //   if (index % 2 == 0) {
+    //     //     List<FeedPost> toSend = [];
+
+    //     //     for (var i = index;
+    //     //         i < (index + (postLenght.feedPosts.length - index));
+    //     //         i++) {
+    //     //       toSend.add(postLenght.feedPosts[i]);
+    //     //     }
+    //     //     FeedPostController.downloadThumbs(
+    //     //         toSend, context, MediaQuery.of(context).size.height);
+    //     //     emitter('caching next ${toSend.length} sent');
+    //     //   }
+    //     //   await paginateFeed(context, index);
+    //     // },
+    //   );
   }
 
   Future paginateFeed(BuildContext context) async {

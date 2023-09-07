@@ -46,4 +46,28 @@ class VerifyEmailController {
       //print("something went wrong");
     }
   }
+
+  static Future<void> resendOtpController(
+      BuildContext context, String email) async {
+    OtpWare ware = Provider.of<OtpWare>(context, listen: false);
+
+    //  ware.resendLoad(true);
+    OtpModel data = OtpModel(email: email, otp: "");
+    bool isDone = await ware
+        .resendOtpFromApi(data)
+        .whenComplete(() => emitter("can now navigate to username page"));
+
+    if (isDone) {
+      //   ware.resendLoad(false);
+      // ignore: use_build_context_synchronously
+      showToast2(context, ware.message1, isError: false);
+      // await Future.delayed(const Duration(seconds: 2)).whenComplete(
+      //     () => PageRouting.pushToPage(context, const SelectGender()));
+    } else {
+      // ware.resendLoad(false);
+      // ignore: use_build_context_synchronously
+      showToast2(context, ware.message1, isError: true);
+      //print("something went wrong");
+    }
+  }
 }

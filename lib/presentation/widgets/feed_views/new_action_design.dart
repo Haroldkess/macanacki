@@ -78,7 +78,7 @@ class _NewDesignTestState extends State<NewDesignTest> {
     ActionWare action = Provider.of<ActionWare>(context, listen: false);
     StoreComment comment = context.watch<StoreComment>();
     return Padding(
-      padding: const EdgeInsets.only(left: 8.0),
+      padding: const EdgeInsets.only(left: 0.0),
       child: Container(
         height: showMore
             ? height / 1.4
@@ -86,37 +86,77 @@ class _NewDesignTestState extends State<NewDesignTest> {
                 ? 119
                 : 119,
         width: width,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Row(
-              children: [
-                Container(
-                  //  color: Colors.amber,
-                  //475
-                  constraints: BoxConstraints(maxWidth: width * 0.55),
-                  child: Row(
-                    children: [
-                      InkWell(
-                        onTap: () async {
-                          TabProvider action =
-                              Provider.of<TabProvider>(context, listen: false);
-                          if (widget.data.media!.length > 1) {
-                            for (var i = 0;
-                                i < widget.data.media!.length;
-                                i++) {
-                              if (widget.data.media![i].contains(".mp4")) {
-                                if (action.controller != null) {
-                                  if (action.controller!.value.isInitialized) {
-                                    if (mounted) {
-                                      action.controller!.pause();
-                                    }
-                                  } else {
-                                    if (mounted) {
-                                      action.controller!.pause();
+        decoration: BoxDecoration(
+          //    backgroundBlendMode: BlendMode.colorDodge,
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.transparent,
+              Colors.transparent,
+              Colors.black.withOpacity(.05),
+              Colors.black.withOpacity(.1),
+              Colors.black.withOpacity(.1),
+            ],
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.only(left:8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    //  color: Colors.amber,
+                    //475
+                    constraints: BoxConstraints(maxWidth: width * 0.55),
+                    child: Row(
+                      children: [
+                        InkWell(
+                          onTap: () async {
+                            TabProvider action =
+                                Provider.of<TabProvider>(context, listen: false);
+                            if (widget.data.media!.length > 1) {
+                              for (var i = 0;
+                                  i < widget.data.media!.length;
+                                  i++) {
+                                if (widget.data.media![i].contains(".mp4")) {
+                                  if (action.controller != null) {
+                                    if (action.controller!.value.isInitialized) {
+                                      if (mounted) {
+                                        action.controller!.pause();
+                                      }
+                                    } else {
+                                      if (mounted) {
+                                        action.controller!.pause();
+                                      }
                                     }
                                   }
+                                  if (action.controller != null) {
+                                    if (action.controller!.value.isInitialized) {
+                                      if (action.controller!.value.isBuffering ||
+                                          action.controller!.value.isPlaying) {
+                                        if (mounted) {
+                                          action.tap(true);
+                                          action.pauseControl();
+                                        }
+                                      } else {
+                                        if (mounted) {
+                                          action.tap(true);
+                                          action.pauseControl();
+                                        }
+
+                                        //  return;
+                                      }
+                                    }
+                                  }
+
+                                  // widget.controller!.pause();
                                 }
+                              }
+                            } else {
+                              if (widget.data.media!.first.contains(".mp4")) {
                                 if (action.controller != null) {
                                   if (action.controller!.value.isInitialized) {
                                     if (action.controller!.value.isBuffering ||
@@ -125,304 +165,282 @@ class _NewDesignTestState extends State<NewDesignTest> {
                                         action.tap(true);
                                         action.pauseControl();
                                       }
+                                      // action.tap(true);
+                                      // action.pauseControl();
                                     } else {
-                                      if (mounted) {
-                                        action.tap(true);
-                                        action.pauseControl();
-                                      }
-
+                                      // action.tap(true);
+                                      // action.pauseControl();
                                       //  return;
                                     }
                                   }
                                 }
-
-                                // widget.controller!.pause();
+                                widget.controller!.pause();
                               }
                             }
-                          } else {
-                            if (widget.data.media!.first.contains(".mp4")) {
+
+                            if (widget.data.user!.username! ==
+                                user.userProfileModel.username) {
+                              action.tap(true);
+                              action.tapTrack(0);
+                              action.changeIndex(4);
                               if (action.controller != null) {
-                                if (action.controller!.value.isInitialized) {
-                                  if (action.controller!.value.isBuffering ||
-                                      action.controller!.value.isPlaying) {
-                                    if (mounted) {
-                                      action.tap(true);
-                                      action.pauseControl();
-                                    }
-                                    // action.tap(true);
-                                    // action.pauseControl();
-                                  } else {
-                                    // action.tap(true);
-                                    // action.pauseControl();
-                                    //  return;
-                                  }
+                                action.pauseControl();
+                              }
+                              action.pageController!.animateToPage(
+                                4,
+                                duration: const Duration(milliseconds: 1),
+                                curve: Curves.easeIn,
+                              );
+                              // PageRouting.pushToPage(
+                              //     context, const ProfileScreen());
+                            } else {
+                              PageRouting.pushToPage(
+                                  context,
+                                  UsersProfile(
+                                    username: widget.data.user!.username!,
+                                  ));
+                              if (mounted) {
+                                action.tap(true);
+                                if (action.controller != null) {
+                                  action.pauseControl();
                                 }
                               }
-                              widget.controller!.pause();
                             }
-                          }
-
-                          if (widget.data.user!.username! ==
-                              user.userProfileModel.username) {
-                            action.tap(true);
-                            action.pauseControl();
-
-                            action.tapTrack(0);
-                            action.changeIndex(4);
-                            action.pageController!.animateToPage(
-                              4,
-                              duration: const Duration(milliseconds: 1),
-                              curve: Curves.easeIn,
-                            );
-                            // PageRouting.pushToPage(
-                            //     context, const ProfileScreen());
-                          } else {
-                            PageRouting.pushToPage(
-                                context,
-                                UsersProfile(
-                                  username: widget.data.user!.username!,
-                                ));
-                            if (mounted) {
-                              action.tap(true);
-                              action.pauseControl();
-                            }
-                          }
-                        },
-                        child: Row(
-                          children: [
-                            Stack(
-                              alignment: Alignment.center,
-                              children: [
-                                HexagonWidget.pointy(
-                                  width: w - 3,
-                                  elevation: 2.0,
-                                  color: Colors.white,
-                                  cornerRadius: 2.0,
-                                  child: AspectRatio(
-                                    aspectRatio: HexagonType.POINTY.ratio,
-                                    // child: Image.asset(
-                                    //   'assets/tram.jpg',
-                                    //   fit: BoxFit.fitWidth,
-                                    // ),
-                                  ),
-                                ),
-                                HexagonAvatar(
-                                  url: widget.data.user!.profilephoto!,
-                                  w: w,
-                                ),
-                              ],
-                            ),
-                            const SizedBox(
-                              width: 5.5,
-                            ),
-                            Row(
-                              children: [
-                                Container(
-                                  constraints: const BoxConstraints(
-                                    maxWidth: 139,
-                                  ),
-                                  //   color: Colors.amber,
-                                  child: AppText(
-                                    text: widget.data.user!.username!,
-                                    size: 13,
-                                    fontWeight: FontWeight.w700,
-                                    maxLines: 1,
-                                    overflow:
-                                        widget.data.user!.username!.length > 20
-                                            ? TextOverflow.ellipsis
-                                            : TextOverflow.ellipsis,
-                                    color: HexColor(backgroundColor),
-                                  ),
-                                ),
-                                widget.data.user!.verified == 1 &&
-                                        widget.data.user!.activePlan !=
-                                            sub
-                                    ? SvgPicture.asset("assets/icon/badge.svg",
-                                        height: 13, width: 13)
-                                    : const SizedBox.shrink()
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 5.5,
-                      ),
-                      // Image.asset("assets/pic/verified.png"),
-                      // const SizedBox(
-                      //   width: 5.5,
-                      // ),
-                      // myUsername == widget.data.user!.username!
-                      //     ? const SizedBox.shrink()
-                      //     : Expanded(
-                      //         child: Row(
-                      //           children: [
-                      //             followButton(() async {
-                      //               followAction(
-                      //                 context,
-                      //               );
-                      //             },
-                      //                 stream.followIds
-                      //                         .contains(widget.data.user!.id!)
-                      //                     ? "Following"
-                      //                     : "Follow"),
-                      //           ],
-                      //         ),
-                      //       ),
-
-                      // const SizedBox(
-                      //   width: 15.5,
-                      // ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        likeButton(
-                            context,
-                            stream.likeIds.contains(widget.data.id!) ||
-                                    stream.isDoubleTapped
-                                ? widget.data.noOfLikes! + stream.addLike
-                                : widget.data.noOfLikes!,
-                            stream.likeIds.contains(widget.data.id!) ||
-                                    stream.isDoubleTapped
-                                ? true
-                                : false),
-                        // myIcon("assets/icon/heart.svg", backgroundColor, 35, 35,
-                        //     widget.data.noOfLikes),
-                        InkWell(
-                          onTap: () async {
-                            StoreComment comment = Provider.of<StoreComment>(
-                                context,
-                                listen: false);
-                            List checkCom = comment.comments
-                                .where((element) =>
-                                    element.postId == widget.data.id)
-                                .toList();
-
-                            if (checkCom.isEmpty) {
-                              if (widget.data.comments!.isEmpty) {
-                              } else {
-                                Operations.commentOperation(
-                                    context, false, widget.data.comments!);
-                              }
-                            } else {}
-                            setState(() {});
-                            //   emitter(comment.comments.length.toString());
-                            // emitter(widget.data.id!.toString());
-                            // Operations.commentOperation(
-                            //     context, false, widget.data.comments!);
-
-                            commentModal(context, widget.data.id!, widget.page);
                           },
-                          child: Padding(
-                            padding: const EdgeInsets.only(right: 3.0),
-                            child: myIcon(
-                                "assets/icon/coment.svg",
-                                backgroundColor,
-                                30,
-                                30,
-                                comment.comments
-                                    .where((element) =>
-                                        element.postId == widget.data.id)
-                                    .toList()
-                                    .length),
+                          child: Row(
+                            children: [
+                              Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  HexagonWidget.pointy(
+                                    width: w - 3,
+                                    elevation: 2.0,
+                                    color: Colors.white,
+                                    cornerRadius: 2.0,
+                                    child: AspectRatio(
+                                      aspectRatio: HexagonType.POINTY.ratio,
+                                      // child: Image.asset(
+                                      //   'assets/tram.jpg',
+                                      //   fit: BoxFit.fitWidth,
+                                      // ),
+                                    ),
+                                  ),
+                                  HexagonAvatar(
+                                    url: widget.data.user!.profilephoto!,
+                                    w: w,
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                width: 5.5,
+                              ),
+                              Row(
+                                children: [
+                                  Container(
+                                    constraints: const BoxConstraints(
+                                      maxWidth: 139,
+                                    ),
+                                    //   color: Colors.amber,
+                                    child: AppText(
+                                      text: widget.data.user!.username!,
+                                      size: 13,
+                                      fontWeight: FontWeight.w700,
+                                      maxLines: 1,
+                                      overflow:
+                                          widget.data.user!.username!.length > 20
+                                              ? TextOverflow.ellipsis
+                                              : TextOverflow.ellipsis,
+                                      color: HexColor(backgroundColor),
+                                    ),
+                                  ),
+                                  widget.data.user!.verified == 1 &&
+                                          widget.data.user!.activePlan != sub
+                                      ? SvgPicture.asset("assets/icon/badge.svg",
+                                          height: 13, width: 13)
+                                      : const SizedBox.shrink()
+                                ],
+                              ),
+                            ],
                           ),
                         ),
+                        const SizedBox(
+                          width: 5.5,
+                        ),
+                        // Image.asset("assets/pic/verified.png"),
+                        // const SizedBox(
+                        //   width: 5.5,
+                        // ),
+                        // myUsername == widget.data.user!.username!
+                        //     ? const SizedBox.shrink()
+                        //     : Expanded(
+                        //         child: Row(
+                        //           children: [
+                        //             followButton(() async {
+                        //               followAction(
+                        //                 context,
+                        //               );
+                        //             },
+                        //                 stream.followIds
+                        //                         .contains(widget.data.user!.id!)
+                        //                     ? "Following"
+                        //                     : "Follow"),
+                        //           ],
+                        //         ),
+                        //       ),
+
+                        // const SizedBox(
+                        //   width: 15.5,
+                        // ),
                       ],
                     ),
                   ),
-                )
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 36, top: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    // color: Colors.amber,
-                    //   width: width * 0.5,
-                    constraints: BoxConstraints(maxWidth: width * 0.85),
-                    child: SingleChildScrollView(
-                      child: RichText(
-                          textAlign: TextAlign.start,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: showMore ? 50 : 2,
-                          text: TextSpan(
-                              text: widget.data.description!.length >=
-                                          seeMoreVal &&
-                                      showMore == false
-                                  ? widget.data.description!
-                                      .substring(0, seeMoreVal - 3)
-                                  : widget.data.description!,
-                              style: GoogleFonts.spartan(
-                                  textStyle: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                color:
-                                    HexColor(backgroundColor).withOpacity(0.9),
-                                decorationStyle: TextDecorationStyle.solid,
-                                fontSize: 10,
-                                fontFamily: '',
-                              )),
-                              recognizer: tapGestureRecognizer
-                                ..onTap = () async {
-                                  //    print("object");
-                                  if (showMore) {
-                                    setState(() {
-                                      showMore = false;
-                                    });
-                                  } else {
-                                    setState(() {
-                                      showMore = true;
-                                    });
-                                  }
-                                },
-                              children: [
-                                widget.data.description!.length < seeMoreVal
-                                    ? const TextSpan(text: "")
-                                    : TextSpan(
-                                        text:
-                                            showMore ? " less" : "...see more",
-                                        style: TextStyle(
-                                          fontSize: 13,
-                                          color: HexColor(backgroundColor),
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                        recognizer: tapGestureRecognizer
-                                          ..onTap = () async {
-                                            //    print("object");
-                                            if (showMore) {
-                                              setState(() {
-                                                showMore = false;
-                                              });
-                                            } else {
-                                              setState(() {
-                                                showMore = true;
-                                              });
-                                            }
-                                          },
-                                      )
-                              ])),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          likeButton(
+                              context,
+                              stream.likeIds.contains(widget.data.id!) ||
+                                      stream.isDoubleTapped
+                                  ? widget.data.noOfLikes! + stream.addLike
+                                  : widget.data.noOfLikes!,
+                              stream.likeIds.contains(widget.data.id!) ||
+                                      stream.isDoubleTapped
+                                  ? true
+                                  : false),
+                          // myIcon("assets/icon/heart.svg", backgroundColor, 35, 35,
+                          //     widget.data.noOfLikes),
+                          InkWell(
+                            onTap: () async {
+                              StoreComment comment = Provider.of<StoreComment>(
+                                  context,
+                                  listen: false);
+                              List checkCom = comment.comments
+                                  .where((element) =>
+                                      element.postId == widget.data.id)
+                                  .toList();
+
+                              if (checkCom.isEmpty) {
+                                if (widget.data.comments!.isEmpty) {
+                                } else {
+                                  Operations.commentOperation(
+                                      context, false, widget.data.comments!);
+                                }
+                              } else {}
+                              setState(() {});
+                              //   emitter(comment.comments.length.toString());
+                              // emitter(widget.data.id!.toString());
+                              // Operations.commentOperation(
+                              //     context, false, widget.data.comments!);
+
+                              commentModal(context, widget.data.id!, widget.page);
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 3.0),
+                              child: myIcon(
+                                  "assets/icon/coment.svg",
+                                  backgroundColor,
+                                  30,
+                                  30,
+                                  comment.comments
+                                      .where((element) =>
+                                          element.postId == widget.data.id)
+                                      .toList()
+                                      .length),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
+                  )
                 ],
               ),
-            ),
-            SizedBox(
-              height: widget.data.user!.gender == "Business" ? 10 : 10,
-            ),
-            SizedBox(
-              height: widget.data.btnLink != null && widget.data.button != null
-                  ? 40
-                  : 10,
-            )
-          ],
+              Padding(
+                padding: const EdgeInsets.only(left: 36, top: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      //   width: width * 0.5,
+                      constraints: BoxConstraints(maxWidth: width * 0.85),
+                      child: SingleChildScrollView(
+                        child: RichText(
+                            textAlign: TextAlign.start,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: showMore ? 50 : 2,
+                            text: TextSpan(
+                                text: widget.data.description!.length >=
+                                            seeMoreVal &&
+                                        showMore == false
+                                    ? widget.data.description!
+                                        .substring(0, seeMoreVal - 3)
+                                    : widget.data.description!,
+                                style: GoogleFonts.spartan(
+                                    textStyle: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color:
+                                      HexColor(backgroundColor).withOpacity(0.9),
+                                  decorationStyle: TextDecorationStyle.solid,
+                                  fontSize: 10,
+                                  fontFamily: '',
+                                )),
+                                recognizer: tapGestureRecognizer
+                                  ..onTap = () async {
+                                    //    print("object");
+                                    if (showMore) {
+                                      setState(() {
+                                        showMore = false;
+                                      });
+                                    } else {
+                                      setState(() {
+                                        showMore = true;
+                                      });
+                                    }
+                                  },
+                                children: [
+                                  widget.data.description!.length < seeMoreVal
+                                      ? const TextSpan(text: "")
+                                      : TextSpan(
+                                          text:
+                                              showMore ? " less" : "...see more",
+                                          style: TextStyle(
+                                            fontSize: 13,
+                                            color: HexColor(backgroundColor),
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                          recognizer: tapGestureRecognizer
+                                            ..onTap = () async {
+                                              //    print("object");
+                                              if (showMore) {
+                                                setState(() {
+                                                  showMore = false;
+                                                });
+                                              } else {
+                                                setState(() {
+                                                  showMore = true;
+                                                });
+                                              }
+                                            },
+                                        )
+                                ])),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: widget.data.user!.gender == "Business" ? 10 : 10,
+              ),
+              SizedBox(
+                height: widget.data.btnLink != null && widget.data.button != null
+                    ? 40
+                    : 10,
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -441,15 +459,15 @@ class _NewDesignTestState extends State<NewDesignTest> {
             decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border:
-                    Border.all(color: HexColor(backgroundColor), width: 1.5)),
+                    Border.all(color: HexColor(backgroundColor), width: 0.5)),
             child: Center(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: InkWell(
                   child: SvgPicture.asset(
                     svgPath,
-                    // height: 18,
-                    // width: 18,
+                    height: 18,
+                    width: 18,
                     color: HexColor(hexString),
                   ),
                 ),
@@ -571,7 +589,7 @@ class _NewDesignTestState extends State<NewDesignTest> {
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(
-                            color: HexColor(backgroundColor), width: 1.5)),
+                            color: HexColor(backgroundColor), width: 0.5)),
                     child: Center(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -589,15 +607,15 @@ class _NewDesignTestState extends State<NewDesignTest> {
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(
-                            color: HexColor(backgroundColor), width: 1.5)),
+                            color: HexColor(backgroundColor), width: 0.5)),
                     child: Center(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: SvgPicture.asset(
                           "assets/icon/hert.svg",
                           color: HexColor(backgroundColor),
-                          // height: 20,
-                          // width: 20,
+                          height: 16,
+                          width: 16,
                         ),
                       ),
                     ),

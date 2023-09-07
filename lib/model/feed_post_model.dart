@@ -110,22 +110,25 @@ class FeedData {
 }
 
 class FeedPost {
-  FeedPost(
-      {this.id,
-      this.description,
-      this.published,
-      this.createdAt,
-      this.updatedAt,
-      this.btnLink,
-      this.creator,
-      this.media,
-      this.mux,
-      this.comments,
-      this.noOfLikes,
-      this.viewCount,
-      this.button,
-      this.user,
-      this.media2, this.controller,     this.promoted,});
+  FeedPost({
+    this.id,
+    this.description,
+    this.published,
+    this.createdAt,
+    this.updatedAt,
+    this.btnLink,
+    this.creator,
+    this.media,
+    this.mux,
+    this.comments,
+    this.noOfLikes,
+    this.viewCount,
+    this.button,
+    this.user,
+    this.media2,
+    this.controller,
+    this.promoted,
+  });
 
   int? id;
   String? description;
@@ -143,7 +146,7 @@ class FeedPost {
   String? button;
   User? user;
   VideoPlayerController? controller;
-   String? promoted;
+  String? promoted;
 
   FeedPost copyWith({
     int? id,
@@ -161,7 +164,6 @@ class FeedPost {
     int? viewCount,
     String? button,
     User? user,
-    
     VideoPlayerController? controller,
   }) =>
       FeedPost(
@@ -179,7 +181,8 @@ class FeedPost {
           noOfLikes: noOfLikes ?? this.noOfLikes,
           viewCount: viewCount ?? this.viewCount,
           button: button ?? this.button,
-          user: user ?? this.user, controller: controller ?? this.controller);
+          user: user ?? this.user,
+          controller: controller ?? this.controller);
 
   factory FeedPost.fromJson(Map<String, dynamic> json) => FeedPost(
         id: json["id"],
@@ -209,7 +212,7 @@ class FeedPost {
         noOfLikes: json["no_of_likes"],
         button: json["button"],
         user: json["user"] == null ? null : User.fromJson(json["user"]),
-         promoted: json["promoted"],
+        promoted: json["promoted"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -231,7 +234,7 @@ class FeedPost {
         "view_count": viewCount,
         "button": button,
         "user": user?.toJson(),
-         "promoted": promoted,
+        "promoted": promoted,
       };
 }
 
@@ -256,7 +259,7 @@ class Comment {
   String? profilePhoto;
   int? noOfLikes;
   int? postId;
-  dynamic isVerified;
+  int? isVerified;
 
   factory Comment.fromJson(Map<String, dynamic> json) => Comment(
         id: json["id"],

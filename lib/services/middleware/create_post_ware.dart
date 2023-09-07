@@ -100,6 +100,8 @@ class CreatePostWare extends ChangeNotifier {
         //    log(jsonData["message"]);
         _message = jsonData["message"];
         isSuccessful = true;
+        log(jsonData.toString());
+        log(jsonData["message"]);
         //  log("post created!!");
 
         //  var res = http.Response.fromStream(response);
@@ -109,6 +111,8 @@ class CreatePostWare extends ChangeNotifier {
         var jsonData = jsonDecode(res.body);
         //   log(jsonData["message"]);
         _message = jsonData["message"];
+        log(jsonData.toString());
+        log(jsonData["message"]);
         isSuccessful = false;
       }
     } catch (e) {
@@ -136,6 +140,9 @@ class CreatePostWare extends ChangeNotifier {
         _commentMessage = jsonData["message"].toString();
         emitter("share comment request success");
         isSuccessful = true;
+      } else if (response.statusCode == 500){
+            _commentMessage = "Cannot comment on this post at the moment";
+  isSuccessful = false;
       } else {
         var jsonData = jsonDecode(response.body);
         _commentMessage = jsonData["message"].toString();

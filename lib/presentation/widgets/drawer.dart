@@ -111,14 +111,14 @@ class _DrawerSideState extends State<DrawerSide> {
                           // ignore: use_build_context_synchronously
                           PageRouting.removeAllToPage(context, const Splash());
                           if (Platform.isAndroid) {
-                            Restart.restartApp();
+                            //  Restart.restartApp();
                           } else {
                             try {
                               Phoenix.rebirth(context);
                             } catch (e) {
                               PageRouting.removeAllToPage(
                                   context, const Splash());
-                              Restart.restartApp();
+                         //     Restart.restartApp();
                             }
                           }
 
@@ -249,6 +249,8 @@ class _DrawerSideState extends State<DrawerSide> {
                     }
                   }
                 },
+               
+               
                 title: AppText(
                   text: "Verify account",
                   color: HexColor(backgroundColor),

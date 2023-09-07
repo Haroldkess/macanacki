@@ -24,7 +24,7 @@ Future<http.Response?> getSwipedUsers(String type,
       },
     );
 
-    log(response.statusCode.toString());
+  //  log(response.body.toString());
   } catch (e) {
     response = null;
   }

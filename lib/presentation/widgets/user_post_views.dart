@@ -337,35 +337,39 @@ class _UserTikTokViewState extends State<UserTikTokView>
           //       media: widget.media,
           //       urls: widget.urls,
           //     )),
-          Positioned(
-            right: 1,
-            top: 0.1,
+          Padding(
+            padding: const EdgeInsets.only(top: 20),
             child: Align(
               alignment: Alignment.topCenter,
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 30),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    // myUsername == widget.data.user!.username!
-                    //     ? const SizedBox.shrink()
-                    //     : Expanded(
-                    //         child: Row(
-                    //           children: [
-                    //             followButton(() async {
-                    //               followAction(
-                    //                 context,
-                    //               );
-                    //             },
-                    //                 stream.followIds
-                    //                         .contains(widget.data.user!.id!)
-                    //                     ? "Following"
-                    //                     : "Follow"),
-                    //           ],
-                    //         ),
-                    //       ),
-
-                    InkWell(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // myUsername == widget.data.user!.username!
+                  //     ? const SizedBox.shrink()
+                  //     : Expanded(
+                  //         child: Row(
+                  //           children: [
+                  //             followButton(() async {
+                  //               followAction(
+                  //                 context,
+                  //               );
+                  //             },
+                  //                 stream.followIds
+                  //                         .contains(widget.data.user!.id!)
+                  //                     ? "Following"
+                  //                     : "Follow"),
+                  //           ],
+                  //         ),
+                  //       ),
+                  IconButton(
+                      onPressed: () => PageRouting.popToPage(context),
+                      icon: const Icon(
+                        Icons.arrow_back_ios,
+                        color: Colors.white,
+                      )),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 30),
+                    child: InkWell(
                         onTap: () => optionModal(context, widget.urls,
                             widget.data.user!.id, widget.data.id),
                         child: SvgPicture.asset(
@@ -374,8 +378,8 @@ class _UserTikTokViewState extends State<UserTikTokView>
                           width: 20,
                           color: HexColor(backgroundColor),
                         )),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),

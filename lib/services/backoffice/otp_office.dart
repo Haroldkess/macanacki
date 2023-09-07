@@ -23,3 +23,21 @@ Future<http.Response?> verifyOtp(OtpModel data) async {
   }
   return response;
 }
+
+Future<http.Response?> resendOtp(OtpModel data) async {
+  http.Response? response;
+  try {
+    response = await http.post(
+      Uri.parse('$baseUrl/public/api/resend/otp/${data.email}'),
+      headers: {
+        HttpHeaders.contentTypeHeader: "application/json",
+      },
+    );
+
+    // log(response.body.toString());
+    // log(response.statusCode.toString());
+  } catch (e) {
+    response = null;
+  }
+  return response;
+}

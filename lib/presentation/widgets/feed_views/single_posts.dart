@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:path/path.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../constants/colors.dart';
@@ -20,14 +21,15 @@ class SinglePost extends StatelessWidget {
   final bool isHome;
   final String thumbLink;
   bool isInView;
-   SinglePost(
+  SinglePost(
       {super.key,
       required this.media,
       required this.controller,
       required this.shouldPlay,
       required this.constraints,
       required this.isHome,
-      required this.thumbLink, required this.isInView});
+      required this.thumbLink,
+      required this.isInView});
 
   @override
   Widget build(BuildContext context) {
@@ -45,25 +47,41 @@ class SinglePost extends StatelessWidget {
         : Stack(
             alignment: Alignment.center,
             children: [
-              Container(
+                Container(
+                  width: width,
+                  height: height,
+                  decoration: BoxDecoration(
+                    color: Colors.black
+                   ),
+                 ),
+              // Container(
+              //     width: width,
+              //     height: height,
+              //     decoration: BoxDecoration(
+              //         image: DecorationImage(
+              //       image: CachedNetworkImageProvider(
+              //         media,
+              //       ),
+              //       fit: BoxFit.fill,
+              //     )),
+              //     child: BackdropFilter(
+              //       filter: ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0),
+              //       child: Container(
+              //         decoration:
+              //             BoxDecoration(color: Colors.white.withOpacity(0.0)),
+              //       ),
+              //     )),
+              CachedNetworkImage(
+                imageUrl: media,
+                imageBuilder: (context, imageProvider) => Container(
                   width: width,
                   height: height,
                   decoration: BoxDecoration(
                       image: DecorationImage(
-                    image: CachedNetworkImageProvider(
-                      media,
-                    ),
-                    fit: BoxFit.fill,
+                    image: imageProvider,
+                    //  fit: BoxFit.fill,
                   )),
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0),
-                    child: Container(
-                      decoration:
-                          BoxDecoration(color: Colors.white.withOpacity(0.0)),
-                    ),
-                  )),
-              CachedNetworkImage(
-                imageUrl: media,
+                ),
                 progressIndicatorBuilder: (context, url, downloadProgress) =>
                     Center(
                         child: Loader(
@@ -125,25 +143,41 @@ class UserSinglePost extends StatelessWidget {
         : Stack(
             alignment: Alignment.center,
             children: [
-              Container(
+                  Container(
+                  width: width,
+                  height: height,
+                  decoration: BoxDecoration(
+                    color: Colors.black
+                   ),
+                 ),
+              // Container(
+              //     width: width,
+              //     height: height,
+              //     decoration: BoxDecoration(
+              //         image: DecorationImage(
+              //       image: CachedNetworkImageProvider(
+              //         media,
+              //       ),
+              //       fit: BoxFit.fill,
+              //     )),
+              //     child: BackdropFilter(
+              //       filter: ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0),
+              //       child: Container(
+              //         decoration:
+              //             BoxDecoration(color: Colors.white.withOpacity(0.0)),
+              //       ),
+              //     )),
+            CachedNetworkImage(
+                imageUrl: media,
+                imageBuilder: (context, imageProvider) => Container(
                   width: width,
                   height: height,
                   decoration: BoxDecoration(
                       image: DecorationImage(
-                    image: CachedNetworkImageProvider(
-                      media,
-                    ),
-                    fit: BoxFit.fill,
+                    image: imageProvider,
+                    //  fit: BoxFit.fill,
                   )),
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0),
-                    child: Container(
-                      decoration:
-                          BoxDecoration(color: Colors.white.withOpacity(0.0)),
-                    ),
-                  )),
-              CachedNetworkImage(
-                imageUrl: media,
+                ),
                 progressIndicatorBuilder: (context, url, downloadProgress) =>
                     Center(
                         child: Loader(

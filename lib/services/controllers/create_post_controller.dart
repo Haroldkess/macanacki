@@ -123,7 +123,7 @@ class CreatePostController {
           profilePhoto: sendCom.profilePhoto,
           noOfLikes: sendCom.noOfLikes,
           postId: id,
-          isVerified: user.userProfileModel.verified);
+          isVerified: int.tryParse(user.userProfileModel.verified.toString()));
 
       // ignore: use_build_context_synchronously
       Operations.commentOperation(context, true, [], finalData);

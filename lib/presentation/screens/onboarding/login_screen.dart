@@ -19,6 +19,7 @@ import '../../widgets/buttons.dart';
 import '../../widgets/loader.dart';
 import '../../widgets/text.dart';
 import 'business/business_info.dart';
+import 'forget_pass/forget_email.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -292,11 +293,17 @@ class _LoginScreenState extends State<LoginScreen> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
-                                    AppText(
-                                      text: "Forgot Password?",
-                                      size: 12,
-                                      color: HexColor(backgroundColor),
-                                      fontWeight: FontWeight.w400,
+                                    GestureDetector(
+                                      onTap: () {
+                                        PageRouting.pushToPage(
+                                            context, ForgetPasswordEmail());
+                                      },
+                                      child: AppText(
+                                        text: "Forgot Password?",
+                                        size: 12,
+                                        color: HexColor(backgroundColor),
+                                        fontWeight: FontWeight.w400,
+                                      ),
                                     ),
                                   ],
                                 ),

@@ -148,6 +148,26 @@ class _EmailOtpState extends State<EmailOtp> {
                       ],
                     ),
                     const SizedBox(
+                      height: 30,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        AppText(
+                          text: "Did not recieve otp?",
+                          color: HexColor("#FF94B7"),
+                        ),
+                        InkWell(
+                          onTap: () => resend(context, widget.email),
+                          child: AppText(
+                            text: "  Resend",
+                            color: HexColor(backgroundColor),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        )
+                      ],
+                    ),
+                    const SizedBox(
                       height: 70,
                     ),
                     Column(
@@ -192,5 +212,10 @@ class _EmailOtpState extends State<EmailOtp> {
       VerifyEmailController.verifyEmailController(
           context, textEditingController.text);
     }
+  }
+
+  resend(context, email) {
+    showToast2(context, "Resending otp");
+    VerifyEmailController.resendOtpController(context, email);
   }
 }

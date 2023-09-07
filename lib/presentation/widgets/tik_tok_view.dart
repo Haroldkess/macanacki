@@ -273,7 +273,7 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
             child: Align(
               alignment: Alignment.topCenter,
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 30),
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 50),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [

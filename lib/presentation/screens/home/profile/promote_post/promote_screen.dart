@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -7,24 +8,29 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:macanacki/presentation/screens/home/profile/promote_post/duration_modal.dart';
 import 'package:macanacki/presentation/screens/home/profile/promote_post/price_modal.dart';
+import 'package:macanacki/presentation/screens/home/profile/promote_post/select_post.dart';
 import 'package:macanacki/presentation/widgets/loader.dart';
 import 'package:macanacki/presentation/widgets/snack_msg.dart';
 import 'package:macanacki/services/controllers/ads_controller.dart';
 import 'package:macanacki/services/middleware/ads_ware.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_paystack/flutter_paystack.dart';
+import 'package:cached_video_preview/cached_video_preview.dart';
 import '../../../../../model/ads_price_model.dart';
+import '../../../../../model/profile_feed_post.dart';
 import '../../../../../services/api_url.dart';
 import '../../../../../services/controllers/payment_controller.dart';
 import '../../../../../services/controllers/url_launch_controller.dart';
+import '../../../../../services/middleware/feed_post_ware.dart';
 import '../../../../constants/colors.dart';
 import '../../../../constants/params.dart';
 import '../../../../widgets/buttons.dart';
 import '../../../../widgets/text.dart';
+import '../profileextras/profile_action_buttons.dart';
 
 class PromoteScreen extends StatefulWidget {
-  final String postId;
-  const PromoteScreen({super.key, required this.postId});
+  final String? postId;
+  const PromoteScreen({super.key, this.postId});
   @override
   State<PromoteScreen> createState() => _PromoteScreenState();
 }
@@ -34,6 +40,7 @@ class _PromoteScreenState extends State<PromoteScreen> {
   TapGestureRecognizer tapGestureRecognizer = TapGestureRecognizer();
   bool iAgree = true;
   String choosenCountry = "";
+  ProfileFeedDatum? post;
   @override
   void initState() {
     super.initState();
@@ -51,6 +58,7 @@ class _PromoteScreenState extends State<PromoteScreen> {
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
     AdsWare stream = context.watch<AdsWare>();
+    FeedPostWare feed = context.watch<FeedPostWare>();
     return Scaffold(
       backgroundColor: HexColor("#F5F2F9"),
       appBar: AppBar(
@@ -147,6 +155,100 @@ class _PromoteScreenState extends State<PromoteScreen> {
                 const SizedBox(
                   height: 40,
                 ),
+                Column(
+                  children: [
+                    post == null
+                        ? SizedBox.shrink()
+                        : Row(
+                            children: [
+                              Column(
+                                children: [
+                                  post!.media!.first.contains("https")
+                                      ? Container(
+                                          width: 70,
+                                          height: 70,
+                                          decoration: BoxDecoration(
+                                              color: Colors.black,
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                              image: DecorationImage(
+                                                image:
+                                                    CachedNetworkImageProvider(
+                                                  post!.media!.first
+                                                      .replaceAll('\\', '/'),
+                                                ),
+                                                fit: BoxFit.fill,
+                                              )),
+                                        )
+                                      : Stack(
+                                          alignment: Alignment.center,
+                                          children: [
+                                            Container(
+                                              width: 70,
+                                              height: 70,
+                                              decoration: BoxDecoration(
+                                                  color: Colors.black,
+                                                  borderRadius:
+                                                      BorderRadius.circular(8)),
+                                              child: CachedVideoPreviewWidget(
+                                                path: post!.media!.first,
+                                                type: SourceType.remote,
+                                                remoteImageBuilder:
+                                                    (BuildContext context,
+                                                            url) =>
+                                                        Image.network(url),
+                                              ),
+                                            ),
+                                            Icon(Icons.play_arrow,
+                                                size: 14, color: Colors.grey)
+                                          ],
+                                        ),
+                                ],
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  AppText(
+                                    text:
+                                        post == null ? '' : post!.description!,
+                                    fontWeight: FontWeight.w500,
+                                    size: 13,
+                                    color: HexColor("#797979"),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                    ProfileActionButton(
+                      icon: "assets/icon/post.svg",
+                      onClick: () async {
+                        var data =
+                            await selectPost(context, feed.profileFeedPosts);
+                        if (data != null) {
+                          setState(() {
+                            post = data;
+                          });
+                        }
+                      },
+                      color: "#F94C84",
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    AppText(
+                      text: 'select post',
+                      fontWeight: FontWeight.w500,
+                      size: 13,
+                      color: HexColor("#797979"),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 40,
+                ),
                 Row(
                   children: [
                     Checkbox(
@@ -232,7 +334,17 @@ class _PromoteScreenState extends State<PromoteScreen> {
                         curves: buttonCurves * 5,
                         textColor: backgroundColor,
                         onTap: () async {
-                          _submit(context);
+                          if (widget.postId == null) {
+                            if (post == null) {
+                              showToast2(context,
+                                  "Please select the post you want to promote");
+                              return;
+                            } else {
+                              _submit(context, post!.id!);
+                            }
+                          } else {
+                            _submit(context, widget.postId);
+                          }
                         })
               ],
             ),
@@ -240,8 +352,15 @@ class _PromoteScreenState extends State<PromoteScreen> {
     );
   }
 
-  _submit(context) async {
+  _submit(context, id) async {
     AdsWare action = Provider.of<AdsWare>(context, listen: false);
+    if (action.adsPrice.isEmpty) {
+      showToast2(context, "Failed to get the ads price please try again");
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        AdsController.retrievAdsController(context);
+      });
+      return;
+    }
     if (choosenCountry.isEmpty) {
       showToast2(context, "Select country", isError: true);
       return;
@@ -254,7 +373,7 @@ class _PromoteScreenState extends State<PromoteScreen> {
     } else {
       SendAdModel data = SendAdModel(
           country: choosenCountry,
-          postId: widget.postId,
+          postId: id.toString(),
           duration: action.duration,
           planId: action.selected.id.toString());
       AdsController.sendAdRequeest(context, data);

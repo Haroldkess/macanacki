@@ -10,7 +10,6 @@ import '../../home/profile/followers_following.dart';
 
 class PublicProfileFollowersStatistics extends StatelessWidget {
   const PublicProfileFollowersStatistics({super.key});
-
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;

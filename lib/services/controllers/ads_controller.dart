@@ -28,7 +28,7 @@ class AdsController {
     } else {
       ware.isLoading(false);
       // ignore: use_build_context_synchronously
-      showToast2(context, "An error occured", isError: true);
+      showToast2(context, "Cannot process. please try again", isError: true);
     }
     ware.isLoading(false);
   }

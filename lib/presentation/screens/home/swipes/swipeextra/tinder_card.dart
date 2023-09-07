@@ -127,6 +127,8 @@ class _TinderCardState extends State<TinderCard> {
     _matchEngine = MatchEngine(swipeItems: _swipeItems);
   }
 
+  bool tapped = false;
+
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
@@ -161,6 +163,7 @@ class _TinderCardState extends State<TinderCard> {
                           text: element.username ?? "",
                         ),
                         likeAction: () async {
+                          //if (tapped) return;
                           //   print(widget.users[indexer].id!.toString());
                           //  print(widget.users[indexer].username!.toString());
                           ActionWare action =
@@ -185,9 +188,12 @@ class _TinderCardState extends State<TinderCard> {
                               // ignore: use_build_context_synchronously
 
                               // ignore: use_build_context_synchronously
-                              showToast2(context,
-                                  "You just followed ${widget.users[newIndex].username}",
-                                  isError: false);
+                              // showToast2(context,
+                              //     "You just followed ${widget.users[newIndex].username}",
+                              //     isError: false);
+                              // setState(() {
+                              //   tapped = false;
+                              // });
                             }
                           } else {
                             //   print("can not follow your self");
@@ -238,12 +244,18 @@ class _TinderCardState extends State<TinderCard> {
               });
               SwipeWare swipe = Provider.of<SwipeWare>(context, listen: false);
               if (swipe.filterName == "Women") {
-                await SwipeController.retrievSwipeController(context, "female");
+                await SwipeController.retrievSwipeController(
+                    context, "female", swipe.country, swipe.state, swipe.city);
               } else if (swipe.filterName == "Men") {
-                await SwipeController.retrievSwipeController(context, "male");
+                await SwipeController.retrievSwipeController(
+                    context, "male", swipe.country, swipe.state, swipe.city);
               } else {
                 await SwipeController.retrievSwipeController(
-                    context, swipe.filterName.toLowerCase());
+                    context,
+                    swipe.filterName.toLowerCase(),
+                    swipe.country,
+                    swipe.state,
+                    swipe.city);
               }
 
               // _matchEngine!.currentItem!.resetMatch();
@@ -256,6 +268,7 @@ class _TinderCardState extends State<TinderCard> {
             itemChanged: (SwipeItem item, int index) {
               setState(() {
                 indexer = index;
+                tapped = false;
               });
               // print("item: ${item.content.text}, index: ${this.index}");
             },
@@ -326,8 +339,7 @@ class _TinderCardState extends State<TinderCard> {
                               ),
 
                               widget.users[indexer].verified == 1 &&
-                                      widget.users[indexer].activePlan !=
-                                          sub
+                                      widget.users[indexer].activePlan != sub
                                   ? SvgPicture.asset(
                                       "assets/icon/badge.svg",
                                       height: 15,
@@ -351,32 +363,50 @@ class _TinderCardState extends State<TinderCard> {
                       children: [
                         Row(
                           children: [
-                            CircleAvatar(
-                              radius: 5,
-                              backgroundColor: myChat.allSocketUsers
-                                      .where((element) =>
-                                          element.userId.toString() ==
-                                          widget.users[indexer].id.toString())
-                                      .toList()
-                                      .isEmpty
-                                  ? Colors.red
-                                  : HexColor("#00B074"),
+                            SvgPicture.asset(
+                              "assets/icon/location.svg",
+                              color: Colors.green,
                             ),
                             const SizedBox(
                               width: 5,
                             ),
-                            AppText(
-                              text: myChat.allSocketUsers
-                                      .where((element) =>
-                                          element.userId.toString() ==
-                                          widget.users[indexer].id.toString())
-                                      .toList()
-                                      .isEmpty
-                                  ? "offline"
-                                  : "online",
-                              size: 12,
-                              fontWeight: FontWeight.w500,
+                            Container(
+                              constraints: BoxConstraints(maxWidth: 200),
+                              child: AppText(
+                                text:
+                                    "${widget.users[indexer].country ?? ""}, ${widget.users[indexer].state ?? ""}, ${widget.users[indexer].city ?? ""} ",
+                                size: 12,
+                                fontWeight: FontWeight.w500,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             )
+                            // CircleAvatar(
+                            //   radius: 5,
+                            //   backgroundColor: myChat.allSocketUsers
+                            //           .where((element) =>
+                            //               element.userId.toString() ==
+                            //               widget.users[indexer].id.toString())
+                            //           .toList()
+                            //           .isEmpty
+                            //       ? Colors.red
+                            //       : HexColor("#00B074"),
+                            // ),
+                            // const SizedBox(
+                            //   width: 5,
+                            // ),
+                            // AppText(
+                            //   text: myChat.allSocketUsers
+                            //           .where((element) =>
+                            //               element.userId.toString() ==
+                            //               widget.users[indexer].id.toString())
+                            //           .toList()
+                            //           .isEmpty
+                            //       ? "offline"
+                            //       : "online",
+                            //   size: 12,
+                            //   fontWeight: FontWeight.w500,
+                            // )
                           ],
                         ),
                         const SizedBox(
@@ -436,6 +466,29 @@ class _TinderCardState extends State<TinderCard> {
     );
   }
 
+  double height = 60;
+  double width = 60;
+
+  Future animateButton(double val, bool isFirst) async {
+    if (isFirst) {
+      setState(() {
+        height = val;
+        width = val;
+        show = true;
+        tapped = true;
+      });
+
+      await Future.delayed(Duration(seconds: 1));
+    } else {
+      setState(() {
+        height = 60;
+        width = 60;
+        show = false;
+        tapped = false;
+      });
+    }
+  }
+
   Widget buildCard(
       BuildContext context, String image, String username, int id) {
     ActionWare stream = context.watch<ActionWare>();
@@ -476,48 +529,62 @@ class _TinderCardState extends State<TinderCard> {
                   : const SizedBox.shrink()
             ],
           ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 15.0),
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Card(
-                  color: Colors.transparent,
-                  shadowColor: HexColor(primaryColor),
-                  elevation: 20,
-                  child: ProfileActionButtonNotThisUsers(
-                    icon: "assets/icon/follow.svg",
-                    isSwipe: true,
-                    onClick: () async {
-                      SharedPreferences pref =
-                          await SharedPreferences.getInstance();
-                      _matchEngine!.currentItem!.like();
-                      if (username == pref.getString(userNameKey)) {
-                        emitter("can n ot follow your self");
-                      } else {
-                        // ignore: use_build_context_synchronously
-                        await followAction(
-                          context,
-                          id,
-                          username,
-                        );
-                      }
-                    },
-                    color: primaryColor,
+          stream.followIds.contains(id)
+              ? SizedBox.shrink()
+              : Padding(
+                  padding: const EdgeInsets.only(bottom: 15.0),
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: AnimatedContainer(
+                        duration: Duration(seconds: 1),
+                        height: height,
+                        width: width,
+                        child: Card(
+                          color: Colors.transparent,
+                          shadowColor: HexColor(primaryColor),
+                          elevation: 20,
+                          child: ProfileActionButtonNotThisUsers(
+                            icon: "assets/icon/follow.svg",
+                            isSwipe: true,
+                            onClick: () async {
+                              SharedPreferences pref =
+                                  await SharedPreferences.getInstance();
+
+                              await animateButton(0.0, true).whenComplete(() =>
+                                  mounted
+                                      ? _matchEngine!.currentItem!.like()
+                                      : null);
+                              mounted ? animateButton(60.0, false) : null;
+
+                              if (username == pref.getString(userNameKey)) {
+                                emitter("can n ot follow your self");
+                              } else {
+                                // ignore: use_build_context_synchronously
+                                followAction(
+                                  context,
+                                  id,
+                                  username,
+                                );
+                              }
+                            },
+                            color: primaryColor,
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            ),
-          )
+                )
         ],
       ),
     );
   }
 }
 
-Future<void> followAction(BuildContext context, int id, String username) async {
-  await ActionController.followOrUnFollowController(context, username, id);
+Future<void> followAction(context, int id, String username) async {
+  ActionController.followOrUnFollowController(context, username, id);
+//  JustFollow.follow(username, id);
 }
 
 class Content {

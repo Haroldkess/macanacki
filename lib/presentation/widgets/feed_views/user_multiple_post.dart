@@ -78,6 +78,8 @@ class UserMultiplePost extends StatelessWidget {
             ),
           ],
         )
+   
+   
       ],
     );
   }
@@ -190,37 +192,57 @@ class _UserMultipleViewState extends State<UserMultipleView> {
     var width = MediaQuery.of(context).size.width;
 
     return !widget.media!.contains("https")
-        ?  FeedVideoHolderPrivate(
-                file: "$muxStreamBaseUrl/${widget.media}.$videoExtension",
-                controller: thisData == null ? null : thisData!.controller!,
-                shouldPlay: true,
-                isHome: widget.isHome,
-                thumbLink: widget.thumbLink,
-                page: widget.page,
-                isInView: widget.isInView,
-              )
+        ? FeedVideoHolderPrivate(
+            file: "$muxStreamBaseUrl/${widget.media}.$videoExtension",
+            controller: thisData == null ? null : thisData!.controller!,
+            shouldPlay: true,
+            isHome: widget.isHome,
+            thumbLink: widget.thumbLink,
+            page: widget.page,
+            isInView: widget.isInView,
+          )
         : Stack(
             alignment: Alignment.center,
             children: [
-              Container(
+                Container(
+                  width: width,
+                  height: height,
+                  decoration: BoxDecoration(
+                    color: Colors.black
+                   ),
+                 ),
+              // Container(
+              //   width: width,
+              //   height: height,
+              //   decoration: BoxDecoration(
+              
+              //         image: DecorationImage(
+              //       image: CachedNetworkImageProvider(
+              //         widget.media!.replaceAll('\\', '/'),
+              //       ),
+              //       fit: BoxFit.fill,
+
+              //     )
+              //   ),
+              //   child: BackdropFilter(
+              //     filter: ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0),
+              //     child: Container(
+              //       decoration:
+              //           BoxDecoration(color: Colors.white.withOpacity(0.0)),
+              //     ),
+              //   )
+              // ),
+               CachedNetworkImage(
+                imageUrl:  widget.media!.replaceAll('\\', '/'),
+                imageBuilder: (context, imageProvider) => Container(
                   width: width,
                   height: height,
                   decoration: BoxDecoration(
                       image: DecorationImage(
-                    image: CachedNetworkImageProvider(
-                      widget.media!.replaceAll('\\', '/'),
-                    ),
-                    fit: BoxFit.fill,
+                    image: imageProvider,
+                    //  fit: BoxFit.fill,
                   )),
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0),
-                    child: Container(
-                      decoration:
-                          BoxDecoration(color: Colors.white.withOpacity(0.0)),
-                    ),
-                  )),
-              CachedNetworkImage(
-                imageUrl: widget.media!.replaceAll('\\', '/'),
+                ),
                 progressIndicatorBuilder: (context, url, downloadProgress) =>
                     Center(
                         child: Loader(
@@ -231,6 +253,18 @@ class _UserMultipleViewState extends State<UserMultipleView> {
                   color: HexColor(primaryColor),
                 ),
               ),
+              // CachedNetworkImage(
+              //   imageUrl: widget.media!.replaceAll('\\', '/'),
+              //   progressIndicatorBuilder: (context, url, downloadProgress) =>
+              //       Center(
+              //           child: Loader(
+              //     color: HexColor(primaryColor),
+              //   )),
+              //   errorWidget: (context, url, error) => Icon(
+              //     Icons.error,
+              //     color: HexColor(primaryColor),
+              //   ),
+              // ),
               // Image(
               //   //  fit: BoxFit.fitWidth,
               //   width: widget.constraints!.maxWidth,

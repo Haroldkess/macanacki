@@ -47,7 +47,7 @@ class ProfileFollowersStatistics extends StatelessWidget {
                     // color: Colors.amber,
                     alignment: Alignment.center,
                     child: AppText(
-                      text: Numeral(stream.userProfileModel.noOfFollowers!)
+                      text: Numeral(stream.userProfileModel.noOfFollowers ?? 0)
                           .format(fractionDigits: 1),
                       fontWeight: FontWeight.w600,
                       size: 18,

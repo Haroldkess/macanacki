@@ -49,7 +49,8 @@ class VerifyController {
         .whenComplete(() => emitter("verification done "));
 
     if (isDone) {
-      UserProfileController.retrievProfileController(context, true);
+      // ignore: use_build_context_synchronously
+     // UserProfileController.retrievProfileController(context, true);
       ware.isLoadingBus(false);
       // ignore: use_build_context_synchronously
       showToast2(

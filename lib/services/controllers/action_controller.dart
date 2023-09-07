@@ -19,6 +19,14 @@ import '../../presentation/widgets/debug_emitter.dart';
 import '../middleware/create_post_ware.dart';
 import '../middleware/feed_post_ware.dart';
 
+class JustFollow extends ActionWare {
+  static Future follow(String userName, int userId) async {
+    log("here");
+    ActionWare ware = ActionWare();
+    ware.followOrUnFollowFromApi(userName, userId);
+  }
+}
+
 class ActionController {
   static Future<void> followOrUnFollowController(
       BuildContext context, String userName, int userId) async {

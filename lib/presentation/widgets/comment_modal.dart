@@ -70,7 +70,8 @@ commentModal(BuildContext context, int id, String page) async {
                       Expanded(
                         //height: height / 2,
                         child: stream.comments
-                                .where((element) => element.postId == id)
+                                .where((element) =>
+                                    element.postId.toString() == id.toString())
                                 .toList()
                                 .isEmpty
                             ? Center(
@@ -96,7 +97,7 @@ commentModal(BuildContext context, int id, String page) async {
                                                           element.postId == id)
                                                       .toList()
                                                       .length >
-                                                  10
+                                                  8
                                               ? true
                                               : false,
                                           itemBuilder: (context, index) {
@@ -205,7 +206,7 @@ class _CommentFormState extends State<CommentForm> {
   @override
   void dispose() {
     //_controller!.dispose();
-    _focusNode.dispose();
+    // _focusNode.dispose();
 
     super.dispose();
   }
@@ -214,104 +215,102 @@ class _CommentFormState extends State<CommentForm> {
   Widget build(BuildContext context) {
     CreatePostWare ware = Provider.of<CreatePostWare>(context, listen: false);
     CreatePostWare stream = context.watch<CreatePostWare>();
-    return InkWell(
-      onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
-      child: Card(
-        color: Colors.transparent,
-        elevation: 10,
-        shadowColor: HexColor("#D8D1F4"),
-        child: InkWell(
-          // onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
-          child: Container(
-            height: 58,
-            width: 379,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-                color: HexColor(backgroundColor),
-                shape: BoxShape.rectangle,
-                border: Border.all(
-                    width: 1.0,
-                    color: HexColor("#E8E6EA"),
-                    style: BorderStyle.solid),
-                borderRadius: const BorderRadius.all(Radius.circular(8.0))),
-            child: TextFormField(
-              controller: widget.comment,
-              cursorColor: HexColor(primaryColor),
-              focusNode: _focusNode,
-              keyboardType: TextInputType.multiline,
-              // onTap: () async {
-              //   print("hello");
-              //   // FocusScope.of(context).requestFocus(FocusNode());
-              //   setState(() {
-              //     done = false;
-              //   });
-              // },
-              onChanged: (val) {
-                if (val.isNotEmpty) {
-                  setState(() {
-                    typing = true;
-                  });
-                } else {
-                  setState(() {
-                    typing = false;
-                  });
-                }
-              },
-              decoration: InputDecoration(
-                hintText: "Write a comment...",
-                hintStyle: GoogleFonts.spartan(
-                    color: HexColor("#8B8B8B"), fontSize: 14),
-                contentPadding: EdgeInsets.only(left: 10, top: 15),
-                // prefixIcon: Padding(
-                //   padding: const EdgeInsets.all(15.0),
-                //   child: SvgPicture.asset(
-                //     "assets/icon/sticker.svg",
-                //     height: 5,
-                //     width: 5,
-                //     color: const Color.fromRGBO(0, 0, 0, 0.4),
-                //   ),
-                // ),
-                suffixIcon: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: stream.loadStatus2
-                      ? Loader(color: HexColor(primaryColor))
-                      : InkWell(
-                          onTap: () async {
-                            if (widget.comment.text.isEmpty) {
-                              log("empty comment");
-                              return;
-                            } else {
-                              log(widget.id.toString());
-                              await _submitComment(
-                                  widget.id, context, widget.page);
-                              _focusNode.unfocus();
-                              // widget.control.animateTo(
-                              //   widget.control.position.maxScrollExtent,
-                              //   curve: Curves.easeOut,
-                              //   duration: const Duration(milliseconds: 300),
-                              // );
+    return Card(
+      color: Colors.transparent,
+      elevation: 10,
+      shadowColor: HexColor("#D8D1F4"),
+      child: InkWell(
+        onTap: () => FocusScope.of(context).requestFocus(_focusNode),
+        child: Container(
+          height: 58,
+          width: 379,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+              color: HexColor(backgroundColor),
+              shape: BoxShape.rectangle,
+              border: Border.all(
+                  width: 1.0,
+                  color: HexColor("#E8E6EA"),
+                  style: BorderStyle.solid),
+              borderRadius: const BorderRadius.all(Radius.circular(8.0))),
+          child: TextFormField(
+            controller: widget.comment,
+            cursorColor: HexColor(primaryColor),
+            focusNode: _focusNode,
+            keyboardType: TextInputType.multiline,
+            // onTap: () async {
+            //   print("hello");
+            //   // FocusScope.of(context).requestFocus(FocusNode());
+            //   setState(() {
+            //     done = false;
+            //   });
+            // },
+            onChanged: (val) {
+              if (val.isNotEmpty) {
+                setState(() {
+                  typing = true;
+                });
+              } else {
+                setState(() {
+                  typing = false;
+                });
+              }
+            },
+            decoration: InputDecoration(
+              hintText: "Write a comment...",
+              hintStyle:
+                  GoogleFonts.spartan(color: HexColor("#8B8B8B"), fontSize: 14),
+              contentPadding: EdgeInsets.only(left: 10, top: 15),
+              // prefixIcon: Padding(
+              //   padding: const EdgeInsets.all(15.0),
+              //   child: SvgPicture.asset(
+              //     "assets/icon/sticker.svg",
+              //     height: 5,
+              //     width: 5,
+              //     color: const Color.fromRGBO(0, 0, 0, 0.4),
+              //   ),
+              // ),
+              suffixIcon: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: stream.loadStatus2
+                    ? Loader(color: HexColor(primaryColor))
+                    : InkWell(
+                        onTap: () async {
+                          if (widget.comment.text.isEmpty) {
+                            log("empty comment");
+                            return;
+                          } else {
+                            log(widget.id.toString());
+                            await _submitComment(
+                                widget.id, context, widget.page);
+                            _focusNode.unfocus();
+                            if (widget.control.hasClients) {
+                              widget.control.animateTo(
+                                widget.control.position.minScrollExtent,
+                                curve: Curves.easeOut,
+                                duration: const Duration(milliseconds: 300),
+                              );
                             }
-                          },
-                          child: SvgPicture.asset(
-                            "assets/icon/Send.svg",
-                            height: 7,
-                            width: 7,
-                            color:
-                                typing ? HexColor(primaryColor) : Colors.grey,
-                          ),
+                          }
+                        },
+                        child: SvgPicture.asset(
+                          "assets/icon/Send.svg",
+                          height: 7,
+                          width: 7,
+                          color: typing ? HexColor(primaryColor) : Colors.grey,
                         ),
-                ),
-
-                border: UnderlineInputBorder(
-                    borderRadius: BorderRadius.circular(2.0),
-                    borderSide: const BorderSide(color: Colors.transparent)),
-                enabledBorder: UnderlineInputBorder(
-                    borderRadius: BorderRadius.circular(2.0),
-                    borderSide: const BorderSide(color: Colors.transparent)),
-                focusedBorder: UnderlineInputBorder(
-                    borderRadius: BorderRadius.circular(2.0),
-                    borderSide: const BorderSide(color: Colors.transparent)),
+                      ),
               ),
+
+              border: UnderlineInputBorder(
+                  borderRadius: BorderRadius.circular(2.0),
+                  borderSide: const BorderSide(color: Colors.transparent)),
+              enabledBorder: UnderlineInputBorder(
+                  borderRadius: BorderRadius.circular(2.0),
+                  borderSide: const BorderSide(color: Colors.transparent)),
+              focusedBorder: UnderlineInputBorder(
+                  borderRadius: BorderRadius.circular(2.0),
+                  borderSide: const BorderSide(color: Colors.transparent)),
             ),
           ),
         ),
