@@ -24,7 +24,7 @@ void main() async {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       systemNavigationBarIconBrightness: Brightness.dark,
       systemNavigationBarColor: HexColor(backgroundColor)));
-  runApp( Phoenix(child: const  MyApp() ));
+  runApp(Phoenix(child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -35,18 +35,25 @@ class MyApp extends StatelessWidget {
         providers: InitProvider.providerInit(),
         child: OverlaySupport(
           toastTheme: ToastThemeData(alignment: Alignment.center),
-          child: GetMaterialApp (
+          child: GetMaterialApp(
             debugShowCheckedModeBanner: false,
             title: 'Macanacki',
             theme: ThemeData(
-              primaryColor: HexColor(primaryColor),
-              brightness: Brightness.light,
-            ),
+                primaryColor: HexColor(primaryColor),
+                brightness: Brightness.light,
+                iconTheme: IconThemeData(color: Colors.black),
+                iconButtonTheme: IconButtonThemeData(
+                    style: ButtonStyle(
+                        iconColor: MaterialStateProperty.all(Colors.black))),
+                primaryIconTheme: IconThemeData(color: Colors.black)),
             home: UpgradeAlert(
-                  upgrader: Upgrader(dialogStyle: Platform.isIOS ? UpgradeDialogStyle.cupertino :
-                UpgradeDialogStyle.material,debugLogging:  false),child: const Splash()),
+                upgrader: Upgrader(
+                    dialogStyle: Platform.isIOS
+                        ? UpgradeDialogStyle.cupertino
+                        : UpgradeDialogStyle.material,
+                    debugLogging: false),
+                child: const Splash()),
           ),
         ));
   }
 }
-                   
