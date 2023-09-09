@@ -76,12 +76,12 @@ class MatchedBox extends StatelessWidget {
                 RichText(
                     text: TextSpan(
                         text: "${matches.name}, ",
-                        style: GoogleFonts.spartan(
+                        style: GoogleFonts.leagueSpartan(
                             color: HexColor(darkColor), fontSize: 20),
                         children: [
                       TextSpan(
                         text: matches.age,
-                        style: GoogleFonts.spartan(
+                        style: GoogleFonts.leagueSpartan(
                             color: HexColor("#C0C0C0"), fontSize: 20),
                       )
                     ])),

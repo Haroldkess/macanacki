@@ -153,25 +153,32 @@ Future<http.StreamedResponse?> completeRegisteration(
 ) async {
   http.StreamedResponse? response;
 
-  final filePhotoName = basename(data.photo!.path);
-  List<dynamic> photo = [filePhotoName];
+//  final filePhotoName =
+  var filePhoto;
+//  List<dynamic> photo = [filePhotoName];
 
   var request = http.MultipartRequest(
       "POST", Uri.parse("$baseUrl/public/api/user/register/complete"));
   Map<String, String> headers = {'Accept': 'application/json'};
-  var filePhoto = await http.MultipartFile.fromPath('photo', data.photo!.path,
-      filename: filePhotoName);
+  if (data.photo == null) {
+  } else {
+    filePhoto = await http.MultipartFile.fromPath('photo', data.photo!.path,
+        filename: basename(data.photo!.path));
+  }
 
   request.headers.addAll(headers);
   request.fields["email"] = data.email!;
   request.fields["gender_id"] = data.genderId!.toString();
   request.fields["dob"] = data.dob!.toString();
-  request.files.add(filePhoto);
   request.fields["password"] = data.password!;
   request.fields["category_id"] = data.catId!;
   request.fields["country"] = data.country!.toString();
   request.fields["state"] = data.state!.toString();
   request.fields["city"] = data.city!.toString();
+  request.fields["device"] = Platform.isIOS ? "IOS":  Platform.isAndroid ? "ANDROID" :  Platform.isFuchsia ?"Fuchsia".toUpperCase() : "";
+  if (data.photo != null) {
+    request.files.add(filePhoto);
+  }
 
   try {
     response = await request.send();

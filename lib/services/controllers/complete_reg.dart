@@ -1,4 +1,7 @@
+// ignore_for_file: prefer_if_null_operators
+
 import 'dart:developer';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:macanacki/model/register_model.dart';
@@ -20,20 +23,27 @@ import '../middleware/category_ware.dart';
 class CompleteRegisterationController {
   static Future<RegisterUserModel> regData(BuildContext context) async {
     FacialWare pic = Provider.of<FacialWare>(context, listen: false);
-       CategoryWare cat =
-                              Provider.of<CategoryWare>(context, listen: false);
+    CategoryWare cat = Provider.of<CategoryWare>(context, listen: false);
     SharedPreferences pref = await SharedPreferences.getInstance();
     RegisterUserModel data = RegisterUserModel(
-        username: pref.getString(userNameKey),
-        genderId: pref.getInt(genderId),
-        dob: pref.getString(dobKey),
-        email: pref.getString(emailKey),
-        password: pref.getString(passwordKey),
-        photo: pic.addedPhoto,
-        country: pref.getString(countryKey),
-        state: pref.getString(stateKey) ,
-        city:  pref.getString(cityKey),
-        catId: cat.selected.id.toString(),);
+      username: pref.getString(userNameKey),
+      genderId: pref.getInt(genderId),
+      dob: pref.getString(dobKey),
+      email: pref.getString(emailKey),
+      password: pref.getString(passwordKey),
+      photo: pref.containsKey(photoKey)
+          ? File(
+              pref.getString(photoKey)!,
+            )
+          : pic.addedPhoto != null
+              ? pic.addedPhoto
+              : null,
+      //  pic.addedPhoto
+      country: pref.getString(countryKey),
+      state: pref.getString(stateKey),
+      city: pref.getString(cityKey),
+      catId: cat.selected.id.toString(),
+    );
     return data;
   }
 
@@ -58,6 +68,7 @@ class CompleteRegisterationController {
       temp.addIsLoggedInTemp(true);
       SharedPreferences pref = await SharedPreferences.getInstance();
 
+      pref.remove(photoKey);
       // ignore: use_build_context_synchronously
       await LoginController.loginUserController(context,
           pref.getString(emailKey)!, pref.getString(passwordKey)!, isSplash);

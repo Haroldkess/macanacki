@@ -33,7 +33,7 @@ class GlobalSearchBar extends StatelessWidget {
           // if (value.isEmpty) {
           //   return;
           // }
-          SearchController.retrievSearchUserController(context, value);
+          SearchAppController.retrievSearchUserController(context, value);
 
           // await Future.delayed(const Duration(milliseconds: 1000)).whenComplete(
           //     () =>
@@ -42,7 +42,7 @@ class GlobalSearchBar extends StatelessWidget {
         decoration: InputDecoration(
           hintText: " Search",
           hintStyle:
-              GoogleFonts.spartan(color: HexColor("#C0C0C0"), fontSize: 14),
+              GoogleFonts.leagueSpartan(color: HexColor("#C0C0C0"), fontSize: 14),
           border: InputBorder.none,
           enabledBorder: InputBorder.none,
           disabledBorder: UnderlineInputBorder(

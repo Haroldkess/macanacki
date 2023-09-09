@@ -21,7 +21,6 @@ import '../../../uiproviders/screen/tab_provider.dart';
 import '../../../widgets/custom_paint.dart';
 import '../../../widgets/text.dart';
 import 'package:uuid/uuid.dart';
-import 'package:flutter_paystack/flutter_paystack.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:http/http.dart' as http;
@@ -40,7 +39,7 @@ class _SubscriptionPlansState extends State<SubscriptionPlans> {
   @override
   void initState() {
     super.initState();
-    plugin.initialize(publicKey: dotenv.get('PUBLIC_KEY').toString());
+   // plugin.initialize(publicKey: dotenv.get('PUBLIC_KEY').toString());
   }
 
   @override

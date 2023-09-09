@@ -38,7 +38,7 @@ class SearchLoader extends StatelessWidget {
                       RichText(
                           text: TextSpan(
                               text: "     , ",
-                              style: GoogleFonts.spartan(
+                              style: GoogleFonts.leagueSpartan(
                                   textStyle: const TextStyle(
                                       fontWeight: FontWeight.w400,
                                       color: Colors.black,
@@ -48,7 +48,7 @@ class SearchLoader extends StatelessWidget {
                               children: [
                             TextSpan(
                               text: "   ",
-                              style: GoogleFonts.spartan(
+                              style: GoogleFonts.leagueSpartan(
                                   textStyle: const TextStyle(
                                       fontWeight: FontWeight.w400,
                                       color: Colors.black,

@@ -101,7 +101,7 @@ class _NewDesignTestState extends State<NewDesignTest> {
           ),
         ),
         child: Padding(
-          padding: const EdgeInsets.only(left:8.0),
+          padding: const EdgeInsets.only(left: 8.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -115,15 +115,17 @@ class _NewDesignTestState extends State<NewDesignTest> {
                       children: [
                         InkWell(
                           onTap: () async {
-                            TabProvider action =
-                                Provider.of<TabProvider>(context, listen: false);
+                            TabProvider action = Provider.of<TabProvider>(
+                                context,
+                                listen: false);
                             if (widget.data.media!.length > 1) {
                               for (var i = 0;
                                   i < widget.data.media!.length;
                                   i++) {
                                 if (widget.data.media![i].contains(".mp4")) {
                                   if (action.controller != null) {
-                                    if (action.controller!.value.isInitialized) {
+                                    if (action
+                                        .controller!.value.isInitialized) {
                                       if (mounted) {
                                         action.controller!.pause();
                                       }
@@ -134,8 +136,10 @@ class _NewDesignTestState extends State<NewDesignTest> {
                                     }
                                   }
                                   if (action.controller != null) {
-                                    if (action.controller!.value.isInitialized) {
-                                      if (action.controller!.value.isBuffering ||
+                                    if (action
+                                        .controller!.value.isInitialized) {
+                                      if (action
+                                              .controller!.value.isBuffering ||
                                           action.controller!.value.isPlaying) {
                                         if (mounted) {
                                           action.tap(true);
@@ -243,11 +247,12 @@ class _NewDesignTestState extends State<NewDesignTest> {
                                     //   color: Colors.amber,
                                     child: AppText(
                                       text: widget.data.user!.username!,
-                                      size: 13,
+                                      size: 16,
                                       fontWeight: FontWeight.w700,
                                       maxLines: 1,
                                       overflow:
-                                          widget.data.user!.username!.length > 20
+                                          widget.data.user!.username!.length >
+                                                  20
                                               ? TextOverflow.ellipsis
                                               : TextOverflow.ellipsis,
                                       color: HexColor(backgroundColor),
@@ -255,8 +260,10 @@ class _NewDesignTestState extends State<NewDesignTest> {
                                   ),
                                   widget.data.user!.verified == 1 &&
                                           widget.data.user!.activePlan != sub
-                                      ? SvgPicture.asset("assets/icon/badge.svg",
-                                          height: 13, width: 13)
+                                      ? SvgPicture.asset(
+                                          "assets/icon/badge.svg",
+                                          height: 13,
+                                          width: 13)
                                       : const SizedBox.shrink()
                                 ],
                               ),
@@ -335,7 +342,8 @@ class _NewDesignTestState extends State<NewDesignTest> {
                               // Operations.commentOperation(
                               //     context, false, widget.data.comments!);
 
-                              commentModal(context, widget.data.id!, widget.page);
+                              commentModal(
+                                  context, widget.data.id!, widget.page);
                             },
                             child: Padding(
                               padding: const EdgeInsets.only(right: 3.0),
@@ -378,13 +386,13 @@ class _NewDesignTestState extends State<NewDesignTest> {
                                     ? widget.data.description!
                                         .substring(0, seeMoreVal - 3)
                                     : widget.data.description!,
-                                style: GoogleFonts.spartan(
+                                style: GoogleFonts.leagueSpartan(
                                     textStyle: TextStyle(
                                   fontWeight: FontWeight.w600,
-                                  color:
-                                      HexColor(backgroundColor).withOpacity(0.9),
+                                  color: HexColor(backgroundColor)
+                                      .withOpacity(0.9),
                                   decorationStyle: TextDecorationStyle.solid,
-                                  fontSize: 10,
+                                  fontSize: 12,
                                   fontFamily: '',
                                 )),
                                 recognizer: tapGestureRecognizer
@@ -404,10 +412,11 @@ class _NewDesignTestState extends State<NewDesignTest> {
                                   widget.data.description!.length < seeMoreVal
                                       ? const TextSpan(text: "")
                                       : TextSpan(
-                                          text:
-                                              showMore ? " less" : "...see more",
+                                          text: showMore
+                                              ? " less"
+                                              : "...see more",
                                           style: TextStyle(
-                                            fontSize: 13,
+                                            fontSize: 14,
                                             color: HexColor(backgroundColor),
                                             fontWeight: FontWeight.w600,
                                           ),
@@ -435,9 +444,10 @@ class _NewDesignTestState extends State<NewDesignTest> {
                 height: widget.data.user!.gender == "Business" ? 10 : 10,
               ),
               SizedBox(
-                height: widget.data.btnLink != null && widget.data.button != null
-                    ? 40
-                    : 10,
+                height:
+                    widget.data.btnLink != null && widget.data.button != null
+                        ? 40
+                        : 10,
               )
             ],
           ),
@@ -485,9 +495,9 @@ class _NewDesignTestState extends State<NewDesignTest> {
                   ? ""
                   : Numeral(text == 0 ? widget.data.comments!.length : text)
                       .format(fractionDigits: 1),
-              size: 12,
+              size: 14,
               align: TextAlign.center,
-              fontWeight: FontWeight.w400,
+              fontWeight: FontWeight.w500,
               color: HexColor(backgroundColor),
             ),
           ),
@@ -573,8 +583,8 @@ class _NewDesignTestState extends State<NewDesignTest> {
                 text: Numeral(likeCount!).format(fractionDigits: 1),
                 color: Colors.white,
                 align: TextAlign.center,
-                size: 12,
-                fontWeight: FontWeight.w400,
+                size: 14,
+                fontWeight: FontWeight.w500,
               ),
             ),
           ),

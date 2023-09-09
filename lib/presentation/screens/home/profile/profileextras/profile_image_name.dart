@@ -87,7 +87,7 @@ class ProfileImageAndName extends StatelessWidget {
                       child: AppText(
                         text: "${stream.userProfileModel.username}",
                         color: HexColor(darkColor),
-                        size: 15,
+                        size: 16,
                         letterSpacing: 0.0,
                         fontWeight: FontWeight.w800,
                         align: TextAlign.center,
@@ -100,8 +100,7 @@ class ProfileImageAndName extends StatelessWidget {
                       ),
                     ),
                     stream.userProfileModel.verified == 1 &&
-                            stream.userProfileModel.activePlan !=
-                               sub
+                            stream.userProfileModel.activePlan != sub
                         ? SvgPicture.asset(
                             "assets/icon/badge.svg",
                             height: 15,
@@ -184,7 +183,7 @@ class ProfileImageAndNameShimmer extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         text: TextSpan(
                             text: "macanacki, ",
-                            style: GoogleFonts.spartan(
+                            style: GoogleFonts.leagueSpartan(
                               color: HexColor(darkColor),
                               fontSize: 24,
                               letterSpacing: 0.0,
@@ -193,7 +192,7 @@ class ProfileImageAndNameShimmer extends StatelessWidget {
                             children: [
                               TextSpan(
                                 text: " ",
-                                style: GoogleFonts.spartan(
+                                style: GoogleFonts.leagueSpartan(
                                     color: HexColor("#C0C0C0"), fontSize: 24),
                               )
                             ])),

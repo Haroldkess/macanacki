@@ -162,12 +162,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       ? user.userProfileModel.aboutMe!
                                           .substring(0, seeMoreVal - 3)
                                       : user.userProfileModel.aboutMe!,
-                                  style: GoogleFonts.spartan(
+                                  style: GoogleFonts.leagueSpartan(
                                       textStyle: TextStyle(
                                     fontWeight: FontWeight.w600,
                                     color: HexColor(darkColor).withOpacity(0.6),
                                     decorationStyle: TextDecorationStyle.solid,
-                                    fontSize: 10,
+                                    fontSize: 12,
                                     fontFamily: '',
                                   )),
                                   recognizer: tapGestureRecognizer
@@ -190,7 +190,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                         : TextSpan(
                                             text: showMore ? "" : "...see more",
                                             style: TextStyle(
-                                              fontSize: 10,
+                                              fontSize: 12,
                                               color: HexColor(darkColor)
                                                   .withOpacity(0.6),
                                               fontWeight: FontWeight.w600,
@@ -345,7 +345,7 @@ class ProfileQuickLinks extends StatelessWidget {
     return InkWell(
       onTap: onClick,
       child: Card(
-      //  elevation: 10,
+        //  elevation: 10,
         // shape: RoundedRectangleBorder(
         //   borderRadius: BorderRadius.circular(80),
         //   //set border radius more than 50% of height and width to make circle
@@ -360,13 +360,14 @@ class ProfileQuickLinks extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SvgPicture.asset(icon, height: 22, width: 25,color: isVerified ? null: color),
-            const  SizedBox(
+              SvgPicture.asset(icon,
+                  height: 22, width: 25, color: isVerified ? null : color),
+              const SizedBox(
                 height: 10,
               ),
               AppText(
                 text: name,
-                size: 10,
+                size: 12,
                 fontWeight: FontWeight.w400,
                 color: HexColor("#828282"),
               ),

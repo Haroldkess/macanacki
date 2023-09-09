@@ -19,6 +19,7 @@ const String passwordKey = "password";
 const String genderId = "genderId";
 const String facialUploadKey = "facial_upload";
 const String photoKey = "photo";
+const String temPhotoKey = "dpPhoto";
 const String dobKey = "dob";
 const String isLoggedInKey = "isLoggedIn";
 const String tokenKey = "token";

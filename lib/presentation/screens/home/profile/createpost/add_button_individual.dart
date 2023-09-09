@@ -170,7 +170,7 @@ class _IndividualButtonFormState extends State<IndividualButtonForm> {
             //   validator: (value)=>RegExp(r"^(https?:\/\/(.+?\.)?\.com(\/[A-Za-z0-9\-\._~:\/\?#\[\]@!$&'\(\)\*\+,;\=]*)?)").hasMatch(value!)?null:'Not a valid google drive url',
 
             cursorColor: HexColor(primaryColor),
-            style: GoogleFonts.spartan(
+            style: GoogleFonts.leagueSpartan(
               color: HexColor(darkColor),
               fontSize: 14,
             ),
@@ -237,7 +237,7 @@ class _IndividualButtonFormState extends State<IndividualButtonForm> {
               errorText: error,
               errorStyle: TextStyle(color: Colors.red),
               hintStyle:
-                  GoogleFonts.spartan(color: HexColor('#C0C0C0'), fontSize: 12),
+                  GoogleFonts.leagueSpartan(color: HexColor('#C0C0C0'), fontSize: 12),
               border: InputBorder.none,
               enabledBorder: InputBorder.none,
               focusedBorder: InputBorder.none,

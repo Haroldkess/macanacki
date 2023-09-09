@@ -59,7 +59,7 @@ class MatchRequestScreen extends StatelessWidget {
                               child: RichText(
                                   text: TextSpan(
                                       text: userName ?? "",
-                                      style: GoogleFonts.spartan(
+                                      style: GoogleFonts.leagueSpartan(
                                         color: HexColor(darkColor),
                                         fontSize: 20,
                                         fontWeight: FontWeight.w700,
@@ -67,7 +67,7 @@ class MatchRequestScreen extends StatelessWidget {
                                       children: [
                                     TextSpan(
                                       text: "",
-                                      style: GoogleFonts.spartan(
+                                      style: GoogleFonts.leagueSpartan(
                                           color: HexColor("#C0C0C0"),
                                           fontSize: 20),
                                     )

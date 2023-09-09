@@ -135,7 +135,7 @@ class _UsersProfileState extends State<UsersProfile>
                                       ? stream.publicUserProfileModel.aboutMe!
                                           .substring(0, seeMoreVal - 3)
                                       : stream.publicUserProfileModel.aboutMe!,
-                                  style: GoogleFonts.spartan(
+                                  style: GoogleFonts.leagueSpartan(
                                       textStyle: TextStyle(
                                     fontWeight: FontWeight.w600,
                                     color: HexColor(darkColor).withOpacity(0.6),

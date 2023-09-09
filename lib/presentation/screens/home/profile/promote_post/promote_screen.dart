@@ -14,8 +14,6 @@ import 'package:macanacki/presentation/widgets/snack_msg.dart';
 import 'package:macanacki/services/controllers/ads_controller.dart';
 import 'package:macanacki/services/middleware/ads_ware.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_paystack/flutter_paystack.dart';
-import 'package:cached_video_preview/cached_video_preview.dart';
 import '../../../../../model/ads_price_model.dart';
 import '../../../../../model/profile_feed_post.dart';
 import '../../../../../services/api_url.dart';
@@ -44,7 +42,9 @@ class _PromoteScreenState extends State<PromoteScreen> {
   @override
   void initState() {
     super.initState();
-    plugin.initialize(publicKey: dotenv.get('PUBLIC_KEY').toString());
+    // plugin.initialize(
+    //     publicKey: publicKey);
+         //dotenv.get('PUBLIC_KEY').toString()
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       AdsController.retrievAdsController(context);
     });
@@ -163,46 +163,20 @@ class _PromoteScreenState extends State<PromoteScreen> {
                             children: [
                               Column(
                                 children: [
-                                  post!.media!.first.contains("https")
-                                      ? Container(
-                                          width: 70,
-                                          height: 70,
-                                          decoration: BoxDecoration(
-                                              color: Colors.black,
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                              image: DecorationImage(
-                                                image:
-                                                    CachedNetworkImageProvider(
-                                                  post!.media!.first
-                                                      .replaceAll('\\', '/'),
-                                                ),
-                                                fit: BoxFit.fill,
-                                              )),
-                                        )
-                                      : Stack(
-                                          alignment: Alignment.center,
-                                          children: [
-                                            Container(
-                                              width: 70,
-                                              height: 70,
-                                              decoration: BoxDecoration(
-                                                  color: Colors.black,
-                                                  borderRadius:
-                                                      BorderRadius.circular(8)),
-                                              child: CachedVideoPreviewWidget(
-                                                path: post!.media!.first,
-                                                type: SourceType.remote,
-                                                remoteImageBuilder:
-                                                    (BuildContext context,
-                                                            url) =>
-                                                        Image.network(url),
-                                              ),
-                                            ),
-                                            Icon(Icons.play_arrow,
-                                                size: 14, color: Colors.grey)
-                                          ],
-                                        ),
+                                  Container(
+                                    width: 70,
+                                    height: 70,
+                                    decoration: BoxDecoration(
+                                        color: Colors.black,
+                                        borderRadius: BorderRadius.circular(8),
+                                        image: DecorationImage(
+                                          image: CachedNetworkImageProvider(
+                                            post!.media!.first
+                                                .replaceAll('\\', '/'),
+                                          ),
+                                          fit: BoxFit.fill,
+                                        )),
+                                  )
                                 ],
                               ),
                               SizedBox(
@@ -241,7 +215,7 @@ class _PromoteScreenState extends State<PromoteScreen> {
                     AppText(
                       text: 'select post',
                       fontWeight: FontWeight.w500,
-                      size: 13,
+                      size: 16,
                       color: HexColor("#797979"),
                     ),
                   ],
@@ -268,7 +242,7 @@ class _PromoteScreenState extends State<PromoteScreen> {
                       child: RichText(
                         text: TextSpan(
                             text: "I consent to the use of MacaNacki ",
-                            style: GoogleFonts.spartan(
+                            style: GoogleFonts.leagueSpartan(
                                 textStyle: TextStyle(
                                     fontWeight: FontWeight.w400,
                                     color: HexColor(darkColor),
@@ -277,7 +251,7 @@ class _PromoteScreenState extends State<PromoteScreen> {
                             children: [
                               TextSpan(
                                 text: "Terms of Use",
-                                style: GoogleFonts.spartan(
+                                style: GoogleFonts.leagueSpartan(
                                     textStyle: TextStyle(
                                         fontWeight: FontWeight.w400,
                                         color: HexColor(primaryColor),
@@ -292,7 +266,7 @@ class _PromoteScreenState extends State<PromoteScreen> {
                               ),
                               TextSpan(
                                 text: " and ",
-                                style: GoogleFonts.spartan(
+                                style: GoogleFonts.leagueSpartan(
                                     textStyle: TextStyle(
                                         fontWeight: FontWeight.w400,
                                         color: HexColor(darkColor),
@@ -302,7 +276,7 @@ class _PromoteScreenState extends State<PromoteScreen> {
                               ),
                               TextSpan(
                                 text: "Privacy Policy",
-                                style: GoogleFonts.spartan(
+                                style: GoogleFonts.leagueSpartan(
                                     textStyle: TextStyle(
                                         fontWeight: FontWeight.w400,
                                         color: HexColor(primaryColor),
@@ -429,7 +403,7 @@ class AdsAction extends StatelessWidget {
                           AppText(
                             text: SubName,
                             color: HexColor("#0C0C0C"),
-                            size: 10,
+                            size: 13,
                             fontWeight: FontWeight.w400,
                           ),
                         ],
@@ -466,7 +440,7 @@ class AdsAction extends StatelessWidget {
                             AppText(
                               text: subTitle,
                               color: HexColor("#818181"),
-                              size: 10,
+                              size: 13,
                               fontWeight: FontWeight.w400,
                             )
                           ],

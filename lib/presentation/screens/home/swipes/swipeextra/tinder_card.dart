@@ -323,15 +323,15 @@ class _TinderCardState extends State<TinderCard> {
                                     text: TextSpan(
                                         text: widget.users[indexer].username ??
                                             "",
-                                        style: GoogleFonts.spartan(
+                                        style: GoogleFonts.leagueSpartan(
                                           color: HexColor(darkColor),
-                                          fontSize: 15,
+                                          fontSize: 16,
                                           fontWeight: FontWeight.w700,
                                         ),
                                         children: [
                                           TextSpan(
                                             text: "",
-                                            style: GoogleFonts.spartan(
+                                            style: GoogleFonts.leagueSpartan(
                                                 color: HexColor("#C0C0C0"),
                                                 fontSize: 20),
                                           )
@@ -375,7 +375,7 @@ class _TinderCardState extends State<TinderCard> {
                               child: AppText(
                                 text:
                                     "${widget.users[indexer].country ?? ""}, ${widget.users[indexer].state ?? ""}, ${widget.users[indexer].city ?? ""} ",
-                                size: 12,
+                                size: 14,
                                 fontWeight: FontWeight.w500,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,

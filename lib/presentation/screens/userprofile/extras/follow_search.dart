@@ -30,7 +30,7 @@ class FollowSearch extends StatelessWidget {
         decoration: InputDecoration(
           hintText: " Search",
           hintStyle:
-              GoogleFonts.spartan(color: HexColor("#C0C0C0"), fontSize: 14),
+              GoogleFonts.leagueSpartan(color: HexColor("#C0C0C0"), fontSize: 14),
           border: UnderlineInputBorder(
               borderRadius: BorderRadius.circular(2.0),
               borderSide: const BorderSide(color: Colors.transparent)),

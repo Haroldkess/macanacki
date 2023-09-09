@@ -49,13 +49,13 @@ class AdsController {
       ware.isLoading2(false);
       // ignore: use_build_context_synchronously
       payModal(context, finalPay, null, true, data.postId);
-     
+
       //   ware.clear();
       // ignore: use_build_context_synchronously
       //   PageRouting.popToPage(context);
-
     } else {
       ware.isLoading2(false);
+    //  payModal(context, finalPay, null, true, data.postId);
       // ignore: use_build_context_synchronously
       showToast2(context, ware.message2, isError: true);
     }

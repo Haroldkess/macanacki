@@ -93,7 +93,7 @@ class PublicProfileImageAndName extends StatelessWidget {
                             ? ""
                             : "${stream.publicUserProfileModel.username}",
                         color: HexColor(darkColor),
-                        size: 15,
+                        size: 16,
                         letterSpacing: 0.0,
                         fontWeight: FontWeight.w800,
                         align: TextAlign.center,

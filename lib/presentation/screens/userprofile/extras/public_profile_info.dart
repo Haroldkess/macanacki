@@ -153,7 +153,7 @@ class LoaderImageAndName extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         text: TextSpan(
                             text: "      , ",
-                            style: GoogleFonts.spartan(
+                            style: GoogleFonts.leagueSpartan(
                               color: HexColor(darkColor),
                               fontSize: 24,
                               letterSpacing: 0.0,
@@ -162,7 +162,7 @@ class LoaderImageAndName extends StatelessWidget {
                             children: [
                               TextSpan(
                                 text: " ",
-                                style: GoogleFonts.spartan(
+                                style: GoogleFonts.leagueSpartan(
                                     color: HexColor("#C0C0C0"), fontSize: 24),
                               )
                             ])),

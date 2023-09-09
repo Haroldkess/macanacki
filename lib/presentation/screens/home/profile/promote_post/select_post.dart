@@ -6,7 +6,7 @@ import 'package:macanacki/presentation/operations.dart';
 import 'package:macanacki/services/controllers/feed_post_controller.dart';
 import 'package:macanacki/services/middleware/ads_ware.dart';
 import 'package:provider/provider.dart';
-import 'package:cached_video_preview/cached_video_preview.dart';
+
 import '../../../../../model/profile_feed_post.dart';
 import '../../../../constants/colors.dart';
 import '../../../../constants/params.dart';
@@ -62,8 +62,7 @@ Future selectPost(BuildContext context, List<ProfileFeedDatum> post) async {
                                         children: [
                                           Column(
                                             children: [
-                                              e.media!.first.contains("https")
-                                                  ? Container(
+                                            Container(
                                                       width: 70,
                                                       height: 70,
                                                       decoration: BoxDecoration(
@@ -83,39 +82,8 @@ Future selectPost(BuildContext context, List<ProfileFeedDatum> post) async {
                                                             fit: BoxFit.fill,
                                                           )),
                                                     )
-                                                  : Stack(
-                                                      alignment:
-                                                          Alignment.center,
-                                                      children: [
-                                                        Container(
-                                                          width: 70,
-                                                          height: 70,
-                                                          decoration: BoxDecoration(
-                                                              color:
-                                                                  Colors.black,
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          8)),
-                                                          child:
-                                                              CachedVideoPreviewWidget(
-                                                            path:
-                                                                e.media!.first,
-                                                            type: SourceType
-                                                                .remote,
-                                                            remoteImageBuilder:
-                                                                (BuildContext
-                                                                            context,
-                                                                        url) =>
-                                                                    Image.network(
-                                                                        url),
-                                                          ),
-                                                        ),
-                                                        Icon(Icons.play_arrow,
-                                                            size: 14,
-                                                            color: Colors.grey)
-                                                      ],
-                                                    ),
+                                            
+                                           
                                             ],
                                           ),
                                           SizedBox(

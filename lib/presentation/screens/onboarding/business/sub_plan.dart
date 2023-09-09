@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:macanacki/presentation/model/ui_model.dart';
 import 'package:macanacki/presentation/operations.dart';
@@ -25,10 +26,10 @@ import '../../../constants/colors.dart';
 import '../../../constants/params.dart';
 import '../../../uiproviders/screen/tab_provider.dart';
 import '../../../widgets/custom_paint.dart';
+import '../../../widgets/dialogue.dart';
 import '../../../widgets/screen_loader.dart';
 import '../../../widgets/text.dart';
 import 'package:uuid/uuid.dart';
-import 'package:flutter_paystack/flutter_paystack.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:http/http.dart' as http;
@@ -54,7 +55,7 @@ class _SubscriptionPlansBusinessState extends State<SubscriptionPlansBusiness> {
   void initState() {
     // dotenv.get('PUBLIC_KEY').toString()
     super.initState();
-    plugin.initialize(publicKey: dotenv.get('PUBLIC_KEY').toString());
+    //  plugin.initialize(publicKey: dotenv.get('PUBLIC_KEY').toString());
     Operations.controlSystemColor();
   }
   // dotenv.get('PUBLIC_KEY').toString()
@@ -422,8 +423,9 @@ payModal(BuildContext context, PlanData plan, bool? isBusiness, bool isPayOnly,
                         //   return;
                         // } else {
                         int amount = plan.amountInNaira!.toInt() * 100;
-                        await PaymentController.chargeCard(
+                       await PaymentController.chargeCard(
                             context, amount, isBusiness, isPayOnly, id);
+                     
 
                         //   plan.addAmount(0);
                         // }

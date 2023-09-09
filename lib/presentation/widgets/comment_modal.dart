@@ -259,7 +259,7 @@ class _CommentFormState extends State<CommentForm> {
             decoration: InputDecoration(
               hintText: "Write a comment...",
               hintStyle:
-                  GoogleFonts.spartan(color: HexColor("#8B8B8B"), fontSize: 14),
+                  GoogleFonts.leagueSpartan(color: HexColor("#8B8B8B"), fontSize: 14),
               contentPadding: EdgeInsets.only(left: 10, top: 15),
               // prefixIcon: Padding(
               //   padding: const EdgeInsets.all(15.0),

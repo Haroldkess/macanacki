@@ -192,7 +192,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       ? null
                                       : "Enter a valid email";
                                 },
-                                style: GoogleFonts.spartan(
+                                style: GoogleFonts.leagueSpartan(
                                   color: HexColor('#F5F2F9'),
                                   fontSize: 14,
                                 ),
@@ -200,7 +200,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   contentPadding:
                                       const EdgeInsets.only(left: 20),
                                   hintText: "Enter your email here",
-                                  hintStyle: GoogleFonts.spartan(
+                                  hintStyle: GoogleFonts.leagueSpartan(
                                       color: HexColor('#F5F2F9'), fontSize: 12),
                                   border: InputBorder.none,
                                   enabledBorder: InputBorder.none,
@@ -242,7 +242,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                           ? null
                                           : "Password too short";
                                     },
-                                    style: GoogleFonts.spartan(
+                                    style: GoogleFonts.leagueSpartan(
                                       color: HexColor('#F5F2F9'),
                                       fontSize: 14,
                                     ),
@@ -250,7 +250,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       contentPadding: const EdgeInsets.only(
                                           left: 20, top: 17),
                                       hintText: "Enter your password here",
-                                      hintStyle: GoogleFonts.spartan(
+                                      hintStyle: GoogleFonts.leagueSpartan(
                                           color: HexColor('#F5F2F9'),
                                           fontSize: 12),
                                       border: InputBorder.none,

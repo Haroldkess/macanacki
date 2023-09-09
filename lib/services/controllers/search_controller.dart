@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 
 import '../../presentation/widgets/debug_emitter.dart';
 
-class SearchController {
+class SearchAppController {
   static Future<void> retrievSearchUserController(
       BuildContext context, String x) async {
     SearchWare ware = Provider.of<SearchWare>(context, listen: false);

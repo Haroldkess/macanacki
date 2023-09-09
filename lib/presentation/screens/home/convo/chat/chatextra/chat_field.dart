@@ -102,7 +102,8 @@ class ChatForm extends StatelessWidget {
           decoration: InputDecoration(
             hintText: "  Your message",
             hintStyle:
-                GoogleFonts.spartan(color: HexColor("#8B8B8B"), fontSize: 14),
+                GoogleFonts.leagueSpartan
+                (color: HexColor("#8B8B8B"), fontSize: 14),
             contentPadding: const EdgeInsets.only(top: 15, bottom: 16),
             prefixIcon: Padding(
               padding: const EdgeInsets.all(15.0),

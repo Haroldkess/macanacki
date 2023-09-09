@@ -206,7 +206,7 @@ class _BusinessVerificationState extends State<BusinessVerification> {
                   child: RichText(
                     text: TextSpan(
                         text: "I consent to the use of MacaNacki ",
-                        style: GoogleFonts.spartan(
+                        style: GoogleFonts.leagueSpartan(
                             textStyle: TextStyle(
                                 fontWeight: FontWeight.w500,
                                 color: HexColor(darkColor),
@@ -215,7 +215,7 @@ class _BusinessVerificationState extends State<BusinessVerification> {
                         children: [
                           TextSpan(
                             text: "Terms of Use",
-                            style: GoogleFonts.spartan(
+                            style: GoogleFonts.leagueSpartan(
                                 textStyle: TextStyle(
                                     fontWeight: FontWeight.w500,
                                     color: HexColor(primaryColor),
@@ -229,7 +229,7 @@ class _BusinessVerificationState extends State<BusinessVerification> {
                           ),
                           TextSpan(
                             text: " and ",
-                            style: GoogleFonts.spartan(
+                            style: GoogleFonts.leagueSpartan(
                                 textStyle: TextStyle(
                                     fontWeight: FontWeight.w500,
                                     color: HexColor(darkColor),
@@ -238,7 +238,7 @@ class _BusinessVerificationState extends State<BusinessVerification> {
                           ),
                           TextSpan(
                             text: "Privacy Policy",
-                            style: GoogleFonts.spartan(
+                            style: GoogleFonts.leagueSpartan(
                                 textStyle: TextStyle(
                                     fontWeight: FontWeight.w500,
                                     color: HexColor(primaryColor),

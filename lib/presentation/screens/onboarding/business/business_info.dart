@@ -126,7 +126,7 @@ class _BusinessInfoState extends State<BusinessInfo> {
                     RichText(
                       text: TextSpan(
                         text: "Yes, its a registered business ",
-                        style: GoogleFonts.spartan(
+                        style: GoogleFonts.leagueSpartan(
                             textStyle: TextStyle(
                                 fontWeight: FontWeight.w700,
                                 color: HexColor(darkColor),
@@ -140,7 +140,7 @@ class _BusinessInfoState extends State<BusinessInfo> {
                         text: TextSpan(
                           text:
                               "Tick this box if your business is a registered business.",
-                          style: GoogleFonts.spartan(
+                          style: GoogleFonts.leagueSpartan(
                               textStyle: TextStyle(
                                   fontWeight: FontWeight.w400,
                                   color: HexColor("#606060"),
@@ -467,14 +467,14 @@ class BusinessForm extends StatelessWidget {
                             : "Enter a valid email";
                       },
                 keyboardType: isNumber == true ? TextInputType.number : null,
-                style: GoogleFonts.spartan(
+                style: GoogleFonts.leagueSpartan(
                   color: Colors.black,
                   fontSize: 14,
                 ),
                 decoration: InputDecoration(
                   contentPadding: const EdgeInsets.only(left: 20),
                   hintText: "$hint",
-                  hintStyle: GoogleFonts.spartan(
+                  hintStyle: GoogleFonts.leagueSpartan(
                       color: HexColor('#C0C0C0'), fontSize: 12),
                   border: InputBorder.none,
                   enabledBorder: InputBorder.none,

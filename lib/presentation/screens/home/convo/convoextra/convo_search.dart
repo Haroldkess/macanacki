@@ -29,7 +29,7 @@ class ConvoSearch extends StatelessWidget {
         autocorrect: false,
         decoration: InputDecoration(
           hintText: "  Search Conversations",
-          hintStyle: GoogleFonts.spartan(
+          hintStyle: GoogleFonts.leagueSpartan(
               color: Color.fromRGBO(0, 0, 0, 0.4), fontSize: 14),
           prefixIcon: Padding(
             padding: const EdgeInsets.all(12.0),

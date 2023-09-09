@@ -62,7 +62,7 @@ class FollowTile extends StatelessWidget {
                                 maxLines: 1,
                                 text: TextSpan(
                                     text: "${data.username}",
-                                    style: GoogleFonts.spartan(
+                                    style: GoogleFonts.leagueSpartan(
                                         textStyle: const TextStyle(
                                             fontWeight: FontWeight.w700,
                                             color: Colors.black,
@@ -72,7 +72,7 @@ class FollowTile extends StatelessWidget {
                                     children: [
                                       TextSpan(
                                         text: "",
-                                        style: GoogleFonts.spartan(
+                                        style: GoogleFonts.leagueSpartan(
                                             textStyle: const TextStyle(
                                                 fontWeight: FontWeight.w400,
                                                 color: Colors.black,

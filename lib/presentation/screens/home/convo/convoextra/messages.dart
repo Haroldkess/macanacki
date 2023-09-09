@@ -191,7 +191,7 @@ class _MessageWidgetState extends State<MessageWidget> {
                                             temp.userName
                                         ? widget.people.userTwo!
                                         : widget.people.userOne!,
-                                    style: GoogleFonts.spartan(
+                                    style: GoogleFonts.leagueSpartan(
                                         textStyle: TextStyle(
                                             fontWeight: FontWeight.w700,
                                             color: widget.people.conversations!

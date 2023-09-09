@@ -109,14 +109,14 @@ class _ForgetPasswordEmailState extends State<ForgetPasswordEmail> {
                               ? null
                               : "Enter a valid email";
                         },
-                        style: GoogleFonts.spartan(
+                        style: GoogleFonts.leagueSpartan(
                           color: HexColor('#F5F2F9'),
                           fontSize: 14,
                         ),
                         decoration: InputDecoration(
                           contentPadding: const EdgeInsets.only(left: 20),
                           hintText: "Enter your email here",
-                          hintStyle: GoogleFonts.spartan(
+                          hintStyle: GoogleFonts.leagueSpartan(
                               color: HexColor('#F5F2F9'), fontSize: 12),
                           border: InputBorder.none,
                           enabledBorder: InputBorder.none,

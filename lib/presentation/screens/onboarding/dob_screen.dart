@@ -7,6 +7,7 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:macanacki/presentation/allNavigation.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
 import 'package:macanacki/presentation/operations.dart';
+import 'package:macanacki/presentation/screens/onboarding/add_password.dart';
 import 'package:macanacki/presentation/screens/onboarding/add_photo_screen.dart';
 import 'package:macanacki/presentation/uiproviders/dob/dob_provider.dart';
 import 'package:macanacki/presentation/widgets/buttons.dart';
@@ -152,7 +153,7 @@ class _DobScreenState extends State<DobScreen> {
         child: TextFormField(
           enabled: false,
           cursorColor: HexColor(primaryColor),
-          style: GoogleFonts.spartan(
+          style: GoogleFonts.leagueSpartan(
             color: HexColor(darkColor),
             fontSize: 14,
           ),
@@ -163,7 +164,7 @@ class _DobScreenState extends State<DobScreen> {
             ),
             contentPadding: const EdgeInsets.only(left: 20, top: 17),
             hintText: d == "DAY" ? "Date of birth" : "$d-$m-$y",
-            hintStyle: GoogleFonts.spartan(
+            hintStyle: GoogleFonts.leagueSpartan(
                 color: HexColor('#424242'),
                 fontSize: 12,
                 fontWeight: FontWeight.w600),
@@ -184,8 +185,9 @@ class _DobScreenState extends State<DobScreen> {
       if (formattedDate.isEmpty) {
         showToast(context, "When were you born?", Colors.red);
       } else {
+        //AddPhotoScreen()
         temp.addDobTemp(formattedDate).whenComplete(
-            () => PageRouting.pushToPage(context, const AddPhotoScreen()));
+            () => PageRouting.pushToPage(context, const AddPasswordScreen() ));
       }
     } catch (e) {
       log(e.toString());

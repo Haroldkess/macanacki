@@ -92,7 +92,7 @@ class _SelectUserNameState extends State<SelectUserName> {
                       child: TextFormField(
                         controller: userName,
                         cursorColor: HexColor(primaryColor),
-                        style: GoogleFonts.spartan(
+                        style: GoogleFonts.leagueSpartan(
                           color: HexColor(darkColor),
                           fontSize: 14,
                         ),
@@ -129,7 +129,7 @@ class _SelectUserNameState extends State<SelectUserName> {
                           contentPadding:
                               const EdgeInsets.only(left: 20, top: 17),
                           hintText: "Enter your User name here",
-                          hintStyle: GoogleFonts.spartan(
+                          hintStyle: GoogleFonts.leagueSpartan(
                               color: HexColor('#C0C0C0'), fontSize: 12),
                           border: InputBorder.none,
                           enabledBorder: InputBorder.none,
@@ -175,7 +175,7 @@ class _SelectUserNameState extends State<SelectUserName> {
                         child: RichText(
                           text: TextSpan(
                               text: "I consent to the use of MacaNacki ",
-                              style: GoogleFonts.spartan(
+                              style: GoogleFonts.leagueSpartan(
                                   textStyle: TextStyle(
                                       fontWeight: FontWeight.w400,
                                       color: HexColor(darkColor),
@@ -185,7 +185,7 @@ class _SelectUserNameState extends State<SelectUserName> {
                               children: [
                                 TextSpan(
                                   text: "Terms of Use",
-                                  style: GoogleFonts.spartan(
+                                  style: GoogleFonts.leagueSpartan(
                                       textStyle: TextStyle(
                                           fontWeight: FontWeight.w400,
                                           color: HexColor(primaryColor),
@@ -201,7 +201,7 @@ class _SelectUserNameState extends State<SelectUserName> {
                                 ),
                                 TextSpan(
                                   text: " and ",
-                                  style: GoogleFonts.spartan(
+                                  style: GoogleFonts.leagueSpartan(
                                       textStyle: TextStyle(
                                           fontWeight: FontWeight.w400,
                                           color: HexColor(darkColor),
@@ -211,7 +211,7 @@ class _SelectUserNameState extends State<SelectUserName> {
                                 ),
                                 TextSpan(
                                   text: "Privacy Policy",
-                                  style: GoogleFonts.spartan(
+                                  style: GoogleFonts.leagueSpartan(
                                       textStyle: TextStyle(
                                           fontWeight: FontWeight.w400,
                                           color: HexColor(primaryColor),

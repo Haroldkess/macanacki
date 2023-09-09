@@ -179,7 +179,7 @@ class _ResetPassScreenState extends State<ResetPassScreen> {
                                             ? null
                                             : "otp too short";
                                       },
-                                      style: GoogleFonts.spartan(
+                                      style: GoogleFonts.leagueSpartan(
                                         color: HexColor('#F5F2F9'),
                                         fontSize: 14,
                                       ),
@@ -187,7 +187,7 @@ class _ResetPassScreenState extends State<ResetPassScreen> {
                                         contentPadding: const EdgeInsets.only(
                                             left: 20, top: 17),
                                         hintText: "Enter your otp here",
-                                        hintStyle: GoogleFonts.spartan(
+                                        hintStyle: GoogleFonts.leagueSpartan(
                                             color: HexColor('#F5F2F9'),
                                             fontSize: 12),
                                         border: InputBorder.none,
@@ -245,7 +245,7 @@ class _ResetPassScreenState extends State<ResetPassScreen> {
                                             ? null
                                             : "Password too short";
                                       },
-                                      style: GoogleFonts.spartan(
+                                      style: GoogleFonts.leagueSpartan(
                                         color: HexColor('#F5F2F9'),
                                         fontSize: 14,
                                       ),
@@ -253,7 +253,7 @@ class _ResetPassScreenState extends State<ResetPassScreen> {
                                         contentPadding: const EdgeInsets.only(
                                             left: 20, top: 17),
                                         hintText: "Enter your password here",
-                                        hintStyle: GoogleFonts.spartan(
+                                        hintStyle: GoogleFonts.leagueSpartan(
                                             color: HexColor('#F5F2F9'),
                                             fontSize: 12),
                                         border: InputBorder.none,
@@ -326,7 +326,7 @@ class _ResetPassScreenState extends State<ResetPassScreen> {
                                             ? null
                                             : "Password does not match";
                                       },
-                                      style: GoogleFonts.spartan(
+                                      style: GoogleFonts.leagueSpartan(
                                         color: HexColor('#F5F2F9'),
                                         fontSize: 14,
                                       ),
@@ -334,7 +334,7 @@ class _ResetPassScreenState extends State<ResetPassScreen> {
                                         contentPadding: const EdgeInsets.only(
                                             left: 20, top: 17),
                                         hintText: "Confirm password",
-                                        hintStyle: GoogleFonts.spartan(
+                                        hintStyle: GoogleFonts.leagueSpartan(
                                             color: HexColor('#F5F2F9'),
                                             fontSize: 12),
                                         border: InputBorder.none,

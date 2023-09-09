@@ -153,7 +153,7 @@ class Operations {
 
       if (file != null) {
         imageFile = file;
-       // emitter(imageFile.path);
+        // emitter(imageFile.path);
         facial.addPhoto(imageFile);
         // facial.isLoading(true);
       }
@@ -163,6 +163,7 @@ class Operations {
   }
 
   static Future changePhotoFromGallery(BuildContext context) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
     final ImagePicker picker = ImagePicker();
     late XFile? imageFile;
     FacialWare facial = Provider.of<FacialWare>(context, listen: false);
@@ -173,8 +174,10 @@ class Operations {
 
       if (file != null) {
         imageFile = file;
-       // emitter(imageFile.path);
+         pref.setString(temPhotoKey, imageFile.path);
+        // emitter(imageFile.path);
         facial.addDp(imageFile);
+       // pref.setString(temPhotoKey, imageFile.path);
         // facial.isLoading(true);
       }
     } catch (e) {
@@ -367,7 +370,7 @@ class Operations {
           return;
         }
 
-      //  emitter(file.first.path.toString());
+        //  emitter(file.first.path.toString());
         if (isUser) {
           picked.addIdUser(file.first);
         } else {

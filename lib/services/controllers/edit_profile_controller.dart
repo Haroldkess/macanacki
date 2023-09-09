@@ -6,7 +6,9 @@ import 'package:macanacki/model/create_post_model.dart';
 import 'package:macanacki/services/controllers/user_profile_controller.dart';
 import 'package:macanacki/services/middleware/edit_profile_ware.dart';
 import 'package:macanacki/services/middleware/facial_ware.dart';
+import 'package:macanacki/services/temps/temps_id.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../presentation/widgets/debug_emitter.dart';
 import '../../presentation/widgets/snack_msg.dart';
@@ -14,31 +16,31 @@ import '../middleware/user_profile_ware.dart';
 
 class EditProfileController {
   static Future<EditProfileModel> regData(
-      BuildContext context, String description, String phone, [String? country, state, city]) async {
+      BuildContext context, String description, String phone,
+      [String? country, state, city]) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
     EditProfileWare pic = Provider.of<EditProfileWare>(context, listen: false);
     FacialWare img = Provider.of<FacialWare>(context, listen: false);
-     UserProfileWare user = Provider.of<UserProfileWare>(context, listen: false);
+    UserProfileWare user = Provider.of<UserProfileWare>(context, listen: false);
 
     EditProfileModel data = EditProfileModel(
       description: description,
       phone: phone,
-      media: img.addedDp == null ? "" : img.addedDp!.path,
-      country: country ?? user.userProfileModel.country ,
-      state:  state ?? user.userProfileModel.state,
-      city: city ?? user.userProfileModel.city ,
+      media: pref.containsKey(temPhotoKey) ?  pref.getString(temPhotoKey) : img.addedDp == null ? "" : img.addedDp!.path ,
+      country: country ?? user.userProfileModel.country,
+      state: state ?? user.userProfileModel.state,
+      city: city ?? user.userProfileModel.city,
     );
     return data;
   }
 
   static Future<void> editProfileController(
-    BuildContext context,
-    String description,
-    String phone,
-    [String? country, state, city]
-  ) async {
+      BuildContext context, String description, String phone,
+      [String? country, state, city]) async {
     EditProfileWare ware = Provider.of<EditProfileWare>(context, listen: false);
 
-    EditProfileModel data = await regData(context, description, phone,country,state,city);
+    EditProfileModel data =
+        await regData(context, description, phone, country, state, city);
     ware.isLoading(true);
 
     bool isDone = await ware

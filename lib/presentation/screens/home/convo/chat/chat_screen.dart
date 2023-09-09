@@ -14,7 +14,6 @@ import 'package:macanacki/services/middleware/user_profile_ware.dart';
 import 'package:macanacki/services/temps/temp.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../../../../model/conversation_model.dart';
 import '../../../../../services/controllers/mode_controller.dart';
 import '../../../../../services/middleware/chat_ware.dart';
@@ -22,11 +21,11 @@ import '../../../../../services/temps/temps_id.dart';
 import '../../../../allNavigation.dart';
 import '../../../../constants/colors.dart';
 import '../../../../widgets/hexagon_avatar.dart';
-
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:macanacki/services/api_url.dart';
 import '../../../userprofile/user_profile_screen.dart';
 import '../../profile/profile_screen.dart';
+
 
 class ChatScreen extends StatefulWidget {
   ChatData user;
@@ -320,7 +319,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                         ? "${widget.user.userTwo}"
                                         : "${widget.user.userOne} ",
 
-                                    style: GoogleFonts.spartan(
+                                    style: GoogleFonts.leagueSpartan(
                                       color: HexColor(darkColor),
                                       fontSize: 15,
                                       fontWeight: FontWeight.w500,
@@ -356,7 +355,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                   text: TextSpan(
                                     text: "${widget.user.userTwo} ",
 
-                                    style: GoogleFonts.spartan(
+                                    style: GoogleFonts.leagueSpartan(
                                       color: HexColor(darkColor),
                                       fontSize: 15,
                                       fontWeight: FontWeight.w500,
