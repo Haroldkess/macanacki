@@ -31,13 +31,14 @@ class CompleteRegisterationController {
       dob: pref.getString(dobKey),
       email: pref.getString(emailKey),
       password: pref.getString(passwordKey),
-      photo: pref.containsKey(photoKey)
-          ? File(
-              pref.getString(photoKey)!,
-            )
-          : pic.addedPhoto != null
-              ? pic.addedPhoto
-              : null,
+      photo: null,
+      // pref.containsKey(photoKey)
+      //     ? File(
+      //         pref.getString(photoKey)!,
+      //       )
+      //     : pic.addedPhoto != null
+      //         ? pic.addedPhoto
+      //         : null,
       //  pic.addedPhoto
       country: pref.getString(countryKey),
       state: pref.getString(stateKey),

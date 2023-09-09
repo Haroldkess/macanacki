@@ -187,7 +187,7 @@ class _DobScreenState extends State<DobScreen> {
       } else {
         //AddPhotoScreen()
         temp.addDobTemp(formattedDate).whenComplete(
-            () => PageRouting.pushToPage(context, const AddPhotoScreen()));
+            () => PageRouting.pushToPage(context, const AddPasswordScreen() ));
       }
     } catch (e) {
       log(e.toString());
