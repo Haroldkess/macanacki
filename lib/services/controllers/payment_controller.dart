@@ -25,7 +25,7 @@ import '../../presentation/widgets/debug_emitter.dart';
 import '../../presentation/widgets/dialogue.dart';
 //"sk_test_1a9e1524621e4c91e3489926ef37db7337b4c68f";
 
-String sk = "sk_test_1a9e1524621e4c91e3489926ef37db7337b4c68f";
+String sk = dotenv.get('SECRET_KEY').toString();
 // dotenv.get('SECRET_KEY').toString();
 
 //dotenv.get('SECRET_KEY').toString();
@@ -73,9 +73,7 @@ class PaymentController {
     // ignore: use_build_context_synchronously
     String access = await createAccessCode(ref, context, amount.toString(), id);
     if (access.isNotEmpty) {
-      PaystackStandard(context)
-          .checkout(checkoutUrl: access)
-          .then((response)  {
+      PaystackStandard(context).checkout(checkoutUrl: access).then((response) {
         if (response.success) {
           verifyOnServer(ref, context, isFirst, isPayOnly);
         } else {}
@@ -242,7 +240,7 @@ class PaymentController {
             headers: headers, body: payload)
         .timeout(const Duration(seconds: 30));
     var data2 = jsonDecode(response.body);
-   // print(data2.toString());
+    // print(data2.toString());
     String accessCode = data2['data']['access_code'];
     String authUrl = data2['data']['authorization_url'];
     return authUrl;
