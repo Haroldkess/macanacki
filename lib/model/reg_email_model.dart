@@ -51,7 +51,9 @@ class SendLoginModel {
         ? "IOS"
         : Platform.isAndroid
             ? "ANDROID"
-            :  Platform.isFuchsia ?"Fuchsia".toUpperCase() : "";
+            : Platform.isFuchsia
+                ? "Fuchsia".toUpperCase()
+                : "";
     return data;
   }
 }
