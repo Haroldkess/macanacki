@@ -2,17 +2,19 @@ import 'dart:developer';
 import 'dart:math' as math;
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/allNavigation.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
-import 'package:makanaki/presentation/constants/params.dart';
-import 'package:makanaki/presentation/screens/userprofile/user_profile_screen.dart';
-import 'package:makanaki/presentation/widgets/text.dart';
-import 'package:makanaki/services/middleware/swipe_ware.dart';
-import 'package:makanaki/services/temps/temps_id.dart';
+import 'package:macanacki/presentation/allNavigation.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/constants/params.dart';
+import 'package:macanacki/presentation/screens/userprofile/user_profile_screen.dart';
+import 'package:macanacki/presentation/widgets/debug_emitter.dart';
+import 'package:macanacki/presentation/widgets/text.dart';
+import 'package:macanacki/services/middleware/swipe_ware.dart';
+import 'package:macanacki/services/temps/temps_id.dart';
 import 'package:numeral/numeral.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -23,7 +25,9 @@ import '../../../../../model/swiped_user_model.dart';
 import '../../../../../services/controllers/action_controller.dart';
 import '../../../../../services/controllers/swipe_users_controller.dart';
 import '../../../../../services/middleware/action_ware.dart';
+import '../../../../../services/middleware/chat_ware.dart';
 import '../../../../uiproviders/screen/card_provider.dart';
+import '../../../../widgets/filter_address_modal.dart';
 import '../../../../widgets/snack_msg.dart';
 import '../../profile/profileextras/not_mine_buttons.dart';
 
@@ -123,13 +127,15 @@ class _TinderCardState extends State<TinderCard> {
     _matchEngine = MatchEngine(swipeItems: _swipeItems);
   }
 
+  bool tapped = false;
+
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
     ActionWare stream = context.watch<ActionWare>();
     ActionWare action = Provider.of<ActionWare>(context, listen: false);
-
+    ChatWare myChat = context.watch<ChatWare>();
     return Column(
       children: [
         SizedBox(
@@ -154,9 +160,10 @@ class _TinderCardState extends State<TinderCard> {
                     widget.users,
                     (element) => _swipeItems.add(SwipeItem(
                         content: Content(
-                          text: element.username!,
+                          text: element.username ?? "",
                         ),
                         likeAction: () async {
+                          //if (tapped) return;
                           //   print(widget.users[indexer].id!.toString());
                           //  print(widget.users[indexer].username!.toString());
                           ActionWare action =
@@ -181,9 +188,12 @@ class _TinderCardState extends State<TinderCard> {
                               // ignore: use_build_context_synchronously
 
                               // ignore: use_build_context_synchronously
-                              showToast2(context,
-                                  "You just followed ${widget.users[newIndex].username}",
-                                  isError: false);
+                              // showToast2(context,
+                              //     "You just followed ${widget.users[newIndex].username}",
+                              //     isError: false);
+                              // setState(() {
+                              //   tapped = false;
+                              // });
                             }
                           } else {
                             //   print("can not follow your self");
@@ -232,7 +242,21 @@ class _TinderCardState extends State<TinderCard> {
               setState(() {
                 indexer = 0;
               });
-              await SwipeController.retrievSwipeController(context);
+              SwipeWare swipe = Provider.of<SwipeWare>(context, listen: false);
+              if (swipe.filterName == "Women") {
+                await SwipeController.retrievSwipeController(
+                    context, "female", swipe.country, swipe.state, swipe.city);
+              } else if (swipe.filterName == "Men") {
+                await SwipeController.retrievSwipeController(
+                    context, "male", swipe.country, swipe.state, swipe.city);
+              } else {
+                await SwipeController.retrievSwipeController(
+                    context,
+                    swipe.filterName.toLowerCase(),
+                    swipe.country,
+                    swipe.state,
+                    swipe.city);
+              }
 
               // _matchEngine!.currentItem!.resetMatch();
               //    _matchEngine!.cycleMatch();
@@ -244,6 +268,7 @@ class _TinderCardState extends State<TinderCard> {
             itemChanged: (SwipeItem item, int index) {
               setState(() {
                 indexer = index;
+                tapped = false;
               });
               // print("item: ${item.content.text}, index: ${this.index}");
             },
@@ -256,100 +281,182 @@ class _TinderCardState extends State<TinderCard> {
           padding: const EdgeInsets.only(left: 16),
           child: Container(
             alignment: Alignment.topLeft,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Stack(
               children: [
-                const SizedBox(
-                  height: 15,
-                ),
-                GestureDetector(
-                  onTap: () async {
-                    SharedPreferences pref =
-                        await SharedPreferences.getInstance();
-                    if (pref.getString(userNameKey) ==
-                        widget.users[indexer].username!) {
-                      // ignore: use_build_context_synchronously
-                      showToast2(context, "This is your page", isError: true);
-                    } else {
-                      // ignore: use_build_context_synchronously
-                      PageRouting.pushToPage(
-                          context,
-                          UsersProfile(
-                              username: widget.users[indexer].username!));
-                    }
-                  },
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: RichText(
-                            text: TextSpan(
-                                text: "${widget.users[indexer].username}",
-                                style: GoogleFonts.spartan(
-                                  color: HexColor(darkColor),
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                                children: [
-                              TextSpan(
-                                text: "",
-                                style: GoogleFonts.spartan(
-                                    color: HexColor("#C0C0C0"), fontSize: 20),
-                              )
-                            ])),
-                      ),
-                      // Image.asset(
-                      //   "assets/pic/verified.png",
-                      //   height: 27,
-                      //   width: 27,
-                      // )
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
                 Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    const SizedBox(
+                      height: 15,
+                    ),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        CircleAvatar(
-                          radius: 5,
-                          backgroundColor: widget.users[indexer].mode == null ||
-                                  widget.users[indexer].mode == "offline"
-                              ? Colors.red
-                              : HexColor("#00B074"),
+                        GestureDetector(
+                          onTap: () async {
+                            SharedPreferences pref =
+                                await SharedPreferences.getInstance();
+                            if (pref.getString(userNameKey) ==
+                                widget.users[indexer].username!) {
+                              // ignore: use_build_context_synchronously
+                              showToast2(context, "This is your page",
+                                  isError: true);
+                            } else {
+                              if (widget.users[indexer].username == null) {
+                                return;
+                              }
+                              // ignore: use_build_context_synchronously
+                              PageRouting.pushToPage(
+                                  context,
+                                  UsersProfile(
+                                      username:
+                                          widget.users[indexer].username!));
+                            }
+                          },
+                          child: Row(
+                            children: [
+                              Container(
+                                constraints: BoxConstraints(maxWidth: 250),
+                                child: RichText(
+                                    maxLines: 1,
+                                    overflow: TextOverflow.visible,
+                                    text: TextSpan(
+                                        text: widget.users[indexer].username ??
+                                            "",
+                                        style: GoogleFonts.leagueSpartan(
+                                          color: HexColor(darkColor),
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                        children: [
+                                          TextSpan(
+                                            text: "",
+                                            style: GoogleFonts.leagueSpartan(
+                                                color: HexColor("#C0C0C0"),
+                                                fontSize: 20),
+                                          )
+                                        ])),
+                              ),
+
+                              widget.users[indexer].verified == 1 &&
+                                      widget.users[indexer].activePlan != sub
+                                  ? SvgPicture.asset(
+                                      "assets/icon/badge.svg",
+                                      height: 15,
+                                      width: 15,
+                                    )
+                                  : const SizedBox.shrink()
+                              // Image.asset(
+                              //   "assets/pic/verified.png",
+                              //   height: 27,
+                              //   width: 27,
+                              // )
+                            ],
+                          ),
                         ),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        AppText(
-                          text: "${widget.users[indexer].mode ?? "offline"}",
-                          size: 12,
-                          fontWeight: FontWeight.w500,
-                        )
                       ],
                     ),
                     const SizedBox(
-                      height: 5,
+                      height: 10,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 5),
-                      child: Row(
-                        children: [
-                          SvgPicture.asset("assets/icon/location.svg"),
-                          const SizedBox(
-                            width: 5,
+                    Column(
+                      children: [
+                        Row(
+                          children: [
+                            SvgPicture.asset(
+                              "assets/icon/location.svg",
+                              color: Colors.green,
+                            ),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            Container(
+                              constraints: BoxConstraints(maxWidth: 200),
+                              child: AppText(
+                                text:
+                                    "${widget.users[indexer].country ?? ""}, ${widget.users[indexer].state ?? ""}, ${widget.users[indexer].city ?? ""} ",
+                                size: 14,
+                                fontWeight: FontWeight.w500,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            )
+                            // CircleAvatar(
+                            //   radius: 5,
+                            //   backgroundColor: myChat.allSocketUsers
+                            //           .where((element) =>
+                            //               element.userId.toString() ==
+                            //               widget.users[indexer].id.toString())
+                            //           .toList()
+                            //           .isEmpty
+                            //       ? Colors.red
+                            //       : HexColor("#00B074"),
+                            // ),
+                            // const SizedBox(
+                            //   width: 5,
+                            // ),
+                            // AppText(
+                            //   text: myChat.allSocketUsers
+                            //           .where((element) =>
+                            //               element.userId.toString() ==
+                            //               widget.users[indexer].id.toString())
+                            //           .toList()
+                            //           .isEmpty
+                            //       ? "offline"
+                            //       : "online",
+                            //   size: 12,
+                            //   fontWeight: FontWeight.w500,
+                            // )
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: Row(
+                            children: [
+                              AppText(
+                                text: "Suggested account",
+                                size: 12,
+                                fontWeight: FontWeight.w500,
+                              )
+                              // SvgPicture.asset("assets/icon/location.svg"),
+                              // const SizedBox(
+                              //   width: 5,
+                              // ),
+                              // AppText(
+                              //   text:
+                              //       "${Numeral(widget.users[indexer].distance == null ? 0 : widget.users[indexer].distance!)} km away",
+                              //   size: 12,
+                              //   fontWeight: FontWeight.w500,
+                              // )
+                            ],
                           ),
-                          AppText(
-                            text:
-                                "${Numeral(widget.users[indexer].distance == null ? 0 : widget.users[indexer].distance!)} km away",
-                            size: 12,
-                            fontWeight: FontWeight.w500,
-                          )
-                        ],
-                      ),
+                        )
+                      ],
                     )
                   ],
+                ),
+                Align(
+                  alignment: Alignment.topRight,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: InkWell(
+                      onTap: () => filterAdressModals(context),
+                      child: Container(
+                        height: 40,
+                        width: 40,
+                        decoration: BoxDecoration(
+                            color: HexColor(primaryColor),
+                            shape: BoxShape.circle),
+                        child: Icon(
+                          Icons.filter_list_alt,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
                 )
               ],
             ),
@@ -357,6 +464,29 @@ class _TinderCardState extends State<TinderCard> {
         ))
       ],
     );
+  }
+
+  double height = 60;
+  double width = 60;
+
+  Future animateButton(double val, bool isFirst) async {
+    if (isFirst) {
+      setState(() {
+        height = val;
+        width = val;
+        show = true;
+        tapped = true;
+      });
+
+      await Future.delayed(Duration(seconds: 1));
+    } else {
+      setState(() {
+        height = 60;
+        width = 60;
+        show = false;
+        tapped = false;
+      });
+    }
   }
 
   Widget buildCard(
@@ -373,7 +503,7 @@ class _TinderCardState extends State<TinderCard> {
                 decoration: BoxDecoration(
                     image: DecorationImage(
                         alignment: const Alignment(-0.3, 0),
-                        image: NetworkImage(image),
+                        image: CachedNetworkImageProvider(image),
                         fit: BoxFit.cover)),
                 child: BackdropFilter(
                   filter: ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0),
@@ -387,7 +517,7 @@ class _TinderCardState extends State<TinderCard> {
                 decoration: BoxDecoration(
                     image: DecorationImage(
                         alignment: const Alignment(-0.3, 0),
-                        image: NetworkImage(image),
+                        image: CachedNetworkImageProvider(image),
                         fit: BoxFit.cover)),
               ),
               show && username == widget.users[indexer].username
@@ -399,48 +529,62 @@ class _TinderCardState extends State<TinderCard> {
                   : const SizedBox.shrink()
             ],
           ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 15.0),
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Card(
-                  color: Colors.transparent,
-                  shadowColor: HexColor(primaryColor),
-                  elevation: 20,
-                  child: ProfileActionButtonNotThisUsers(
-                    icon: "assets/icon/follow.svg",
-                    isSwipe: true,
-                    onClick: () async {
-                      SharedPreferences pref =
-                          await SharedPreferences.getInstance();
-                      _matchEngine!.currentItem!.like();
-                      if (username == pref.getString(userNameKey)) {
-                        print("can n ot follow your self");
-                      } else {
-                        // ignore: use_build_context_synchronously
-                        await followAction(
-                          context,
-                          id,
-                          username,
-                        );
-                      }
-                    },
-                    color: primaryColor,
+          stream.followIds.contains(id)
+              ? SizedBox.shrink()
+              : Padding(
+                  padding: const EdgeInsets.only(bottom: 15.0),
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: AnimatedContainer(
+                        duration: Duration(seconds: 1),
+                        height: height,
+                        width: width,
+                        child: Card(
+                          color: Colors.transparent,
+                          shadowColor: HexColor(primaryColor),
+                          elevation: 20,
+                          child: ProfileActionButtonNotThisUsers(
+                            icon: "assets/icon/follow.svg",
+                            isSwipe: true,
+                            onClick: () async {
+                              SharedPreferences pref =
+                                  await SharedPreferences.getInstance();
+
+                              await animateButton(0.0, true).whenComplete(() =>
+                                  mounted
+                                      ? _matchEngine!.currentItem!.like()
+                                      : null);
+                              mounted ? animateButton(60.0, false) : null;
+
+                              if (username == pref.getString(userNameKey)) {
+                                emitter("can n ot follow your self");
+                              } else {
+                                // ignore: use_build_context_synchronously
+                                followAction(
+                                  context,
+                                  id,
+                                  username,
+                                );
+                              }
+                            },
+                            color: primaryColor,
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            ),
-          )
+                )
         ],
       ),
     );
   }
 }
 
-Future<void> followAction(BuildContext context, int id, String username) async {
-  await ActionController.followOrUnFollowController(context, username, id);
+Future<void> followAction(context, int id, String username) async {
+  ActionController.followOrUnFollowController(context, username, id);
+//  JustFollow.follow(username, id);
 }
 
 class Content {

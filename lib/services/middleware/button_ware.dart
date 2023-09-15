@@ -1,12 +1,13 @@
 import 'package:flutter/cupertino.dart';
-import 'package:makanaki/model/gender_model.dart';
-import 'package:makanaki/model/plan_model.dart';
-import 'package:makanaki/services/backoffice/gender_office.dart';
+import 'package:macanacki/model/gender_model.dart';
+import 'package:macanacki/model/plan_model.dart';
+import 'package:macanacki/services/backoffice/gender_office.dart';
 import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
 
 import '../../model/button_model.dart';
+import '../../presentation/widgets/debug_emitter.dart';
 import '../backoffice/button_office.dart';
 import '../backoffice/plan_office.dart';
 
@@ -60,7 +61,7 @@ class ButtonWare extends ChangeNotifier {
     late bool isSuccessful;
     try {
       http.Response? response = await getButtons()
-          .whenComplete(() => log("buttons gotten successfully"));
+          .whenComplete(() => emitter("buttons gotten successfully"));
       if (response == null) {
         isSuccessful = false;
         //      log("get gender request failed");

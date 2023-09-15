@@ -1,85 +1,220 @@
 import 'dart:convert';
 import 'dart:developer';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_paystack/flutter_paystack.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+// import 'package:flutter_paystack_plus/flutter_paystack_plus.dart';
+// import 'package:flutter_paystack_payment/flutter_paystack_payment.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:http/http.dart' as http;
-import 'package:makanaki/presentation/allNavigation.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
-import 'package:makanaki/presentation/screens/home/subscription/sub_successful.dart';
-import 'package:makanaki/presentation/widgets/snack_msg.dart';
-import 'package:makanaki/services/middleware/user_profile_ware.dart';
+import 'package:macanacki/presentation/allNavigation.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/screens/home/subscription/sub_successful.dart';
+import 'package:macanacki/presentation/widgets/snack_msg.dart';
+import 'package:macanacki/services/controllers/verify_controller.dart';
+import 'package:macanacki/services/middleware/user_profile_ware.dart';
+import 'package:pay_with_paystack/pay_with_paystack.dart';
+import 'package:paystack_standard/paystack_standard.dart';
 import 'package:provider/provider.dart';
+import '../../presentation/screens/onboarding/business/success.dart';
+import '../../presentation/widgets/debug_emitter.dart';
+import '../../presentation/widgets/dialogue.dart';
+//"sk_test_1a9e1524621e4c91e3489926ef37db7337b4c68f";
 
-String sk = "sk_test_1a9e1524621e4c91e3489926ef37db7337b4c68f";
-final plugin = PaystackPlugin();
+String sk = dotenv.get('SECRET_KEY').toString();
+// dotenv.get('SECRET_KEY').toString();
+
+//dotenv.get('SECRET_KEY').toString();
+//final plugin = PaystackPayment();
 
 class PaymentController {
-  static PaymentCard getCardFromUI() {
-    // Using just the must-required parameters.
-    //4084084084084081
-    return PaymentCard(
-      number: "",
-      cvc: "408",
-      expiryMonth: 4,
-      expiryYear: 24,
+  // static PaymentCard getCardFromUI() {
+  //   // Using just the must-required parameters.
+  //   //4084084084084081
+  //   return PaymentCard(
+  //     number: "4084084084084081",
+  //     cvc: "408",
+  //     expiryMonth: 4,
+  //     expiryYear: 24,
+  //   );
+  // }
+
+  static void promote(context) {
+    Get.back();
+    Get.back();
+
+    Get.dialog(
+      confirmationDialog(
+          title: "Promotion Successful",
+          message: "You just promoted a post",
+          confirmText: "Okay",
+          cancelText: "Go back",
+          icon: Icons.donut_small_outlined,
+          iconColor: [HexColor(primaryColor), Colors.green],
+          onPressedCancel: () {
+            Get.back();
+          },
+          onPressed: () {
+            Get.back();
+          }),
     );
   }
 
-  static Future chargeCard(BuildContext context, int amount) async {
+  static Future<bool> chargeCard(BuildContext context, int amount,
+      [bool? isFirst, isPayOnly, String? id]) async {
+    //  log(sk);
+    late bool success;
     UserProfileWare user = Provider.of<UserProfileWare>(context, listen: false);
     final String ref = await getReference();
     // ignore: use_build_context_synchronously
-    String access = await createAccessCode(ref, context, amount.toString());
-    Charge charge = Charge();
+    String access = await createAccessCode(ref, context, amount.toString(), id);
+    if (access.isNotEmpty) {
+      PaystackStandard(context).checkout(checkoutUrl: access).then((response) {
+        if (response.success) {
+          verifyOnServer(ref, context, isFirst, isPayOnly);
+        } else {}
 
-    PaymentCard myCard = getCardFromUI();
-
-    charge
-      ..amount = amount // In base currency
-      ..email = user.userProfileModel.email
-      ..reference = ref
-      ..accessCode = access
-      ..putCustomField('Charged From', 'Flutter SDK')
-      ..card = myCard.number!.isEmpty ? null : myCard;
-
-    try {
-      // ignore: use_build_context_synchronously
-      CheckoutResponse response = await plugin.checkout(
-        context,
-        method: CheckoutMethod.selectable,
-        charge: charge,
-        fullscreen: true,
-        logo: SvgPicture.asset(
-          "assets/icon/crown.svg",
-          color: HexColor(primaryColor),
-        ),
-      );
-
-      if (response.status == true) {
-        // ignore: use_build_context_synchronously
-        verifyOnServer(response.reference!, context);
-      } else {
-        print('Response = $response');
-        //  showToast2(context, message)
-      }
-    } catch (e) {
-      print("Check console for error");
-      return;
-      //'rethrow;
+// here check for success - verify transaction status with your backend server
+      }).whenComplete(() => verifyOnServer(ref, context, isFirst, isPayOnly));
     }
+
+    // Map data = {
+    //   "amount": amount,
+    //   "email": "${user.userProfileModel.email}",
+    //   "reference": ref,
+    // };
+
+    // Map promoteData = {
+    //   "amount": amount,
+    //   "email": "${user.userProfileModel.email}",
+    //   "reference": ref,
+    //   "metadata": {"post_id": id}
+    // };
+
+    // FlutterPaystackPlus.openPaystackPopup(
+
+//       publicKey: '-Your-public-key-',
+//       customerEmail: 'youremail@gmail.com',
+//       context:context,
+//       secretKey:'-Your-secret-key-',
+//       amount: (amount * 100).toString(),
+
+//       reference: DateTime.now().millisecondsSinceEpoch.toString(),
+//       onClosed: () {
+//         debugPrint('Could\'nt finish payment');
+//       },
+//       onSuccess: () async {
+//         debugPrint('successful payment');
+//       },
+//     );
+    // ignore: use_build_context_synchronously
+    // await PayWithPayStack().now(
+    //     context: context,
+    //     secretKey: sk,
+    //     customerEmail: user.userProfileModel.email ?? "",
+    //     reference: ref,
+    //     callbackUrl: "macanacki.com",
+    //     currency: "NGN",
+    //     paymentChannel: ["mobile_money", "card"],
+    //     amount: "$amount",
+    //     metaData: id == null ? data : promoteData,
+    //     transactionCompleted: () async {
+    //       print("done");
+    //       success = true;
+    //       // if (isFirst != null) {
+    //       //   if (isFirst == true) {
+    //       //     if (isPayOnly == false) {
+    //       //       VerifyController.business(context);
+    //       //     }
+
+    //       //     //  PageRouting.popToPage(context);
+    //       //     PageRouting.pushToPage(
+    //       //         context, const SubSuccessfullBusinessSignUp());
+    //       //   } else {
+    //       //     if (isPayOnly == false) {
+    //       //       VerifyController.userVerify(context);
+    //       //     }
+
+    //       //     PageRouting.pushToPage(context, const SubSuccessfull());
+    //       //   }
+    //       // } else {
+    //       //   //  Get.off(2);
+    //       //   promote(context);
+
+    //       //   emitter("tidy");
+    //       // }
+    //     },
+    //     transactionNotCompleted: () {
+    //       success = false;
+    //       Get.dialog(
+    //         confirmationDialog(
+    //             title: "Failed",
+    //             message: "Payment Failed",
+    //             confirmText: "Okay",
+    //             cancelText: "Go back",
+    //             icon: Icons.error,
+    //             iconColor: [HexColor(primaryColor), Colors.red],
+    //             onPressedCancel: () {
+    //               Get.back();
+    //             },
+    //             onPressed: () {
+    //               Get.back();
+    //             }),
+    //       );
+    //     });
+
+    // Charge charge = Charge();
+
+    // PaymentCard myCard = getCardFromUI();
+    // emitter("access code " + access + "  ref  " + ref);
+
+    // charge
+    //   ..amount = amount // In base currency
+    //   ..email = user.userProfileModel.email
+    //   ..reference = ref
+    //   ..accessCode = access
+    //   ..putCustomField('Charged From', 'Flutter SDK')
+    //   ..card = myCard.number!.isEmpty ? null : myCard;
+
+    // try {
+    //   // ignore: use_build_context_synchronously
+    //   CheckoutResponse response = await plugin.checkout(
+    //     context,
+    //     method: CheckoutMethod.selectable,
+    //     charge: charge,
+    //     fullscreen: true,
+    //     logo: SvgPicture.asset(
+    //       "assets/icon/crown.svg",
+    //       color: HexColor(primaryColor),
+    //     ),
+    //   );
+
+    //   if (response.status == true) {
+    //     //    emitter("you clicked on pay");
+    //     // ignore: use_build_context_synchronously
+    //     verifyOnServer(response.reference!, context, isFirst, isPayOnly);
+    //   } else {
+    //     emitter('Response = $response');
+    //     //  showToast2(context, message)
+    //   }
+    // } catch (e) {
+    //   emitter("Check console for error $e");
+    //   return;
+    //   //'rethrow;
+    // }
 
     //  final response = await plugin.chargeCard(context, charge: charge);
     // Use the response
+
+    return true;
   }
 
-  static Future<String> createAccessCode(
-      reference, context, String amount) async {
+  static Future<String> createAccessCode(reference, context, String amount,
+      [String? id]) async {
     UserProfileWare user = Provider.of<UserProfileWare>(context, listen: false);
     // skTest -> Secret key
     Map<String, String> headers = {
@@ -90,9 +225,16 @@ class PaymentController {
     Map data = {
       "amount": amount,
       "email": "${user.userProfileModel.email}",
-      "reference": reference
+      "reference": reference,
     };
-    String payload = json.encode(data);
+
+    Map promoteData = {
+      "amount": amount,
+      "email": "${user.userProfileModel.email}",
+      "reference": reference,
+      "metadata": {"post_id": id}
+    };
+    String payload = id == null ? json.encode(data) : json.encode(promoteData);
     http.Response response = await http
         .post(Uri.parse('https://api.paystack.co/transaction/initialize'),
             headers: headers, body: payload)
@@ -100,10 +242,12 @@ class PaymentController {
     var data2 = jsonDecode(response.body);
     // print(data2.toString());
     String accessCode = data2['data']['access_code'];
-    return accessCode;
+    String authUrl = data2['data']['authorization_url'];
+    return authUrl;
   }
 
-  static void verifyOnServer(String reference, context) async {
+  static void verifyOnServer(
+      String reference, context, bool? isFirst, bool isPayOnly) async {
     try {
       Map<String, String> headers = {
         'Content-Type': 'application/json',
@@ -119,8 +263,45 @@ class PaymentController {
       final Map body = json.decode(response.body);
       if (body['data']['status'] == 'success') {
         // log("paid");
-        PageRouting.popToPage(context);
-        PageRouting.pushToPage(context, const SubSuccessfull());
+
+        if (isFirst != null) {
+          if (isFirst == true) {
+            if (isPayOnly == false) {
+              VerifyController.business(context);
+            }
+
+            //  PageRouting.popToPage(context);
+            PageRouting.pushToPage(
+                context, const SubSuccessfullBusinessSignUp());
+          } else {
+            if (isPayOnly == false) {
+              VerifyController.userVerify(context);
+            }
+
+            PageRouting.pushToPage(context, const SubSuccessfull());
+          }
+        } else {
+          //  Get.off(2);
+          Get.back();
+          Get.back();
+          Get.dialog(
+            confirmationDialog(
+                title: "Promotion Successful",
+                message: "You just promoted a post",
+                confirmText: "Okay",
+                cancelText: "Go back",
+                icon: Icons.donut_small_outlined,
+                iconColor: [HexColor(primaryColor), Colors.green],
+                onPressedCancel: () {
+                  Get.back();
+                },
+                onPressed: () {
+                  Get.back();
+                }),
+          );
+          emitter("tidy");
+        }
+
         //do something with the response. show success}
         //show error prompt}
         return;
@@ -143,7 +324,7 @@ class PaymentController {
       platform = 'Android';
     }
     ret =
-        'ChargedFrom${platform}Makanaki${DateTime.now().millisecondsSinceEpoch.toString()}';
+        'ChargedFrom${platform}macanacki${DateTime.now().millisecondsSinceEpoch.toString()}';
 
     return ret;
   }

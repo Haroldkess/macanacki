@@ -5,8 +5,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
-import 'package:makanaki/presentation/widgets/loader.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/widgets/debug_emitter.dart';
+import 'package:macanacki/presentation/widgets/loader.dart';
 import 'package:numeral/numeral.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
@@ -48,25 +49,30 @@ class _PublicGridViewItemsState extends State<PublicGridViewItems> {
 
 //}
   getThumbnail() async {
-    if (!widget.data.media!.contains(".mp4")) {
+    if (widget.data.media!.isEmpty) {
+      return;
+    }
+    if (!widget.data.media!.first.contains(".mp4")) {
       return;
     }
     try {
       final fileName = await VideoThumbnail.thumbnailFile(
-        video: widget.data.media!,
+        video: widget.data.media!.first,
         thumbnailPath: (await getTemporaryDirectory()).path,
         imageFormat: ImageFormat.WEBP,
         maxHeight:
             0, // specify the height of the thumbnail, let the width auto-scaled to keep the source aspect ratio
         quality: 100,
-      ).whenComplete(() => log(" thumbnail generated"));
+      );
 
-      log(fileName.toString());
-      setState(() {
-        thumbnail = fileName;
-      });
+      // emitter(fileName.toString());
+      if (mounted) {
+        setState(() {
+          thumbnail = fileName;
+        });
+      }
     } catch (e) {
-      log(e.toString());
+      emitter(e.toString());
     }
   }
 
@@ -74,7 +80,7 @@ class _PublicGridViewItemsState extends State<PublicGridViewItems> {
   Widget build(BuildContext context) {
     return InkWell(
       splashColor: HexColor(primaryColor),
-      onTap: () {
+      onTap: () async {
         PageRouting.pushToPage(
             context,
             PublicUserProfileFeed(
@@ -86,13 +92,14 @@ class _PublicGridViewItemsState extends State<PublicGridViewItems> {
             //  borderRadius: BorderRadius.circular(12),
             image: DecorationImage(
                 fit: BoxFit.cover,
-                image: widget.data.media!.contains(".mp4")
+                image: widget.data.media!.first.contains(".mp4")
                     ? FileImage(File(thumbnail!))
-                    : NetworkImage(widget.data.media!) as ImageProvider)),
+                    : CachedNetworkImageProvider(widget.data.media!.first)
+                        as ImageProvider)),
         child: Stack(
           alignment: Alignment.center,
           children: [
-            widget.data.media!.contains(".mp4")
+            widget.data.media!.first.contains(".mp4")
                 ? Icon(
                     Icons.play_arrow,
                     color: Colors.grey.withOpacity(0.9),
@@ -114,7 +121,7 @@ class _PublicGridViewItemsState extends State<PublicGridViewItems> {
                     Padding(
                       padding: const EdgeInsets.only(top: 2, left: 3),
                       child: AppText(
-                        text:  Numeral(widget.data.viewCount!).format(),
+                        text: Numeral(widget.data.viewCount!).format(),
                         fontWeight: FontWeight.w600,
                         size: 12,
                         color: HexColor(backgroundColor),

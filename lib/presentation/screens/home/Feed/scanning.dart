@@ -1,8 +1,8 @@
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
-import 'package:makanaki/presentation/widgets/text.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/widgets/text.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../services/temps/temp.dart';
@@ -11,7 +11,8 @@ import '../../../uiproviders/screen/find_people_provider.dart';
 import '../../../widgets/avatar.dart';
 
 class ScanningPerimeter extends StatefulWidget {
-  const ScanningPerimeter({super.key});
+  final String? msg;
+  const ScanningPerimeter({super.key, this.msg});
 
   @override
   State<ScanningPerimeter> createState() => _ScanningPerimeterState();
@@ -20,21 +21,22 @@ class ScanningPerimeter extends StatefulWidget {
 class _ScanningPerimeterState extends State<ScanningPerimeter> {
   @override
   Widget build(BuildContext context) {
-     Temp temp = Provider.of<Temp>(context, listen: false);
- 
+    Temp temp = Provider.of<Temp>(context, listen: false);
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         AvatarGlow(
-            endRadius: 141.0,
+            endRadius: 120.0,
+            duration: Duration(milliseconds: 800),
             glowColor: HexColor(primaryColor),
-            child: Avatar(image: temp.dp, radius: 50)),
+            child: Avatar(image: temp.dp, radius: 40)),
         const SizedBox(
           height: 24,
         ),
         AppText(
-          text: "Finding people near you...",
+          text: widget.msg ?? "Finding people near you...",
           fontWeight: FontWeight.w400,
           size: 14,
           align: TextAlign.center,

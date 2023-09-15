@@ -1,12 +1,9 @@
 import 'dart:io';
 
-import 'package:http/http.dart';
-import 'package:path/path.dart';
-
 class CreatePostModel {
   String? description;
   int? published;
-  File? media;
+  List<File>? media;
   int? btnId;
   String? url;
 
@@ -21,8 +18,9 @@ class CreatePostModel {
   Future<Map<String, dynamic>> toJson() async => {
         "description": description,
         "published": published,
-        "media": await MultipartFile.fromPath('media', media!.path,
-            filename: basename(media!.path)),
+        "media": media,
+        // "media": await MultipartFile.fromPath('media', media!.path,
+        //     filename: basename(media!.path)),
         "btn_id": btnId,
         "btn_link": url,
       };
@@ -40,24 +38,38 @@ class ShareCommentsModel {
       };
 }
 
-
 class EditProfileModel {
   String? description;
   String? phone;
   String? media;
-
+  String? country, state, city;
 
   EditProfileModel({
     this.description,
     this.phone,
     this.media,
-
+    this.country,this.state, this.city
   });
 
   Future<Map<String, dynamic>> toJson() async => {
         "about_me": description,
         "phone": phone,
         "selfie": media,
-      
       };
+}
+
+class EditPost {
+  String? body;
+
+  EditPost({
+    this.body,
+  });
+  Map<String, dynamic> toJson() {
+    return {
+      'description': body,
+    };
+  }
+  // Future<Map<String, dynamic>> toJson() async => {
+  //       "description": body,
+  //     };
 }

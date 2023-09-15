@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/model/conversation_model.dart';
-import 'package:makanaki/presentation/allNavigation.dart';
-import 'package:makanaki/presentation/screens/home/convo/chat/chat_screen.dart';
-import 'package:makanaki/presentation/widgets/snack_msg.dart';
-import 'package:makanaki/services/controllers/url_launch_controller.dart';
-import 'package:makanaki/services/middleware/chat_ware.dart';
+import 'package:macanacki/model/conversation_model.dart';
+import 'package:macanacki/presentation/allNavigation.dart';
+import 'package:macanacki/presentation/screens/home/convo/chat/chat_screen.dart';
+import 'package:macanacki/presentation/widgets/debug_emitter.dart';
+import 'package:macanacki/presentation/widgets/loader.dart';
+import 'package:macanacki/presentation/widgets/snack_msg.dart';
+import 'package:macanacki/services/controllers/chat_controller.dart';
+import 'package:macanacki/services/controllers/url_launch_controller.dart';
+import 'package:macanacki/services/middleware/chat_ware.dart';
 import 'package:provider/provider.dart';
 import '../../../../../services/controllers/action_controller.dart';
 import '../../../../../services/middleware/action_ware.dart';
@@ -43,8 +46,8 @@ class ProfileActionButtonNotThisUsers extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: SvgPicture.asset(
               icon,
-              height: isSwipe ? 30 : null,
-              width: isSwipe ? 30 : null,
+              height: isSwipe ? 22 : null,
+              width: isSwipe ? 22 : null,
               color: HexColor(color),
             ),
           ),
@@ -63,9 +66,11 @@ class UserProfileActions extends StatelessWidget {
     var height = MediaQuery.of(context).size.width;
     ActionWare stream = context.watch<ActionWare>();
     UserProfileWare data = context.watch<UserProfileWare>();
+    ChatWare chatWareStream = context.watch<ChatWare>();
+
     return Container(
-      width: width * 0.7,
-      height: height * 0.25,
+      width: 220,
+      height: 80,
       //  color: Colors.amber,
       child: data.publicUserProfileModel.gender == "Business"
           ? Row(
@@ -75,7 +80,7 @@ class UserProfileActions extends StatelessWidget {
                     ? InkWell(
                         //   onTap: () => PageRouting.pushToPage(context, const EditProfile()),
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             ProfileActionButtonNotThisUsers(
                               icon: "assets/icon/call.svg",
@@ -99,13 +104,13 @@ class UserProfileActions extends StatelessWidget {
                               height: 5,
                             ),
                             Container(
-                              width: 70,
+                              width: 50,
                               alignment: Alignment.center,
                               // color: Colors.amber,
                               child: AppText(
                                 text: "Call",
                                 fontWeight: FontWeight.w400,
-                                size: 12,
+                                size: 10,
                                 color: HexColor("#797979"),
                               ),
                             ),
@@ -115,7 +120,7 @@ class UserProfileActions extends StatelessWidget {
                     : const SizedBox.shrink(),
                 InkWell(
                   onTap: () async {
-                    print("dfdd");
+                 //   print("dfdd");
                     await followAction(context, data.publicUserProfileModel.id!,
                         data.publicUserProfileModel.username!);
                   },
@@ -146,7 +151,7 @@ class UserProfileActions extends StatelessWidget {
                           height: 5,
                         ),
                         AnimatedContainer(
-                          width: 70,
+                          width: 50,
                           alignment: Alignment.center,
                           //color: Colors.amber,
                           duration: Duration(seconds: 2),
@@ -156,13 +161,13 @@ class UserProfileActions extends StatelessWidget {
                               ? AppText(
                                   text: "Follow",
                                   fontWeight: FontWeight.w400,
-                                  size: 12,
+                                  size: 10,
                                   color: HexColor("#797979"),
                                 )
                               : AppText(
                                   text: "Unfollow",
                                   fontWeight: FontWeight.w400,
-                                  size: 12,
+                                  size: 10,
                                   color: HexColor("#797979"),
                                 ),
                         ),
@@ -173,161 +178,233 @@ class UserProfileActions extends StatelessWidget {
                 InkWell(
                   onTap: () {},
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       const SizedBox(
                         height: 4,
                       ),
-                      ProfileActionButtonNotThisUsers(
-                        isSwipe: false,
-                        icon: "assets/icon/userchat.svg",
-                        onClick: () async {
-                          late ChatData chat;
-                          ChatWare chatWare =
-                              Provider.of<ChatWare>(context, listen: false);
-                          List<Conversation> empty = [];
+                      chatWareStream.loadStatus
+                          ? Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Loader(color: HexColor(primaryColor)),
+                            )
+                          : ProfileActionButtonNotThisUsers(
+                              isSwipe: false,
+                              icon: "assets/icon/userchat.svg",
+                              onClick: () async {
+                                late ChatData chat;
+                                ChatWare chatWare = Provider.of<ChatWare>(
+                                    context,
+                                    listen: false);
+                                await ChatController.retrievChatController(
+                                    context, true);
+                                List<Conversation> empty = [];
 
-                          late int statusId;
-                          late int id;
-                          late ChatData chatData;
+                                late int statusId;
+                                late int id;
+                                late ChatData chatData;
 
-                          if (chatWare.chatList.isEmpty) {
-                            statusId = 0;
+                                if (chatWare.chatList.isEmpty) {
+                                  statusId = 0;
 
-                            id = 0;
+                                  id = 0;
 
-                            chatData = ChatData(
-                              status: statusId,
-                              id: id,
-                              userOne: data.userProfileModel.username,
-                              userOneProfilePhoto:
-                                  data.userProfileModel.profilephoto,
-                              createdAt: DateTime.now(),
-                              updatedAt: DateTime.now(),
-                              blockedBy: null,
-                              userTwo: data.publicUserProfileModel.username,
-                              userTwoProfilePhoto:
-                                  data.publicUserProfileModel.profilephoto,
-                              conversations: empty,
-                            );
-                          } else {
-                            statusId = chatWare.chatList.first.status! + 1;
-
-                            id = chatWare.chatList.first.id! + 1;
-
-                            chatData = ChatData(
-                                status: statusId,
-                                id: id,
-                                userOne: data.userProfileModel.username,
-                                userOneProfilePhoto:
-                                    data.userProfileModel.profilephoto,
-                                createdAt: DateTime.now(),
-                                updatedAt: DateTime.now(),
-                                blockedBy: null,
-                                userTwo: data.publicUserProfileModel.username,
-                                userTwoProfilePhoto:
-                                    data.publicUserProfileModel.profilephoto,
-                                conversations: empty,
-                                userOneMode: data.userProfileModel.mode,
-                                userTwoMode: data.publicUserProfileModel.mode);
-                          }
-
-                          bool seen = false;
-
-                          await Future.forEach(chatWare.chatList,
-                              (element) async {
-                            // ignore: unrelated_type_equality_checks
-                            if (element.userTwo ==
-                                data.publicUserProfileModel.username) {
-                              seen = true;
-                              chat = element;
-                              PageRouting.pushToPage(
-                                  context,
-                                  ChatScreen(
-                                    user: element,
-                                    chat: element.conversations!,
-                                    dp: data
+                                  chatData = ChatData(
+                                    status: statusId,
+                                    id: id,
+                                    userOne: data.userProfileModel.username,
+                                    userOneProfilePhoto:
+                                        data.userProfileModel.profilephoto,
+                                    createdAt: DateTime.now(),
+                                    updatedAt: DateTime.now(),
+                                    blockedBy: null,
+                                    userTwo:
+                                        data.publicUserProfileModel.username,
+                                    userTwoProfilePhoto: data
                                         .publicUserProfileModel.profilephoto,
-                                    mode: data.publicUserProfileModel.mode,
-                                  ));
-                              return;
-                            } else if (element.userOne ==
-                                data.publicUserProfileModel.username) {
-                              chat = element;
-                              seen = true;
-                              PageRouting.pushToPage(
-                                  context,
-                                  ChatScreen(
-                                    user: element,
-                                    chat: element.conversations!,
-                                    dp: data
+                                    conversations: empty,
+                                  );
+                                } else {
+                                  statusId =
+                                      chatWare.chatList.first.status! + 1;
+
+                                  id = chatWare.chatList.first.id! + 1;
+
+                                  chatData = ChatData(
+                                    status: statusId,
+                                    id: id,
+                                    userOne: data.userProfileModel.username,
+                                    userOneProfilePhoto:
+                                        data.userProfileModel.profilephoto,
+                                    createdAt: DateTime.now(),
+                                    updatedAt: DateTime.now(),
+                                    blockedBy: null,
+                                    userTwo:
+                                        data.publicUserProfileModel.username,
+                                    userTwoProfilePhoto: data
                                         .publicUserProfileModel.profilephoto,
-                                    mode: data.publicUserProfileModel.mode,
-                                  ));
-                              return;
-                            } else {
-                              chat = ChatData();
-                            }
-                          });
+                                    conversations: empty,
+                                  );
+                                }
 
-                          if (seen) {
-                            return;
-                            // ignore: use_build_context_synchronously
+                                bool seen = false;
 
-                          } else {
-                            print(data.publicUserProfileModel.username);
-                            // ignore: use_build_context_synchronously
-                            PageRouting.pushToPage(
-                                context,
-                                ChatScreen(
-                                  user: chatData,
-                                  chat: empty,
-                                  dp: data.publicUserProfileModel.profilephoto,
-                                  mode: data.publicUserProfileModel.mode,
-                                ));
-                          }
+                                await Future.forEach(chatWare.chatList,
+                                    (element) async {
+                                  // ignore: unrelated_type_equality_checks
+                                  if (element.userTwo ==
+                                      data.publicUserProfileModel.username) {
+                                    seen = true;
+                                    chat = element;
+                                    PageRouting.pushToPage(
+                                        context,
+                                        ChatScreen(
+                                          user: element,
+                                          chat: element.conversations!,
+                                          dp: data.publicUserProfileModel
+                                              .profilephoto,
+                                          mode:
+                                              data.publicUserProfileModel.mode,
+                                          isHome: false,
+                                          verified: data
+                                              .publicUserProfileModel.verified!,
+                                        ));
+                                    return;
+                                  } else if (element.userOne ==
+                                      data.publicUserProfileModel.username) {
+                                    chat = element;
+                                    seen = true;
+                                    PageRouting.pushToPage(
+                                        context,
+                                        ChatScreen(
+                                          user: element,
+                                          chat: element.conversations!,
+                                          dp: data.publicUserProfileModel
+                                              .profilephoto,
+                                          mode: data.publicUserProfileModel
+                                              .profilephoto,
+                                          isHome: false,
+                                          verified: data
+                                              .publicUserProfileModel.verified!,
+                                        ));
+                                    return;
+                                  } else {
+                                    chat = ChatData();
+                                  }
+                                });
 
-                          // chat = chatWare.chatList
-                          //     // ignore: unrelated_type_equality_checks
-                          //     .where((element) {
-                          //       final val = element.conversations!.last == "kelt"
-                          //           ? element.userTwo
-                          //           : element.userOne;
-                          //       final val2 = data.publicUserProfileModel.username;
+                                if (seen) {
+                                  return;
+                                  // ignore: use_build_context_synchronously
 
-                          //       return val == val2;
-                          //     })
-                          //     .toList()
-                          //     .single;
+                                } else {
+                                  List<ChatData> checker = chatWareStream
+                                      .chatList2
+                                      .where((element) =>
+                                          element.userTwo ==
+                                          data.publicUserProfileModel.username)
+                                      .toList();
+                                  List<ChatData> checker2 = chatWareStream
+                                      .chatList2
+                                      .where((element) =>
+                                          element.userOne ==
+                                          data.publicUserProfileModel.username)
+                                      .toList();
+                                  if (checker.isNotEmpty && checker2.isEmpty) {
+                                    // ignore: use_build_context_synchronously
+                                    PageRouting.pushToPage(
+                                        context,
+                                        ChatScreen(
+                                          user: checker.first,
+                                          chat: checker.first.conversations!,
+                                          dp: data.publicUserProfileModel
+                                              .profilephoto,
+                                          mode:
+                                              data.publicUserProfileModel.mode,
+                                          isHome: false,
+                                          verified: data
+                                              .publicUserProfileModel.verified!,
+                                        ));
+                                  } else if (checker.isEmpty &&
+                                      checker2.isNotEmpty) {
+                                    // ignore: use_build_context_synchronously
+                                    PageRouting.pushToPage(
+                                        context,
+                                        ChatScreen(
+                                          user: checker2.first,
+                                          chat: checker2.first.conversations!,
+                                          dp: data.publicUserProfileModel
+                                              .profilephoto,
+                                          mode:
+                                              data.publicUserProfileModel.mode,
+                                          isHome: false,
+                                          verified: data
+                                              .publicUserProfileModel.verified!,
+                                        ));
+                                  } else {
+                                    // ignore: use_build_context_synchronously
 
-                          // if (chat.conversations!.isNotEmpty) {
-                          //   // ignore: use_build_context_synchronously
-                          //   PageRouting.pushToPage(context,
-                          //       ChatScreen(user: chat, chat: chat.conversations!));
-                          // } else {
-                          //   // ignore: use_build_context_synchronously
-                          //   PageRouting.pushToPage(
-                          //       context, ChatScreen(user: chatData, chat: empty));
-                          // }
+                                    // ignore: use_build_context_synchronously
+                                    PageRouting.pushToPage(
+                                        context,
+                                        ChatScreen(
+                                          user: chatData,
+                                          chat: empty,
+                                          dp: data.publicUserProfileModel
+                                              .profilephoto,
+                                          mode:
+                                              data.publicUserProfileModel.mode,
+                                          isHome: false,
+                                          verified: data
+                                              .publicUserProfileModel.verified!,
+                                        ));
+                                  }
 
-                          print("not exist");
+                                  // ignore: use_build_context_synchronously
 
-                          // PageRouting.pushToPage(
-                          //     context, ChatScreen(user: user, chat: chat));
-                        },
-                        color: "#FFC1D6",
-                      ),
+                                }
+
+                                // chat = chatWare.chatList
+                                //     // ignore: unrelated_type_equality_checks
+                                //     .where((element) {
+                                //       final val = element.conversations!.last == "kelt"
+                                //           ? element.userTwo
+                                //           : element.userOne;
+                                //       final val2 = data.publicUserProfileModel.username;
+
+                                //       return val == val2;
+                                //     })
+                                //     .toList()
+                                //     .single;
+
+                                // if (chat.conversations!.isNotEmpty) {
+                                //   // ignore: use_build_context_synchronously
+                                //   PageRouting.pushToPage(context,
+                                //       ChatScreen(user: chat, chat: chat.conversations!));
+                                // } else {
+                                //   // ignore: use_build_context_synchronously
+                                //   PageRouting.pushToPage(
+                                //       context, ChatScreen(user: chatData, chat: empty));
+                                // }
+
+                                emitter("not exist");
+
+                                // PageRouting.pushToPage(
+                                //     context, ChatScreen(user: user, chat: chat));
+                              },
+                              color: "#FFC1D6",
+                            ),
                       const SizedBox(
                         height: 5,
                       ),
                       Container(
-                        width: 70,
+                        width: 50,
                         alignment: Alignment.center,
-                        //color: Colors.amber,
+                        //  color: Colors.amber,
                         child: AppText(
-                          text: "Message",
+                          text: chatWareStream.loadStatus ? "" : "Message",
                           fontWeight: FontWeight.w400,
-                          size: 12,
+                          size: 10,
                           color: HexColor("#797979"),
                         ),
                       ),
@@ -340,18 +417,58 @@ class UserProfileActions extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 InkWell(
+                  //   onTap: () => PageRouting.pushToPage(context, const EditProfile()),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      ProfileActionButtonNotThisUsers(
+                        icon: "assets/icon/email.svg",
+                        isSwipe: true,
+                        onClick: () async {
+                          UserProfileWare data = Provider.of<UserProfileWare>(
+                              context,
+                              listen: false);
+                          if (data.publicUserProfileModel.email == null ||
+                              data.publicUserProfileModel.email!.isEmpty) {
+                            showToast2(
+                                context, "Can't reach this user at the moment",
+                                isError: true);
+                          } else {
+                            final url =
+                                'mailTo:${data.publicUserProfileModel.email}?subject=${Uri.encodeFull("From a follower on Macanacki")}&body=${Uri.encodeFull("Sending from my device")}';
+
+                            UrlLaunchController.launchInWebViewOrVC(
+                                Uri.parse(url));
+                          }
+                        },
+                        color: "#FFC1D6",
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Container(
+                         constraints: BoxConstraints(maxWidth: 70, minWidth: 50) ,
+                        alignment: Alignment.center,
+                        // color: Colors.amber,
+                        child: AppText(
+                          text: "Email",
+                          fontWeight: FontWeight.w400,
+                          size: 10,
+                          color: HexColor("#797979"),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                InkWell(
                   onTap: () async {
-                    print("dfdd");
                     await followAction(context, data.publicUserProfileModel.id!,
                         data.publicUserProfileModel.username!);
                   },
                   child: AnimatedContainer(
                     duration: Duration(seconds: 2),
                     child: Column(
-                      mainAxisAlignment:
-                          data.publicUserProfileModel.gender == "Business"
-                              ? MainAxisAlignment.end
-                              : MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         ProfileActionButtonNotThisUsers(
                           icon: "assets/icon/follow.svg",
@@ -372,7 +489,7 @@ class UserProfileActions extends StatelessWidget {
                           height: 5,
                         ),
                         AnimatedContainer(
-                          width: 70,
+                         constraints: BoxConstraints(maxWidth: 70, minWidth: 50) ,
                           alignment: Alignment.center,
                           //color: Colors.amber,
                           duration: Duration(seconds: 2),
@@ -382,13 +499,13 @@ class UserProfileActions extends StatelessWidget {
                               ? AppText(
                                   text: "Follow",
                                   fontWeight: FontWeight.w400,
-                                  size: 12,
+                                  size: 10,
                                   color: HexColor("#797979"),
                                 )
                               : AppText(
                                   text: "Unfollow",
                                   fontWeight: FontWeight.w400,
-                                  size: 12,
+                                  size: 10,
                                   color: HexColor("#797979"),
                                 ),
                         ),
@@ -399,161 +516,232 @@ class UserProfileActions extends StatelessWidget {
                 InkWell(
                   onTap: () {},
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      const SizedBox(
-                        height: 4,
-                      ),
-                      ProfileActionButtonNotThisUsers(
-                        isSwipe: false,
-                        icon: "assets/icon/userchat.svg",
-                        onClick: () async {
-                          late ChatData chat;
-                          ChatWare chatWare =
-                              Provider.of<ChatWare>(context, listen: false);
-                          List<Conversation> empty = [];
+                      // const SizedBox(
+                      //   height: 4,
+                      // ),
+                      chatWareStream.loadStatus
+                          ? Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Loader(color: HexColor(primaryColor)),
+                            )
+                          : ProfileActionButtonNotThisUsers(
+                              isSwipe: false,
+                              icon: "assets/icon/userchat.svg",
+                              onClick: () async {
+                                ChatWare chatWare = Provider.of<ChatWare>(
+                                    context,
+                                    listen: false);
+                                await ChatController.retrievChatController(
+                                    context, true);
+                                late ChatData chat;
 
-                          late int statusId;
-                          late int id;
-                          late ChatData chatData;
+                                List<Conversation> empty = [];
 
-                          if (chatWare.chatList.isEmpty) {
-                            statusId = 0;
+                                late int statusId;
+                                late int id;
+                                late ChatData chatData;
 
-                            id = 0;
+                                if (chatWare.chatList.isEmpty) {
+                                  statusId = 0;
 
-                            chatData = ChatData(
-                              status: statusId,
-                              id: id,
-                              userOne: data.userProfileModel.username,
-                              userOneProfilePhoto:
-                                  data.userProfileModel.profilephoto,
-                              createdAt: DateTime.now(),
-                              updatedAt: DateTime.now(),
-                              blockedBy: null,
-                              userTwo: data.publicUserProfileModel.username,
-                              userTwoProfilePhoto:
-                                  data.publicUserProfileModel.profilephoto,
-                              conversations: empty,
-                            );
-                          } else {
-                            statusId = chatWare.chatList.first.status! + 1;
+                                  id = 0;
 
-                            id = chatWare.chatList.first.id! + 1;
-
-                            chatData = ChatData(
-                              status: statusId,
-                              id: id,
-                              userOne: data.userProfileModel.username,
-                              userOneProfilePhoto:
-                                  data.userProfileModel.profilephoto,
-                              createdAt: DateTime.now(),
-                              updatedAt: DateTime.now(),
-                              blockedBy: null,
-                              userTwo: data.publicUserProfileModel.username,
-                              userTwoProfilePhoto:
-                                  data.publicUserProfileModel.profilephoto,
-                              conversations: empty,
-                            );
-                          }
-
-                          bool seen = false;
-
-                          await Future.forEach(chatWare.chatList,
-                              (element) async {
-                            // ignore: unrelated_type_equality_checks
-                            if (element.userTwo ==
-                                data.publicUserProfileModel.username) {
-                              seen = true;
-                              chat = element;
-                              PageRouting.pushToPage(
-                                  context,
-                                  ChatScreen(
-                                    user: element,
-                                    chat: element.conversations!,
-                                    dp: data
+                                  chatData = ChatData(
+                                    status: statusId,
+                                    id: id,
+                                    userOne: data.userProfileModel.username,
+                                    userOneProfilePhoto:
+                                        data.userProfileModel.profilephoto,
+                                    createdAt: DateTime.now(),
+                                    updatedAt: DateTime.now(),
+                                    blockedBy: null,
+                                    userTwo:
+                                        data.publicUserProfileModel.username,
+                                    userTwoProfilePhoto: data
                                         .publicUserProfileModel.profilephoto,
-                                    mode: data.publicUserProfileModel.mode,
-                                  ));
-                              return;
-                            } else if (element.userOne ==
-                                data.publicUserProfileModel.username) {
-                              chat = element;
-                              seen = true;
-                              PageRouting.pushToPage(
-                                  context,
-                                  ChatScreen(
-                                    user: element,
-                                    chat: element.conversations!,
-                                    dp: data
+                                    conversations: empty,
+                                  );
+                                } else {
+                                  statusId =
+                                      chatWare.chatList.first.status! + 1;
+
+                                  id = chatWare.chatList.first.id! + 1;
+
+                                  chatData = ChatData(
+                                    status: statusId,
+                                    id: id,
+                                    userOne: data.userProfileModel.username,
+                                    userOneProfilePhoto:
+                                        data.userProfileModel.profilephoto,
+                                    createdAt: DateTime.now(),
+                                    updatedAt: DateTime.now(),
+                                    blockedBy: null,
+                                    userTwo:
+                                        data.publicUserProfileModel.username,
+                                    userTwoProfilePhoto: data
                                         .publicUserProfileModel.profilephoto,
-                                    mode: data
-                                        .publicUserProfileModel.profilephoto,
-                                  ));
-                              return;
-                            } else {
-                              chat = ChatData();
-                            }
-                          });
+                                    conversations: empty,
+                                  );
+                                }
 
-                          if (seen) {
-                            return;
-                            // ignore: use_build_context_synchronously
+                                bool seen = false;
 
-                          } else {
-                            print(data.publicUserProfileModel.username);
-                            // ignore: use_build_context_synchronously
-                            PageRouting.pushToPage(
-                                context,
-                                ChatScreen(
-                                  user: chatData,
-                                  chat: empty,
-                                  dp: data.publicUserProfileModel.profilephoto,
-                                  mode: data.publicUserProfileModel.mode,
-                                ));
-                          }
+                                await Future.forEach(chatWare.chatList,
+                                    (element) async {
+                                  // ignore: unrelated_type_equality_checks
+                                  if (element.userTwo ==
+                                      data.publicUserProfileModel.username) {
+                                    seen = true;
+                                    chat = element;
+                                    PageRouting.pushToPage(
+                                        context,
+                                        ChatScreen(
+                                          user: element,
+                                          chat: element.conversations!,
+                                          dp: data.publicUserProfileModel
+                                              .profilephoto,
+                                          mode:
+                                              data.publicUserProfileModel.mode,
+                                          isHome: false,
+                                          verified: data
+                                              .publicUserProfileModel.verified!,
+                                        ));
+                                    return;
+                                  } else if (element.userOne ==
+                                      data.publicUserProfileModel.username) {
+                                    chat = element;
+                                    seen = true;
+                                    PageRouting.pushToPage(
+                                        context,
+                                        ChatScreen(
+                                          user: element,
+                                          chat: element.conversations!,
+                                          dp: data.publicUserProfileModel
+                                              .profilephoto,
+                                          mode: data.publicUserProfileModel
+                                              .profilephoto,
+                                          isHome: false,
+                                          verified: data
+                                              .publicUserProfileModel.verified!,
+                                        ));
+                                    return;
+                                  } else {
+                                    chat = ChatData();
+                                  }
+                                });
 
-                          // chat = chatWare.chatList
-                          //     // ignore: unrelated_type_equality_checks
-                          //     .where((element) {
-                          //       final val = element.conversations!.last == "kelt"
-                          //           ? element.userTwo
-                          //           : element.userOne;
-                          //       final val2 = data.publicUserProfileModel.username;
+                                if (seen) {
+                                  return;
+                                  // ignore: use_build_context_synchronously
 
-                          //       return val == val2;
-                          //     })
-                          //     .toList()
-                          //     .single;
+                                } else {
+                                  List<ChatData> checker = chatWareStream
+                                      .chatList2
+                                      .where((element) =>
+                                          element.userTwo ==
+                                          data.publicUserProfileModel.username)
+                                      .toList();
+                                  List<ChatData> checker2 = chatWareStream
+                                      .chatList2
+                                      .where((element) =>
+                                          element.userOne ==
+                                          data.publicUserProfileModel.username)
+                                      .toList();
+                                  if (checker.isNotEmpty && checker2.isEmpty) {
+                                    // ignore: use_build_context_synchronously
+                                    PageRouting.pushToPage(
+                                        context,
+                                        ChatScreen(
+                                          user: checker.first,
+                                          chat: checker.first.conversations!,
+                                          dp: data.publicUserProfileModel
+                                              .profilephoto,
+                                          mode:
+                                              data.publicUserProfileModel.mode,
+                                          isHome: false,
+                                          verified: data
+                                              .publicUserProfileModel.verified!,
+                                        ));
+                                  } else if (checker.isEmpty &&
+                                      checker2.isNotEmpty) {
+                                    // ignore: use_build_context_synchronously
+                                    PageRouting.pushToPage(
+                                        context,
+                                        ChatScreen(
+                                          user: checker2.first,
+                                          chat: checker2.first.conversations!,
+                                          dp: data.publicUserProfileModel
+                                              .profilephoto,
+                                          mode:
+                                              data.publicUserProfileModel.mode,
+                                          isHome: false,
+                                          verified: data
+                                              .publicUserProfileModel.verified!,
+                                        ));
+                                  } else {
+                                    // ignore: use_build_context_synchronously
 
-                          // if (chat.conversations!.isNotEmpty) {
-                          //   // ignore: use_build_context_synchronously
-                          //   PageRouting.pushToPage(context,
-                          //       ChatScreen(user: chat, chat: chat.conversations!));
-                          // } else {
-                          //   // ignore: use_build_context_synchronously
-                          //   PageRouting.pushToPage(
-                          //       context, ChatScreen(user: chatData, chat: empty));
-                          // }
+                                    // ignore: use_build_context_synchronously
+                                    PageRouting.pushToPage(
+                                        context,
+                                        ChatScreen(
+                                          user: chatData,
+                                          chat: empty,
+                                          dp: data.publicUserProfileModel
+                                              .profilephoto,
+                                          mode:
+                                              data.publicUserProfileModel.mode,
+                                          isHome: false,
+                                          verified: data
+                                              .publicUserProfileModel.verified!,
+                                        ));
+                                  }
 
-                          print("not exist");
+                                  // ignore: use_build_context_synchronously
 
-                          // PageRouting.pushToPage(
-                          //     context, ChatScreen(user: user, chat: chat));
-                        },
-                        color: "#FFC1D6",
-                      ),
+                                }
+
+                                // chat = chatWare.chatList
+                                //     // ignore: unrelated_type_equality_checks
+                                //     .where((element) {
+                                //       final val = element.conversations!.last == "kelt"
+                                //           ? element.userTwo
+                                //           : element.userOne;
+                                //       final val2 = data.publicUserProfileModel.username;
+
+                                //       return val == val2;
+                                //     })
+                                //     .toList()
+                                //     .single;
+
+                                // if (chat.conversations!.isNotEmpty) {
+                                //   // ignore: use_build_context_synchronously
+                                //   PageRouting.pushToPage(context,
+                                //       ChatScreen(user: chat, chat: chat.conversations!));
+                                // } else {
+                                //   // ignore: use_build_context_synchronously
+                                //   PageRouting.pushToPage(
+                                //       context, ChatScreen(user: chatData, chat: empty));
+                                // }
+
+                                // PageRouting.pushToPage(
+                                //     context, ChatScreen(user: user, chat: chat));
+                              },
+                              color: "#FFC1D6",
+                            ),
                       const SizedBox(
                         height: 5,
                       ),
                       Container(
-                        width: 70,
+                        constraints: BoxConstraints(maxWidth: 70, minWidth: 50) ,
                         alignment: Alignment.center,
                         //color: Colors.amber,
                         child: AppText(
-                          text: "Message",
+                          text: chatWareStream.loadStatus ? "" : "Message",
                           fontWeight: FontWeight.w400,
-                          size: 12,
+                          size: 10,
                           color: HexColor("#797979"),
                         ),
                       ),

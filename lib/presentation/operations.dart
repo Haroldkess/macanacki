@@ -2,19 +2,29 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/allNavigation.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
-import 'package:makanaki/presentation/screens/home/profile/createpost/create_post_screen.dart';
-import 'package:makanaki/presentation/uiproviders/dob/dob_provider.dart';
-import 'package:makanaki/presentation/uiproviders/screen/comment_provider.dart';
-import 'package:makanaki/presentation/uiproviders/screen/find_people_provider.dart';
-import 'package:makanaki/presentation/uiproviders/screen/gender_provider.dart';
-import 'package:makanaki/presentation/widgets/text.dart';
-import 'package:makanaki/services/controllers/login_controller.dart';
-import 'package:makanaki/services/controllers/mode_controller.dart';
-import 'package:makanaki/services/middleware/gender_ware.dart';
-import 'package:makanaki/services/temps/temps_id.dart';
+import 'package:macanacki/presentation/allNavigation.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/screens/home/profile/createpost/create_post_screen.dart';
+import 'package:macanacki/presentation/screens/onboarding/business/business_info.dart';
+import 'package:macanacki/presentation/screens/onboarding/business/business_verification.dart';
+import 'package:macanacki/presentation/screens/onboarding/business/sub_plan.dart';
+import 'package:macanacki/presentation/uiproviders/dob/dob_provider.dart';
+import 'package:macanacki/presentation/uiproviders/screen/comment_provider.dart';
+import 'package:macanacki/presentation/uiproviders/screen/find_people_provider.dart';
+import 'package:macanacki/presentation/uiproviders/screen/gender_provider.dart';
+import 'package:macanacki/presentation/widgets/debug_emitter.dart';
+import 'package:macanacki/presentation/widgets/dialogue.dart';
+import 'package:macanacki/presentation/widgets/snack_msg.dart';
+import 'package:macanacki/presentation/widgets/text.dart';
+import 'package:macanacki/services/controllers/login_controller.dart';
+import 'package:macanacki/services/controllers/mode_controller.dart';
+import 'package:macanacki/services/middleware/gender_ware.dart';
+import 'package:macanacki/services/middleware/swipe_ware.dart';
+import 'package:macanacki/services/middleware/user_profile_ware.dart';
+import 'package:macanacki/services/temps/temps_id.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -22,8 +32,13 @@ import '../model/feed_post_model.dart';
 import '../model/gender_model.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../services/controllers/plan_controller.dart';
+import '../services/controllers/user_profile_controller.dart';
+import '../services/middleware/chat_ware.dart';
 import '../services/middleware/create_post_ware.dart';
 import '../services/middleware/facial_ware.dart';
+import '../services/middleware/plan_ware.dart';
+import 'constants/params.dart';
 
 class Operations {
   static Future delayScreen(BuildContext context, Widget page) async {
@@ -118,12 +133,12 @@ class Operations {
 
       if (file != null) {
         imageFile = file;
-        log(imageFile.path);
+        emitter(imageFile.path);
         facial.addFacialFile(imageFile);
         // facial.isLoading(true);
       }
     } catch (e) {
-      log(e.toString());
+      emitter(e.toString());
     }
   }
 
@@ -138,16 +153,17 @@ class Operations {
 
       if (file != null) {
         imageFile = file;
-        log(imageFile.path);
+        // emitter(imageFile.path);
         facial.addPhoto(imageFile);
         // facial.isLoading(true);
       }
     } catch (e) {
-      log(e.toString());
+      emitter(e.toString());
     }
   }
 
   static Future changePhotoFromGallery(BuildContext context) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
     final ImagePicker picker = ImagePicker();
     late XFile? imageFile;
     FacialWare facial = Provider.of<FacialWare>(context, listen: false);
@@ -158,26 +174,76 @@ class Operations {
 
       if (file != null) {
         imageFile = file;
-        log(imageFile.path);
+         pref.setString(temPhotoKey, imageFile.path);
+        // emitter(imageFile.path);
         facial.addDp(imageFile);
+       // pref.setString(temPhotoKey, imageFile.path);
         // facial.isLoading(true);
       }
     } catch (e) {
-      log(e.toString());
+      emitter(e.toString());
     }
   }
 
   static Future pickForPost(BuildContext context) async {
     CreatePostWare picked = Provider.of<CreatePostWare>(context, listen: false);
+    UserProfileWare user = Provider.of<UserProfileWare>(context, listen: false);
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['jpg', 'mp4'],
-      );
+          type: FileType.image,
+
+          //   allowedExtensions: ['jpg','png','jpeg'],
+          allowMultiple: true);
 
       if (result != null) {
-        File file = File(result.files.single.path!);
-        log(file.path.toString());
+        List<File> file = result.paths.map((path) => File(path!)).toList();
+
+        if (file.length > 10) {
+          // ignore: use_build_context_synchronously
+          showToast2(context, "You can only select maximum of 10 media files",
+              isError: true);
+          return;
+        }
+
+        // if (user.userProfileModel.verified == null ||
+        //     (user.userProfileModel.verified == 0 &&
+        //         user.userProfileModel.gender != "Business")) {
+        //   emitter("selected file lenght ${file.length.toString()}");
+        //   if (file.length > 1) {
+        //     // ignore: use_build_context_synchronously
+        //     errors(context);
+
+        //     return;
+        //   }
+        // } else {
+        //   if ((user.userProfileModel.verified == 1 &&
+        //       user.userProfileModel.gender == "Business")) {
+        //     if (file.length > 10) {
+        //       // ignore: use_build_context_synchronously
+        //       showToast2(
+        //           context, "You can only select maximum of 10 media files",
+        //           isError: true);
+        //       return;
+        //     }
+        //   } else if ((user.userProfileModel.verified == 0 &&
+        //       user.userProfileModel.gender == "Business")) {
+        //     if (file.length > 1) {
+        //       // ignore: use_build_context_synchronously
+        //       errors(context);
+
+        //       return;
+        //     }
+        //   } else {
+        //     if (file.length > 1) {
+        //       // ignore: use_build_context_synchronously
+        //       errors(context);
+
+        //       return;
+        //     }
+        //   }
+        // }
+
+        //  emitter(file.first.path.toString());
         picked.addFile(file);
         // ignore: use_build_context_synchronously
         PageRouting.pushToPage(context, const CreatePostScreen());
@@ -185,13 +251,29 @@ class Operations {
         // User canceled the picker
       }
     } catch (e) {
-      log(e.toString());
+      emitter(e.toString());
+    }
+  }
+
+  static Future errors(context) async {
+    showToast2(context, "You can only select maximum of 1 media files",
+        isError: true);
+
+    await Future.delayed(Duration(seconds: 4));
+    // ignore: use_build_context_synchronously
+    try {
+      // ignore: use_build_context_synchronously
+      showToast2(context, "Become a verified Business to post more media files",
+          isError: false);
+    } catch (e) {
+      showToastLater("Become a verified Business to post more media files");
     }
   }
 
   static Future commentOperation(BuildContext context, bool isAdd,
       [List<dynamic>? commentList, Comment? data]) async {
     StoreComment comment = Provider.of<StoreComment>(context, listen: false);
+
     if (isAdd == false) {
       comment.addAllComments(commentList!);
     } else {
@@ -220,6 +302,12 @@ class Operations {
       realTime = "$value ${time.hour}:${time.minute} $timeOfDay";
     } else {
       realTime = value;
+    }
+
+    if (realTime.contains("about")) {
+      var val = realTime.split("about");
+
+      realTime = val.last;
     }
 
     return realTime;
@@ -263,5 +351,209 @@ class Operations {
     });
 
     return isClolsing;
+  }
+
+  static Future pickId(BuildContext context, bool isUser) async {
+    CreatePostWare picked = Provider.of<CreatePostWare>(context, listen: false);
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+          type: FileType.custom,
+          allowedExtensions: ['jpg', 'pdf'],
+          allowMultiple: false);
+
+      if (result != null) {
+        List<File> file = result.paths.map((path) => File(path!)).toList();
+        if (file.length > 1) {
+          // ignore: use_build_context_synchronously
+          showToast2(context, "You can only select maximum of 1 files",
+              isError: true);
+          return;
+        }
+
+        //  emitter(file.first.path.toString());
+        if (isUser) {
+          picked.addIdUser(file.first);
+        } else {
+          picked.addIdBusiness(file.first);
+        }
+      } else {
+        // User canceled the picker
+      }
+    } catch (e) {
+      emitter(e.toString());
+    }
+  }
+
+  static Future stopCommentLoad(context) async {
+    CreatePostWare ware = Provider.of<CreatePostWare>(context, listen: false);
+    ware.isLoading2(false);
+  }
+
+  static Future<void> searchInConversations(
+      BuildContext context, String text) async {
+    ChatWare action = Provider.of<ChatWare>(context, listen: false);
+    action.addToSearch(text);
+  }
+
+  static Future controlSystemColor() async {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        systemNavigationBarIconBrightness: Brightness.dark,
+        systemNavigationBarColor: HexColor(backgroundColor)));
+  }
+
+  static Future<void> filterLocaton(context,
+      [String? country, state, city]) async {
+    SwipeWare ware = Provider.of<SwipeWare>(context, listen: false);
+    if (country != null) {
+      ware.filterByCountry(country);
+    }
+    if (state != null) {
+      ware.filterByState(state);
+    }
+    if (city != null) {
+      ware.filterByCity(city);
+    }
+  }
+
+  static Future checkNewlyVerified() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    if (pref.containsKey(isVerifiedKey)) {
+      if (pref.getBool(isVerifiedKey) == true &&
+          pref.getBool(isVerifiedFirstKey) == false) {
+        Get.dialog(
+            verifiedDialog(
+                title: "Congratulations",
+                message: "Your account has been verified.",
+                confirmText: "Okay",
+                cancelText: "Go back",
+                onPressedCancel: () {
+                  pref.setBool(isVerifiedFirstKey, true);
+                  Get.back();
+                },
+                onPressed: () {
+                  pref.setBool(isVerifiedFirstKey, true);
+                  Get.back();
+                }),
+            barrierDismissible: false);
+      } else {
+        return;
+      }
+    } else {
+      return;
+    }
+  }
+
+  static Future verifyOperation(context) async {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      UserProfileController.retrievProfileController(context, true);
+    });
+    PlanWare ware = Provider.of<PlanWare>(context, listen: false);
+    UserProfileWare user = Provider.of<UserProfileWare>(context, listen: false);
+    GenderList gender = GenderList(id: 2, name: "Business", selected: true);
+    PlanController.retrievPlanController(context, true);
+    if (ware.plans.isEmpty) {
+      PlanController.retrievPlanController(context, true);
+    }
+    if (user.userProfileModel.gender == "Business" &&
+        user.userProfileModel.verified == 0 &&
+        user.userProfileModel.verification == null) {
+      PageRouting.pushToPage(
+          context,
+          BusinessInfo(
+            data: gender,
+            action: "both",
+          ));
+
+      // ignore: use_build_context_synchronously
+      // PageRouting.pushToPage(
+      //     context, const SubscriptionPlansBusiness());
+    } else if (user.userProfileModel.gender != "Business" &&
+        user.userProfileModel.verified == 0 &&
+        user.userProfileModel.verification == null) {
+      PageRouting.pushToPage(
+          context,
+          BusinessVerification(
+            gender: gender,
+            isBusiness: false,
+            action: "both",
+          ));
+    } else if (user.userProfileModel.gender != "Business" &&
+        user.userProfileModel.verified == 2 &&
+        user.userProfileModel.verification != null) {
+      emitter("upload without payment");
+      PageRouting.pushToPage(
+          context,
+          BusinessVerification(
+            gender: gender,
+            isBusiness: false,
+            action: "upload",
+          ));
+      //upload without payment
+    } else if (user.userProfileModel.gender == "Business" &&
+        user.userProfileModel.verified == 2 &&
+        user.userProfileModel.verification != null) {
+      //upload without payment
+      PageRouting.pushToPage(
+          context,
+          BusinessInfo(
+            data: gender,
+            action: "upload",
+          ));
+      emitter("upload without payment");
+    } else if (user.userProfileModel.gender == "Business" &&
+        user.userProfileModel.verified == 1 &&
+        user.userProfileModel.activePlan == sub) {
+      // payment only
+      emitter("payment only");
+      PageRouting.pushToPage(
+          context,
+          const SubscriptionPlansBusiness(
+            isBusiness: true,
+            isSubmiting: "pay",
+          ));
+    } else if (user.userProfileModel.gender != "Business" &&
+        user.userProfileModel.verified == 1 &&
+        user.userProfileModel.activePlan == sub) {
+      // payment only
+      PageRouting.pushToPage(
+          context,
+          const SubscriptionPlansBusiness(
+            isBusiness: false,
+            isSubmiting: "pay",
+          ));
+      emitter("payment only");
+    } else {
+      if (user.userProfileModel.verified == 1 &&
+          user.userProfileModel.activePlan != sub) {
+        Get.back();
+        Get.dialog(
+          verifiedDialog(
+              title: "Congratulations",
+              message: "Your account has been verified.",
+              confirmText: "Okay",
+              cancelText: "Go back",
+              onPressedCancel: () {
+                Get.back();
+              },
+              onPressed: () {
+                Get.back();
+              }),
+        );
+      } else {
+        Get.back();
+        Get.dialog(confirmationDialog(
+            title: "Verification",
+            message:
+                "Your documenets are under review. This will take 48 hours or 5 working days to be confirmed.",
+            confirmText: "Okay",
+            cancelText: "Go back",
+            onPressedCancel: () {
+              Get.back();
+            },
+            onPressed: () {
+              Get.back();
+            }));
+      }
+    }
   }
 }

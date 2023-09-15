@@ -1,13 +1,16 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexagon/hexagon.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/constants/params.dart';
-import 'package:makanaki/presentation/widgets/text.dart';
-import 'package:makanaki/services/middleware/user_profile_ware.dart';
+import 'package:macanacki/presentation/constants/params.dart';
+import 'package:macanacki/presentation/widgets/text.dart';
+import 'package:macanacki/services/middleware/user_profile_ware.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../constants/colors.dart';
+import '../../../../widgets/loader.dart';
 
 class ProfileImageAndName extends StatelessWidget {
   const ProfileImageAndName({super.key});
@@ -18,7 +21,7 @@ class ProfileImageAndName extends StatelessWidget {
     var width = MediaQuery.of(context).size.width;
     var size = MediaQuery.of(context).size;
     var padding = 8.0;
-    var w = (size.width - 4 * 1) / 3.5;
+    var w = 100.0;
     UserProfileWare stream = context.watch<UserProfileWare>();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -47,8 +50,22 @@ class ProfileImageAndName extends StatelessWidget {
               child: AspectRatio(
                   aspectRatio: HexagonType.POINTY.ratio,
                   child: Center(
-                      child: Image.network(
-                          stream.userProfileModel.profilephoto ?? ""))),
+                    child: CachedNetworkImage(
+                      imageUrl: stream.userProfileModel.profilephoto ?? "",
+                      progressIndicatorBuilder:
+                          (context, url, downloadProgress) => Center(
+                              child: Loader(
+                        color: HexColor(primaryColor),
+                      )),
+                      errorWidget: (context, url, error) => Icon(
+                        Icons.error,
+                        color: HexColor(primaryColor),
+                      ),
+                    ),
+
+                    // Image.network(
+                    //     stream.userProfileModel.profilephoto ?? "")
+                  )),
             ),
           ],
         ),
@@ -65,23 +82,39 @@ class ProfileImageAndName extends StatelessWidget {
               : Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Expanded(
+                    Container(
+                      constraints: BoxConstraints(maxWidth: 210),
                       child: AppText(
                         text: "${stream.userProfileModel.username}",
                         color: HexColor(darkColor),
-                        size: 18,
+                        size: 16,
                         letterSpacing: 0.0,
                         fontWeight: FontWeight.w800,
                         align: TextAlign.center,
                         maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                        overflow:
+                            stream.userProfileModel.username.toString().length >
+                                    20
+                                ? TextOverflow.ellipsis
+                                : TextOverflow.fade,
                       ),
-                    )
-                    // Image.asset(
-                    //   "assets/pic/verified.png",
-                    //   height: 27,
-                    //   width: 27,
-                    // )
+                    ),
+                    stream.userProfileModel.verified == 1 &&
+                            stream.userProfileModel.activePlan != sub
+                        ? SvgPicture.asset(
+                            "assets/icon/badge.svg",
+                            height: 15,
+                            width: 15,
+                          )
+                        : const SizedBox.shrink()
+                    // stream.userProfileModel.verified == 0 ||
+                    //         stream.userProfileModel.verified == null
+                    //     ? const SizedBox.shrink()
+                    //     : SvgPicture.asset(
+                    //         "assets/icon/badge.svg",
+                    //         height: 15,
+                    //         width: 15,
+                    //       )
                   ],
                 ),
         )
@@ -149,8 +182,8 @@ class ProfileImageAndNameShimmer extends StatelessWidget {
                     RichText(
                         overflow: TextOverflow.ellipsis,
                         text: TextSpan(
-                            text: "Makanaki, ",
-                            style: GoogleFonts.spartan(
+                            text: "macanacki, ",
+                            style: GoogleFonts.leagueSpartan(
                               color: HexColor(darkColor),
                               fontSize: 24,
                               letterSpacing: 0.0,
@@ -159,7 +192,7 @@ class ProfileImageAndNameShimmer extends StatelessWidget {
                             children: [
                               TextSpan(
                                 text: " ",
-                                style: GoogleFonts.spartan(
+                                style: GoogleFonts.leagueSpartan(
                                     color: HexColor("#C0C0C0"), fontSize: 24),
                               )
                             ])),

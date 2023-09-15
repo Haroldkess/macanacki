@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
-import 'package:makanaki/presentation/widgets/text.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/widgets/text.dart';
 
 class EditAboutMe extends StatelessWidget {
-   EditAboutMe({super.key, required this.about});
-    TextEditingController about;
+  EditAboutMe({super.key, required this.about});
+  TextEditingController about;
 
   @override
   Widget build(BuildContext context) {
@@ -34,9 +34,9 @@ class EditAboutMe extends StatelessWidget {
               shape: BoxShape.rectangle,
               borderRadius: const BorderRadius.all(Radius.circular(0))),
           child: Padding(
-            padding: const EdgeInsets.only(left: 10, right: 10, bottom: 30),
+            padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
             child: TextFormField(
-              controller:  about,
+              controller: about,
               maxLength: 120,
               cursorColor: HexColor(primaryColor),
               keyboardType: TextInputType.text,

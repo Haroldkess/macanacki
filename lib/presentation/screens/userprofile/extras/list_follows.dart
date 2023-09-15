@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/model/public_profile_model.dart';
-import 'package:makanaki/presentation/model/ui_model.dart';
-import 'package:makanaki/presentation/screens/home/profile/profileextras/follow_tile.dart';
-import 'package:makanaki/presentation/screens/userprofile/extras/public_tile.dart';
+import 'package:macanacki/model/public_profile_model.dart';
+import 'package:macanacki/presentation/model/ui_model.dart';
+import 'package:macanacki/presentation/screens/home/profile/profileextras/follow_tile.dart';
+import 'package:macanacki/presentation/screens/userprofile/extras/public_tile.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../../model/following_model.dart';
 import '../../../constants/colors.dart';
+import '../../../uiproviders/screen/find_people_provider.dart';
 import '../../../widgets/text.dart';
 
 class PublicFollowFollowingList extends StatelessWidget {
@@ -18,6 +20,7 @@ class PublicFollowFollowingList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    FindPeopleProvider search = context.watch<FindPeopleProvider>();
     return data.isEmpty
         ? Center(
             child: Column(
@@ -37,18 +40,29 @@ class PublicFollowFollowingList extends StatelessWidget {
               ],
             ),
           )
-        : ListView.builder(
-            itemCount: data.length,
-            itemBuilder: (context, index) {
-              PublicUserData followerData = data[index];
-              return Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                child: PublicFollowTile(
-                  data: followerData,
-                ),
+        : StreamBuilder(
+            stream: null,
+            builder: (context, snapshot) {
+              List<PublicUserData> searched = search.SearchInProfile.isEmpty
+                  ? data
+                  : data.where((element) {
+                      return element.username!
+                          .toLowerCase()
+                          .contains(search.SearchInProfile.toLowerCase());
+                    }).toList();
+              return ListView.builder(
+                itemCount: searched.length,
+                itemBuilder: (context, index) {
+                  PublicUserData followerData = searched[index];
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 10),
+                    child: PublicFollowTile(
+                      data: followerData,
+                    ),
+                  );
+                },
               );
-            },
-          );
+            });
   }
 }

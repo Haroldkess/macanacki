@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/screens/userprofile/following_followers.dart';
-import 'package:makanaki/presentation/widgets/text.dart';
+import 'package:macanacki/presentation/screens/userprofile/following_followers.dart';
+import 'package:macanacki/presentation/widgets/text.dart';
 import 'package:provider/provider.dart';
 import 'package:numeral/numeral.dart';
 import '../../../../../services/middleware/user_profile_ware.dart';
@@ -10,7 +10,6 @@ import '../../home/profile/followers_following.dart';
 
 class PublicProfileFollowersStatistics extends StatelessWidget {
   const PublicProfileFollowersStatistics({super.key});
-
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -41,7 +40,7 @@ class PublicProfileFollowersStatistics extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
-                    width: 95,
+                    width: 85,
                     // color: Colors.amber,
                     alignment: Alignment.center,
                     child: AppText(
@@ -50,7 +49,7 @@ class PublicProfileFollowersStatistics extends StatelessWidget {
                                   null
                               ? 10
                               : stream.publicUserProfileModel.noOfFollowers!)
-                          .format(),
+                          .format(fractionDigits: 1),
                       fontWeight: FontWeight.w600,
                       size: 18,
                     ),
@@ -82,7 +81,7 @@ class PublicProfileFollowersStatistics extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
-                    width: 95,
+                    width: 85,
                     alignment: Alignment.center,
                     // color: Colors.amber,
                     child: AppText(
@@ -91,7 +90,7 @@ class PublicProfileFollowersStatistics extends StatelessWidget {
                                   null
                               ? 10
                               : stream.publicUserProfileModel.noOfFollowing!)
-                          .format(),
+                          .format(fractionDigits: 1),
                       fontWeight: FontWeight.w600,
                       size: 18,
                     ),

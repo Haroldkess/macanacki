@@ -3,24 +3,26 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/model/gender_model.dart';
-import 'package:makanaki/presentation/allNavigation.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
-import 'package:makanaki/presentation/constants/params.dart';
-import 'package:makanaki/presentation/model/ui_model.dart';
-import 'package:makanaki/presentation/operations.dart';
-import 'package:makanaki/presentation/screens/kyc/kyc_notification.dart';
-import 'package:makanaki/presentation/screens/onboarding/user_name.dart';
-import 'package:makanaki/presentation/widgets/buttons.dart';
-import 'package:makanaki/presentation/widgets/loader.dart';
-import 'package:makanaki/presentation/widgets/snack_msg.dart';
-import 'package:makanaki/services/controllers/gender_controller.dart';
-import 'package:makanaki/services/middleware/gender_ware.dart';
-import 'package:makanaki/services/temps/temp.dart';
+import 'package:macanacki/model/gender_model.dart';
+import 'package:macanacki/presentation/allNavigation.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/constants/params.dart';
+import 'package:macanacki/presentation/model/ui_model.dart';
+import 'package:macanacki/presentation/operations.dart';
+import 'package:macanacki/presentation/screens/kyc/kyc_notification.dart';
+import 'package:macanacki/presentation/screens/onboarding/location_screen.dart';
+import 'package:macanacki/presentation/screens/onboarding/user_name.dart';
+import 'package:macanacki/presentation/widgets/buttons.dart';
+import 'package:macanacki/presentation/widgets/loader.dart';
+import 'package:macanacki/presentation/widgets/snack_msg.dart';
+import 'package:macanacki/services/controllers/gender_controller.dart';
+import 'package:macanacki/services/middleware/gender_ware.dart';
+import 'package:macanacki/services/temps/temp.dart';
 import 'package:provider/provider.dart';
 
 import '../../uiproviders/screen/gender_provider.dart';
 import '../../widgets/text.dart';
+import 'business/business_info.dart';
 import 'dob_screen.dart';
 
 class SelectGender extends StatefulWidget {
@@ -169,7 +171,24 @@ class _SelectGenderState extends State<SelectGender> {
 
   Future<void> _submit(BuildContext context, GenderList data) async {
     Temp temp = Provider.of<Temp>(context, listen: false);
-    temp.addGenderIdTemp(data.id!).whenComplete(
-          () =>  PageRouting.pushToPage(context,  SelectUserName(genderId: data.id!,)));
+    print(data.name);
+    if (data.name == "Business") {
+      // temp.addGenderIdTemp(data.id!).whenComplete(() => PageRouting.pushToPage(
+      //     context,
+      //     BusinessInfo(
+      //       data: data,
+      //     )));
+      temp.addGenderIdTemp(data.id!).whenComplete(() => PageRouting.pushToPage(
+          context,
+          SelectLocation(
+            data: data,
+          )));
+    } else {
+      temp.addGenderIdTemp(data.id!).whenComplete(() => PageRouting.pushToPage(
+          context,
+          SelectLocation(
+            data: data,
+          )));
+    }
   }
 }

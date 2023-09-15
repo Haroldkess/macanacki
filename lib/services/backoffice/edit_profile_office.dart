@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:http/http.dart' as http;
-import 'package:makanaki/model/create_post_model.dart';
-import 'package:makanaki/services/api_url.dart';
-import 'package:makanaki/services/temps/temps_id.dart';
+import 'package:macanacki/model/create_post_model.dart';
+import 'package:macanacki/services/api_url.dart';
+import 'package:macanacki/services/temps/temps_id.dart';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -21,16 +21,19 @@ Future<http.StreamedResponse?> editProfile(
     'Accept': 'application/json',
     'authorization': 'Bearer $token',
   };
-  var filePhoto;
+  late var filePhoto;
 
   if (data.media!.isNotEmpty) {
-    filePhoto = await http.MultipartFile.fromPath('selfie', data.media!,
+    filePhoto = await http.MultipartFile.fromPath('profile', data.media!,
         filename: filePhotoName);
   }
 
   request.headers.addAll(headers);
   request.fields["about_me"] = data.description!;
   request.fields["phone"] = data.phone!.toString();
+  request.fields["country"] = data.country!;
+  request.fields["state"] = data.state!.toString();
+  request.fields["city"] = data.city!;
 
   if (data.media!.isNotEmpty) {
     request.files.add(filePhoto);

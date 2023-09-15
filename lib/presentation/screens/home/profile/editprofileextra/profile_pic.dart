@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexagon/hexagon.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
-import 'package:makanaki/presentation/operations.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/operations.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../../services/middleware/facial_ware.dart';
@@ -55,7 +55,8 @@ class ProfilePicture extends StatelessWidget {
                     child: Center(
                         child: facial.addedDp == null
                             ? CachedNetworkImage(
-                                imageUrl: user.userProfileModel.profilephoto!)
+                                imageUrl: user.userProfileModel.profilephoto ??
+                                    "https://icon-library.com/images/no-profile-pic-icon/no-profile-pic-icon-27.jpg")
                             : Image.file(File(facial.addedDp!.path)))),
               ),
               Align(

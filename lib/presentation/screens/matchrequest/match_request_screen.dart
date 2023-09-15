@@ -2,19 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/allNavigation.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
-import 'package:makanaki/presentation/constants/params.dart';
-import 'package:makanaki/presentation/widgets/buttons.dart';
-import 'package:makanaki/presentation/widgets/loader.dart';
-import 'package:makanaki/services/controllers/action_controller.dart';
+import 'package:macanacki/presentation/allNavigation.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/constants/params.dart';
+import 'package:macanacki/presentation/widgets/buttons.dart';
+import 'package:macanacki/presentation/widgets/debug_emitter.dart';
+import 'package:macanacki/presentation/widgets/loader.dart';
+import 'package:macanacki/services/controllers/action_controller.dart';
 import 'package:provider/provider.dart';
 
 import '../../../services/middleware/action_ware.dart';
+import '../../../services/middleware/chat_ware.dart';
 import '../../widgets/text.dart';
+import '../userprofile/user_profile_screen.dart';
 
 class MatchRequestScreen extends StatelessWidget {
-  final String userName;
+  final String? userName;
   final int id;
   final String? img;
   const MatchRequestScreen(
@@ -26,6 +29,7 @@ class MatchRequestScreen extends StatelessWidget {
     var height = MediaQuery.of(context).size.height;
     ActionWare stream = context.watch<ActionWare>();
     ActionWare action = Provider.of<ActionWare>(context, listen: false);
+    ChatWare myChat = context.watch<ChatWare>();
     return Scaffold(
       backgroundColor: HexColor(backgroundColor),
       body: Stack(
@@ -47,22 +51,28 @@ class MatchRequestScreen extends StatelessWidget {
                       Row(
                         children: [
                           Expanded(
-                            child: RichText(
-                                text: TextSpan(
-                                    text: userName,
-                                    style: GoogleFonts.spartan(
-                                      color: HexColor(darkColor),
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                    children: [
-                                  TextSpan(
-                                    text: "",
-                                    style: GoogleFonts.spartan(
-                                        color: HexColor("#C0C0C0"),
-                                        fontSize: 20),
-                                  )
-                                ])),
+                            child: InkWell(
+                              onTap: () {
+                                PageRouting.pushToPage(
+                                    context, UsersProfile(username: userName!));
+                              },
+                              child: RichText(
+                                  text: TextSpan(
+                                      text: userName ?? "",
+                                      style: GoogleFonts.leagueSpartan(
+                                        color: HexColor(darkColor),
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                      children: [
+                                    TextSpan(
+                                      text: "",
+                                      style: GoogleFonts.leagueSpartan(
+                                          color: HexColor("#C0C0C0"),
+                                          fontSize: 20),
+                                    )
+                                  ])),
+                            ),
                           ),
                           // Image.asset(
                           //   "assets/pic/verified.png",
@@ -81,20 +91,34 @@ class MatchRequestScreen extends StatelessWidget {
                             children: [
                               CircleAvatar(
                                 radius: 5,
-                                backgroundColor: HexColor("#00B074"),
+                                backgroundColor: myChat.allSocketUsers
+                                        .where((element) =>
+                                            element.userId.toString() ==
+                                            id.toString())
+                                        .toList()
+                                        .isEmpty
+                                    ? Colors.red
+                                    : HexColor("#00B074"),
                               ),
                               const SizedBox(
                                 width: 5,
                               ),
                               AppText(
-                                text: "Online Now",
+                                text: myChat.allSocketUsers
+                                        .where((element) =>
+                                            element.userId.toString() ==
+                                            id.toString())
+                                        .toList()
+                                        .isEmpty
+                                    ? "offline"
+                                    : "online",
                                 size: 12,
                                 fontWeight: FontWeight.w500,
                               )
                             ],
                           ),
                           SizedBox(
-                            height: 10,
+                            height: 7,
                           ),
                           Row(
                             children: [
@@ -103,7 +127,7 @@ class MatchRequestScreen extends StatelessWidget {
                                 width: 5,
                               ),
                               AppText(
-                                text: "2 km away",
+                                text: "some km away",
                                 size: 12,
                                 fontWeight: FontWeight.w500,
                               )
@@ -116,7 +140,7 @@ class MatchRequestScreen extends StatelessWidget {
                 ),
               )),
               const SizedBox(
-                height: 35,
+                height: 25,
               ),
               Container(
                 height: 58,
@@ -131,7 +155,7 @@ class MatchRequestScreen extends StatelessWidget {
                             ? "UnFollow"
                             : "Follow Back",
                         backColor: primaryColor,
-                        onTap: () => followAction(context, userName, id),
+                        onTap: () => followAction(context, userName!, id),
                         curves: 37,
                         textColor: "#FFFFFF"),
               ),
@@ -147,7 +171,9 @@ class MatchRequestScreen extends StatelessWidget {
                     color: "#F5F2F9",
                     text: "Maybe Later",
                     backColor: "#F5F2F9",
-                    onTap: () => PageRouting.popToPage(context),
+                    onTap: () {
+                      PageRouting.popToPage(context);
+                    },
                     curves: 37,
                     textColor: "#8B8B8B"),
               ),

@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
-import 'package:makanaki/services/temps/temps_id.dart';
+import 'package:macanacki/services/temps/temps_id.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Temp extends ChangeNotifier {
   SharedPreferences? _pref;
 
   String _userName = "";
-  
+
   String _dp = "";
 
   String get userName => _userName;
@@ -27,7 +27,7 @@ class Temp extends ChangeNotifier {
     notifyListeners();
   }
 
-    Future<void> addDp(String photo) async {
+  Future<void> addDp(String photo) async {
     await initPref();
     _pref!.setString(dpKey, photo);
     _dp = photo;
@@ -44,6 +44,11 @@ class Temp extends ChangeNotifier {
         .whenComplete(() => _pref!.setString(userNameKey, userName));
     notifyListeners();
   }
+    Future<void> addSubStatusTemp(bool s) async {
+    await initPref()
+        .whenComplete(() => _pref!.setBool(isVerifiedKey, s));
+    notifyListeners();
+  }
 
   Future<void> addPasswordTemp(String password) async {
     await initPref()
@@ -53,6 +58,23 @@ class Temp extends ChangeNotifier {
 
   Future<void> addGenderIdTemp(int id) async {
     await initPref().whenComplete(() => _pref!.setInt(genderId, id));
+    notifyListeners();
+  }
+
+  Future<void> addCategoryTemp(int id, String name) async {
+    await initPref().whenComplete(() {
+      _pref!.setInt(categoryIdKey, id);
+      _pref!.setString(categoryKey, name);
+    });
+    notifyListeners();
+  }
+
+  Future<void> addLocationTemp(String country, state, city) async {
+    await initPref().whenComplete(() async {
+      _pref!.setString(countryKey, country);
+      _pref!.setString(stateKey, state);
+      _pref!.setString(cityKey, city);
+    });
     notifyListeners();
   }
 

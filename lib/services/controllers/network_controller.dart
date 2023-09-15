@@ -4,8 +4,8 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/widgets/text.dart';
-import 'package:makanaki/services/controllers/mode_controller.dart';
+import 'package:macanacki/presentation/widgets/text.dart';
+import 'package:macanacki/services/controllers/mode_controller.dart';
 import 'package:overlay_support/overlay_support.dart';
 
 import '../../presentation/constants/colors.dart';
@@ -16,7 +16,7 @@ String string = '';
 
 class CheckConnect {
   static Future networkCheck() async {
-     bool? isOnce;
+    bool? isOnce;
     _networkConnectivity.initialise();
     _networkConnectivity.myStream.listen((source) {
       _source = source;
@@ -75,6 +75,7 @@ class CheckConnect {
             duration: const Duration(seconds: 5),
           );
         }
+        ModeController.handleMode("online");
       } else {
         isOnce = true;
         showSimpleNotification(

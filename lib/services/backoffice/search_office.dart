@@ -1,10 +1,9 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:http/http.dart' as http;
-import 'package:makanaki/services/api_url.dart';
-import 'package:makanaki/services/temps/temps_id.dart';
+import 'package:macanacki/services/api_url.dart';
+import 'package:macanacki/services/temps/temps_id.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 
 Future<http.Response?> getSearchByUser(String x) async {
   http.Response? response;
@@ -21,13 +20,12 @@ Future<http.Response?> getSearchByUser(String x) async {
       },
     );
 
-  //  log(response.body.toString());
+    //  log(response.body.toString());
   } catch (e) {
     response = null;
   }
   return response;
 }
-
 
 Future<http.Response?> getSearchByPost(String username) async {
   http.Response? response;
@@ -44,7 +42,7 @@ Future<http.Response?> getSearchByPost(String username) async {
       },
     );
 
-  //  log(response.body.toString());
+    //  log(response.body.toString());
   } catch (e) {
     response = null;
   }

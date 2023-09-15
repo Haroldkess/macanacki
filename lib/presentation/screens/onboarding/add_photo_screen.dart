@@ -3,9 +3,9 @@ import 'dart:developer';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/operations.dart';
-import 'package:makanaki/presentation/screens/onboarding/add_password.dart';
-import 'package:makanaki/presentation/widgets/snack_msg.dart';
+import 'package:macanacki/presentation/operations.dart';
+import 'package:macanacki/presentation/screens/onboarding/add_password.dart';
+import 'package:macanacki/presentation/widgets/snack_msg.dart';
 import 'package:provider/provider.dart';
 
 import '../../../services/middleware/facial_ware.dart';

@@ -2,13 +2,15 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:makanaki/model/comments_model.dart';
-import 'package:makanaki/model/create_post_model.dart';
-import 'package:makanaki/services/backoffice/create_post_office.dart';
+import 'package:macanacki/model/comments_model.dart';
+import 'package:macanacki/model/create_post_model.dart';
+import 'package:macanacki/services/backoffice/create_post_office.dart';
 import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
-import 'package:makanaki/services/backoffice/edit_profile_office.dart';
+import 'package:macanacki/services/backoffice/edit_profile_office.dart';
+
+import '../../presentation/widgets/debug_emitter.dart';
 
 class EditProfileWare extends ChangeNotifier {
   bool _loadStatus = false;
@@ -51,6 +53,7 @@ class EditProfileWare extends ChangeNotifier {
       } else if (response.statusCode == 200) {
         final res = await http.Response.fromStream(response);
         var jsonData = jsonDecode(res.body);
+        log(res.body);
 
         _message = jsonData["message"];
         isSuccessful = true;
@@ -62,7 +65,7 @@ class EditProfileWare extends ChangeNotifier {
       }
     } catch (e) {
       isSuccessful = false;
-      log(e.toString());
+      emitter(e.toString());
     }
 
     notifyListeners();

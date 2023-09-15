@@ -2,11 +2,12 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/widgets/snack_msg.dart';
-import 'package:makanaki/services/controllers/create_post_controller.dart';
-import 'package:makanaki/services/middleware/action_ware.dart';
-import 'package:makanaki/services/middleware/button_ware.dart';
-import 'package:makanaki/services/middleware/create_post_ware.dart';
+import 'package:macanacki/presentation/allNavigation.dart';
+import 'package:macanacki/presentation/widgets/snack_msg.dart';
+import 'package:macanacki/services/controllers/create_post_controller.dart';
+import 'package:macanacki/services/middleware/action_ware.dart';
+import 'package:macanacki/services/middleware/button_ware.dart';
+import 'package:macanacki/services/middleware/create_post_ware.dart';
 import 'package:numeral/numeral.dart';
 import 'package:provider/provider.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
@@ -36,6 +37,20 @@ buttonModal(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                const SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    IconButton(
+                        onPressed: () => PageRouting.popToPage(context),
+                        icon: const Icon(
+                          Icons.close,
+                          color: Colors.red,
+                        ))
+                  ],
+                ),
                 const SizedBox(
                   height: 10,
                 ),
@@ -155,7 +170,7 @@ class _ButtonFormState extends State<ButtonForm> {
             //   validator: (value)=>RegExp(r"^(https?:\/\/(.+?\.)?\.com(\/[A-Za-z0-9\-\._~:\/\?#\[\]@!$&'\(\)\*\+,;\=]*)?)").hasMatch(value!)?null:'Not a valid google drive url',
 
             cursorColor: HexColor(primaryColor),
-            style: GoogleFonts.spartan(
+            style: GoogleFonts.leagueSpartan(
               color: HexColor(darkColor),
               fontSize: 14,
             ),
@@ -222,7 +237,7 @@ class _ButtonFormState extends State<ButtonForm> {
               errorText: error,
               errorStyle: TextStyle(color: Colors.red),
               hintStyle:
-                  GoogleFonts.spartan(color: HexColor('#C0C0C0'), fontSize: 12),
+                  GoogleFonts.leagueSpartan(color: HexColor('#C0C0C0'), fontSize: 12),
               border: InputBorder.none,
               enabledBorder: InputBorder.none,
               focusedBorder: InputBorder.none,

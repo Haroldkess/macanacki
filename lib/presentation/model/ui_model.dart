@@ -1,4 +1,4 @@
-import 'package:makanaki/presentation/constants/params.dart';
+import 'package:macanacki/presentation/constants/params.dart';
 
 class GenderSelectModel {
   int id;
@@ -100,9 +100,15 @@ List<FeedPostOption> feedOption = [
   FeedPostOption(id: 1, name: "Report"),
   FeedPostOption(id: 2, name: "Report Abuse"),
 ];
-
+List<FeedPostOption> userFeedOption = [
+  FeedPostOption(id: 0, name: "Download"),
+  FeedPostOption(id: 1, name: "Report"),
+  FeedPostOption(id: 2, name: "Report Abuse"),
+  FeedPostOption(id: 3, name: "Edit Post"),
+  FeedPostOption(id: 4, name: "Delete Post"),
+];
 List<FeedPostOption> chatOption = [
- // FeedPostOption(id: 0, name: "Unmatch"),
+  // FeedPostOption(id: 0, name: "Unmatch"),
   FeedPostOption(id: 1, name: "Block User"),
   FeedPostOption(id: 2, name: "Report Abuse"),
 ];

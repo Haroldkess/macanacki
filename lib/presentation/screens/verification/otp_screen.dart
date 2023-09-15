@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/allNavigation.dart';
-import 'package:makanaki/presentation/screens/onboarding/login_screen.dart';
-import 'package:makanaki/presentation/screens/onboarding/user_name.dart';
-import 'package:makanaki/presentation/widgets/loader.dart';
-import 'package:makanaki/presentation/widgets/otp.dart';
-import 'package:makanaki/presentation/widgets/snack_msg.dart';
-import 'package:makanaki/services/controllers/otp_controller.dart';
-import 'package:makanaki/services/middleware/otp_ware.dart';
+import 'package:macanacki/presentation/allNavigation.dart';
+import 'package:macanacki/presentation/screens/onboarding/login_screen.dart';
+import 'package:macanacki/presentation/screens/onboarding/user_name.dart';
+import 'package:macanacki/presentation/widgets/loader.dart';
+import 'package:macanacki/presentation/widgets/otp.dart';
+import 'package:macanacki/presentation/widgets/snack_msg.dart';
+import 'package:macanacki/services/controllers/otp_controller.dart';
+import 'package:macanacki/services/middleware/otp_ware.dart';
 import 'package:provider/provider.dart';
 
 import '../../constants/colors.dart';
@@ -148,6 +148,26 @@ class _EmailOtpState extends State<EmailOtp> {
                       ],
                     ),
                     const SizedBox(
+                      height: 30,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        AppText(
+                          text: "Did not recieve otp?",
+                          color: HexColor("#FF94B7"),
+                        ),
+                        InkWell(
+                          onTap: () => resend(context, widget.email),
+                          child: AppText(
+                            text: "  Resend",
+                            color: HexColor(backgroundColor),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        )
+                      ],
+                    ),
+                    const SizedBox(
                       height: 70,
                     ),
                     Column(
@@ -160,6 +180,8 @@ class _EmailOtpState extends State<EmailOtp> {
                               color: HexColor("#FF94B7"),
                             ),
                             InkWell(
+                              onTap: () => PageRouting.removeAllToPage(
+                                  context, const LoginScreen()),
                               child: AppText(
                                 text: "Switch Account",
                                 color: HexColor(backgroundColor),
@@ -190,5 +212,10 @@ class _EmailOtpState extends State<EmailOtp> {
       VerifyEmailController.verifyEmailController(
           context, textEditingController.text);
     }
+  }
+
+  resend(context, email) {
+    showToast2(context, "Resending otp");
+    VerifyEmailController.resendOtpController(context, email);
   }
 }

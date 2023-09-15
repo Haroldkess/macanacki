@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexagon/hexagon.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/model/notification_model.dart';
-import 'package:makanaki/presentation/allNavigation.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
+import 'package:macanacki/model/notification_model.dart';
+import 'package:macanacki/presentation/allNavigation.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/widgets/debug_emitter.dart';
 import 'package:timeago/timeago.dart' as timeago;
-import 'package:makanaki/presentation/screens/matchrequest/match_request_screen.dart';
-import 'package:makanaki/presentation/widgets/text.dart';
+import 'package:macanacki/presentation/screens/matchrequest/match_request_screen.dart';
+import 'package:macanacki/presentation/widgets/text.dart';
 
 import '../../../widgets/hexagon_avatar.dart';
 
@@ -24,6 +25,7 @@ class NotificationTile extends StatelessWidget {
     return ListTile(
       onTap: () async {
         if (item.type == "follow") {
+        
           PageRouting.pushToPage(
               context,
               MatchRequestScreen(

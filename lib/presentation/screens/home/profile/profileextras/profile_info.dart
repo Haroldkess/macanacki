@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
-import 'package:makanaki/presentation/screens/home/profile/profileextras/not_mine_buttons.dart';
-import 'package:makanaki/presentation/screens/home/profile/profileextras/profile_action_buttons.dart';
-import 'package:makanaki/presentation/screens/home/profile/profileextras/profile_followers.dart';
-import 'package:makanaki/presentation/screens/home/profile/profileextras/profile_image_name.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/screens/home/profile/profileextras/not_mine_buttons.dart';
+import 'package:macanacki/presentation/screens/home/profile/profileextras/profile_action_buttons.dart';
+import 'package:macanacki/presentation/screens/home/profile/profileextras/profile_followers.dart';
+import 'package:macanacki/presentation/screens/home/profile/profileextras/profile_image_name.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -39,9 +39,10 @@ class _ProfileInfoState extends State<ProfileInfo> {
               bottomRight: Radius.elliptical(250, 200))),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           const SizedBox(
-            height: 70,
+            height: 50,
           ),
           stream.loadStatus
               ? Shimmer.fromColors(
@@ -49,9 +50,6 @@ class _ProfileInfoState extends State<ProfileInfo> {
                   highlightColor: highlightColor,
                   child: const ProfileImageAndNameShimmer())
               : const ProfileImageAndName(),
-          const SizedBox(
-            height: 20,
-          ),
           stream.loadStatus
               ? Shimmer.fromColors(
                   baseColor: baseColor,
@@ -59,8 +57,11 @@ class _ProfileInfoState extends State<ProfileInfo> {
                   child: const ProfileFollowersStatisticsShimmer())
               : const ProfileFollowersStatistics(),
           widget.isMine
-              ? AllProfileActions(
-                  isMine: widget.isMine,
+              ? Padding(
+                  padding: EdgeInsets.only(bottom: 20.0),
+                  child: AllProfileActions(
+                    isMine: widget.isMine,
+                  ),
                 )
               : UserProfileActions()
         ],

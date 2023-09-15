@@ -1,33 +1,99 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
-import 'package:makanaki/model/feed_post_model.dart';
-import 'package:makanaki/model/gender_model.dart';
-import 'package:makanaki/services/backoffice/feed_post_office.dart';
-import 'package:makanaki/services/backoffice/gender_office.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:macanacki/model/common/data.dart';
+import 'package:macanacki/model/feed_post_model.dart';
+import 'package:macanacki/model/gender_model.dart';
+import 'package:macanacki/services/backoffice/feed_post_office.dart';
+import 'package:macanacki/services/backoffice/gender_office.dart';
 import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
-import 'package:makanaki/services/backoffice/user_profile_office.dart';
+import 'package:macanacki/services/backoffice/user_profile_office.dart';
+import 'package:macanacki/services/controllers/feed_post_controller.dart';
+import 'package:path/path.dart';
+import 'package:provider/provider.dart';
+import 'package:video_player/video_player.dart';
 
+import '../../model/asset_data.dart';
 import '../../model/profile_feed_post.dart';
 import '../../model/user_profile_model.dart';
+import '../../presentation/constants/string.dart';
+import '../../presentation/widgets/debug_emitter.dart';
+import '../backoffice/db.dart';
+import '../backoffice/mux_client.dart';
 
 class FeedPostWare extends ChangeNotifier {
+  MUXClient muxClient = MUXClient();
   bool _loadStatus = false;
   bool _loadStatus2 = false;
+  bool _loadStatusReferesh = false;
   int _index = 0;
   FeedData _feedData = FeedData();
   List<FeedPost> _feedPosts = [];
+  List<Data?> _feedStreamPosts = [];
+  List<File> cachedFilePosts = [];
+  List<FeedPost> cachedPosts = [];
+  List<String> thumbs = [];
+  bool? isVisible;
 
   ProfileFeedModel _profileFeedData = ProfileFeedModel();
   List<ProfileFeedDatum> _profileFeedPosts = [];
   int get index => _index;
   bool get loadStatus => _loadStatus;
   bool get loadStatus2 => _loadStatus2;
+  bool get loadStatusReferesh => _loadStatusReferesh;
   FeedData get feedData => _feedData;
   List<FeedPost> get feedPosts => _feedPosts;
+  List<Data?> get feedStreamPosts => _feedStreamPosts;
 
   ProfileFeedModel get profileFeedData => _profileFeedData;
   List<ProfileFeedDatum> get profileFeedPosts => _profileFeedPosts;
+
+  void changeVisibility(bool val) {
+    isVisible = val;
+    notifyListeners();
+  }
+
+  Future<void> addCached(FeedPost post) async {
+    List<FeedPost> check =
+        cachedPosts.where((element) => element.id == post.id).toList();
+
+    //  if (check.isEmpty) {
+    cachedPosts.add(post);
+    emitter(
+        "000000000000000000   ----------  ADDED ${cachedPosts.length} ------- 0000000000000");
+    // } else {
+    //  log("   ---------- DID NOT  ADD ------- ");
+    //  }
+
+    //   FeedData feedData = FeedData(data: cachedPosts);
+
+    //  try {
+    // var incomingData = jsonDecode(jsonEncode(feedData.toJson()));
+
+    // Database.create(Database.videoKey, incomingData);
+    // var data = await Database.read(Database.videoKey);
+    // var decode = await jsonDecode(jsonEncode(data));
+    // var existingData = FeedData.fromJson(decode);
+    // cachedPosts.addAll(existingData.data!);
+    //  } catch (e) {
+    //   log(e.toString());
+    // }
+
+    notifyListeners();
+  }
+
+  Future addCachedFromDb(FeedData data) async {
+    cachedPosts.addAll(data.data!);
+    notifyListeners();
+  }
+
+  Future addThumbs(List<String> thum) async {
+    thumbs.addAll(thum);
+    notifyListeners();
+  }
 
   void disposeValue() async {
     _feedData = FeedData();
@@ -62,6 +128,11 @@ class FeedPostWare extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> isLoadingReferesh(bool isLoad) async {
+    _loadStatusReferesh = isLoad;
+    notifyListeners();
+  }
+
   Future<void> indexChange(int num) async {
     _index = num;
     notifyListeners();
@@ -77,8 +148,8 @@ class FeedPostWare extends ChangeNotifier {
     List<FeedPost> _moreFeedPosts = [];
 
     try {
-      http.Response? response = await getFeedPost(pageNum)
-          .whenComplete(() => log("user feed posts data gotten successfully"));
+      http.Response? response = await getFeedPost(pageNum).whenComplete(
+          () => emitter("user feed posts data gotten successfully"));
       if (response == null) {
         isSuccessful = false;
         //   log("get feed posts data request failed");
@@ -87,19 +158,26 @@ class FeedPostWare extends ChangeNotifier {
 
         var incomingData = FeedData.fromJson(jsonData["data"]);
         _feedData = incomingData;
+        //  _feedData.data!.shuffle();
+        //emitter(pageNum.toString());
 
         if (pageNum == 1) {
-          _feedData.data!.shuffle();
-
           _feedPosts = _feedData.data!;
         } else {
-          _feedData.data!.shuffle();
           _moreFeedPosts = incomingData.data!;
           _feedPosts.addAll(_moreFeedPosts);
+          // if (_moreFeedPosts.length > 5) {
+          // //  _moreFeedPosts.shuffle();
+
+          // } else {
+          //   _feedPosts.addAll(_moreFeedPosts);
+          // }
         }
         if (_moreFeedPosts.isNotEmpty) {
           _moreFeedPosts.clear();
         }
+
+        //   await downloadThumbs(_feedPosts);
 
         //  log("get feed posts data  request success");
         isSuccessful = true;
@@ -118,6 +196,33 @@ class FeedPostWare extends ChangeNotifier {
     return isSuccessful;
   }
 
+  Future<void> initializeBeforeHand(FeedPost post) async {
+    List<FeedPost> data = _feedPosts.where((val) => val.id == post.id).toList();
+    if (data.isNotEmpty) {
+      if(_feedPosts.where((val) => val.id == post.id).toList().first.controller == null){
+        _feedPosts.where((val) => val.id == post.id).toList().first.controller=
+          post.controller;
+
+      }
+    }
+
+    notifyListeners();
+  }
+
+  Future<void> remove(id) async {
+    final data1 = _feedPosts.where((element) => element.id == id).toList();
+    final data2 =
+        _profileFeedPosts.where((element) => element.id == id).toList();
+    if (data1.isNotEmpty) {
+      _feedPosts.removeWhere((element) => element.id == id);
+    }
+    if (data2.isNotEmpty) {
+      _profileFeedPosts.removeWhere((element) => element.id == id);
+    }
+
+    notifyListeners();
+  }
+
   Future clearPost() async {
     _profileFeedData = ProfileFeedModel();
 
@@ -129,7 +234,7 @@ class FeedPostWare extends ChangeNotifier {
     late bool isSuccessful;
     try {
       http.Response? response = await getUserFeedPost()
-          .whenComplete(() => log("user posts data gotten successfully"));
+          .whenComplete(() => emitter("user posts data gotten successfully"));
       if (response == null) {
         isSuccessful = false;
         //   log("get user posts data request failed");
@@ -157,4 +262,22 @@ class FeedPostWare extends ChangeNotifier {
 
     return isSuccessful;
   }
+}
+
+class VideosController {
+  static Future addVideosOffline(BuildContext context) async {
+    FeedPostWare vid = Provider.of(context, listen: false);
+    var data = await Database.read(Database.videoKey);
+
+    if (data == null) {
+      return;
+    }
+    log(data.toString());
+    var decode = await jsonDecode(jsonEncode(data));
+    var existingData = FeedData.fromJson(decode);
+    vid.addCachedFromDb(existingData);
+    log(existingData.toString());
+  }
+
+  static Future makeRequest(context, token) async {}
 }

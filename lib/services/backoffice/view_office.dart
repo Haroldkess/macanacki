@@ -3,10 +3,10 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
-import 'package:makanaki/model/otp_model.dart';
-import 'package:makanaki/model/reg_email_model.dart';
-import 'package:makanaki/services/api_url.dart';
-import 'package:makanaki/services/temps/temps_id.dart';
+import 'package:macanacki/model/otp_model.dart';
+import 'package:macanacki/model/reg_email_model.dart';
+import 'package:macanacki/services/api_url.dart';
+import 'package:macanacki/services/temps/temps_id.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<http.Response?> viewPost(int postId) async {
@@ -23,7 +23,7 @@ Future<http.Response?> viewPost(int postId) async {
       },
     ).timeout(const Duration(seconds: 20));
 
-    log(response.body);
+    //  log(response.body);
   } catch (e) {
     response = null;
   }

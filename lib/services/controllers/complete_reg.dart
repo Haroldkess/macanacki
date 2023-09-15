@@ -1,37 +1,55 @@
+// ignore_for_file: prefer_if_null_operators
+
 import 'dart:developer';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/model/register_model.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
-import 'package:makanaki/presentation/screens/home/tab_screen.dart';
-import 'package:makanaki/presentation/widgets/snack_msg.dart';
-import 'package:makanaki/services/controllers/login_controller.dart';
-import 'package:makanaki/services/middleware/facial_ware.dart';
-import 'package:makanaki/services/middleware/registeration_ware.dart';
-import 'package:makanaki/services/temps/temp.dart';
-import 'package:makanaki/services/temps/temps_id.dart';
+import 'package:macanacki/model/register_model.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/screens/home/tab_screen.dart';
+import 'package:macanacki/presentation/widgets/snack_msg.dart';
+import 'package:macanacki/services/controllers/login_controller.dart';
+import 'package:macanacki/services/middleware/facial_ware.dart';
+import 'package:macanacki/services/middleware/registeration_ware.dart';
+import 'package:macanacki/services/temps/temp.dart';
+import 'package:macanacki/services/temps/temps_id.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../presentation/allNavigation.dart';
+import '../../presentation/widgets/debug_emitter.dart';
+import '../middleware/category_ware.dart';
 
 class CompleteRegisterationController {
   static Future<RegisterUserModel> regData(BuildContext context) async {
     FacialWare pic = Provider.of<FacialWare>(context, listen: false);
+    CategoryWare cat = Provider.of<CategoryWare>(context, listen: false);
     SharedPreferences pref = await SharedPreferences.getInstance();
     RegisterUserModel data = RegisterUserModel(
-        username: pref.getString(userNameKey),
-        genderId: pref.getInt(genderId),
-        dob: pref.getString(dobKey),
-        email: pref.getString(emailKey),
-        password: pref.getString(passwordKey),
-        photo: pic.addedPhoto);
+      username: pref.getString(userNameKey),
+      genderId: pref.getInt(genderId),
+      dob: pref.getString(dobKey),
+      email: pref.getString(emailKey),
+      password: pref.getString(passwordKey),
+      photo: null,
+      // pref.containsKey(photoKey)
+      //     ? File(
+      //         pref.getString(photoKey)!,
+      //       )
+      //     : pic.addedPhoto != null
+      //         ? pic.addedPhoto
+      //         : null,
+      //  pic.addedPhoto
+      country: pref.getString(countryKey),
+      state: pref.getString(stateKey),
+      city: pref.getString(cityKey),
+      catId: cat.selected.id.toString(),
+    );
     return data;
   }
 
   static Future<void> registerationController(
-    BuildContext context,
-  ) async {
+      BuildContext context, bool isSplash) async {
     RegisterationWare ware =
         Provider.of<RegisterationWare>(context, listen: false);
     Temp temp = Provider.of<Temp>(context, listen: false);
@@ -41,7 +59,7 @@ class CompleteRegisterationController {
 
     bool isDone = await ware
         .registerUserFromApi(data)
-        .whenComplete(() => log("api function done"));
+        .whenComplete(() => emitter("api function done"));
 
     if (isDone) {
       // ignore: use_build_context_synchronously
@@ -51,9 +69,10 @@ class CompleteRegisterationController {
       temp.addIsLoggedInTemp(true);
       SharedPreferences pref = await SharedPreferences.getInstance();
 
+      pref.remove(photoKey);
       // ignore: use_build_context_synchronously
       await LoginController.loginUserController(context,
-          pref.getString(emailKey)!, pref.getString(passwordKey)!, true);
+          pref.getString(emailKey)!, pref.getString(passwordKey)!, isSplash);
       ware.isLoading3(false);
 
       // ignore: use_build_context_synchronously
@@ -64,5 +83,6 @@ class CompleteRegisterationController {
       showToast2(context, ware.message2, isError: true);
       //print("something went wrong");
     }
+    await ware.isLoading3(false);
   }
 }

@@ -1,11 +1,15 @@
+import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 import 'package:http/http.dart' as http;
-import 'package:makanaki/model/conversation_model.dart';
-import 'package:makanaki/services/api_url.dart';
+import 'package:macanacki/model/conversation_model.dart';
+import 'package:macanacki/services/api_url.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:socket_io_client/socket_io_client.dart';
+import '../../presentation/widgets/debug_emitter.dart';
 import '../temps/temps_id.dart';
 import 'package:path/path.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 Future<http.StreamedResponse?> sendMessageTo(
   SendMsgModel data,
@@ -29,7 +33,7 @@ Future<http.StreamedResponse?> sendMessageTo(
     filePhoto = await http.MultipartFile.fromPath('media', data.media!.path,
         filename: filePhotoName);
   }
-
+  emitter("here is the body ${data.body}");
   request.headers.addAll(headers);
   request.fields["body"] = data.body!;
   if (data.media != null) {
@@ -37,10 +41,10 @@ Future<http.StreamedResponse?> sendMessageTo(
   }
 
   try {
-    response = await request.send().timeout(const Duration(seconds: 30));
+    response = await request.send();
   } catch (e) {
-  //  log("hello");
-  //  log(e.toString());
+    //  log("hello");
+    //  log(e.toString());
     response = null;
   }
 
@@ -60,8 +64,46 @@ Future<http.Response?> getAllConversation() async {
         HttpHeaders.authorizationHeader: "Bearer $token",
       },
     );
+  } catch (e) {
+    response = null;
+  }
+  return response;
+}
 
-    // log(response.body.toString());
+Future<http.Response?> getUnreadChat() async {
+  http.Response? response;
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  String? token = pref.getString(tokenKey);
+
+  try {
+    response = await http.get(
+      Uri.parse('$baseUrl/public/api/chat/unread/notifications'),
+      headers: {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $token",
+      },
+    );
+    // log(response.body);
+  } catch (e) {
+    response = null;
+  }
+  return response;
+}
+
+Future<http.Response?> readAllChats(int userId) async {
+  http.Response? response;
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  String? token = pref.getString(tokenKey);
+
+  try {
+    response = await http.get(
+      Uri.parse('$baseUrl/public/api/chat/markall/chats/$userId'),
+      headers: {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $token",
+      },
+    );
+    log("read this${response.body}");
   } catch (e) {
     response = null;
   }

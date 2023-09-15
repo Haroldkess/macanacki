@@ -4,14 +4,14 @@ import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/model/ui_model.dart';
-import 'package:makanaki/presentation/screens/home/subscription/plan_box.dart';
-import 'package:makanaki/presentation/screens/home/subscription/sub_successful.dart';
-import 'package:makanaki/presentation/widgets/buttons.dart';
-import 'package:makanaki/presentation/widgets/snack_msg.dart';
-import 'package:makanaki/services/controllers/payment_controller.dart';
-import 'package:makanaki/services/middleware/plan_ware.dart';
-import 'package:makanaki/services/middleware/user_profile_ware.dart';
+import 'package:macanacki/presentation/model/ui_model.dart';
+import 'package:macanacki/presentation/screens/home/subscription/plan_box.dart';
+import 'package:macanacki/presentation/screens/home/subscription/sub_successful.dart';
+import 'package:macanacki/presentation/widgets/buttons.dart';
+import 'package:macanacki/presentation/widgets/snack_msg.dart';
+import 'package:macanacki/services/controllers/payment_controller.dart';
+import 'package:macanacki/services/middleware/plan_ware.dart';
+import 'package:macanacki/services/middleware/user_profile_ware.dart';
 import 'package:provider/provider.dart';
 import '../../../../model/plan_model.dart';
 import '../../../allNavigation.dart';
@@ -21,10 +21,10 @@ import '../../../uiproviders/screen/tab_provider.dart';
 import '../../../widgets/custom_paint.dart';
 import '../../../widgets/text.dart';
 import 'package:uuid/uuid.dart';
-import 'package:flutter_paystack/flutter_paystack.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class SubscriptionPlans extends StatefulWidget {
   const SubscriptionPlans({super.key});
@@ -39,7 +39,7 @@ class _SubscriptionPlansState extends State<SubscriptionPlans> {
   @override
   void initState() {
     super.initState();
-    plugin.initialize(publicKey: publicKey);
+   // plugin.initialize(publicKey: dotenv.get('PUBLIC_KEY').toString());
   }
 
   @override
@@ -123,7 +123,7 @@ class _SubscriptionPlansState extends State<SubscriptionPlans> {
                           ),
                           Padding(
                             padding:
-                                const EdgeInsets.only(bottom: buttonCurves ),
+                                const EdgeInsets.only(bottom: buttonCurves),
                             child: CircleAvatar(
                               radius: 25,
                               backgroundColor: Colors.white,
@@ -149,21 +149,21 @@ class _SubscriptionPlansState extends State<SubscriptionPlans> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const SizedBox(
-                          height: 70.0,
+                          height: 50.0,
                         ),
-                        SizedBox(
-                          width: width * 0.7,
-                          child: AppText(
-                            text: "Subscribe to Premium. Cancel Anytime",
-                            color: HexColor(darkColor),
-                            size: 17,
-                            fontWeight: FontWeight.w700,
-                            align: TextAlign.center,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 15.0,
-                        ),
+                        // SizedBox(
+                        //   width: width * 0.7,
+                        //   child: AppText(
+                        //     text: "Subscribe to Premium. Cancel Anytime",
+                        //     color: HexColor(darkColor),
+                        //     size: 17,
+                        //     fontWeight: FontWeight.w700,
+                        //     align: TextAlign.center,
+                        //   ),
+                        // ),
+                        // const SizedBox(
+                        //   height: 15.0,
+                        // ),
                         Container(
                           width: width * 0.8,
                           alignment: Alignment.center,
@@ -326,7 +326,9 @@ payModal(BuildContext context) async {
                               color: HexColor("#C0C0C0"),
                               width: 1.0,
                               style: BorderStyle.solid)),
-                      onPressed: () {},
+                      onPressed: () {
+                        showToast2(context, "Coming soon");
+                      },
                       child: Platform.isAndroid
                           ? SvgPicture.asset("assets/icon/G.svg")
                           : SvgPicture.asset("assets/icon/A.svg")),

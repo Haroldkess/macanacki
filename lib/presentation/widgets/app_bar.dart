@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/allNavigation.dart';
-import 'package:makanaki/presentation/screens/notification/notification_screen.dart';
+import 'package:macanacki/presentation/allNavigation.dart';
+import 'package:macanacki/presentation/screens/notification/notification_screen.dart';
 
 import '../constants/colors.dart';
 import '../constants/params.dart';
@@ -38,7 +38,7 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
                 children: [
                   index == 2
                       ? const SizedBox.shrink()
-                      : myIcon("assets/icon/makanakiicon.svg", primaryColor,
+                      : myIcon("assets/icon/macanackiicon.svg", primaryColor,
                           16.52, 70, false),
                   InkWell(
                     onTap: () => PageRouting.pushToPage(

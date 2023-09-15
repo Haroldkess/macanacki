@@ -3,19 +3,20 @@ import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexagon/hexagon.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
-import 'package:makanaki/presentation/constants/params.dart';
-import 'package:makanaki/presentation/screens/home/profile/profileextras/not_mine_buttons.dart';
-import 'package:makanaki/presentation/screens/home/profile/profileextras/profile_action_buttons.dart';
-import 'package:makanaki/presentation/screens/home/profile/profileextras/profile_followers.dart';
-import 'package:makanaki/presentation/screens/home/profile/profileextras/profile_image_name.dart';
-import 'package:makanaki/presentation/screens/userprofile/extras/public_profile_followers.dart';
-import 'package:makanaki/presentation/screens/userprofile/extras/public_profile_image_name.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/constants/params.dart';
+import 'package:macanacki/presentation/screens/home/profile/profileextras/not_mine_buttons.dart';
+import 'package:macanacki/presentation/screens/home/profile/profileextras/profile_action_buttons.dart';
+import 'package:macanacki/presentation/screens/home/profile/profileextras/profile_followers.dart';
+import 'package:macanacki/presentation/screens/home/profile/profileextras/profile_image_name.dart';
+import 'package:macanacki/presentation/screens/userprofile/extras/public_profile_followers.dart';
+import 'package:macanacki/presentation/screens/userprofile/extras/public_profile_image_name.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../../../../services/controllers/user_profile_controller.dart';
 import '../../../../../services/middleware/user_profile_ware.dart';
+import '../../../../services/controllers/chat_controller.dart';
 
 class PublicProfileInfo extends StatefulWidget {
   final bool isMine;
@@ -43,16 +44,17 @@ class _PublicProfileInfoState extends State<PublicProfileInfo> {
               bottomRight: Radius.elliptical(250, 200))),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: const [
           SizedBox(
-            height: 80,
+            height: 50,
           ),
           PublicProfileImageAndName(),
-          SizedBox(
-            height: 20,
-          ),
           PublicProfileFollowersStatistics(),
-          UserProfileActions()
+          Padding(
+            padding: EdgeInsets.only(bottom: 20.0),
+            child: UserProfileActions(),
+          )
         ],
       ),
     );
@@ -61,6 +63,9 @@ class _PublicProfileInfoState extends State<PublicProfileInfo> {
   @override
   void initState() {
     super.initState();
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //   ChatController.retrievChatController(context, false);
+    // });
   }
 }
 
@@ -148,7 +153,7 @@ class LoaderImageAndName extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         text: TextSpan(
                             text: "      , ",
-                            style: GoogleFonts.spartan(
+                            style: GoogleFonts.leagueSpartan(
                               color: HexColor(darkColor),
                               fontSize: 24,
                               letterSpacing: 0.0,
@@ -157,7 +162,7 @@ class LoaderImageAndName extends StatelessWidget {
                             children: [
                               TextSpan(
                                 text: " ",
-                                style: GoogleFonts.spartan(
+                                style: GoogleFonts.leagueSpartan(
                                     color: HexColor("#C0C0C0"), fontSize: 24),
                               )
                             ])),

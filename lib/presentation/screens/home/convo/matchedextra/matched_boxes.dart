@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexagon/hexagon.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/model/ui_model.dart';
+import 'package:macanacki/presentation/model/ui_model.dart';
 
 import '../../../../allNavigation.dart';
 import '../../../../constants/colors.dart';
@@ -76,12 +76,12 @@ class MatchedBox extends StatelessWidget {
                 RichText(
                     text: TextSpan(
                         text: "${matches.name}, ",
-                        style: GoogleFonts.spartan(
+                        style: GoogleFonts.leagueSpartan(
                             color: HexColor(darkColor), fontSize: 20),
                         children: [
                       TextSpan(
                         text: matches.age,
-                        style: GoogleFonts.spartan(
+                        style: GoogleFonts.leagueSpartan(
                             color: HexColor("#C0C0C0"), fontSize: 20),
                       )
                     ])),

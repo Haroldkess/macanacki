@@ -4,19 +4,22 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexagon/hexagon.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/allNavigation.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
-import 'package:makanaki/presentation/screens/onboarding/email_screen.dart';
-import 'package:makanaki/presentation/screens/onboarding/user_name.dart';
-import 'package:makanaki/presentation/widgets/app_icon.dart';
-import 'package:makanaki/services/controllers/login_controller.dart';
-import 'package:makanaki/services/middleware/login_ware.dart';
+import 'package:macanacki/presentation/allNavigation.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/screens/onboarding/add_category.dart';
+import 'package:macanacki/presentation/screens/onboarding/email_screen.dart';
+import 'package:macanacki/presentation/screens/onboarding/user_name.dart';
+import 'package:macanacki/presentation/widgets/app_icon.dart';
+import 'package:macanacki/services/controllers/login_controller.dart';
+import 'package:macanacki/services/middleware/login_ware.dart';
 import 'package:provider/provider.dart';
 
 import '../../constants/params.dart';
 import '../../widgets/buttons.dart';
 import '../../widgets/loader.dart';
 import '../../widgets/text.dart';
+import 'business/business_info.dart';
+import 'forget_pass/forget_email.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -46,72 +49,75 @@ class _LoginScreenState extends State<LoginScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-                height: height * 0.37,
+                //height: 250,
                 child: Column(
-                  children: [
-                    const SizedBox(
-                      height: 56,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 40),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: const [
-                          AppIcon(
-                            width: 8,
-                            height: 15,
-                          ),
-                        ],
+              children: [
+                const SizedBox(
+                  height: 56,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 40),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: const [
+                      AppIcon(
+                        width: 8,
+                        height: 15,
                       ),
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 15),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          // CircleAvatar(
-                          //   radius: 40,
-                          //   backgroundColor: HexColor('#FC9DBF'),
-                          //   child: SvgPicture.asset("assets/icon/email.svg"),
-                          // ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 15),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // CircleAvatar(
+                      //   radius: 40,
+                      //   backgroundColor: HexColor('#FC9DBF'),
+                      //   child: SvgPicture.asset("assets/icon/email.svg"),
+                      // ),
 
-                          HexagonWidget.pointy(
-                            width: w,
-                            elevation: 0.0,
-                            color: HexColor('#FC9DBF'),
-                            padding: 2,
-                            cornerRadius: 20.0,
-                            child: AspectRatio(
-                                aspectRatio: HexagonType.POINTY.ratio,
-                                child: Center(
-                                  child: SvgPicture.asset(
-                                    "assets/icon/profile.svg",
-                                    color: HexColor(backgroundColor),
-                                  ),
-                                )),
-                          )
-                        ],
-                      ),
-                    ),
-                    AppText(
-                      text: "Welcome",
-                      fontWeight: FontWeight.w400,
-                      size: 20,
-                      align: TextAlign.center,
-                      color: HexColor(backgroundColor),
-                    ),
-                    // AppText(
-                    //   text: "usertagname@email.com",
-                    //   fontWeight: FontWeight.w400,
-                    //   size: 16,
-                    //   align: TextAlign.center,
-                    //   color: HexColor(backgroundColor),
-                    // ),
-                  ],
-                )),
+                      HexagonWidget.pointy(
+                        width: w,
+                        elevation: 0.0,
+                        color: HexColor('#FC9DBF'),
+                        padding: 2,
+                        cornerRadius: 20.0,
+                        child: AspectRatio(
+                            aspectRatio: HexagonType.POINTY.ratio,
+                            child: Center(
+                              child: SvgPicture.asset(
+                                "assets/icon/profile.svg",
+                                color: HexColor(backgroundColor),
+                              ),
+                            )),
+                      )
+                    ],
+                  ),
+                ),
+                AppText(
+                  text: "Welcome",
+                  fontWeight: FontWeight.w400,
+                  size: 20,
+                  align: TextAlign.center,
+                  color: HexColor(backgroundColor),
+                ),
+                // AppText(
+                //   text: "usertagname@email.com",
+                //   fontWeight: FontWeight.w400,
+                //   size: 16,
+                //   align: TextAlign.center,
+                //   color: HexColor(backgroundColor),
+                // ),
+              ],
+            )),
+            SizedBox(
+              height: 20,
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40),
               child: Column(
@@ -186,7 +192,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       ? null
                                       : "Enter a valid email";
                                 },
-                                style: GoogleFonts.spartan(
+                                style: GoogleFonts.leagueSpartan(
                                   color: HexColor('#F5F2F9'),
                                   fontSize: 14,
                                 ),
@@ -194,7 +200,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   contentPadding:
                                       const EdgeInsets.only(left: 20),
                                   hintText: "Enter your email here",
-                                  hintStyle: GoogleFonts.spartan(
+                                  hintStyle: GoogleFonts.leagueSpartan(
                                       color: HexColor('#F5F2F9'), fontSize: 12),
                                   border: InputBorder.none,
                                   enabledBorder: InputBorder.none,
@@ -236,7 +242,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                           ? null
                                           : "Password too short";
                                     },
-                                    style: GoogleFonts.spartan(
+                                    style: GoogleFonts.leagueSpartan(
                                       color: HexColor('#F5F2F9'),
                                       fontSize: 14,
                                     ),
@@ -244,7 +250,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       contentPadding: const EdgeInsets.only(
                                           left: 20, top: 17),
                                       hintText: "Enter your password here",
-                                      hintStyle: GoogleFonts.spartan(
+                                      hintStyle: GoogleFonts.leagueSpartan(
                                           color: HexColor('#F5F2F9'),
                                           fontSize: 12),
                                       border: InputBorder.none,
@@ -287,11 +293,17 @@ class _LoginScreenState extends State<LoginScreen> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
-                                    AppText(
-                                      text: "Forgot Password?",
-                                      size: 12,
-                                      color: HexColor(backgroundColor),
-                                      fontWeight: FontWeight.w400,
+                                    GestureDetector(
+                                      onTap: () {
+                                        PageRouting.pushToPage(
+                                            context, ForgetPasswordEmail());
+                                      },
+                                      child: AppText(
+                                        text: "Forgot Password?",
+                                        size: 12,
+                                        color: HexColor(backgroundColor),
+                                        fontWeight: FontWeight.w400,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -377,7 +389,7 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     } else {
       LoginController.loginUserController(
-          context, email.text, password.text, false);
+          context, email.text, password.text, true);
       //  RegisterEmailController.registerationController(context, email.text);
     }
     _formKey.currentState?.save();

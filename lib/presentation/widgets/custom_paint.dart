@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
 
 class RPSCustomPainter extends CustomPainter {
   @override

@@ -1,11 +1,11 @@
 import 'dart:developer';
 
-import 'package:makanaki/services/middleware/action_ware.dart';
-import 'package:makanaki/services/middleware/chat_ware.dart';
-import 'package:makanaki/services/middleware/create_post_ware.dart';
-import 'package:makanaki/services/middleware/search_ware.dart';
-import 'package:makanaki/services/middleware/swipe_ware.dart';
-import 'package:makanaki/services/temps/temp.dart';
+import 'package:macanacki/services/middleware/action_ware.dart';
+import 'package:macanacki/services/middleware/chat_ware.dart';
+import 'package:macanacki/services/middleware/create_post_ware.dart';
+import 'package:macanacki/services/middleware/search_ware.dart';
+import 'package:macanacki/services/middleware/swipe_ware.dart';
+import 'package:macanacki/services/temps/temp.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -19,6 +19,7 @@ const String passwordKey = "password";
 const String genderId = "genderId";
 const String facialUploadKey = "facial_upload";
 const String photoKey = "photo";
+const String temPhotoKey = "dpPhoto";
 const String dobKey = "dob";
 const String isLoggedInKey = "isLoggedIn";
 const String tokenKey = "token";
@@ -27,6 +28,13 @@ const String deviceTokenKey = "deviceTokenKey";
 const String latitudeKey = "latitudeKey";
 const String longitudeKey = "longitudeKey";
 const String isFirstTimeKey = "isFirstTime";
+const String countryKey = "countryKey";
+const String stateKey = "stateKey";
+const String cityKey = "cityKey";
+const String categoryKey = "categoryKey";
+const String categoryIdKey = "categoryIdKey";
+const String isVerifiedKey = "isVerifiedKey";
+const String isVerifiedFirstKey = "isVerifiedFirstKey";
 
 Future runTask(context, [String? name, String? dp]) async {
   SharedPreferences pref = await SharedPreferences.getInstance();

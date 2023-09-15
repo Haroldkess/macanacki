@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class OtpInputs extends StatefulWidget {
@@ -52,7 +52,7 @@ class _OtpInputsState extends State<OtpInputs> {
       //backgroundColor: HexColor("#161A22"),
 
       appContext: context,
-      
+
       pastedTextStyle: TextStyle(
         color: HexColor(primaryColor),
         fontWeight: FontWeight.bold,
@@ -73,7 +73,7 @@ class _OtpInputsState extends State<OtpInputs> {
           return null;
         }
       },
-      
+
       pinTheme: PinTheme(
         shape: PinCodeFieldShape.box,
         borderRadius: BorderRadius.circular(5),

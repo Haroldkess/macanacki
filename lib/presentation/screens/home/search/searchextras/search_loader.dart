@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexagon/hexagon.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
-import 'package:makanaki/presentation/constants/params.dart';
-import 'package:makanaki/presentation/widgets/text.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/constants/params.dart';
+import 'package:macanacki/presentation/widgets/text.dart';
 import 'package:shimmer/shimmer.dart';
 
 class SearchLoader extends StatelessWidget {
@@ -38,7 +38,7 @@ class SearchLoader extends StatelessWidget {
                       RichText(
                           text: TextSpan(
                               text: "     , ",
-                              style: GoogleFonts.spartan(
+                              style: GoogleFonts.leagueSpartan(
                                   textStyle: const TextStyle(
                                       fontWeight: FontWeight.w400,
                                       color: Colors.black,
@@ -48,7 +48,7 @@ class SearchLoader extends StatelessWidget {
                               children: [
                             TextSpan(
                               text: "   ",
-                              style: GoogleFonts.spartan(
+                              style: GoogleFonts.leagueSpartan(
                                   textStyle: const TextStyle(
                                       fontWeight: FontWeight.w400,
                                       color: Colors.black,

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
-import 'package:makanaki/presentation/model/ui_model.dart';
-import 'package:makanaki/presentation/widgets/buttons.dart';
-import 'package:makanaki/presentation/widgets/text.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/model/ui_model.dart';
+import 'package:macanacki/presentation/widgets/buttons.dart';
+import 'package:macanacki/presentation/widgets/text.dart';
 
 import '../../../allNavigation.dart';
 import '../../../constants/params.dart';

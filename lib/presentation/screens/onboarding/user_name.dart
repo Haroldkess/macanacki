@@ -1,16 +1,19 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
-import 'package:makanaki/presentation/constants/params.dart';
-import 'package:makanaki/presentation/screens/onboarding/select_gender.dart';
-import 'package:makanaki/presentation/widgets/snack_msg.dart';
-import 'package:makanaki/presentation/widgets/text.dart';
-import 'package:makanaki/services/controllers/register_username_controller.dart';
-import 'package:makanaki/services/temps/temp.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/constants/params.dart';
+import 'package:macanacki/presentation/screens/onboarding/select_gender.dart';
+import 'package:macanacki/presentation/widgets/snack_msg.dart';
+import 'package:macanacki/presentation/widgets/text.dart';
+import 'package:macanacki/services/api_url.dart';
+import 'package:macanacki/services/controllers/register_username_controller.dart';
+import 'package:macanacki/services/temps/temp.dart';
 import 'package:provider/provider.dart';
 
+import '../../../services/controllers/url_launch_controller.dart';
 import '../../../services/middleware/registeration_ware.dart';
 import '../../allNavigation.dart';
 import '../../widgets/buttons.dart';
@@ -27,6 +30,7 @@ class SelectUserName extends StatefulWidget {
 class _SelectUserNameState extends State<SelectUserName> {
   TextEditingController userName = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  TapGestureRecognizer tapGestureRecognizer = TapGestureRecognizer();
   bool iAgree = true;
   bool typing = false;
   @override
@@ -52,9 +56,7 @@ class _SelectUserNameState extends State<SelectUserName> {
                       SizedBox(
                           width: width / 1.2,
                           child: AppText(
-                            text: widget.genderId == 3
-                                ? "What is your business name?"
-                                : "How would You like to be addressed?",
+                            text: "How would You like to be addressed?",
                             align: TextAlign.start,
                             size: 30,
                             fontWeight: FontWeight.w700,
@@ -68,9 +70,7 @@ class _SelectUserNameState extends State<SelectUserName> {
                   Row(
                     children: [
                       AppText(
-                        text: widget.genderId == 3
-                            ? "Business Name"
-                            : "User Name",
+                        text: "User Name",
                         size: 14,
                         color: HexColor(darkColor),
                         fontWeight: FontWeight.w400,
@@ -92,7 +92,7 @@ class _SelectUserNameState extends State<SelectUserName> {
                       child: TextFormField(
                         controller: userName,
                         cursorColor: HexColor(primaryColor),
-                        style: GoogleFonts.spartan(
+                        style: GoogleFonts.leagueSpartan(
                           color: HexColor(darkColor),
                           fontSize: 14,
                         ),
@@ -128,10 +128,8 @@ class _SelectUserNameState extends State<SelectUserName> {
                           ),
                           contentPadding:
                               const EdgeInsets.only(left: 20, top: 17),
-                          hintText: widget.genderId == 3
-                              ? "Enter your Business name here"
-                              : "Enter your User name here",
-                          hintStyle: GoogleFonts.spartan(
+                          hintText: "Enter your User name here",
+                          hintStyle: GoogleFonts.leagueSpartan(
                               color: HexColor('#C0C0C0'), fontSize: 12),
                           border: InputBorder.none,
                           enabledBorder: InputBorder.none,
@@ -139,10 +137,8 @@ class _SelectUserNameState extends State<SelectUserName> {
                           errorBorder: InputBorder.none,
                         ),
                       ),
-                 
                     ),
                   ),
-              
                   Padding(
                     padding: const EdgeInsets.only(top: 5),
                     child: Row(
@@ -178,8 +174,8 @@ class _SelectUserNameState extends State<SelectUserName> {
                         width: width * 0.7,
                         child: RichText(
                           text: TextSpan(
-                              text: "I consent to the The MacaNacki ",
-                              style: GoogleFonts.spartan(
+                              text: "I consent to the use of MacaNacki ",
+                              style: GoogleFonts.leagueSpartan(
                                   textStyle: TextStyle(
                                       fontWeight: FontWeight.w400,
                                       color: HexColor(darkColor),
@@ -189,17 +185,23 @@ class _SelectUserNameState extends State<SelectUserName> {
                               children: [
                                 TextSpan(
                                   text: "Terms of Use",
-                                  style: GoogleFonts.spartan(
+                                  style: GoogleFonts.leagueSpartan(
                                       textStyle: TextStyle(
                                           fontWeight: FontWeight.w400,
                                           color: HexColor(primaryColor),
                                           decorationStyle:
                                               TextDecorationStyle.solid,
                                           fontSize: 12)),
+                                  recognizer: tapGestureRecognizer
+                                    ..onTap = () async {
+                                      await UrlLaunchController
+                                          .launchInWebViewOrVC(
+                                              Uri.parse(terms));
+                                    },
                                 ),
                                 TextSpan(
                                   text: " and ",
-                                  style: GoogleFonts.spartan(
+                                  style: GoogleFonts.leagueSpartan(
                                       textStyle: TextStyle(
                                           fontWeight: FontWeight.w400,
                                           color: HexColor(darkColor),
@@ -209,17 +211,24 @@ class _SelectUserNameState extends State<SelectUserName> {
                                 ),
                                 TextSpan(
                                   text: "Privacy Policy",
-                                  style: GoogleFonts.spartan(
+                                  style: GoogleFonts.leagueSpartan(
                                       textStyle: TextStyle(
                                           fontWeight: FontWeight.w400,
                                           color: HexColor(primaryColor),
                                           decorationStyle:
                                               TextDecorationStyle.solid,
                                           fontSize: 12)),
+                                  recognizer: tapGestureRecognizer
+                                    ..onTap = () async {
+                                      await UrlLaunchController
+                                          .launchInWebViewOrVC(
+                                              Uri.parse(terms));
+                                    },
                                 )
                               ]),
                         ),
                       ),
+                  
                     ],
                   ),
                   const SizedBox(
@@ -251,6 +260,8 @@ class _SelectUserNameState extends State<SelectUserName> {
                             }
                             //  PageRouting.pushToPage(context, const SelectGender());
                           })
+              
+              
                 ],
               )
             ],
@@ -269,7 +280,7 @@ class _SelectUserNameState extends State<SelectUserName> {
     if (!isValid! || userName.text.isEmpty && typing == false) {
       return;
     } else {
-    //  print(userName.text);
+      //  print(userName.text);
       saveUsername.addUserNameTemp(userName.text).whenComplete(() =>
           RegisterUsernameController.usernameController(
               context, userName.text));

@@ -1,29 +1,52 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:developer';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/model/reg_email_model.dart';
-import 'package:makanaki/presentation/allNavigation.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
-import 'package:makanaki/presentation/screens/home/tab_screen.dart';
-import 'package:makanaki/presentation/screens/onboarding/login_screen.dart';
-import 'package:makanaki/presentation/widgets/snack_msg.dart';
-import 'package:makanaki/presentation/widgets/text.dart';
-import 'package:makanaki/services/controllers/mode_controller.dart';
-import 'package:makanaki/services/controllers/user_profile_controller.dart';
-import 'package:makanaki/services/middleware/login_ware.dart';
-import 'package:makanaki/services/temps/temp.dart';
-import 'package:makanaki/services/temps/temps_id.dart';
+import 'package:macanacki/model/reg_email_model.dart';
+import 'package:macanacki/presentation/allNavigation.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/screens/home/tab_screen.dart';
+import 'package:macanacki/presentation/screens/onboarding/login_screen.dart';
+import 'package:macanacki/presentation/widgets/snack_msg.dart';
+import 'package:macanacki/presentation/widgets/text.dart';
+import 'package:macanacki/services/controllers/action_controller.dart';
+import 'package:macanacki/services/controllers/chat_controller.dart';
+import 'package:macanacki/services/controllers/feed_post_controller.dart';
+import 'package:macanacki/services/controllers/mode_controller.dart';
+import 'package:macanacki/services/controllers/notification_controller.dart';
+import 'package:macanacki/services/controllers/plan_controller.dart';
+import 'package:macanacki/services/controllers/user_profile_controller.dart';
+import 'package:macanacki/services/controllers/verify_controller.dart';
+import 'package:macanacki/services/middleware/gender_ware.dart';
+import 'package:macanacki/services/middleware/login_ware.dart';
+import 'package:macanacki/services/temps/temp.dart';
+import 'package:macanacki/services/temps/temps_id.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../model/gender_model.dart';
+import '../../presentation/screens/onboarding/business/sub_plan.dart';
+import '../../presentation/widgets/debug_emitter.dart';
+import '../middleware/user_profile_ware.dart';
 
 class LoginController {
   static Future<void> loginUserController(BuildContext context, String email,
       String password, bool isSplash) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
+    if (!pref.containsKey(readAllKey)) {
+      pref.setBool(readAllKey, false);
+    }
+    if (!pref.containsKey(lastMsgKey)) {
+      pref.setString(lastMsgKey, "");
+    }
+    if (!pref.containsKey(isVerifiedFirstKey)) {
+      pref.setBool(isVerifiedFirstKey, false);
+    }
     // ignore: use_build_context_synchronously
     await requestPermission();
     // String? _token = await FirebaseMessaging.instance.getToken();
@@ -38,41 +61,80 @@ class LoginController {
       longitude: pref.getDouble(longitudeKey).toString(),
       latitude: pref.getDouble(latitudeKey).toString(),
     );
-    // ignore: use_build_context_synchronously
+
     LoginWare ware = Provider.of<LoginWare>(context, listen: false);
-    // ignore: use_build_context_synchronously
+    genderWare gender = Provider.of<genderWare>(context, listen: false);
+
     Temp temp = Provider.of<Temp>(context, listen: false);
 
     ware.isLoading(true);
 
     bool isDone = await ware
         .loginUserFromApi(data)
-        .whenComplete(() => log("can now navigate to home"));
+        .whenComplete(() => emitter("can now navigate to home"));
+    // if (isSplash != true) {
+    //   List<GenderList> selected = gender.genderList
+    //       .where((element) => element.selected == true)
+    //       .toList();
+    //   if (selected.isNotEmpty) {
+    //     if (selected.first.name == "Business") {
+    //       await VerifyController.business(context);
+    //     } else {
+    //       emitter("Business not selected rather it is ${selected.first.name}");
+    //     }
+    //   } else {
+    //     emitter("Business not selected");
+    //   }
+    // }
 
     if (isDone) {
-      ware.isLoading(false);
+      emitter("Done with Login");
       await temp.addEmailTemp(email);
       await temp.addPasswordTemp(password);
       await temp.addIsLoggedInTemp(true);
-      // ignore: use_build_context_synchronously
+
+      await UserProfileController.retrievProfileController(context, true);
+      // ModeController.handleMode("online");
+
       await runTask(
         context,
       );
-      // ignore: use_build_context_synchronously
-      await UserProfileController.retrievProfileController(context, true);
-      log("removing all previous screens");
-      await ModeController.handleMode("online");
-      // ignore: use_build_context_synchronously
+      // UserProfileWare user =
+      //     Provider.of<UserProfileWare>(context, listen: false);
+
+      // if (user.userProfileModel.gender == "Business" &&
+      //     user.userProfileModel.activePlan == "inactive subscription") {
+      //   callFeedPost(context);
+      //   await PlanController.retrievPlanController(context, true);
+      //   PageRouting.pushToPage(context, const SubscriptionPlansBusiness());
+      // } else {
+      //   await callFeedPost(context);
+      //   emitter("removing all previous screens");
+      //   PageRouting.removeAllToPage(context, const TabScreen());
+      // }
+
+      await callFeedPost(context);
+      emitter("removing all previous screens");
       PageRouting.removeAllToPage(context, const TabScreen());
+      ware.isLoading(false);
     } else {
       ware.isLoading(false);
-      // ignore: use_build_context_synchronously
       showToast2(context, ware.message, isError: true);
       if (isSplash) {
-        // ignore: use_build_context_synchronously
         PageRouting.pushToPage(context, const LoginScreen());
       }
     }
+    ware.isLoading(false);
+  }
+
+  static Future callFeedPost(BuildContext context) async {
+    await FeedPostController.getFeedPostController(context, 1, false);
+    //  await UserProfileController.retrievProfileController(context, true);
+    ChatController.retreiveUnread(context);
+    ChatController.retrievChatController(context, false);
+    FeedPostController.getUserPostController(context);
+    //  ActionController.retrievAllUserFollowingController(context);
+    // ActionController.retrievAllUserLikedCommentsController(context);
   }
 
   static Future requestPermission() async {
@@ -88,7 +150,7 @@ class LoginController {
         sound: true);
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      print("access granted");
+      emitter("access granted");
       await getToken();
       await FirebaseMessaging.instance.setAutoInitEnabled(true);
       await Firebase.initializeApp();
@@ -129,9 +191,9 @@ class LoginController {
       });
     } else if (settings.authorizationStatus ==
         AuthorizationStatus.provisional) {
-      print("user granteed provitional access");
+      emitter("user granteed provitional access");
     } else {
-      print("user denied access");
+      emitter("user denied access");
     }
   }
 
@@ -151,7 +213,7 @@ class LoginController {
   }
 
   static Future saveToken(String token) async {
-    log("the token is $token");
+    emitter("the token is $token");
     SharedPreferences pref = await SharedPreferences.getInstance();
 
     await pref.setString(deviceTokenKey, token);
@@ -159,6 +221,6 @@ class LoginController {
 
   static Future _firebaseMessagingBackgroundHandler(
       RemoteMessage message) async {
-    print("Handling a background message: ${message.messageId}");
+    emitter("Handling a background message: ${message.messageId}");
   }
 }

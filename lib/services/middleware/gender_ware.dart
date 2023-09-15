@@ -1,16 +1,18 @@
 import 'package:flutter/cupertino.dart';
-import 'package:makanaki/model/gender_model.dart';
-import 'package:makanaki/services/backoffice/gender_office.dart';
+import 'package:macanacki/model/gender_model.dart';
+import 'package:macanacki/services/backoffice/gender_office.dart';
 import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
+
+import '../../presentation/widgets/debug_emitter.dart';
 
 class genderWare extends ChangeNotifier {
   bool _loadStatus = false;
   String message = "Cant get gender at the moment";
 
   List<GenderList> genderList = [];
-   List<GenderList> selectedOne = [];
+  List<GenderList> selectedOne = [];
 
   bool get loadStatus => _loadStatus;
 
@@ -19,9 +21,8 @@ class genderWare extends ChangeNotifier {
     notifyListeners();
   }
 
-    void selectGenderOptions(int id, bool tick) {
-    GenderList isSelect =
-        genderList.where((element) => element.id == id).first;
+  void selectGenderOptions(int id, bool tick) {
+    GenderList isSelect = genderList.where((element) => element.id == id).first;
     List<GenderList> notSelect =
         genderList.where((element) => element.id != id).toList();
 
@@ -43,31 +44,33 @@ class genderWare extends ChangeNotifier {
     late bool isSuccessful;
     try {
       http.Response? response = await getGender()
-          .whenComplete(() => log("gender gotten successfully"));
+          .whenComplete(() => emitter("gender gotten successfully"));
       if (response == null) {
         isSuccessful = false;
-      //  log("get gender request failed");
+        //  log("get gender request failed");
       } else if (response.statusCode == 200) {
         var jsonData = jsonDecode(response.body);
 
         var incomingData = GenderModel.fromJson(jsonData);
         genderList = incomingData.data!;
-     //   log(genderList.first.name!);
+        //   log(genderList.first.name!);
 
-      //  log("get gender  request success");
+        //  log("get gender  request success");
         isSuccessful = true;
       } else {
-      //  log("get gender  request failed");
+        //  log("get gender  request failed");
         isSuccessful = false;
       }
     } catch (e) {
       isSuccessful = false;
-   //   log("get gender  request failed");
-    //  log(e.toString());
+      //   log("get gender  request failed");
+      //  log(e.toString());
     }
 
     notifyListeners();
 
     return isSuccessful;
   }
+
+
 }

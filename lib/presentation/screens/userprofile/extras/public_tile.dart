@@ -1,19 +1,23 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexagon/hexagon.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/model/following_model.dart';
-import 'package:makanaki/presentation/allNavigation.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
-import 'package:makanaki/presentation/screens/userprofile/user_profile_screen.dart';
-import 'package:makanaki/presentation/widgets/text.dart';
-import 'package:makanaki/services/controllers/action_controller.dart';
-import 'package:makanaki/services/middleware/action_ware.dart';
-import 'package:makanaki/services/temps/temp.dart';
+import 'package:macanacki/model/following_model.dart';
+import 'package:macanacki/presentation/allNavigation.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/screens/userprofile/user_profile_screen.dart';
+import 'package:macanacki/presentation/widgets/text.dart';
+import 'package:macanacki/services/controllers/action_controller.dart';
+import 'package:macanacki/services/middleware/action_ware.dart';
+import 'package:macanacki/services/temps/temp.dart';
 import 'package:numeral/numeral.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../model/public_profile_model.dart';
+import '../../../constants/params.dart';
+import '../../../widgets/loader.dart';
 
 class PublicFollowTile extends StatelessWidget {
   final PublicUserData data;
@@ -50,42 +54,50 @@ class PublicFollowTile extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Container(
-                        //  color: Colors.red,
-                        constraints: BoxConstraints(maxWidth: 120),
-                        child: RichText(
-                            maxLines: 2,
-                            text: TextSpan(
-                                text: "${data.username}",
-                                style: GoogleFonts.spartan(
-                                    textStyle: const TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        color: Colors.black,
-                                        decorationStyle:
-                                            TextDecorationStyle.solid,
-                                        fontSize: 13)),
-                                children: [
-                                  TextSpan(
-                                    text: "",
-                                    style: GoogleFonts.spartan(
+                      Row(
+                        children: [
+                          Container(
+                            //  color: Colors.red,
+                            constraints: BoxConstraints(maxWidth: 120),
+                            child: RichText(
+                                maxLines: 2,
+                                text: TextSpan(
+                                    text: "${data.username}",
+                                    style: GoogleFonts.leagueSpartan(
                                         textStyle: const TextStyle(
-                                            fontWeight: FontWeight.w400,
+                                            fontWeight: FontWeight.w700,
                                             color: Colors.black,
                                             decorationStyle:
                                                 TextDecorationStyle.solid,
-                                            fontSize: 14)),
-                                  ),
-                                  // TextSpan(
+                                            fontSize: 13)),
+                                    children: [
+                                      TextSpan(
+                                        text: "",
+                                        style: GoogleFonts.leagueSpartan(
+                                            textStyle: const TextStyle(
+                                                fontWeight: FontWeight.w400,
+                                                color: Colors.black,
+                                                decorationStyle:
+                                                    TextDecorationStyle.solid,
+                                                fontSize: 14)),
+                                      ),
+                                      // TextSpan(
 
-                                  //   text: data.isMatched ? "Matched" : " ",
-                                  //   style: GoogleFonts.spartan(
-                                  //       textStyle: TextStyle(
-                                  //           fontWeight: FontWeight.w400,
-                                  //           color: HexColor("#0597FF"),
-                                  //           decorationStyle: TextDecorationStyle.solid,
-                                  //           fontSize: 10)),
-                                  // )
-                                ])),
+                                      //   text: data.isMatched ? "Matched" : " ",
+                                      //   style: GoogleFonts.spartan(
+                                      //       textStyle: TextStyle(
+                                      //           fontWeight: FontWeight.w400,
+                                      //           color: HexColor("#0597FF"),
+                                      //           decorationStyle: TextDecorationStyle.solid,
+                                      //           fontSize: 10)),
+                                      // )
+                                    ])),
+                          ),
+                          data.verified == 1 && data.activePlan == sub
+                              ? SvgPicture.asset("assets/icon/badge.svg",
+                                  height: 15, width: 15)
+                              : const SizedBox.shrink()
+                        ],
                       ),
                       const SizedBox(
                         height: 10,
@@ -139,7 +151,7 @@ class PublicFollowTile extends StatelessWidget {
     var width = MediaQuery.of(context).size.width;
     var size = MediaQuery.of(context).size;
     var padding = 8.0;
-    var w = (size.width - 4 * 1) / 6;
+    var w = 58.0;
     return Stack(
       children: [
         HexagonWidget.pointy(
@@ -163,7 +175,20 @@ class PublicFollowTile extends StatelessWidget {
           cornerRadius: 20.0,
           child: AspectRatio(
               aspectRatio: HexagonType.POINTY.ratio,
-              child: Center(child: Image.network(url))),
+              child: Center(
+                child: CachedNetworkImage(
+                  imageUrl: url,
+                  progressIndicatorBuilder: (context, url, downloadProgress) =>
+                      Center(
+                          child: Loader(
+                    color: HexColor(primaryColor),
+                  )),
+                  errorWidget: (context, url, error) => Icon(
+                    Icons.error,
+                    color: HexColor(primaryColor),
+                  ),
+                ),
+              )),
         ),
       ],
     );

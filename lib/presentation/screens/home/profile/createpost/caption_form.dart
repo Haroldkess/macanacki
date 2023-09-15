@@ -71,7 +71,7 @@ class _CaptionFormState extends State<CaptionForm> {
           decoration: InputDecoration(
             hintText: "  Write a caption...",
             hintStyle:
-                GoogleFonts.spartan(color: HexColor("#8B8B8B"), fontSize: 14),
+                GoogleFonts.leagueSpartan(color: HexColor("#8B8B8B"), fontSize: 14),
             contentPadding: EdgeInsets.only(left: 15),
             // prefixIcon: Padding(
             //   padding: const EdgeInsets.all(15.0),

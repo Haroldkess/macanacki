@@ -1,11 +1,15 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexagon/hexagon.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/allNavigation.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
-import 'package:makanaki/presentation/widgets/text.dart';
-import 'package:makanaki/services/temps/temps_id.dart';
+import 'package:macanacki/presentation/allNavigation.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/constants/params.dart';
+import 'package:macanacki/presentation/widgets/text.dart';
+import 'package:macanacki/services/middleware/user_profile_ware.dart';
+import 'package:macanacki/services/temps/temps_id.dart';
 import 'package:numeral/numeral.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,6 +17,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../../model/search_user_model.dart';
 import '../../../../../services/controllers/action_controller.dart';
 import '../../../../../services/middleware/action_ware.dart';
+import '../../../../uiproviders/screen/tab_provider.dart';
+import '../../../../widgets/loader.dart';
 import '../../../userprofile/user_profile_screen.dart';
 import '../../profile/profile_screen.dart';
 
@@ -24,14 +30,27 @@ class UserResultTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ActionWare stream = context.watch<ActionWare>();
+    UserProfileWare user = context.watch<UserProfileWare>();
     return InkWell(
       onTap: () async {
+        TabProvider action = Provider.of<TabProvider>(context, listen: false);
+
         SharedPreferences pref = await SharedPreferences.getInstance();
 
         if (pref.getString(userNameKey) == data.username) {
           // ignore: use_build_context_synchronously
-          PageRouting.pushToPage(context, const ProfileScreen());
+          //    PageRouting.pushToPage(context, const ProfileScreen());
+          action.tapTrack(0);
+          action.changeIndex(4);
+          action.pageController!.animateToPage(
+            4,
+            duration: const Duration(milliseconds: 1),
+            curve: Curves.easeIn,
+          );
         } else {
+          if (data.username == null) {
+            return;
+          }
           // ignore: use_build_context_synchronously
           PageRouting.pushToPage(
               context,
@@ -61,44 +80,53 @@ class UserResultTile extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Container(
-                        //  color: Colors.red,
-                        constraints: BoxConstraints(maxWidth: 120),
-                        child: RichText(
-                            maxLines: 2,
-                            text: TextSpan(
-                                text: "${data.username}",
-                                style: GoogleFonts.spartan(
-                                    textStyle: const TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        color: Colors.black,
-                                        decorationStyle:
-                                            TextDecorationStyle.solid,
-                                        fontSize: 13)),
-                                children: [
-                                  TextSpan(
-                                    text: "",
-                                    style: GoogleFonts.spartan(
+                      Row(
+                        children: [
+                          Container(
+                            //  color: Colors.red,
+                            constraints: BoxConstraints(maxWidth: 120),
+                            child: RichText(
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                text: TextSpan(
+                                    text: data.username ?? "...",
+                                    style: GoogleFonts.leagueSpartan(
                                         textStyle: const TextStyle(
-                                            fontWeight: FontWeight.w400,
+                                            fontWeight: FontWeight.w700,
                                             color: Colors.black,
                                             decorationStyle:
                                                 TextDecorationStyle.solid,
-                                            fontSize: 14)),
-                                  ),
-                                  // TextSpan(
+                                            fontSize: 12)),
+                                    children: [
+                                      TextSpan(
+                                        text: "",
+                                        style: GoogleFonts.leagueSpartan(
+                                            textStyle: const TextStyle(
+                                                fontWeight: FontWeight.w400,
+                                                color: Colors.black,
+                                                decorationStyle:
+                                                    TextDecorationStyle.solid,
+                                                fontSize: 12)),
+                                      ),
+                                      // TextSpan(
 
-                                  //   text: data.isMatched ? "Matched" : " ",
-                                  //   style: GoogleFonts.spartan(
-                                  //       textStyle: TextStyle(
-                                  //           fontWeight: FontWeight.w400,
-                                  //           color: HexColor("#0597FF"),
-                                  //           decorationStyle: TextDecorationStyle.solid,
-                                  //           fontSize: 10)),
-                                  // )
-                                ])),
+                                      //   text: data.isMatched ? "Matched" : " ",
+                                      //   style: GoogleFonts.spartan(
+                                      //       textStyle: TextStyle(
+                                      //           fontWeight: FontWeight.w400,
+                                      //           color: HexColor("#0597FF"),
+                                      //           decorationStyle: TextDecorationStyle.solid,
+                                      //           fontSize: 10)),
+                                      // )
+                                    ])),
+                          ),
+                          data.verified == 1 &&
+                                  data.activePlan != sub
+                              ? SvgPicture.asset("assets/icon/badge.svg",
+                                  height: 15, width: 15)
+                              : const SizedBox.shrink()
+                        ],
                       ),
-                   
                       const SizedBox(
                         height: 10,
                       ),
@@ -116,7 +144,7 @@ class UserResultTile extends StatelessWidget {
               Expanded(
                 child: Align(
                   alignment: Alignment.centerRight,
-                  child: username == data.username
+                  child: user.userProfileModel.username == data.username
                       ? const SizedBox.shrink()
                       : InkWell(
                           onTap: () {
@@ -146,7 +174,7 @@ class UserResultTile extends StatelessWidget {
     var width = MediaQuery.of(context).size.width;
     var size = MediaQuery.of(context).size;
     var padding = 8.0;
-    var w = (size.width - 4 * 1) / 6;
+    var w = 59.0;
     return Stack(
       children: [
         HexagonWidget.pointy(
@@ -170,7 +198,20 @@ class UserResultTile extends StatelessWidget {
           cornerRadius: 20.0,
           child: AspectRatio(
               aspectRatio: HexagonType.POINTY.ratio,
-              child: Center(child: Image.network(url))),
+              child: Center(
+                child: CachedNetworkImage(
+                  imageUrl: url,
+                  progressIndicatorBuilder: (context, url, downloadProgress) =>
+                      Center(
+                          child: Loader(
+                    color: HexColor(primaryColor),
+                  )),
+                  errorWidget: (context, url, error) => Icon(
+                    Icons.error,
+                    color: HexColor(primaryColor),
+                  ),
+                ),
+              )),
         ),
       ],
     );
@@ -188,7 +229,7 @@ class UserResultTile extends StatelessWidget {
         child: AppText(
           text: title,
           color: HexColor(backgroundColor),
-          size: 13,
+          size: 12,
           fontWeight: FontWeight.w500,
         ),
       ),
@@ -207,7 +248,7 @@ class UserResultTile extends StatelessWidget {
         child: AppText(
           text: title,
           color: HexColor(backgroundColor),
-          size: 13,
+          size: 12,
           fontWeight: FontWeight.w500,
         ),
       ),

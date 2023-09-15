@@ -1,15 +1,20 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:like_button/like_button.dart';
-import 'package:makanaki/presentation/widgets/option_modal.dart';
+import 'package:macanacki/presentation/widgets/debug_emitter.dart';
+import 'package:macanacki/presentation/widgets/option_modal.dart';
 import 'package:numeral/numeral.dart';
 import 'package:provider/provider.dart';
-
+import '../../../model/asset_data.dart';
 import '../../../model/feed_post_model.dart';
+import '../../../services/backoffice/mux_client.dart';
 import '../../../services/controllers/action_controller.dart';
 import '../../../services/middleware/action_ware.dart';
 import '../../constants/colors.dart';
+import '../../operations.dart';
 import '../../uiproviders/screen/comment_provider.dart';
 import '../comment_modal.dart';
 import '../text.dart';
@@ -17,9 +22,14 @@ import '../text.dart';
 class LikeSection extends StatefulWidget {
   final FeedPost data;
   String page;
-  final String media;
+  final List<String> media;
+  final List<String> urls;
   LikeSection(
-      {super.key, required this.data, required this.page, required this.media});
+      {super.key,
+      required this.data,
+      required this.page,
+      required this.media,
+      required this.urls});
 
   @override
   State<LikeSection> createState() => _LikeSectionState();
@@ -31,7 +41,9 @@ class _LikeSectionState extends State<LikeSection> {
     ActionWare stream = context.watch<ActionWare>();
     StoreComment comment = context.watch<StoreComment>();
     return Padding(
-      padding: const EdgeInsets.only(right: 10),
+      padding: const EdgeInsets.only(
+        right: 10,
+      ),
       child: Container(
         height: 300,
         width: 70,
@@ -55,18 +67,44 @@ class _LikeSectionState extends State<LikeSection> {
             //     widget.data.noOfLikes),
             InkWell(
               onTap: () async {
+                StoreComment comment =
+                    Provider.of<StoreComment>(context, listen: false);
+                List checkCom = comment.comments
+                    .where((element) => element.postId == widget.data.id)
+                    .toList();
+
+                if (checkCom.isEmpty) {
+                  if (widget.data.comments!.isEmpty) {
+                  } else {
+                    Operations.commentOperation(
+                        context, false, widget.data.comments!);
+                  }
+                } else {}
+                setState(() {});
+                //   emitter(comment.comments.length.toString());
+                // emitter(widget.data.id!.toString());
                 // Operations.commentOperation(
                 //     context, false, widget.data.comments!);
+
                 commentModal(context, widget.data.id!, widget.page);
               },
               child: Padding(
                 padding: const EdgeInsets.only(right: 3.0),
-                child: myIcon("assets/icon/tick_comment.svg", backgroundColor,
-                    30, 30, comment.comments.length),
+                child: myIcon(
+                    "assets/icon/tick_comment.svg",
+                    backgroundColor,
+                    30,
+                    30,
+                    comment.comments
+                        .where((element) => element.postId == widget.data.id)
+                        .toList()
+                        .length),
               ),
             ),
+
             InkWell(
-                onTap: () => optionModal(context, widget.media),
+                onTap: () => optionModal(
+                    context, widget.urls, widget.data.user!.id, widget.data.id),
                 child: myIcon(
                   "assets/icon/more.svg",
                   backgroundColor,
@@ -81,6 +119,7 @@ class _LikeSectionState extends State<LikeSection> {
 
   Column myIcon(String svgPath, String hexString, double height, double width,
       [int? text]) {
+    StoreComment comment = context.watch<StoreComment>();
     return Column(
       children: [
         InkWell(
@@ -94,7 +133,10 @@ class _LikeSectionState extends State<LikeSection> {
         Padding(
           padding: const EdgeInsets.only(top: 8.0),
           child: AppText(
-            text: text == null ? "" : Numeral(text).format(),
+            text: text == null
+                ? ""
+                : Numeral(text == 0 ? widget.data.comments!.length : text)
+                    .format(),
             size: 16,
             align: TextAlign.center,
             fontWeight: FontWeight.w400,
@@ -124,7 +166,7 @@ class _LikeSectionState extends State<LikeSection> {
           countPostion: CountPostion.bottom,
           crossAxisAlignment: CrossAxisAlignment.end,
           mainAxisAlignment: MainAxisAlignment.end,
-          likeCountPadding: EdgeInsets.only(top: 10, left: 36),
+          likeCountPadding: EdgeInsets.only(top: 10, left: 40),
           onTap: (isLiked) async {
             likeAction(context, isLiked);
             return !isLiked;

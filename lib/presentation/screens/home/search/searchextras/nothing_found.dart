@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
-import 'package:makanaki/presentation/widgets/text.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/widgets/text.dart';
 
 class NoSearchFound extends StatelessWidget {
   const NoSearchFound({super.key});
@@ -17,11 +17,11 @@ class NoSearchFound extends StatelessWidget {
           const SizedBox(
             height: 44,
           ),
-
-          SvgPicture.asset("assets/icon/nouser.svg",
-         // color: HexColor(primaryColor),
+          SvgPicture.asset(
+            "assets/icon/nouser.svg",
+            // color: HexColor(primaryColor),
           ),
-           const SizedBox(
+          const SizedBox(
             height: 30.7,
           ),
           AppText(

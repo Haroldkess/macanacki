@@ -1,8 +1,8 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:http/http.dart' as http;
-import 'package:makanaki/services/api_url.dart';
-import 'package:makanaki/services/temps/temps_id.dart';
+import 'package:macanacki/services/api_url.dart';
+import 'package:macanacki/services/temps/temps_id.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<http.Response?> getNotification() async {
@@ -20,7 +20,7 @@ Future<http.Response?> getNotification() async {
       },
     );
 
-   // log(response.body.toString());
+    // log(response.body.toString());
   } catch (e) {
     response = null;
   }

@@ -37,21 +37,22 @@ class PublicProfileModel {
 }
 
 class PublicUserPost {
-  PublicUserPost({
-    this.id,
-    this.description,
-    this.published,
-    this.createdAt,
-    this.updatedAt,
-    this.btnLink,
-    this.creator,
-    this.media,
-    this.comments,
-    this.noOfLikes,
-    this.viewCount,
-    this.button,
-    this.user,
-  });
+  PublicUserPost(
+      {this.id,
+      this.description,
+      this.published,
+      this.createdAt,
+      this.updatedAt,
+      this.btnLink,
+      this.creator,
+      this.media,
+      this.mux,
+      this.comments,
+      this.noOfLikes,
+      this.viewCount,
+      this.button,
+      this.user,
+      this.promoted});
 
   int? id;
   String? description;
@@ -60,12 +61,14 @@ class PublicUserPost {
   DateTime? updatedAt;
   String? btnLink;
   String? creator;
-  String? media;
+  List<String>? media;
+  List<String>? mux;
   List<PublicComment>? comments;
   int? noOfLikes;
   int? viewCount;
   String? button;
   PublicUserData? user;
+  String? promoted;
 
   factory PublicUserPost.fromJson(Map<String, dynamic> json) => PublicUserPost(
         id: json["id"],
@@ -79,7 +82,12 @@ class PublicUserPost {
             : DateTime.parse(json["updated_at"]),
         btnLink: json["btn_link"],
         creator: json["creator"],
-        media: json["media"],
+        media: json["media"] == null
+            ? []
+            : List<String>.from(json["media"]!.map((x) => x)),
+        mux: json["mux"] == null
+            ? []
+            : List<String>.from(json["mux"]!.map((x) => x)),
         comments: json["comments"] == null
             ? []
             : List<PublicComment>.from(
@@ -89,6 +97,7 @@ class PublicUserPost {
         button: json["button"],
         user:
             json["user"] == null ? null : PublicUserData.fromJson(json["user"]),
+        promoted: json["promoted"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -99,7 +108,8 @@ class PublicUserPost {
         "updated_at": updatedAt?.toIso8601String(),
         "btn_link": btnLink,
         "creator": creator,
-        "media": media,
+        "media": media == null ? [] : List<dynamic>.from(media!.map((x) => x)),
+        "mux": mux == null ? [] : List<dynamic>.from(mux!.map((x) => x)),
         "comments": comments == null
             ? []
             : List<dynamic>.from(comments!.map((x) => x.toJson())),
@@ -107,52 +117,54 @@ class PublicUserPost {
         "view_count": viewCount,
         "button": button,
         "user": user?.toJson(),
+        "promoted": promoted,
       };
 }
 
 class PublicUserData {
-  PublicUserData({
-    this.id,
-    this.email,
-    this.username,
-    this.faceVerification,
-    this.dob,
-    this.emailVerified,
-    this.registrationComplete,
-    this.emailVerifiedAt,
-    this.createdAt,
-    this.updatedAt,
-    this.firebaseId,
-    this.longitude,
-    this.latitude,
-    this.mode,
-    this.ageLowerBound,
-    this.ageUpperBound,
-    this.useCurrentLocation,
-    this.useGlobalLocationSearch,
-    this.enablePushNotification,
-    this.enableEmailNotification,
-    this.setMaxDistSearch,
-    this.twitter,
-    this.facebook,
-    this.instagram,
-    this.linkedin,
-    this.telegram,
-    this.fullName,
-    this.nationality,
-    this.idType,
-    this.idNumber,
-    this.verified,
-    this.aboutMe,
-    this.phone,
-    this.posts,
-    this.followers,
-    this.followings,
-    this.gender,
-    this.profilephoto,
-    this.noOfFollowers,
-    this.noOfFollowing,
-  });
+  PublicUserData(
+      {this.id,
+      this.email,
+      this.username,
+      this.faceVerification,
+      this.dob,
+      this.emailVerified,
+      this.registrationComplete,
+      this.emailVerifiedAt,
+      this.createdAt,
+      this.updatedAt,
+      this.firebaseId,
+      this.longitude,
+      this.latitude,
+      this.mode,
+      this.ageLowerBound,
+      this.ageUpperBound,
+      this.useCurrentLocation,
+      this.useGlobalLocationSearch,
+      this.enablePushNotification,
+      this.enableEmailNotification,
+      this.setMaxDistSearch,
+      this.twitter,
+      this.facebook,
+      this.instagram,
+      this.linkedin,
+      this.telegram,
+      this.fullName,
+      this.nationality,
+      this.idType,
+      this.idNumber,
+      this.verified,
+      this.aboutMe,
+      this.phone,
+      this.posts,
+      this.followers,
+      this.followings,
+      this.gender,
+      this.profilephoto,
+      this.noOfFollowers,
+      this.noOfFollowing,
+      this.verification,
+      this.activePlan});
 
   int? id;
   String? email;
@@ -192,8 +204,10 @@ class PublicUserData {
   List<PublicUserData>? followings;
   String? gender;
   String? profilephoto;
+  dynamic activePlan;
   int? noOfFollowers;
   int? noOfFollowing;
+  Verification? verification;
 
   factory PublicUserData.fromJson(Map<String, dynamic> json) => PublicUserData(
         id: json["id"],
@@ -251,6 +265,10 @@ class PublicUserData {
         profilephoto: json["profilephoto"],
         noOfFollowers: json["no_of_followers"],
         noOfFollowing: json["no_of_following"],
+        verification: json["verification"] == null
+            ? null
+            : Verification.fromJson(json["verification"]),
+        activePlan: json["active_plan"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -300,6 +318,100 @@ class PublicUserData {
         "profilephoto": profilephoto,
         "no_of_followers": noOfFollowers,
         "no_of_following": noOfFollowing,
+        "verification": verification?.toJson(),
+        "active_plan": activePlan,
+      };
+}
+
+class Verification {
+  int? id;
+  dynamic userId;
+  String? name;
+  String? businessName;
+  String? businessEmail;
+  String? phone;
+  String? description;
+  String? isRegistered;
+  String? country;
+  String? registrationNo;
+  String? address;
+  String? idType;
+  String? idNo;
+  dynamic verified;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+  String? businessAddress;
+  String? photo;
+  String? evidence;
+
+  Verification({
+    this.id,
+    this.userId,
+    this.name,
+    this.businessName,
+    this.businessEmail,
+    this.phone,
+    this.description,
+    this.isRegistered,
+    this.country,
+    this.registrationNo,
+    this.address,
+    this.idType,
+    this.idNo,
+    this.verified,
+    this.createdAt,
+    this.updatedAt,
+    this.businessAddress,
+    this.photo,
+    this.evidence,
+  });
+
+  factory Verification.fromJson(Map<String, dynamic> json) => Verification(
+        id: json["id"],
+        userId: json["user_id"],
+        name: json["name"],
+        businessName: json["business_name"],
+        businessEmail: json["business_email"],
+        phone: json["phone"],
+        description: json["description"],
+        isRegistered: json["is_registered"],
+        country: json["country"],
+        registrationNo: json["registration_no"],
+        address: json["address"],
+        idType: json["id_type"],
+        idNo: json["id_no"],
+        verified: json["verified"],
+        createdAt: json["created_at"] == null
+            ? null
+            : DateTime.parse(json["created_at"]),
+        updatedAt: json["updated_at"] == null
+            ? null
+            : DateTime.parse(json["updated_at"]),
+        businessAddress: json["business_address"],
+        photo: json["photo"],
+        evidence: json["evidence"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "user_id": userId,
+        "name": name,
+        "business_name": businessName,
+        "business_email": businessEmail,
+        "phone": phone,
+        "description": description,
+        "is_registered": isRegistered,
+        "country": country,
+        "registration_no": registrationNo,
+        "address": address,
+        "id_type": idType,
+        "id_no": idNo,
+        "verified": verified,
+        "created_at": createdAt?.toIso8601String(),
+        "updated_at": updatedAt?.toIso8601String(),
+        "business_address": businessAddress,
+        "photo": photo,
+        "evidence": evidence,
       };
 }
 
@@ -313,6 +425,7 @@ class PublicComment {
     this.profilePhoto,
     this.noOfLikes,
     this.postId,
+    this.isVerified,
   });
 
   int? id;
@@ -323,6 +436,7 @@ class PublicComment {
   String? profilePhoto;
   int? noOfLikes;
   int? postId;
+  int? isVerified;
 
   factory PublicComment.fromJson(Map<String, dynamic> json) => PublicComment(
         id: json["id"],
@@ -337,6 +451,7 @@ class PublicComment {
         profilePhoto: json["profile_photo"],
         noOfLikes: json["no_of_likes"],
         postId: json["post_id"],
+        isVerified: json["user_verified"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -348,5 +463,6 @@ class PublicComment {
         "profile_photo": profilePhoto,
         "no_of_likes": noOfLikes,
         "post_id": postId,
+        "user_verified": isVerified
       };
 }

@@ -1,18 +1,30 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
-import 'package:makanaki/presentation/screens/onboarding/splash_screen.dart';
-import 'package:makanaki/services/provider_init.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/screens/onboarding/splash_screen.dart';
+import 'package:macanacki/services/provider_init.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:upgrader/upgrader.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 
 void main() async {
+  dotenv.load(fileName: "secret.env");
+  // await Database.initDatabase();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   FirebaseFirestore.instance.settings;
-  runApp(const MyApp());
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      systemNavigationBarIconBrightness: Brightness.dark,
+      systemNavigationBarColor: HexColor(backgroundColor)));
+  runApp(Phoenix(child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -23,11 +35,24 @@ class MyApp extends StatelessWidget {
         providers: InitProvider.providerInit(),
         child: OverlaySupport(
           toastTheme: ToastThemeData(alignment: Alignment.center),
-          child: MaterialApp(
+          child: GetMaterialApp(
             debugShowCheckedModeBanner: false,
-            title: 'MacaNacki',
-            theme: ThemeData(primaryColor: HexColor(primaryColor)),
-            home: const Splash(),
+            title: 'Macanacki',
+            theme: ThemeData(
+                primaryColor: HexColor(primaryColor),
+                brightness: Brightness.light,
+                iconTheme: IconThemeData(color: Colors.black),
+                iconButtonTheme: IconButtonThemeData(
+                    style: ButtonStyle(
+                        iconColor: MaterialStateProperty.all(Colors.black))),
+                primaryIconTheme: IconThemeData(color: Colors.black)),
+            home: UpgradeAlert(
+                upgrader: Upgrader(
+                    dialogStyle: Platform.isIOS
+                        ? UpgradeDialogStyle.cupertino
+                        : UpgradeDialogStyle.material,
+                    debugLogging: false),
+                child: const Splash()),
           ),
         ));
   }

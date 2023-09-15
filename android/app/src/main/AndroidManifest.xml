@@ -1,13 +1,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.makanaki">
+    package="com.thomas.macanacki">
       <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
         <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-        <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-<uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
+<!-- <uses-permission
+       android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+       tools:ignore="ScopedStorage" />
+     if androidExistNotSave = true -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+   
     <!-- Provide required visibility configuration for API level 30 and above -->
 <queries>
   <!-- If your app checks for SMS support -->
@@ -22,9 +24,14 @@
   </intent>
 </queries>
    <application
-        android:label="MacaNacki"
+        android:label="Macanacki"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:usesCleartextTraffic="true">
+              <meta-data
+        android:name="com.google.firebase.messaging.default_notification_icon"
+android:resource="@mipmap/ic_launcher" />
+        
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -49,16 +56,14 @@
               <action android:name="FLUTTER_NOTIFICATION_CLICK" />
               <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+
+            
         </activity>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-             <meta-data android:name="com.google.android.geo.API_KEY"
-               android:value="AIzaSyAd4rEAQqf58fCJGABqW99teDP9BcuyN08"/>
-        
-             
-               
+                       
     </application>
 </manifest>

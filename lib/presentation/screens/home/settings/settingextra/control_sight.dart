@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
-import 'package:makanaki/presentation/uiproviders/screen/gender_provider.dart';
-import 'package:makanaki/presentation/widgets/text.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/uiproviders/screen/gender_provider.dart';
+import 'package:macanacki/presentation/widgets/text.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../operations.dart';

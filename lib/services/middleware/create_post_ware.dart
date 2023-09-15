@@ -2,18 +2,23 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:makanaki/model/comments_model.dart';
-import 'package:makanaki/model/create_post_model.dart';
-import 'package:makanaki/services/backoffice/create_post_office.dart';
+import 'package:macanacki/model/comments_model.dart';
+import 'package:macanacki/model/create_post_model.dart';
+import 'package:macanacki/services/backoffice/create_post_office.dart';
 import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
 
+import '../../presentation/widgets/debug_emitter.dart';
+
 class CreatePostWare extends ChangeNotifier {
   bool _loadStatus = false;
   bool _loadStatus2 = false;
+  bool loadEditPost = false;
   CommentData comments = CommentData();
-  File? file;
+  List<File>? file;
+  File? idUser;
+  File? idBusiness;
   String _message = 'Something went wrong';
   String _commentMessage = 'Something went wrong';
   bool get loadStatus => _loadStatus;
@@ -22,7 +27,6 @@ class CreatePostWare extends ChangeNotifier {
   String get commentMessage => _commentMessage;
 
   void disposeValue() async {
-  
     comments = CommentData();
     _message = "";
     _commentMessage = "";
@@ -35,16 +39,44 @@ class CreatePostWare extends ChangeNotifier {
     notifyListeners();
   }
 
+  void isLoadingEdit(bool isLoad) {
+    loadEditPost = isLoad;
+    notifyListeners();
+  }
+
   void isLoading2(bool isLoad) {
     _loadStatus2 = isLoad;
     notifyListeners();
   }
 
   void addFile(
-    File selectedFile,
+    List<File> selectedFile,
   ) {
     file = selectedFile;
 
+    notifyListeners();
+  }
+
+  void addIdUser(
+    File selectedFile,
+  ) {
+    idUser = selectedFile;
+
+    notifyListeners();
+  }
+
+  void addIdBusiness(
+    File selectedFile,
+  ) {
+    idBusiness = selectedFile;
+
+    notifyListeners();
+  }
+
+  void removeFile(
+    int index,
+  ) {
+    file!.removeAt(index);
     notifyListeners();
   }
 
@@ -52,9 +84,9 @@ class CreatePostWare extends ChangeNotifier {
     CreatePostModel data,
   ) async {
     late bool isSuccessful;
-  //  log(data.media!.path);
-  //  log(data.description.toString());
-   // log(data.published.toString());
+    //  log(data.media!.path);
+    //  log(data.description.toString());
+    // log(data.published.toString());
 
     try {
       http.StreamedResponse? response = await createPost(data);
@@ -65,23 +97,27 @@ class CreatePostWare extends ChangeNotifier {
         final res = await http.Response.fromStream(response);
         var jsonData = jsonDecode(res.body);
 
-    //    log(jsonData["message"]);
+        //    log(jsonData["message"]);
         _message = jsonData["message"];
         isSuccessful = true;
-      //  log("post created!!");
+        log(jsonData.toString());
+        log(jsonData["message"]);
+        //  log("post created!!");
 
         //  var res = http.Response.fromStream(response);
 
       } else {
         final res = await http.Response.fromStream(response);
         var jsonData = jsonDecode(res.body);
-     //   log(jsonData["message"]);
+        //   log(jsonData["message"]);
         _message = jsonData["message"];
+        log(jsonData.toString());
+        log(jsonData["message"]);
         isSuccessful = false;
       }
     } catch (e) {
       isSuccessful = false;
-      log(e.toString());
+      emitter(e.toString());
     }
 
     notifyListeners();
@@ -93,31 +129,94 @@ class CreatePostWare extends ChangeNotifier {
     late bool isSuccessful;
     try {
       http.Response? response = await shareComment(body, id)
-          .whenComplete(() => log("share comment request done"));
+          .whenComplete(() => emitter("share comment request done"));
       if (response == null) {
         _commentMessage = "Something went wrong";
         isSuccessful = false;
-     //   log("share comment request failed");
+        emitter("share comment request failed");
       } else if (response.statusCode == 200) {
         var jsonData = jsonDecode(response.body);
         comments = CommentData.fromJson(jsonData["data"]);
         _commentMessage = jsonData["message"].toString();
-     //   log("share comment request success");
+        emitter("share comment request success");
         isSuccessful = true;
+      } else if (response.statusCode == 500){
+            _commentMessage = "Cannot comment on this post at the moment";
+  isSuccessful = false;
       } else {
         var jsonData = jsonDecode(response.body);
         _commentMessage = jsonData["message"].toString();
-     //   log("share comment request failed");
+        emitter("share comment request else failed");
         isSuccessful = false;
       }
     } catch (e) {
       isSuccessful = false;
-   //   log("share comment request failed");
-    //  log(e.toString());
+      //   log("share comment request failed");
+      emitter(e.toString());
     }
 
     notifyListeners();
 
+    return isSuccessful;
+  }
+
+  Future<bool> deletePostFromApi(int id) async {
+    late bool isSuccessful;
+    try {
+      http.Response? response = await deletePost(id)
+          .whenComplete(() => emitter("delete request done"));
+      if (response == null) {
+        isSuccessful = false;
+      } else if (response.statusCode == 200) {
+        isSuccessful = true;
+      } else {
+        isSuccessful = false;
+      }
+    } catch (e) {
+      isSuccessful = false;
+    }
+    notifyListeners();
+    return isSuccessful;
+  }
+
+  Future<bool> deleteCommentFromApi(int id, int commentId) async {
+    late bool isSuccessful;
+    try {
+      http.Response? response = await deleteComment(id, commentId)
+          .whenComplete(() => emitter("delete comment request done"));
+      if (response == null) {
+        isSuccessful = false;
+      } else if (response.statusCode == 200) {
+        isSuccessful = true;
+      } else {
+        isSuccessful = false;
+      }
+    } catch (e) {
+      isSuccessful = false;
+    }
+    notifyListeners();
+    return isSuccessful;
+  }
+
+  Future<bool> editPostFromApi(EditPost data, int id) async {
+    late bool isSuccessful;
+    try {
+      http.Response? response = await editPost(data, id)
+          .whenComplete(() => emitter("edit  request done"));
+      if (response == null) {
+        emitter("null");
+        isSuccessful = false;
+      } else if (response.statusCode == 201) {
+        isSuccessful = true;
+      } else {
+        emitter("else");
+        isSuccessful = false;
+      }
+    } catch (e) {
+      isSuccessful = false;
+      emitter(e.toString());
+    }
+    notifyListeners();
     return isSuccessful;
   }
 }

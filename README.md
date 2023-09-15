@@ -1,16 +1,30 @@
-# makanaki
+# macanacki
 
-A new Flutter project.
+A social networking platform for individuals and businesses for africa
+!. Full auth (email, otp )
+2. feed
+3. like
+4. comment
+5. like comment
+6. swipe to find user
+7. distance a user is in km
+8. messaging
+9. post buttons
+10. business edges
+11. download posts/ save post to gallery
+12. post image or video
+13. search
+14. and much more....
 
-## Getting Started
+![Alt text](swipe.png)
+above is the user swipe screen...
 
-This project is a starting point for a Flutter application.
+![Alt text](feed.png)
+above screen is the fyp (videos and images)
 
-A few resources to get you started if this is your first Flutter project:
+![Alt text](chat.png)
+above screen is the chat screen 
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+![Alt text](profile.png)
+![Alt text](profilepost.png)
+above screens are the profile screen 

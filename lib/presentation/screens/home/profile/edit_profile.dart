@@ -1,19 +1,22 @@
+import 'package:csc_picker/csc_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
-import 'package:makanaki/presentation/screens/home/profile/editprofileextra/about_me.dart';
-import 'package:makanaki/presentation/screens/home/profile/editprofileextra/edit_gender.dart';
-import 'package:makanaki/presentation/screens/home/profile/editprofileextra/edit_studies.dart';
-import 'package:makanaki/presentation/screens/home/profile/editprofileextra/my_num.dart';
-import 'package:makanaki/presentation/screens/home/profile/editprofileextra/profile_pic.dart';
-import 'package:makanaki/presentation/screens/home/profile/editprofileextra/select_profile_settings.dart';
-import 'package:makanaki/presentation/widgets/buttons.dart';
-import 'package:makanaki/presentation/widgets/loader.dart';
-import 'package:makanaki/presentation/widgets/text.dart';
-import 'package:makanaki/services/controllers/edit_profile_controller.dart';
-import 'package:makanaki/services/middleware/edit_profile_ware.dart';
-import 'package:makanaki/services/middleware/user_profile_ware.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/screens/home/profile/editprofileextra/about_me.dart';
+import 'package:macanacki/presentation/screens/home/profile/editprofileextra/edit_gender.dart';
+import 'package:macanacki/presentation/screens/home/profile/editprofileextra/edit_studies.dart';
+import 'package:macanacki/presentation/screens/home/profile/editprofileextra/my_num.dart';
+import 'package:macanacki/presentation/screens/home/profile/editprofileextra/profile_pic.dart';
+import 'package:macanacki/presentation/screens/home/profile/editprofileextra/select_profile_settings.dart';
+import 'package:macanacki/presentation/widgets/buttons.dart';
+import 'package:macanacki/presentation/widgets/loader.dart';
+import 'package:macanacki/presentation/widgets/text.dart';
+import 'package:macanacki/services/controllers/edit_profile_controller.dart';
+import 'package:macanacki/services/middleware/edit_profile_ware.dart';
+import 'package:macanacki/services/middleware/user_profile_ware.dart';
 import 'package:provider/provider.dart';
+
+import '../../../operations.dart';
 
 class EditProfile extends StatefulWidget {
   final String? aboutMe;
@@ -25,14 +28,29 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
- late TextEditingController about;
+  final _cscPickerKey = GlobalKey<CSCPickerState>();
+  String selectedCity = "";
+  String selectedCountry = "";
+  String selectedState = "";
+  late TextEditingController about;
 
-late  TextEditingController phone ;
+  late TextEditingController phone;
   @override
   void initState() {
     super.initState();
     about = TextEditingController(text: widget.aboutMe ?? "");
     phone = TextEditingController(text: widget.phone ?? "");
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      UserProfileWare user =
+          Provider.of<UserProfileWare>(context, listen: false);
+      setState(() {
+        selectedCountry = user.userProfileModel.country ?? "";
+        selectedState = user.userProfileModel.state ?? "";
+        selectedCity = user.userProfileModel.city ?? "";
+      });
+    });
+
+    Operations.controlSystemColor();
   }
 
   @override
@@ -79,9 +97,64 @@ late  TextEditingController phone ;
                       phone: phone,
                     ),
                     // EditSelectGender(),
-                    // SizedBox(
-                    //   height: 30,
-                    // ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 16, left: 30),
+                          child: Row(
+                            children: [
+                              AppText(
+                                text: "Your Location",
+                                fontWeight: FontWeight.w600,
+                                size: 17,
+                                color: HexColor("#0C0C0C"),
+                              )
+                            ],
+                          ),
+                        ),
+                        CSCPicker(
+                          key: _cscPickerKey,
+                          layout: Layout.vertical,
+                          countryDropdownLabel: "Select country",
+                          stateDropdownLabel: "Select state",
+                          cityDropdownLabel: "Select city",
+                          currentCity:
+                              user.userProfileModel.city ?? "Select city",
+                          currentState:
+                              user.userProfileModel.state ?? "Select state",
+                          currentCountry:
+                              user.userProfileModel.country ?? "Select country",
+                          flagState: CountryFlag.DISABLE,
+                          onCountryChanged: (country) {
+                             if(country  != "Select country"){
+                            setState(() {
+                              selectedCountry = country;
+                            });
+                              }
+
+                            // log(country);
+                          },
+                          onStateChanged: (state) {
+                            if (state != null && state != "Select state") {
+                              setState(() {
+                                selectedState = state;
+                              });
+                            }
+                          },
+                          onCityChanged: (city) {
+                            if (city != null && city != "Select city") {
+                              setState(() {
+                                selectedCity = city;
+                              });
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+
                     //  EditStudies(),
                     // SizedBox(
                     //   height: 30,
@@ -120,7 +193,7 @@ late  TextEditingController phone ;
     //   phone.text = "";
     // }
 
-    EditProfileController.editProfileController(
-        context, about.text, phone.text);
+    EditProfileController.editProfileController(context, about.text, phone.text,
+        selectedCountry, selectedState, selectedCity);
   }
 }

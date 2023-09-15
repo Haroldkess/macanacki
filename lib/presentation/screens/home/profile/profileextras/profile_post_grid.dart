@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:makanaki/model/feed_post_model.dart';
-import 'package:makanaki/model/profile_feed_post.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
-import 'package:makanaki/presentation/screens/home/profile/profileextras/grid_view_items.dart';
+import 'package:macanacki/model/feed_post_model.dart';
+import 'package:macanacki/model/profile_feed_post.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/screens/home/profile/profileextras/grid_view_items.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 

@@ -2,7 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hexagon/hexagon.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
+import 'package:shimmer/shimmer.dart';
+
+import 'loader.dart';
 
 class HexagonAvatar extends StatelessWidget {
   final double w;
@@ -25,9 +28,27 @@ class HexagonAvatar extends StatelessWidget {
           child: CachedNetworkImage(
             imageUrl: url,
             fit: BoxFit.cover,
+            progressIndicatorBuilder: (context, url, downloadProgress) =>
+                Shimmer.fromColors(
+                    baseColor: Colors.grey,
+                    highlightColor: Colors.pink,
+                    child: Container(
+                      height: double.infinity,
+                      width: double.infinity,
+                    )),
+            errorWidget: (context, url, error) => Icon(
+              Icons.error,
+              color: HexColor(primaryColor),
+            ),
           ),
         ),
       ),
     );
   }
 }
+
+
+            //            Center(
+            //         child: Loader(
+            //   color: HexColor(primaryColor).withOpacity(.7),
+            // )),

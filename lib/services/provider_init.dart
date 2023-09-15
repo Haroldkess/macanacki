@@ -1,25 +1,27 @@
-import 'package:makanaki/presentation/uiproviders/dob/dob_provider.dart';
-import 'package:makanaki/presentation/uiproviders/screen/card_provider.dart';
-import 'package:makanaki/presentation/uiproviders/screen/comment_provider.dart';
-import 'package:makanaki/presentation/uiproviders/screen/find_people_provider.dart';
-import 'package:makanaki/presentation/uiproviders/screen/tab_provider.dart';
-import 'package:makanaki/services/middleware/action_ware.dart';
-import 'package:makanaki/services/middleware/button_ware.dart';
-import 'package:makanaki/services/middleware/chat_ware.dart';
-import 'package:makanaki/services/middleware/create_post_ware.dart';
-import 'package:makanaki/services/middleware/edit_profile_ware.dart';
-import 'package:makanaki/services/middleware/facial_ware.dart';
-import 'package:makanaki/services/middleware/feed_post_ware.dart';
-import 'package:makanaki/services/middleware/gender_ware.dart';
-import 'package:makanaki/services/middleware/notification_ware..dart';
-import 'package:makanaki/services/middleware/otp_ware.dart';
-import 'package:makanaki/services/middleware/plan_ware.dart';
-import 'package:makanaki/services/middleware/registeration_ware.dart';
-import 'package:makanaki/services/middleware/search_ware.dart';
-import 'package:makanaki/services/middleware/swipe_ware.dart';
-import 'package:makanaki/services/middleware/user_profile_ware.dart';
-import 'package:makanaki/services/middleware/view_ware.dart';
-import 'package:makanaki/services/temps/temp.dart';
+import 'package:macanacki/presentation/uiproviders/dob/dob_provider.dart';
+import 'package:macanacki/presentation/uiproviders/screen/card_provider.dart';
+import 'package:macanacki/presentation/uiproviders/screen/comment_provider.dart';
+import 'package:macanacki/presentation/uiproviders/screen/find_people_provider.dart';
+import 'package:macanacki/presentation/uiproviders/screen/tab_provider.dart';
+import 'package:macanacki/services/middleware/action_ware.dart';
+import 'package:macanacki/services/middleware/ads_ware.dart';
+import 'package:macanacki/services/middleware/button_ware.dart';
+import 'package:macanacki/services/middleware/category_ware.dart';
+import 'package:macanacki/services/middleware/chat_ware.dart';
+import 'package:macanacki/services/middleware/create_post_ware.dart';
+import 'package:macanacki/services/middleware/edit_profile_ware.dart';
+import 'package:macanacki/services/middleware/facial_ware.dart';
+import 'package:macanacki/services/middleware/feed_post_ware.dart';
+import 'package:macanacki/services/middleware/gender_ware.dart';
+import 'package:macanacki/services/middleware/notification_ware..dart';
+import 'package:macanacki/services/middleware/otp_ware.dart';
+import 'package:macanacki/services/middleware/plan_ware.dart';
+import 'package:macanacki/services/middleware/registeration_ware.dart';
+import 'package:macanacki/services/middleware/search_ware.dart';
+import 'package:macanacki/services/middleware/swipe_ware.dart';
+import 'package:macanacki/services/middleware/user_profile_ware.dart';
+import 'package:macanacki/services/middleware/view_ware.dart';
+import 'package:macanacki/services/temps/temp.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
@@ -104,6 +106,12 @@ class InitProvider {
       ),
       ChangeNotifierProvider(
         create: (context) => EditProfileWare(),
+      ),
+      ChangeNotifierProvider(
+        create: (context) => CategoryWare(),
+      ),
+         ChangeNotifierProvider(
+        create: (context) => AdsWare(),
       ),
     ];
 

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/allNavigation.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
-import 'package:makanaki/presentation/screens/home/profile/followers_following.dart';
-import 'package:makanaki/presentation/widgets/text.dart';
+import 'package:macanacki/presentation/allNavigation.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/screens/home/profile/followers_following.dart';
+import 'package:macanacki/presentation/widgets/text.dart';
 import 'package:provider/provider.dart';
 import 'package:numeral/numeral.dart';
 import '../../../../../services/middleware/user_profile_ware.dart';
@@ -43,12 +43,12 @@ class ProfileFollowersStatistics extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
-                    width: 95,
+                    width: 85,
                     // color: Colors.amber,
                     alignment: Alignment.center,
                     child: AppText(
-                      text: Numeral(stream.userProfileModel.noOfFollowers!)
-                          .format(),
+                      text: Numeral(stream.userProfileModel.noOfFollowers ?? 0)
+                          .format(fractionDigits: 1),
                       fontWeight: FontWeight.w600,
                       size: 18,
                     ),
@@ -82,12 +82,12 @@ class ProfileFollowersStatistics extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
-                    width: 95,
+                    width: 85,
                     alignment: Alignment.center,
                     // color: Colors.amber,
                     child: AppText(
                       text: Numeral(stream.userProfileModel.noOfFollowing!)
-                          .format(),
+                          .format(fractionDigits: 1),
                       fontWeight: FontWeight.w600,
                       size: 18,
                     ),

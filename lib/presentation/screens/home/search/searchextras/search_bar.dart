@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/services/controllers/search_controller.dart';
+import 'package:macanacki/services/controllers/search_controller.dart';
 
 import '../../../../constants/colors.dart';
+import '../../../../operations.dart';
 
 class GlobalSearchBar extends StatelessWidget {
   TextEditingController x;
@@ -26,21 +27,24 @@ class GlobalSearchBar extends StatelessWidget {
       child: TextFormField(
         controller: x,
         cursorColor: HexColor(primaryColor),
+        enableSuggestions: false,
+        autocorrect: false,
         onChanged: (value) async {
           // if (value.isEmpty) {
           //   return;
           // }
-          await Future.delayed(const Duration(milliseconds: 900)).whenComplete(
-              () =>
-                  SearchController.retrievSearchUserController(context, value));
+          SearchAppController.retrievSearchUserController(context, value);
+
+          // await Future.delayed(const Duration(milliseconds: 1000)).whenComplete(
+          //     () =>
+          //         SearchController.retrievSearchUserController(context, value));
         },
         decoration: InputDecoration(
           hintText: " Search",
           hintStyle:
-              GoogleFonts.spartan(color: HexColor("#C0C0C0"), fontSize: 14),
-          border: UnderlineInputBorder(
-              borderRadius: BorderRadius.circular(2.0),
-              borderSide: const BorderSide(color: Colors.transparent)),
+              GoogleFonts.leagueSpartan(color: HexColor("#C0C0C0"), fontSize: 14),
+          border: InputBorder.none,
+          enabledBorder: InputBorder.none,
           disabledBorder: UnderlineInputBorder(
               borderRadius: BorderRadius.circular(2.0),
               borderSide: BorderSide(color: HexColor("#F5F2F9"))),

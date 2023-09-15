@@ -31,12 +31,13 @@ class AppText extends StatelessWidget {
       textScaleFactor: scaleFactor,
       overflow: overflow,
       textAlign: align,
-      style: GoogleFonts.spartan(
+      style: GoogleFonts.leagueSpartan(
           textStyle: TextStyle(
         fontWeight: fontWeight,
         color: color,
         decorationStyle: TextDecorationStyle.solid,
-        fontSize: size
+        fontSize: size,
+        
       )),
     );
   }

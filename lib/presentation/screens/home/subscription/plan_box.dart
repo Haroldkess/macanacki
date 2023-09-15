@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:makanaki/presentation/constants/colors.dart';
-import 'package:makanaki/presentation/model/ui_model.dart';
-import 'package:makanaki/presentation/widgets/text.dart';
-import 'package:makanaki/services/middleware/plan_ware.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/model/ui_model.dart';
+import 'package:macanacki/presentation/widgets/text.dart';
+import 'package:macanacki/services/middleware/plan_ware.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../model/plan_model.dart';
@@ -132,6 +132,87 @@ class PlanBox extends StatelessWidget {
                 )
               ],
             )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class PlanBox2 extends StatelessWidget {
+  final PlanData plans;
+  int index;
+  PlanBox2({super.key, required this.plans, required this.index});
+
+  @override
+  Widget build(BuildContext context) {
+    PlanWare stream = context.watch<PlanWare>();
+
+    return InkWell(
+      onTap: () async {
+        PlanWare ware = Provider.of<PlanWare>(context, listen: false);
+        ware.selectPlan(index);
+        ware.addAmount(plans.amountInNaira!.toInt());
+      },
+      child: Container(
+        height: 140,
+        width: 103,
+        decoration: BoxDecoration(
+            color: plans.mostPopular == 1
+                ? HexColor(backgroundColor)
+                : HexColor("#F5F2F9"),
+            shape: BoxShape.rectangle,
+            border: Border.all(
+              color: stream.index == index
+                  ? HexColor(primaryColor)
+                  : HexColor("#F5F2F9"),
+            ),
+            borderRadius: const BorderRadius.all(Radius.circular(12))),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              width: 95,
+              height: 19,
+              decoration: BoxDecoration(
+                  color: HexColor(primaryColor),
+                  shape: BoxShape.rectangle,
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(11.5),
+                    bottomRight: Radius.circular(11.5),
+                    topLeft: Radius.circular(5.5),
+                    topRight: Radius.circular(5.5),
+                  )),
+              child: Center(
+                child: AppText(
+                  text: "Subscription",
+                  color: HexColor(backgroundColor),
+                  size: 8,
+                  fontWeight: FontWeight.w400,
+                  align: TextAlign.center,
+                ),
+              ),
+            ),
+            Center(
+              child: AppText(
+                text: "Monthly",
+                color: HexColor(primaryColor),
+                size: 14,
+                fontWeight: FontWeight.w600,
+                align: TextAlign.center,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 20),
+              child: AppText(
+                text: "\$${plans.amount.toString()}",
+                size: 14,
+                fontWeight: FontWeight.w600,
+                color: HexColor("#222222"),
+                align: TextAlign.center,
+              ),
+            ),
           ],
         ),
       ),
