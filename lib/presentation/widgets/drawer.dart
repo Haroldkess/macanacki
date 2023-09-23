@@ -19,7 +19,6 @@ import 'package:macanacki/services/controllers/user_profile_controller.dart';
 import 'package:provider/provider.dart';
 import 'package:restart_app/restart_app.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../model/gender_model.dart';
 import '../../services/controllers/plan_controller.dart';
 import '../../services/middleware/user_profile_ware.dart';
@@ -118,7 +117,7 @@ class _DrawerSideState extends State<DrawerSide> {
                             } catch (e) {
                               PageRouting.removeAllToPage(
                                   context, const Splash());
-                         //     Restart.restartApp();
+                              //     Restart.restartApp();
                             }
                           }
 
@@ -249,8 +248,6 @@ class _DrawerSideState extends State<DrawerSide> {
                     }
                   }
                 },
-               
-               
                 title: AppText(
                   text: "Verify account",
                   color: HexColor(backgroundColor),

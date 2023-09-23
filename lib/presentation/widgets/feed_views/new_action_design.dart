@@ -640,7 +640,6 @@ class _NewDesignTestState extends State<NewDesignTest> {
   Future<void> likeAction(BuildContext context, bool like) async {
     ActionWare provide = Provider.of<ActionWare>(context, listen: false);
     late bool isLiked;
-    // print(like.toString());
     provide.tempAddLikeId(widget.data.id!);
 
     if (like == false) {

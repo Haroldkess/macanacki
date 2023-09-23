@@ -27,7 +27,8 @@ import '../../../../operations.dart';
 import 'add_button_individual.dart';
 
 class CreatePostScreen extends StatefulWidget {
-  const CreatePostScreen({super.key});
+  final String? initialCaption;
+  const CreatePostScreen({super.key, this.initialCaption = ''});
 
   @override
   State<CreatePostScreen> createState() => _CreatePostScreenState();
@@ -41,6 +42,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     super.initState();
     Operations.controlSystemColor();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      caption.text = widget.initialCaption ?? '';
       await ButtonController.retrievButtonsController(context);
     });
   }

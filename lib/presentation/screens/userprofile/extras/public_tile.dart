@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hexagon/hexagon.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:macanacki/model/following_model.dart';
+import 'package:macanacki/model/public_user_follower_and_following_model.dart';
 import 'package:macanacki/presentation/allNavigation.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
 import 'package:macanacki/presentation/screens/userprofile/user_profile_screen.dart';
@@ -20,7 +21,7 @@ import '../../../constants/params.dart';
 import '../../../widgets/loader.dart';
 
 class PublicFollowTile extends StatelessWidget {
-  final PublicUserData data;
+  final PublicUserFollowerAndFollowingModel data;
   const PublicFollowTile({super.key, required this.data});
 
   @override

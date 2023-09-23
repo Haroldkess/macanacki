@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:macanacki/model/public_profile_model.dart';
 import 'dart:convert';
 import 'dart:developer';
@@ -16,6 +17,72 @@ import '../../presentation/screens/onboarding/business/business_modal.dart';
 import '../../presentation/widgets/debug_emitter.dart';
 
 class UserProfileWare extends ChangeNotifier {
+  ////////////@@@AutoScroll [State]
+  PagingController<int, PublicUserPost> pagingController =
+      PagingController(firstPageKey: 0);
+  bool _isLastPage = false;
+  int _pageNumber = 1;
+  bool _loading = false;
+  int _numberOfPostsPerRequest = 10;
+  int _nextPageTrigger = 3;
+  ScrollController scrollController = ScrollController();
+  List<PublicUserPost> _allPublicUserPostData = [];
+
+  //////////////////////////////////
+
+  ////////////////////@@@AutoScroll [Getters]
+  bool get loading => _loading;
+  ////////////////////////////////////////////
+
+  ////////////////////@@@@AutoScroll [Mutation]
+
+  void updateLoading(bool value) {
+    _loading = value;
+    notifyListeners();
+  }
+
+  void updateIsLastPage(bool value) {
+    _isLastPage = value;
+    notifyListeners();
+  }
+
+  void initializePagingController() {
+    pagingController = PagingController(firstPageKey: 1);
+    disposeAutoScroll();
+  }
+
+  void updatePageNumber(int value) {
+    _pageNumber = value;
+    notifyListeners();
+  }
+
+  void updateNumberOfPostsPerRequest(int value) {
+    _numberOfPostsPerRequest = value;
+    notifyListeners();
+  }
+
+  void updateNextPagePerTrigger(int value) {
+    _nextPageTrigger = value;
+    notifyListeners();
+  }
+
+  void updateAllPublicUserPostData(List<PublicUserPost> value) {
+    _allPublicUserPostData.addAll(value);
+    notifyListeners();
+  }
+
+  void disposeAutoScroll() {
+    _isLastPage = false;
+    _pageNumber = 1;
+    _loading = false;
+    _numberOfPostsPerRequest = 10;
+    _nextPageTrigger = 3;
+    _allPublicUserPostData.clear();
+    notifyListeners();
+  }
+
+  ////////////////////////////////////////////////
+
   bool _loadStatus = false;
   bool _loadStatus2 = false;
   bool _deleting = false;
@@ -181,7 +248,7 @@ class UserProfileWare extends ChangeNotifier {
       //  log(e.toString());
     }
 
-    notifyListeners();
+    //notifyListeners();
 
     return isSuccessful;
   }
@@ -196,7 +263,6 @@ class UserProfileWare extends ChangeNotifier {
         // log("get user profile data request failed");
       } else if (response.statusCode == 200) {
         var jsonData = jsonDecode(response.body);
-
         var incomingData = PublicProfileModel.fromJson(jsonData);
         _publicUserProfileModel = incomingData.data!;
 
@@ -241,6 +307,53 @@ class UserProfileWare extends ChangeNotifier {
       isSuccessful = false;
       // log("get user profile data  request failed");
       //   log(e.toString());
+    }
+
+    notifyListeners();
+
+    return isSuccessful;
+  }
+
+  Future<bool> getUserPublicPostFromApi({required String username}) async {
+    late bool isSuccessful;
+    if (loading == true || _isLastPage == true) return false;
+
+    try {
+      updateLoading(true);
+      // final username = publicUserProfileModel.username ?? '';
+      http.Response? response = await getUserPublicPost(
+              username, _pageNumber, _numberOfPostsPerRequest)
+          .whenComplete(() => emitter("user posts data gotten successfully"));
+      if (response == null) {
+        isSuccessful = false;
+        //   log("get user posts data request failed");
+      } else if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+        int recordCount = jsonData['record_count'];
+        List<PublicUserPost> newItems = [];
+        for (final x in jsonData['data']) {
+          newItems.add(PublicUserPost.fromJson(x));
+        }
+
+        updateAllPublicUserPostData(newItems);
+        updatePageNumber(_pageNumber + 1);
+        updateIsLastPage(_allPublicUserPostData.length >= recordCount);
+
+        if (_isLastPage == true) {
+          pagingController.appendLastPage(newItems);
+        } else {
+          pagingController.appendPage(newItems, _pageNumber);
+        }
+
+        isSuccessful = true;
+      } else {
+        // log("get user posts data  request failed");
+        isSuccessful = false;
+      }
+    } catch (e) {
+      isSuccessful = false;
+    } finally {
+      updateLoading(false);
     }
 
     notifyListeners();

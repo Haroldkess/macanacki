@@ -105,7 +105,7 @@ class FollowTile extends StatelessWidget {
                       ),
                       AppText(
                         text:
-                            "${Numeral(data.noOfFollowers!).format()} followers",
+                            "${Numeral(data.noOfFollowers ?? 0).format()} followers",
                         fontWeight: FontWeight.w500,
                         size: 10,
                         color: HexColor("#0597FF"),

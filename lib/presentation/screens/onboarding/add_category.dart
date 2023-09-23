@@ -174,7 +174,7 @@ class _SelectCategoryState extends State<SelectCategory> {
     return Scrollbar(
       controller: scroller,
       interactive: true,
-      isAlwaysShown: true,
+      thumbVisibility: true,
       child: ListView(
         controller: scroller,
         physics: BouncingScrollPhysics(),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
 import 'package:macanacki/presentation/screens/home/profile/profileextras/follow_list.dart';
@@ -9,6 +10,7 @@ import 'package:macanacki/presentation/widgets/text.dart';
 import 'package:macanacki/services/controllers/action_controller.dart';
 import 'package:macanacki/services/middleware/action_ware.dart';
 import 'package:provider/provider.dart';
+import 'package:scroll_edge_listener/scroll_edge_listener.dart';
 
 import '../../../uiproviders/screen/find_people_provider.dart';
 
@@ -27,24 +29,26 @@ class FollowersAndFollowingScreen extends StatefulWidget {
 class _FollowersAndFollowingScreenState
     extends State<FollowersAndFollowingScreen> {
   TextEditingController controller = TextEditingController();
+
   @override
   void initState() {
     super.initState();
-    if (widget.isFollowing) {
-      SchedulerBinding.instance.addPostFrameCallback((timeStamp) async {
-        FindPeopleProvider search =
-            Provider.of<FindPeopleProvider>(context, listen: false);
-        search.search("");
-        await ActionController.retrievAllUserFollowingController(context);
-      });
-    } else {
-      SchedulerBinding.instance.addPostFrameCallback((timeStamp) async {
-        FindPeopleProvider search =
-            Provider.of<FindPeopleProvider>(context, listen: false);
-        search.search("");
-        await ActionController.retrievAllUserFollowersController(context);
-      });
-    }
+
+    // if (widget.isFollowing) {
+    //   SchedulerBinding.instance.addPostFrameCallback((timeStamp) async {
+    //     FindPeopleProvider search =
+    //         Provider.of<FindPeopleProvider>(context, listen: false);
+    //     search.search("");
+    //     await ActionController.retrievAllUserFollowingController(context);
+    //   });
+    // } else {
+    //   SchedulerBinding.instance.addPostFrameCallback((timeStamp) async {
+    //     FindPeopleProvider search =
+    //         Provider.of<FindPeopleProvider>(context, listen: false);
+    //     search.search("");
+    //     await ActionController.retrievAllUserFollowersController(context);
+    //   });
+    // }
   }
 
   @override
@@ -65,7 +69,18 @@ class _FollowersAndFollowingScreenState
                   const SizedBox(
                     height: 20,
                   ),
-                  FollowSearch(controller: controller),
+                  //FOLLOW SEARCH
+                  FollowSearch(
+                      controller: controller,
+                      onChanged: (val) {
+                        stream.updateRequestMode("search");
+                        stream.updateSearch(val);
+                        if (widget.isFollowing == 'Following') {
+                          stream.getFollowingFromApi();
+                        } else {
+                          stream.getFollowersFromApi();
+                        }
+                      }),
                 ],
               ),
             ),
@@ -88,7 +103,7 @@ class _FollowersAndFollowingScreenState
       body: stream.loadStatusAllFollowing || stream.loadStatusFollower
           ? Center(child: Loader(color: HexColor(primaryColor)))
           : FollowFollowingList(
-              data: stream.allFollowing,
+              ware: stream,
               what: widget.isFollowing ? "Following" : "Followers",
             ),
     );

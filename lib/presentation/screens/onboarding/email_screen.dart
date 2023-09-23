@@ -1,4 +1,5 @@
 import 'package:email_validator/email_validator.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -141,7 +142,7 @@ class _EmailScreenState extends State<EmailScreen> {
                           curves: buttonCurves * 5,
                           textColor: primaryColor,
                           onTap: () async {
-                            _submit(context);
+                            await _submit(context);
                             //  PageRouting.pushToPage(context, const EmailOtp());
                           }),
                 ],
@@ -184,13 +185,26 @@ class _EmailScreenState extends State<EmailScreen> {
     );
   }
 
-  void _submit(BuildContext context) {
+  Future<void> _submit(BuildContext context) async {
     final isValid = _formKey.currentState?.validate();
     if (!isValid!) {
       return;
     } else {
-      RegisterEmailController.registerationController(context, email.text);
+      final fcmId = await _getToken();
+      RegisterEmailController.registerationController(
+          context, email.text, fcmId);
     }
     _formKey.currentState?.save();
+  }
+
+  Future<String> _getToken() async {
+    try {
+      FirebaseMessaging messaging = FirebaseMessaging.instance;
+      String? token = await messaging.getToken();
+      debugPrint("token is $token");
+      return token ?? "";
+    } catch (e) {
+      return "";
+    }
   }
 }

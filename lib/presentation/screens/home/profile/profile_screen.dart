@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:dio/dio.dart';
+import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -9,17 +11,20 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
+import 'package:macanacki/presentation/operations_ext.dart';
 import 'package:macanacki/presentation/screens/home/profile/profileextras/profile_info.dart';
 import 'package:macanacki/presentation/screens/home/profile/profileextras/profile_post_grid.dart';
 import 'package:macanacki/presentation/screens/home/profile/promote_post/promote_screen.dart';
 import 'package:macanacki/presentation/widgets/snack_msg.dart';
 import 'package:macanacki/presentation/widgets/text.dart';
+import 'package:macanacki/services/api_url.dart';
 import 'package:macanacki/services/controllers/feed_post_controller.dart';
 import 'package:macanacki/services/controllers/user_profile_controller.dart';
 import 'package:macanacki/services/middleware/notification_ware..dart';
 import 'package:macanacki/services/middleware/user_profile_ware.dart';
 import 'package:macanacki/services/temps/temps_id.dart';
 import 'package:provider/provider.dart';
+import 'package:scroll_edge_listener/scroll_edge_listener.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../model/gender_model.dart';
@@ -53,6 +58,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   int seeMoreVal = 100;
   // String myUsername = "";
   TapGestureRecognizer tapGestureRecognizer = TapGestureRecognizer();
+  final ScrollController _controller = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -69,10 +75,13 @@ class _ProfileScreenState extends State<ProfileScreen>
         scafKey: key,
       ),
       body: RefreshIndicator(
-        onRefresh: () => _getUserPost(true),
+        onRefresh: () async {
+          _getUserPost(true);
+        },
         backgroundColor: HexColor(primaryColor),
         color: Colors.white,
         child: CustomScrollView(
+          controller: _controller,
           slivers: [
             SliverAppBar(
               automaticallyImplyLeading: false,
@@ -253,9 +262,7 @@ class _ProfileScreenState extends State<ProfileScreen>
               child: SizedBox(height: 20),
             ),
             SliverToBoxAdapter(
-              child: stream.loadStatus2
-                  ? const ProfilePostGridLoader()
-                  : const ProfilePostGrid(),
+              child: ProfilePostGrid(ware: stream),
             )
           ],
         ),
@@ -290,31 +297,64 @@ class _ProfileScreenState extends State<ProfileScreen>
   @override
   void initState() {
     super.initState();
+
     _getUserPost(false);
+
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) async {
+      FeedPostWare stream = Provider.of<FeedPostWare>(context, listen: false);
+
+      //Re-initializing pagingController
+      stream.initializePagingController();
+
+      _controller.addListener(() {
+        if (_controller.position.atEdge) {
+          bool isTop = _controller.position.pixels == 0;
+          if (isTop) {
+            print('At the top');
+          } else {
+            print('At the bottom');
+            //
+            EasyDebounce.debounce(
+                'my-debouncer',
+                const Duration(milliseconds: 500),
+                () async => await stream.getUserPostFromApi());
+            // print(pageKey);
+            // print("Inside page key");
+          }
+        }
+      });
+
+      stream.getUserPostFromApi();
+    });
+
     Operations.controlSystemColor();
   }
 
   @override
   void dispose() {
-    // SchedulerBinding.instance.addPostFrameCallback((_) async {
-    //   TabProvider provide = Provider.of<TabProvider>(context, listen: false);
-    //   provide.changeIndex(0);
-    // });
+    // WidgetsBinding.instance
+    //     .addPostFrameCallback((_) => s.disposeAutoScroll());
+
     super.dispose();
   }
 
   _getUserPost(bool isRefreshed) async {
-    FeedPostWare ware = Provider.of<FeedPostWare>(context, listen: false);
+    // Initializing Post State
+    FeedPostWare stream = Provider.of<FeedPostWare>(context, listen: false);
+
+    // Initializing ShaaredPrefernec and
     SharedPreferences pref = await SharedPreferences.getInstance();
-    bool isFirstTime = pref.getBool(isFirstTimeKey)!;
+    // bool isFirstTime = pref.getBool(isFirstTimeKey)!;
 
     if (isRefreshed == false) {
-      if (ware.profileFeedPosts.isNotEmpty) {
+      if (stream.profileFeedPosts.isNotEmpty) {
         return;
       }
 
       await FeedPostController.getUserPostController(context);
     } else {
+      stream.disposeAutoScroll();
+      stream.pagingController.refresh();
       await UserProfileController.retrievProfileController(context, false);
       await FeedPostController.getUserPostController(context);
     }

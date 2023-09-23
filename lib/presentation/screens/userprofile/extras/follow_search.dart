@@ -9,7 +9,8 @@ import '../../../uiproviders/screen/find_people_provider.dart';
 
 class FollowSearch extends StatelessWidget {
   TextEditingController controller;
-  FollowSearch({super.key, required this.controller});
+  FollowSearch({super.key, required this.controller, required this.onChanged});
+  final Function(String value) onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -22,15 +23,16 @@ class FollowSearch extends StatelessWidget {
           borderRadius: const BorderRadius.all(Radius.circular(8.0))),
       child: TextFormField(
         controller: controller,
-        onChanged: (val) {
-          FindPeopleProvider search =
-              Provider.of<FindPeopleProvider>(context, listen: false);
-          search.search(val);
-        },
+        // onChanged: (val) {
+        //   FindPeopleProvider search =
+        //       Provider.of<FindPeopleProvider>(context, listen: false);
+        //   search.search(val);
+        // },
+        onChanged: onChanged,
         decoration: InputDecoration(
           hintText: " Search",
-          hintStyle:
-              GoogleFonts.leagueSpartan(color: HexColor("#C0C0C0"), fontSize: 14),
+          hintStyle: GoogleFonts.leagueSpartan(
+              color: HexColor("#C0C0C0"), fontSize: 14),
           border: UnderlineInputBorder(
               borderRadius: BorderRadius.circular(2.0),
               borderSide: const BorderSide(color: Colors.transparent)),

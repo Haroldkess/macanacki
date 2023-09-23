@@ -31,8 +31,8 @@ dependencies:
   swipe_cards: ^2.0.0+1
   pin_code_fields: ^7.4.0
   image_picker: ^1.0.4
-  path: ^1.8.0
-  permission_handler: ^8.1.4+2
+  path: ^1.8.3
+  permission_handler: ^10.4.3
   http: ^0.13.5
   email_validator: ^2.1.17
   freezed_annotation: ^0.14.1
@@ -90,9 +90,16 @@ dependencies:
   fl_toast: ^3.2.0
   pay_with_paystack: ^1.0.6
   paystack_standard: ^0.0.8
-  # flutter_paystack_plus: ^1.0.2
-  # visibility_detector: ^0.4.0+2
-  # change_app_package_name: 1.0.0
+  advance_image_picker: ^0.1.7+1
+  video_trimmer: ^2.1.0
+  pay: ^1.1.0
+  image_cropper: ^2.0.3
+  infinite_scroll_pagination: ^4.0.0
+  scroll_edge_listener: ^0.1.1
+  fast_immutable_collections: ^9.1.5
+  easy_debounce: ^2.0.3
+
+
   
   
 

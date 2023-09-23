@@ -1,9 +1,14 @@
+import 'dart:collection';
+import 'package:fast_immutable_collections/fast_immutable_collections.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:macanacki/model/all_liked_model.dart';
 import 'package:macanacki/model/comments_model.dart';
 import 'package:macanacki/model/following_model.dart';
 import 'package:macanacki/model/reg_email_model.dart';
+import 'package:macanacki/presentation/uiproviders/screen/find_people_provider.dart';
 import 'package:macanacki/presentation/widgets/debug_emitter.dart';
 import 'package:macanacki/services/backoffice/actions_office.dart';
 import 'package:macanacki/services/backoffice/registeration_office.dart';
@@ -11,6 +16,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../model/register_model.dart';
@@ -18,6 +24,95 @@ import '../../presentation/widgets/snack_msg.dart';
 import '../temps/temps_id.dart';
 
 class ActionWare extends ChangeNotifier {
+  ////////////@@@AutoScroll [State]
+  PagingController<int, FollowingData> pagingController =
+      PagingController(firstPageKey: 0);
+  bool _isLastPage = false;
+  int _pageNumber = 1;
+  bool _loading = false;
+  int _numberOfPostsPerRequest = 10;
+  int _nextPageTrigger = 3;
+  ScrollController scrollController = ScrollController();
+  String _search = "";
+  String _requestMode = "normal";
+
+  //////////////////////////////////
+
+  ////////////////////@@@AutoScroll [Getters]
+  bool get loading => _loading;
+  String get search => _search;
+  String get requestMode => _requestMode;
+  ////////////////////////////////////////////
+
+  ////////////////////@@@@AutoScroll [Mutation]
+  void updateRequestMode(String value) {
+    if (_requestMode == value) {
+      return;
+    } else {
+      _requestMode = value;
+      disposeAutoScroll();
+      pagingController.refresh();
+    }
+
+    notifyListeners();
+  }
+
+  void updateLoading(bool value) {
+    _loading = value;
+    notifyListeners();
+  }
+
+  void updateIsLastPage(bool value) {
+    _isLastPage = value;
+    notifyListeners();
+  }
+
+  void updateSearch(String value) {
+    _search = value;
+    disposeAutoScroll();
+    pagingController.refresh();
+    if (value == "") updateRequestMode("normal");
+    notifyListeners();
+  }
+
+  void initializePagingController() {
+    pagingController = PagingController(firstPageKey: 1);
+    disposeAutoScroll();
+  }
+
+  void updatePageNumber(int value) {
+    _pageNumber = value;
+    notifyListeners();
+  }
+
+  void updateNumberOfPostsPerRequest(int value) {
+    _numberOfPostsPerRequest = value;
+    notifyListeners();
+  }
+
+  void updateNextPagePerTrigger(int value) {
+    _nextPageTrigger = value;
+    notifyListeners();
+  }
+
+  void updateAllFollowingData(List<FollowingData> value) {
+    _allFollowingData.addAll(value);
+    // _allFollowingData = [..._allFollowingData, ...value].distinct();
+    notifyListeners();
+  }
+
+  void disposeAutoScroll() {
+    _isLastPage = false;
+    _pageNumber = 1;
+    _loading = false;
+    _numberOfPostsPerRequest = 10;
+    _nextPageTrigger = 3;
+    _allFollowingData.clear();
+    notifyListeners();
+  }
+
+  ////////////////////////////////////////////////
+
   bool _loadStatus = false;
   bool _loadStatus2 = false;
   bool _loadStatus3 = false;
@@ -40,6 +135,8 @@ class ActionWare extends ChangeNotifier {
   List<FollowingData> _allFollowingData = [];
   List<LikedCommentData> _allLikedCommentData = [];
   int _addLike = 1;
+
+  /////
 
   List<AllLikedData> get allLiked => _allLikedData;
   List<FollowingData> get allFollowing => _allFollowingData;
@@ -363,16 +460,31 @@ class ActionWare extends ChangeNotifier {
 
   Future<bool> getFollowingFromApi() async {
     late bool isSuccessful;
+    if (loading == true || _isLastPage == true) return false;
+
     try {
-      http.Response? response = await getAllFollowing()
-          .whenComplete(() => emitter("all following action request done"));
+      updateLoading(true);
+      http.Response? response =
+          await getAllFollowing(_pageNumber, _numberOfPostsPerRequest, _search)
+              .whenComplete(() => emitter("all following action request done"));
+
       if (response == null) {
         isSuccessful = false;
         emitter("all following  action request failed");
       } else if (response.statusCode == 200) {
         var jsonData = jsonDecode(response.body);
+        int recordCount = jsonData['record_count'];
         FollowingModel incommingData = FollowingModel.fromJson(jsonData);
-        _allFollowingData = incommingData.data!;
+        List<FollowingData> newItems = incommingData.data!;
+        updateAllFollowingData(newItems);
+        updatePageNumber(_pageNumber + 1);
+        updateIsLastPage(_allFollowingData.length >= recordCount);
+
+        if (_isLastPage == true) {
+          pagingController.appendLastPage(newItems);
+        } else {
+          pagingController.appendPage(newItems, _pageNumber);
+        }
 
         //  log("all following  action request success");
         isSuccessful = true;
@@ -384,8 +496,11 @@ class ActionWare extends ChangeNotifier {
       }
     } catch (e) {
       isSuccessful = false;
+
       //   log("all following  action request failed");
       emitter(e.toString());
+    } finally {
+      updateLoading(false);
     }
 
     notifyListeners();
@@ -395,18 +510,34 @@ class ActionWare extends ChangeNotifier {
 
   Future<bool> getFollowersFromApi() async {
     late bool isSuccessful;
+    print("before checking loading fro [getFollowersFromApi]");
+    print("Page Number --- ${_pageNumber}");
+    print("Last Page --- ${_isLastPage}");
+    if (loading == true || _isLastPage == true) return false;
+
+    print("after checking loading fro [getFollowersFromApi]");
+
     try {
-      http.Response? response = await getAllFollowers()
-          .whenComplete(() => emitter("all followers action request done"));
+      updateLoading(true);
+
+      http.Response? response =
+          await getAllFollowers(_pageNumber, _numberOfPostsPerRequest, _search)
+              .whenComplete(() => emitter("all followers action request done"));
       if (response == null) {
         isSuccessful = false;
-        //   log("all following  action request failed");
       } else if (response.statusCode == 200) {
         var jsonData = jsonDecode(response.body);
+        int recordCount = jsonData['record_count'];
         FollowingModel incommingData = FollowingModel.fromJson(jsonData);
-        _allFollowingData = incommingData.data!;
-
-        // log("all followers  action request success");
+        List<FollowingData> newItems = incommingData.data!;
+        updateAllFollowingData(newItems);
+        updatePageNumber(_pageNumber + 1);
+        updateIsLastPage(_allFollowingData.length >= recordCount);
+        if (_isLastPage == true) {
+          pagingController.appendLastPage(newItems);
+        } else {
+          pagingController.appendPage(newItems, _pageNumber);
+        }
         isSuccessful = true;
       } else {
         //  log("all followers  action request failed");
@@ -416,8 +547,11 @@ class ActionWare extends ChangeNotifier {
       }
     } catch (e) {
       isSuccessful = false;
+
       //  log("all following  action request failed");
       // log(e.toString());
+    } finally {
+      updateLoading(false);
     }
 
     notifyListeners();

@@ -18,6 +18,7 @@ class ProfileFollowersStatistics extends StatelessWidget {
     int test = 123723478621589;
 
     UserProfileWare stream = context.watch<UserProfileWare>();
+
     return Container(
       width: width * 0.7,
       child: Row(
@@ -30,7 +31,6 @@ class ProfileFollowersStatistics extends StatelessWidget {
                   FollowersAndFollowingScreen(
                       title: stream.userProfileModel.username,
                       isFollowing: false));
-              print("followers");
             },
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: 5),
@@ -64,7 +64,6 @@ class ProfileFollowersStatistics extends StatelessWidget {
           ),
           InkWell(
             onTap: () {
-              print("following");
               PageRouting.pushToPage(
                   context,
                   FollowersAndFollowingScreen(

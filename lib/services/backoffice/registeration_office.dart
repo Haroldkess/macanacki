@@ -16,11 +16,12 @@ import '../../presentation/widgets/debug_emitter.dart';
 Future<http.Response?> registerEmail(SendEmailModel data) async {
   http.Response? response;
   try {
-    response = await http.post(Uri.parse('$baseUrl/public/api/user/register'),
-        headers: {
-          HttpHeaders.contentTypeHeader: "application/json",
-        },
-        body: jsonEncode(data.toJson()));
+    response =
+        await http.post(Uri.parse('$baseUrl/public/api/v2/user/register'),
+            headers: {
+              HttpHeaders.contentTypeHeader: "application/json",
+            },
+            body: jsonEncode(data.toJson()));
 
     //   log(response.body.toString());
   } catch (e) {
@@ -29,11 +30,12 @@ Future<http.Response?> registerEmail(SendEmailModel data) async {
   return response;
 }
 
-Future<http.Response?> verifyUserName(String name) async {
+Future<http.Response?> verifyUserName(String name, String email) async {
   http.Response? response;
   try {
     response = await http.get(
-      Uri.parse('$baseUrl/public/api/checkUsername?username=$name'),
+      Uri.parse(
+          '$baseUrl/public/api/v2/checkUsername?username=$name&email=${email.trim()}'),
       headers: {
         HttpHeaders.contentTypeHeader: "application/json",
       },
@@ -175,7 +177,13 @@ Future<http.StreamedResponse?> completeRegisteration(
   request.fields["country"] = data.country!.toString();
   request.fields["state"] = data.state!.toString();
   request.fields["city"] = data.city!.toString();
-  request.fields["device"] = Platform.isIOS ? "IOS":  Platform.isAndroid ? "ANDROID" :  Platform.isFuchsia ?"Fuchsia".toUpperCase() : "";
+  request.fields["device"] = Platform.isIOS
+      ? "IOS"
+      : Platform.isAndroid
+          ? "ANDROID"
+          : Platform.isFuchsia
+              ? "Fuchsia".toUpperCase()
+              : "";
   if (data.photo != null) {
     request.files.add(filePhoto);
   }

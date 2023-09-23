@@ -136,14 +136,16 @@ class ActionController {
     ware.isLoadingAllLikes(false);
   }
 
-  static Future<void> retrievAllUserFollowingController(
-      BuildContext context) async {
+  static Future<void> retrievAllUserFollowingController(BuildContext context,
+      {bool isScroll = false}) async {
     ActionWare ware = Provider.of<ActionWare>(context, listen: false);
     // if (ware.followIds.isNotEmpty) {
     //   return;
     // }
 
-    ware.isLoadingAllFollowing(true);
+    if (isScroll == false) ware.isLoadingAllFollowing(true);
+
+    if (ware.loading == true) return;
 
     bool isDone = await ware.getFollowingFromApi().whenComplete(
         () => emitter("everything from api and provider is done"));
@@ -161,11 +163,12 @@ class ActionController {
     ware.isLoadingAllFollowing(false);
   }
 
-  static Future<void> retrievAllUserFollowersController(
-      BuildContext context) async {
+  static Future<void> retrievAllUserFollowersController(BuildContext context,
+      {bool isScroll = false}) async {
     ActionWare ware = Provider.of<ActionWare>(context, listen: false);
 
-    ware.isLoadingFollow(true);
+    if (isScroll == false) ware.isLoadingFollow(true);
+    if (ware.loading == true) return;
 
     bool isDone = await ware.getFollowersFromApi().whenComplete(
         () => emitter("everything from api and provider is done"));
