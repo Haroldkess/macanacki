@@ -19,7 +19,9 @@ import 'package:macanacki/services/middleware/plan_ware.dart';
 import 'package:macanacki/services/middleware/registeration_ware.dart';
 import 'package:macanacki/services/middleware/search_ware.dart';
 import 'package:macanacki/services/middleware/swipe_ware.dart';
+import 'package:macanacki/services/middleware/user_profile_ext_ware.dart';
 import 'package:macanacki/services/middleware/user_profile_ware.dart';
+import 'package:macanacki/services/middleware/video_trimmer_ware.dart';
 import 'package:macanacki/services/middleware/view_ware.dart';
 import 'package:macanacki/services/temps/temp.dart';
 import 'package:provider/provider.dart';
@@ -110,8 +112,14 @@ class InitProvider {
       ChangeNotifierProvider(
         create: (context) => CategoryWare(),
       ),
-         ChangeNotifierProvider(
+      ChangeNotifierProvider(
         create: (context) => AdsWare(),
+      ),
+      ChangeNotifierProvider(
+        create: (context) => UserProfileExtWare(),
+      ),
+      ChangeNotifierProvider(
+        create: (context) => VideoTrimmerWare(),
       ),
     ];
 

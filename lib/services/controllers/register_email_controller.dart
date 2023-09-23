@@ -12,8 +12,8 @@ import '../../presentation/widgets/debug_emitter.dart';
 
 class RegisterEmailController {
   static Future<void> registerationController(
-      BuildContext context, String email) async {
-    SendEmailModel data = SendEmailModel(email: email);
+      BuildContext context, String email, String firebaseID) async {
+    SendEmailModel data = SendEmailModel(email: email, firebaseID: firebaseID);
     RegisterationWare ware =
         Provider.of<RegisterationWare>(context, listen: false);
     Temp temp = Provider.of<Temp>(context, listen: false);

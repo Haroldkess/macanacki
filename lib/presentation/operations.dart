@@ -1,10 +1,14 @@
 import 'dart:developer';
 import 'dart:io';
+import 'package:advance_image_picker/models/image_object.dart';
+import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart' hide FormData, MultipartFile;
 import 'package:hexcolor/hexcolor.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:macanacki/presentation/allNavigation.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
 import 'package:macanacki/presentation/screens/home/profile/createpost/create_post_screen.dart';
@@ -25,6 +29,9 @@ import 'package:macanacki/services/middleware/gender_ware.dart';
 import 'package:macanacki/services/middleware/swipe_ware.dart';
 import 'package:macanacki/services/middleware/user_profile_ware.dart';
 import 'package:macanacki/services/temps/temps_id.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+//import 'package:multi_image_crop/multi_image_crop.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -168,22 +175,313 @@ class Operations {
     late XFile? imageFile;
     FacialWare facial = Provider.of<FacialWare>(context, listen: false);
     try {
-      final XFile? file = await picker.pickImage(
-          source: ImageSource.gallery,
-          preferredCameraDevice: CameraDevice.rear);
+      if (await Permission.storage.request().isGranted) {
+        // Call FilePicker.platform.pickFiles in here
 
-      if (file != null) {
-        imageFile = file;
-         pref.setString(temPhotoKey, imageFile.path);
-        // emitter(imageFile.path);
-        facial.addDp(imageFile);
-       // pref.setString(temPhotoKey, imageFile.path);
-        // facial.isLoading(true);
+        final XFile? file = await picker.pickImage(
+            source: ImageSource.gallery,
+            preferredCameraDevice: CameraDevice.rear,
+            requestFullMetadata: true);
+
+        if (file != null) {
+          imageFile = file;
+          emitter("FilePath: ${file.path}");
+
+          //Lets crop image
+          CroppedFile? croppedFile = await ImageCropper().cropImage(
+            sourcePath: imageFile.path,
+            cropStyle: CropStyle.rectangle,
+            aspectRatioPresets: [
+              CropAspectRatioPreset.square,
+              // CropAspectRatioPreset.ratio3x2,
+              // CropAspectRatioPreset.original,
+              // CropAspectRatioPreset.ratio4x3,
+              // CropAspectRatioPreset.ratio16x9
+            ],
+            uiSettings: [
+              AndroidUiSettings(
+                  toolbarTitle: 'Crop Image',
+                  toolbarColor: HexColor(darkColor),
+                  toolbarWidgetColor: Colors.white,
+                  initAspectRatio: CropAspectRatioPreset.square,
+                  lockAspectRatio: true),
+              IOSUiSettings(
+                title: '',
+              ),
+            ],
+          );
+
+          if (croppedFile == null) return;
+          XFile croppedFileX = XFile(croppedFile.path);
+
+          pref.setString(temPhotoKey, croppedFileX.path);
+          emitter("FilePath after cropping: ${croppedFileX.path}");
+
+          facial.addDp(croppedFileX);
+          // pref.setString(temPhotoKey, imageFile.path);
+          // facial.isLoading(true);
+        }
       }
     } catch (e) {
       emitter(e.toString());
     }
   }
+
+  // static Future<void> uploadTestImage() async {
+  //   try {
+  //     FilePickerResult? result =
+  //         await FilePicker.platform.pickFiles(type: FileType.image);
+  //
+  //     if (result != null) {
+  //       CroppedFile? croppedFile = await ImageCropper().cropImage(
+  //         sourcePath: result.files.single.path!,
+  //       );
+  //       if (croppedFile == null) {
+  //         return;
+  //       }
+  //
+  //       File file = File(croppedFile.path);
+  //       String fileName = file.path.split('/').last;
+  //       print("--------------------/// $fileName");
+  //       FormData formData = FormData.fromMap({
+  //         "media": await MultipartFile.fromFile(
+  //           file.path,
+  //           filename: fileName,
+  //         ),
+  //
+  //         // "media": [
+  //         //   await MultipartFile.fromFile(file.path, filename: fileName),
+  //         //   await MultipartFile.fromFile(file.path, filename: fileName)
+  //         // ]
+  //       });
+  //
+  //       final response = await Dio().post(
+  //         "https://api.macanacki.com/api/test/upload",
+  //         //"http://localhost:8000/api/tester",
+  //         data: formData,
+  //         options: Options(
+  //           headers: {
+  //             'Accept': 'application/json'
+  //             //'Authorization': 'Bearer $token',
+  //           },
+  //         ),
+  //       );
+  //
+  //       print(
+  //           "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ ${response.statusCode} - ${response.data.toString()}");
+  //       print(response.toString());
+  //       Fluttertoast.showToast(
+  //           msg: "Upload Successful",
+  //           toastLength: Toast.LENGTH_SHORT,
+  //           gravity: ToastGravity.CENTER,
+  //           timeInSecForIosWeb: 1,
+  //           backgroundColor: Colors.red,
+  //           textColor: Colors.white,
+  //           fontSize: 16.0);
+  //     } else {
+  //       // User canceled the picker
+  //     }
+  //   } on DioError catch (e) {
+  //     Fluttertoast.showToast(
+  //         msg: "${e.response.toString()} - ${e.message.toString()}",
+  //         toastLength: Toast.LENGTH_SHORT,
+  //         gravity: ToastGravity.CENTER,
+  //         timeInSecForIosWeb: 1,
+  //         backgroundColor: Colors.red,
+  //         textColor: Colors.white,
+  //         fontSize: 16.0);
+  //     print(
+  //         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 222222 ${e.response.toString()}");
+  //     print(e.message.toString());
+  //   }
+  // }
+
+  static Future<File> saveImage(Uint8List imageByte) async {
+    //获取临时目录
+    var tempDir = await getTemporaryDirectory();
+    //生成file文件格式
+    var file =
+        await File('${tempDir.path}/image_${DateTime.now().millisecond}.jpg')
+            .create();
+    //转成file文件
+    file.writeAsBytesSync(imageByte);
+    return file;
+    // print("${file.path}");
+    // setState(() {
+    //   path = file.path;
+    //   // turn(file);
+    //   _imageUint8=imageByte;
+    // });
+  }
+
+  // static Future pickForPostExt(BuildContext context) async {
+  //   try {
+  //     //Initialize both [CreatePost] && [UserProfile] State
+  //     CreatePostWare picked =
+  //         Provider.of<CreatePostWare>(context, listen: false);
+  //     UserProfileWare user =
+  //         Provider.of<UserProfileWare>(context, listen: false);
+  //
+  //     // set picker theme based on app theme primary color
+  //     final theme = InstaAssetPicker.themeData(Theme.of(context).primaryColor);
+  //     InstaAssetPicker.pickAssets(
+  //       context,
+  //       pickerTheme: theme.copyWith(
+  //         canvasColor: Colors.black, // body background color
+  //         //splashColor: Color.gra, // ontap splash color
+  //         colorScheme: theme.colorScheme.copyWith(
+  //           background: Colors.black87, // albums list background color
+  //         ),
+  //         appBarTheme: theme.appBarTheme.copyWith(
+  //           backgroundColor: Colors.black, // app bar background color
+  //           titleTextStyle: Theme.of(context).appBarTheme.titleTextStyle?.copyWith(
+  //               color: Colors
+  //                   .white), // change app bar title text style to be like app theme
+  //         ),
+  //         // edit `confirm` button style
+  //         textButtonTheme: TextButtonThemeData(
+  //           style: TextButton.styleFrom(
+  //             foregroundColor: Colors.blue,
+  //             disabledForegroundColor: Colors.red,
+  //           ),
+  //         ),
+  //       ),
+  //       onCompleted: (_) {},
+  //     );
+  //   } catch (e) {
+  //     //Display error to user
+  //     // ignore: use_build_context_synchronously
+  //     showToast2(context, "Oops!! ${e.toString()}", isError: true);
+  //     return;
+  //   }
+  // }
+
+  // static Future pickForPostExt(BuildContext context) async {
+  //   try {
+  //     //Initialize both [CreatePost] && [UserProfile] State
+  //     CreatePostWare picked =
+  //         Provider.of<CreatePostWare>(context, listen: false);
+  //     UserProfileWare user =
+  //         Provider.of<UserProfileWare>(context, listen: false);
+  //
+  //     // // Allow Users select images from their devices
+  //     // FilePickerResult? result = await FilePicker.platform
+  //     //     .pickFiles(type: FileType.image, allowMultiple: true);
+  //     //
+  //     // // Check if selected images is not empty
+  //     // if (result == null) return;
+  //     //
+  //     // // Converts result into usable file
+  //     // List<File> recievedFiles =
+  //     //     result.paths.map((path) => File(path!)).toList();
+  //
+  //     // //Check if the recievedFiles is not more than 10
+  //     // if (recievedFiles.length > 10) {
+  //     //   throw "You can only select maximum of 10 media files";
+  //     // }
+  //
+  //     // Pick Selected Images
+  //     List<Uint8List>? res = await MultiCropPicker.selectMedia(
+  //       context,
+  //       maxLength: 10,
+  //       aspectRatio: 1,
+  //       previewHeight: MediaQuery.of(context).size.width,
+  //       previewShowingRatio: 1.0,
+  //       textColor: Colors.black26,
+  //       backgroundColor: Colors.white,
+  //       tagColor: Colors.yellow,
+  //       // loadingWidget: const LoadingCircle(),
+  //       tagTextColor: Colors.black,
+  //     );
+  //
+  //     // Check if selected images is not empty
+  //     if (res != null) {
+  //       // if (res.length > 10) {
+  //       //   // ignore: use_build_context_synchronously
+  //       //   showToast2(context, "You can only select maximum of 10 media files",
+  //       //       isError: true);
+  //       //   return;
+  //       // }
+  //
+  //       // Convert the selectedImages to file
+  //       // res.map((Uint8List ul) {
+  //       //   return saveImage(ul);
+  //       // }).toList();
+  //
+  //       // List<File> files = [];
+  //       // await Future.forEach(res, (Uint8List uint8list) async {
+  //       //   files.add(await saveImage(uint8list));
+  //       // });
+  //
+  //       List<File> files = res.map((path) => File.fromRawPath(path)).toList();
+  //
+  //       //Save it to [CreatePost] State
+  //       picked.addFile(files);
+  //
+  //       //Navigate to [CreatePostScreen] to complete the process
+  //       // ignore: use_build_context_synchronously
+  //       PageRouting.pushToPage(context, const CreatePostScreen());
+  //     }
+  //   } catch (e) {
+  //     //Display error to user
+  //     // ignore: use_build_context_synchronously
+  //     showToast2(context, "Oops!! ${e.toString()}", isError: true);
+  //     return;
+  //   }
+  // }
+
+  // static Future pickForMartins(BuildContext context) async {
+  //   try {
+  //     final List<ImageObject>? objects = await Navigator.of(context)
+  //         .push(PageRouteBuilder(pageBuilder: (context, animation, __) {
+  //       return const ImagePicker(
+  //         maxCount: 10,
+  //       );
+  //     }));
+  //
+  //     if ((objects?.length ?? 0) > 0) {
+  //       print(objects!.first.originalPath);
+  //       print("----fff---------- ${objects.toString()}");
+  //     }
+  //   } catch (e) {}
+  //   // if ((objects?.length ?? 0) > 0) {
+  //   //   setState(() {
+  //   //     _imgObjs = objects!;
+  //   //   });
+  //   // }
+  //   // try {
+  //   //   //Initialize both [CreatePost] && [UserProfile] State
+  //   //   CreatePostWare picked =
+  //   //       Provider.of<CreatePostWare>(context, listen: false);
+  //   //   UserProfileWare user =
+  //   //       Provider.of<UserProfileWare>(context, listen: false);
+  //   //
+  //   //   // Allow Users select images from their devices
+  //   //   FilePickerResult? result = await FilePicker.platform
+  //   //       .pickFiles(type: FileType.image, allowMultiple: true);
+  //   //
+  //   //   // Check if selected images is not empty
+  //   //   if (result == null) return;
+  //   //
+  //   //   // Converts result into usable file
+  //   //   List<File> recievedFiles =
+  //   //       result.paths.map((path) => File(path!)).toList();
+  //   //
+  //   //   //Check if the recievedFiles is not more than 10
+  //   //   if (recievedFiles.length > 10) {
+  //   //     throw "You can only select maximum of 10 media files";
+  //   //   }
+  //   //
+  //   //   MultiImageCrop.startCropping(
+  //   //       context: context,
+  //   //       aspectRatio: 4 / 3,
+  //   //       activeColor: Colors.amber,
+  //   //       pixelRatio: 3,
+  //   //       files: List.generate(recievedFiles!.length,
+  //   //           (index) => File(recievedFiles![index].path)),
+  //   //       callBack: (List<File> images) {});
+  //   // } catch (e) {}
+  // }
 
   static Future pickForPost(BuildContext context) async {
     CreatePostWare picked = Provider.of<CreatePostWare>(context, listen: false);
@@ -196,6 +494,8 @@ class Operations {
           allowMultiple: true);
 
       if (result != null) {
+        PlatformFile filex = result.files.first;
+
         List<File> file = result.paths.map((path) => File(path!)).toList();
 
         if (file.length > 10) {

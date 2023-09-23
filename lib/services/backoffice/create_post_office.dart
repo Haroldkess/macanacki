@@ -10,9 +10,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../presentation/widgets/debug_emitter.dart';
 
+double getFileSize(File file) {
+  int sizeInBytes = file.lengthSync();
+  double sizeInMb = sizeInBytes / (1024 * 1024);
+  return sizeInMb;
+}
+
 Future<http.StreamedResponse?> createPost(
   CreatePostModel data,
 ) async {
+  print("Inside CreatePost Office");
   http.StreamedResponse? response;
   SharedPreferences pref = await SharedPreferences.getInstance();
   String? token = pref.getString(tokenKey);
@@ -31,6 +38,15 @@ Future<http.StreamedResponse?> createPost(
   //   filePhoto.add(f);
   // });
   for (var i = 0; i < data.media!.length; i++) {
+    emitter("FilePath Before Sending: ${data.media![i].path}");
+    final xx = File(data.media![i].path);
+    // emitter("AAAAAAAAAAAAAA");
+    emitter(" FileSize before sending: ${getFileSize(xx).toString()}");
+    // var f = await http.MultipartFile.fromPath(
+    //   'media[$i]',
+    //   data.media![i].path,
+    // );
+    // filePhoto.add(f);
     var f = await http.MultipartFile.fromPath('media[$i]', data.media![i].path,
         filename: basename(data.media![i].path));
     filePhoto.add(f);

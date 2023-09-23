@@ -169,7 +169,6 @@ class RegisterationWare extends ChangeNotifier {
         emitter("this user is registered");
 
         //  var res = http.Response.fromStream(response);
-
       } else {
         final res = await http.Response.fromStream(response);
         var jsonData = jsonDecode(res.body);
@@ -192,7 +191,10 @@ class RegisterationWare extends ChangeNotifier {
   ) async {
     late bool isSuccessful;
     try {
-      http.Response? response = await verifyUserName(name)
+      SharedPreferences pref = await SharedPreferences.getInstance();
+      String savedEmail = pref.getString(emailKey) ?? '';
+
+      http.Response? response = await verifyUserName(name, savedEmail)
           .whenComplete(() => emitter(" request done"));
       if (response == null) {
         _verifyName = false;
@@ -242,7 +244,6 @@ class RegisterationWare extends ChangeNotifier {
         log(res.body);
 
         //  var res = http.Response.fromStream(response);
-
       } else {
         final res = await http.Response.fromStream(response);
         //  var jsonData = jsonDecode(res.body);
@@ -295,7 +296,6 @@ class RegisterationWare extends ChangeNotifier {
         //   log("this user is registered");
 
         //  var res = http.Response.fromStream(response);
-
       } else {
         final res = await http.Response.fromStream(response);
         try {

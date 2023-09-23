@@ -46,10 +46,10 @@ class FeedPostController {
       // }
 
       emitter("feed post stored");
-    // ignore: use_build_context_synchronously
-    // await  FeedPostController.downloadThumbs(
-    //       // ignore: use_build_context_synchronously
-    //       data, context, MediaQuery.of(context).size.height);
+      // ignore: use_build_context_synchronously
+      // await  FeedPostController.downloadThumbs(
+      //       // ignore: use_build_context_synchronously
+      //       data, context, MediaQuery.of(context).size.height);
     } else {
       if (isPaginating == true) {
         ware.isLoading(false);
@@ -95,10 +95,13 @@ class FeedPostController {
     provide.isLoadingReferesh(false);
   }
 
-  static Future<void> getUserPostController(BuildContext context) async {
+  static Future<void> getUserPostController(BuildContext context,
+      {bool isScroll = false}) async {
     FeedPostWare ware = Provider.of<FeedPostWare>(context, listen: false);
     ware.disposeValue2();
-    ware.isLoading2(true);
+
+    if (isScroll == false) ware.isLoading2(true);
+    if (ware.loading == true) return;
     // ignore: use_build_context_synchronously
     bool isDone = await ware.getUserPostFromApi().whenComplete(
         () => emitter("everything from api and provider is done"));
@@ -114,7 +117,6 @@ class FeedPostController {
       // showToast2(context, "Can't get your posts", isError: true);
 
       // ignore: use_build_context_synchronously
-
     }
     ware.isLoading2(false);
   }
@@ -222,7 +224,6 @@ class FeedPostController {
 
   static Future<void> downloadThumbs(
       List<FeedPost> data, BuildContext context, height) async {
-      
     // emitter("-------------------------------------------------");
     FeedPostWare ware = Provider.of<FeedPostWare>(context, listen: false);
 
@@ -345,8 +346,6 @@ class FeedPostController {
 
   static Future<void> loadBeforeHand(context, FeedPost data) async {
     FeedPostWare feed = Provider.of(context, listen: false);
-   await feed.initializeBeforeHand(data);
-
-
+    await feed.initializeBeforeHand(data);
   }
 }

@@ -12,7 +12,6 @@ import 'package:macanacki/services/controllers/save_media_controller.dart';
 import 'package:macanacki/services/middleware/plan_ware.dart';
 import 'package:macanacki/services/middleware/user_profile_ware.dart';
 import 'package:provider/provider.dart';
-
 import '../screens/home/profile/createpost/edit_post.dart';
 
 optionModal(BuildContext cont, List<String> url, [int? id, int? postId]) async {
@@ -128,7 +127,6 @@ optionModal(BuildContext cont, List<String> url, [int? id, int? postId]) async {
                                                 label: "Yes",
                                                 textColor: Colors.white,
                                                 onPressed: () async {
-                                                  print(id);
                                                   await CreatePostController
                                                       .deletePost(cont, postId);
 
@@ -136,8 +134,6 @@ optionModal(BuildContext cont, List<String> url, [int? id, int? postId]) async {
                                                   //     cont);
                                                 }),
                                           ));
-                                      
-                                      
                                         }
                                       },
                                       title: Padding(

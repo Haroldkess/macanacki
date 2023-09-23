@@ -9,6 +9,7 @@ import 'package:macanacki/model/register_model.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
 import 'package:macanacki/presentation/model/ui_model.dart';
 import 'package:macanacki/presentation/operations.dart';
+import 'package:macanacki/presentation/screens/home/profile/profile_screen.dart';
 import 'package:macanacki/presentation/screens/home/tab_screen.dart';
 import 'package:macanacki/presentation/widgets/float_toast.dart';
 import 'package:macanacki/presentation/widgets/snack_msg.dart';

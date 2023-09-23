@@ -1,8 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:macanacki/presentation/allNavigation.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
 import 'package:macanacki/presentation/operations.dart';
+import 'package:macanacki/presentation/operations_ext.dart';
 import 'package:macanacki/presentation/screens/home/profile/createpost/create_post_screen.dart';
 import 'package:macanacki/presentation/screens/home/profile/edit_profile.dart';
 import 'package:macanacki/presentation/screens/home/settings/settings_screen.dart';
@@ -100,18 +103,20 @@ class AllProfileActions extends StatelessWidget {
             ),
           ),
           InkWell(
-            onTap: () => Operations.pickForPost(
-              context,
-            ),
+            onTap: () {
+              _showActionSheet(context);
+            },
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 ProfileActionButton(
                   icon: "assets/icon/post.svg",
-                  onClick: () => Operations.pickForPost(context),
+                  onClick: () {
+                    _showActionSheet(context);
+                  },
                   color: "#F94C84",
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 5,
                 ),
                 Container(
@@ -142,7 +147,7 @@ class AllProfileActions extends StatelessWidget {
                   },
                   color: "#C0C0C0",
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 5,
                 ),
                 Container(
@@ -157,6 +162,78 @@ class AllProfileActions extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showActionSheet(BuildContext context) {
+    showCupertinoModalPopup<void>(
+      context: context,
+      builder: (BuildContext context) => CupertinoActionSheet(
+        actions: <CupertinoActionSheetAction>[
+          CupertinoActionSheetAction(
+            /// This parameter indicates the action would be a default
+            /// default behavior, turns the action's text to bold text.
+            //isDefaultAction: true,
+            onPressed: () {
+              //Navigator.pop(context);
+              OperationsExt.pickForPost(
+                context,
+              );
+            },
+            child: Row(
+              children: [
+                Icon(
+                  Icons.image_search_outlined,
+                  color: HexColor(primaryColor),
+                ),
+                SizedBox(width: 10),
+                AppText(
+                  text: "Post Images",
+                  fontWeight: FontWeight.w400,
+                  size: 18,
+                  color: HexColor("#797979"),
+                ),
+              ],
+            ),
+          ),
+          CupertinoActionSheetAction(
+            onPressed: () {
+              //Navigator.pop(context);
+              OperationsExt.pickVideoForPost(context);
+            },
+            child: Row(
+              children: [
+                Icon(
+                  Icons.videocam_outlined,
+                  color: HexColor(primaryColor),
+                ),
+                SizedBox(width: 10),
+                AppText(
+                  text: "Post Videos",
+                  fontWeight: FontWeight.w400,
+                  size: 18,
+                  color: HexColor("#797979"),
+                ),
+              ],
+            ),
+          ),
+          CupertinoActionSheetAction(
+            /// This parameter indicates the action would perform
+            /// a destructive action such as delete or exit and turns
+            /// the action's text color to red.
+            isDestructiveAction: true,
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: AppText(
+              text: "Cancel",
+              fontWeight: FontWeight.w400,
+              size: 18,
+              color: HexColor(primaryColor),
             ),
           ),
         ],

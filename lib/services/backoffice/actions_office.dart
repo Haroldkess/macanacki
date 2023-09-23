@@ -31,13 +31,17 @@ Future<http.Response?> followAndUnfollow(String username) async {
   return response;
 }
 
-Future<http.Response?> getAllFollowing() async {
+Future<http.Response?> getAllFollowing(
+    int pageNumber, int numberOfPostPerRequest, String search) async {
   http.Response? response;
   SharedPreferences pref = await SharedPreferences.getInstance();
   String? token = pref.getString(tokenKey);
+  String? userName = pref!.getString(userNameKey);
+
   try {
     response = await http.get(
-      Uri.parse('$baseUrl/public/api/user/following'),
+      Uri.parse(
+          '$baseUrl/public/api/v2/user/public/user/following/$userName/?page=$pageNumber&search=$search'),
       headers: {
         HttpHeaders.contentTypeHeader: "application/json",
         HttpHeaders.authorizationHeader: "Bearer $token",
@@ -51,13 +55,20 @@ Future<http.Response?> getAllFollowing() async {
   return response;
 }
 
-Future<http.Response?> getAllFollowers() async {
+Future<http.Response?> getAllFollowers(
+    int pageNumber, int numberOfPostPerRequest, String search) async {
   http.Response? response;
   SharedPreferences pref = await SharedPreferences.getInstance();
   String? token = pref.getString(tokenKey);
+  String? userName = pref!.getString(userNameKey);
+
+  // print(
+  //     "$baseUrl/public/api/v2/user/public/user/followers/$userName?page=$pageNumber");
+  // print(token);
   try {
     response = await http.get(
-      Uri.parse('$baseUrl/public/api/user/followers'),
+      Uri.parse(
+          '$baseUrl/public/api/v2/user/public/user/followers/$userName/?page=$pageNumber&search=$search'),
       headers: {
         HttpHeaders.contentTypeHeader: "application/json",
         HttpHeaders.authorizationHeader: "Bearer $token",

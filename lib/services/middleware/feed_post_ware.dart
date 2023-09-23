@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:macanacki/model/common/data.dart';
 import 'package:macanacki/model/feed_post_model.dart';
 import 'package:macanacki/model/gender_model.dart';
@@ -25,6 +27,69 @@ import '../backoffice/db.dart';
 import '../backoffice/mux_client.dart';
 
 class FeedPostWare extends ChangeNotifier {
+////////////@@@AutoScroll [State]
+  PagingController<int, ProfileFeedDatum> pagingController =
+      PagingController(firstPageKey: 1);
+  bool _isLastPage = false;
+  int _pageNumber = 1;
+  bool _loading = false;
+  int _numberOfPostsPerRequest = 10;
+  int _nextPageTrigger = 3;
+  ScrollController scrollController = ScrollController();
+//////////////////////////////////
+
+  ////////////////////@@@AutoScroll [Getters]
+  bool get loading => _loading;
+  ////////////////////////////////////////////
+
+  ////////////////////@@@@AutoScroll [Mutation]
+  void updateLoading(bool value) {
+    _loading = value;
+    notifyListeners();
+  }
+
+  void updateIsLastPage(bool value) {
+    _isLastPage = value;
+    notifyListeners();
+  }
+
+  void updatePageNumber(int value) {
+    _pageNumber = value;
+    notifyListeners();
+  }
+
+  void updateNumberOfPostsPerRequest(int value) {
+    _numberOfPostsPerRequest = value;
+    notifyListeners();
+  }
+
+  void updateNextPagePerTrigger(int value) {
+    _nextPageTrigger = value;
+    notifyListeners();
+  }
+
+  void initializePagingController() {
+    pagingController = PagingController(firstPageKey: 1);
+    disposeAutoScroll();
+  }
+
+  void updateProfileFeedPosts(List<ProfileFeedDatum> value) {
+    _profileFeedPosts = [..._profileFeedPosts, ...value].distinct();
+    notifyListeners();
+  }
+
+  void disposeAutoScroll() {
+    print("dispose autoscroll");
+    _isLastPage = false;
+    _pageNumber = 1;
+    _loading = false;
+    _numberOfPostsPerRequest = 10;
+    _nextPageTrigger = 3;
+    _profileFeedPosts.clear();
+    notifyListeners();
+  }
+  ////////////////////////////////////////////////
+
   MUXClient muxClient = MUXClient();
   bool _loadStatus = false;
   bool _loadStatus2 = false;
@@ -191,7 +256,7 @@ class FeedPostWare extends ChangeNotifier {
       // log(e.toString());
     }
 
-    notifyListeners();
+    //notifyListeners();
 
     return isSuccessful;
   }
@@ -199,10 +264,14 @@ class FeedPostWare extends ChangeNotifier {
   Future<void> initializeBeforeHand(FeedPost post) async {
     List<FeedPost> data = _feedPosts.where((val) => val.id == post.id).toList();
     if (data.isNotEmpty) {
-      if(_feedPosts.where((val) => val.id == post.id).toList().first.controller == null){
-        _feedPosts.where((val) => val.id == post.id).toList().first.controller=
-          post.controller;
-
+      if (_feedPosts
+              .where((val) => val.id == post.id)
+              .toList()
+              .first
+              .controller ==
+          null) {
+        _feedPosts.where((val) => val.id == post.id).toList().first.controller =
+            post.controller;
       }
     }
 
@@ -232,21 +301,31 @@ class FeedPostWare extends ChangeNotifier {
 
   Future<bool> getUserPostFromApi() async {
     late bool isSuccessful;
+    if (loading == true || _isLastPage == true) return false;
+
     try {
-      http.Response? response = await getUserFeedPost()
+      updateLoading(true);
+      http.Response? response = await getUserFeedPost(
+              _pageNumber, _numberOfPostsPerRequest)
           .whenComplete(() => emitter("user posts data gotten successfully"));
       if (response == null) {
         isSuccessful = false;
         //   log("get user posts data request failed");
       } else if (response.statusCode == 200) {
         var jsonData = jsonDecode(response.body);
-
+        int recordCount = jsonData['record_count'];
         var incomingData = ProfileFeedModel.fromJson(jsonData);
+        List<ProfileFeedDatum> newItems = incomingData.data!;
+        updateProfileFeedPosts(newItems);
+        updatePageNumber(_pageNumber + 1);
+        updateIsLastPage(profileFeedPosts.length >= recordCount);
 
-        _profileFeedData = incomingData;
+        if (_isLastPage == true) {
+          pagingController.appendLastPage(newItems);
+        } else {
+          pagingController.appendPage(newItems, _pageNumber);
+        }
 
-        _profileFeedPosts = _profileFeedData.data!;
-        //  log("get user posts data  request success");
         isSuccessful = true;
       } else {
         // log("get user posts data  request failed");
@@ -254,8 +333,8 @@ class FeedPostWare extends ChangeNotifier {
       }
     } catch (e) {
       isSuccessful = false;
-      //   log("get user posts data  request failed");
-      // log(e.toString());
+    } finally {
+      updateLoading(false);
     }
 
     notifyListeners();

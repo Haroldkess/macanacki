@@ -2,12 +2,14 @@ import 'dart:io';
 
 class SendEmailModel {
   String? email;
+  String? firebaseID;
 
-  SendEmailModel({required this.email});
+  SendEmailModel({required this.email, this.firebaseID});
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data["email"] = email;
+    data["firebase_id"] = firebaseID;
     return data;
   }
 }

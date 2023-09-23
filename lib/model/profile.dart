@@ -1,0 +1,325 @@
+class Profile {
+  int? id;
+  String? email;
+  String? username;
+  int? faceVerification;
+  String? dob;
+  int? emailVerified;
+  int? registrationComplete;
+  String? emailVerifiedAt;
+  String? createdAt;
+  String? updatedAt;
+  String? firebaseId;
+  String? longitude;
+  String? latitude;
+  String? mode;
+  String? ageLowerBound;
+  String? ageUpperBound;
+  int? useCurrentLocation;
+  int? useGlobalLocationSearch;
+  int? enablePushNotification;
+  int? enableEmailNotification;
+  String? setMaxDistSearch;
+  String? twitter;
+  String? facebook;
+  String? instagram;
+  String? linkedin;
+  String? telegram;
+  String? fullName;
+  String? nationality;
+  String? idType;
+  String? idNumber;
+  String? idFrontCapture;
+  String? idBackCapture;
+  String? selfie;
+  int? verified;
+  String? aboutMe;
+  String? phone;
+  int? admin;
+  int? isSuperAdmin;
+  int? status;
+  String? country;
+  String? state;
+  String? city;
+  String? subscriptionExpires;
+  String? device;
+  int? celeb;
+  int? walletBalance;
+  String? gender;
+  String? profilephoto;
+  int? noOfFollowers;
+  int? noOfFollowing;
+  String? activePlan;
+  String? idFront;
+  String? idBack;
+  Verification? verification;
+  String? category;
+
+  Profile(
+      {this.id,
+      this.email,
+      this.username,
+      this.faceVerification,
+      this.dob,
+      this.emailVerified,
+      this.registrationComplete,
+      this.emailVerifiedAt,
+      this.createdAt,
+      this.updatedAt,
+      this.firebaseId,
+      this.longitude,
+      this.latitude,
+      this.mode,
+      this.ageLowerBound,
+      this.ageUpperBound,
+      this.useCurrentLocation,
+      this.useGlobalLocationSearch,
+      this.enablePushNotification,
+      this.enableEmailNotification,
+      this.setMaxDistSearch,
+      this.twitter,
+      this.facebook,
+      this.instagram,
+      this.linkedin,
+      this.telegram,
+      this.fullName,
+      this.nationality,
+      this.idType,
+      this.idNumber,
+      this.idFrontCapture,
+      this.idBackCapture,
+      this.selfie,
+      this.verified,
+      this.aboutMe,
+      this.phone,
+      this.admin,
+      this.isSuperAdmin,
+      this.status,
+      this.country,
+      this.state,
+      this.city,
+      this.subscriptionExpires,
+      this.device,
+      this.celeb,
+      this.walletBalance,
+      this.gender,
+      this.profilephoto,
+      this.noOfFollowers,
+      this.noOfFollowing,
+      this.activePlan,
+      this.idFront,
+      this.idBack,
+      this.verification,
+      this.category});
+
+  Profile.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    email = json['email'];
+    username = json['username'];
+    faceVerification = json['face_verification'];
+    dob = json['dob'];
+    emailVerified = json['email_verified'];
+    registrationComplete = json['registration_complete'];
+    emailVerifiedAt = json['email_verified_at'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+    firebaseId = json['firebase_id'];
+    longitude = json['longitude'];
+    latitude = json['latitude'];
+    mode = json['mode'];
+    ageLowerBound = json['age_lower_bound'];
+    ageUpperBound = json['age_upper_bound'];
+    useCurrentLocation = json['use_current_location'];
+    useGlobalLocationSearch = json['use_global_location_search'];
+    enablePushNotification = json['enable_push_notification'];
+    enableEmailNotification = json['enable_email_notification'];
+    setMaxDistSearch = json['set_max_dist_search'];
+    twitter = json['twitter'];
+    facebook = json['facebook'];
+    instagram = json['instagram'];
+    linkedin = json['linkedin'];
+    telegram = json['telegram'];
+    fullName = json['full_name'];
+    nationality = json['nationality'];
+    idType = json['id_type'];
+    idNumber = json['id_number'];
+    idFrontCapture = json['id_front_capture'];
+    idBackCapture = json['id_back_capture'];
+    selfie = json['selfie'];
+    verified = json['verified'];
+    aboutMe = json['about_me'];
+    phone = json['phone'];
+    admin = json['admin'];
+    isSuperAdmin = json['is_super_admin'];
+    status = json['status'];
+    country = json['country'];
+    state = json['state'];
+    city = json['city'];
+    subscriptionExpires = json['subscription_expires'];
+    device = json['device'];
+    celeb = json['celeb'];
+    walletBalance = json['wallet_balance'];
+    gender = json['gender'];
+    profilephoto = json['profilephoto'];
+    noOfFollowers = json['no_of_followers'];
+    noOfFollowing = json['no_of_following'];
+    activePlan = json['active_plan'];
+    idFront = json['id_front'];
+    idBack = json['id_back'];
+    verification = json['verification'] != null
+        ? new Verification.fromJson(json['verification'])
+        : null;
+    category = json['category'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['email'] = this.email;
+    data['username'] = this.username;
+    data['face_verification'] = this.faceVerification;
+    data['dob'] = this.dob;
+    data['email_verified'] = this.emailVerified;
+    data['registration_complete'] = this.registrationComplete;
+    data['email_verified_at'] = this.emailVerifiedAt;
+    data['created_at'] = this.createdAt;
+    data['updated_at'] = this.updatedAt;
+    data['firebase_id'] = this.firebaseId;
+    data['longitude'] = this.longitude;
+    data['latitude'] = this.latitude;
+    data['mode'] = this.mode;
+    data['age_lower_bound'] = this.ageLowerBound;
+    data['age_upper_bound'] = this.ageUpperBound;
+    data['use_current_location'] = this.useCurrentLocation;
+    data['use_global_location_search'] = this.useGlobalLocationSearch;
+    data['enable_push_notification'] = this.enablePushNotification;
+    data['enable_email_notification'] = this.enableEmailNotification;
+    data['set_max_dist_search'] = this.setMaxDistSearch;
+    data['twitter'] = this.twitter;
+    data['facebook'] = this.facebook;
+    data['instagram'] = this.instagram;
+    data['linkedin'] = this.linkedin;
+    data['telegram'] = this.telegram;
+    data['full_name'] = this.fullName;
+    data['nationality'] = this.nationality;
+    data['id_type'] = this.idType;
+    data['id_number'] = this.idNumber;
+    data['id_front_capture'] = this.idFrontCapture;
+    data['id_back_capture'] = this.idBackCapture;
+    data['selfie'] = this.selfie;
+    data['verified'] = this.verified;
+    data['about_me'] = this.aboutMe;
+    data['phone'] = this.phone;
+    data['admin'] = this.admin;
+    data['is_super_admin'] = this.isSuperAdmin;
+    data['status'] = this.status;
+    data['country'] = this.country;
+    data['state'] = this.state;
+    data['city'] = this.city;
+    data['subscription_expires'] = this.subscriptionExpires;
+    data['device'] = this.device;
+    data['celeb'] = this.celeb;
+    data['wallet_balance'] = this.walletBalance;
+    data['gender'] = this.gender;
+    data['profilephoto'] = this.profilephoto;
+    data['no_of_followers'] = this.noOfFollowers;
+    data['no_of_following'] = this.noOfFollowing;
+    data['active_plan'] = this.activePlan;
+    data['id_front'] = this.idFront;
+    data['id_back'] = this.idBack;
+    if (this.verification != null) {
+      data['verification'] = this.verification!.toJson();
+    }
+    data['category'] = this.category;
+    return data;
+  }
+}
+
+class Verification {
+  int? id;
+  int? userId;
+  String? name;
+  String? businessName;
+  String? businessEmail;
+  String? phone;
+  String? description;
+  String? isRegistered;
+  String? country;
+  String? registrationNo;
+  String? address;
+  String? idType;
+  String? idNo;
+  int? verified;
+  String? createdAt;
+  String? updatedAt;
+  String? businessAddress;
+  String? photo;
+  String? evidence;
+
+  Verification(
+      {this.id,
+      this.userId,
+      this.name,
+      this.businessName,
+      this.businessEmail,
+      this.phone,
+      this.description,
+      this.isRegistered,
+      this.country,
+      this.registrationNo,
+      this.address,
+      this.idType,
+      this.idNo,
+      this.verified,
+      this.createdAt,
+      this.updatedAt,
+      this.businessAddress,
+      this.photo,
+      this.evidence});
+
+  Verification.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    userId = json['user_id'];
+    name = json['name'];
+    businessName = json['business_name'];
+    businessEmail = json['business_email'];
+    phone = json['phone'];
+    description = json['description'];
+    isRegistered = json['is_registered'];
+    country = json['country'];
+    registrationNo = json['registration_no'];
+    address = json['address'];
+    idType = json['id_type'];
+    idNo = json['id_no'];
+    verified = json['verified'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+    businessAddress = json['business_address'];
+    photo = json['photo'];
+    evidence = json['evidence'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['user_id'] = this.userId;
+    data['name'] = this.name;
+    data['business_name'] = this.businessName;
+    data['business_email'] = this.businessEmail;
+    data['phone'] = this.phone;
+    data['description'] = this.description;
+    data['is_registered'] = this.isRegistered;
+    data['country'] = this.country;
+    data['registration_no'] = this.registrationNo;
+    data['address'] = this.address;
+    data['id_type'] = this.idType;
+    data['id_no'] = this.idNo;
+    data['verified'] = this.verified;
+    data['created_at'] = this.createdAt;
+    data['updated_at'] = this.updatedAt;
+    data['business_address'] = this.businessAddress;
+    data['photo'] = this.photo;
+    data['evidence'] = this.evidence;
+    return data;
+  }
+}

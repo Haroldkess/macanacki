@@ -9,6 +9,7 @@ import 'package:macanacki/presentation/widgets/loader.dart';
 import 'package:macanacki/presentation/widgets/text.dart';
 import 'package:macanacki/services/controllers/action_controller.dart';
 import 'package:macanacki/services/middleware/action_ware.dart';
+import 'package:macanacki/services/middleware/user_profile_ext_ware.dart';
 import 'package:macanacki/services/middleware/user_profile_ware.dart';
 import 'package:provider/provider.dart';
 
@@ -37,6 +38,9 @@ class _PublicUserFollowerFollowingScreenState
       FindPeopleProvider search =
           Provider.of<FindPeopleProvider>(context, listen: false);
       search.search("");
+      UserProfileExtWare ext =
+          Provider.of<UserProfileExtWare>(context, listen: false);
+      ext.updateUsername(widget.title);
     });
     // } else {
     //   SchedulerBinding.instance.addPostFrameCallback((timeStamp) async {
@@ -49,6 +53,7 @@ class _PublicUserFollowerFollowingScreenState
   Widget build(BuildContext context) {
     ActionWare stream = context.watch<ActionWare>();
     UserProfileWare user = context.watch<UserProfileWare>();
+    UserProfileExtWare ware = context.watch<UserProfileExtWare>();
 
     return Scaffold(
       backgroundColor: HexColor("#F5F2F9"),
@@ -65,7 +70,17 @@ class _PublicUserFollowerFollowingScreenState
                   const SizedBox(
                     height: 20,
                   ),
-                  FollowSearch(controller: controller),
+                  FollowSearch(
+                      controller: controller,
+                      onChanged: (val) {
+                        ware.updateRequestMode("search");
+                        ware.updateSearch(val);
+                        if (widget.isFollowing == 'Following') {
+                          ware.getUserPublicFollowingsFromApi();
+                        } else {
+                          ware.getUserPublicFollowersFromApi();
+                        }
+                      }),
                 ],
               ),
             ),
@@ -86,11 +101,11 @@ class _PublicUserFollowerFollowingScreenState
         toolbarHeight: 110,
       ),
       body: PublicFollowFollowingList(
-        data: widget.isFollowing
-            ? user.publicUserProfileModel.followings!
-            : user.publicUserProfileModel.followers!,
-        what: widget.isFollowing ? "Following" : "Followers",
-      ),
+          data: widget.isFollowing
+              ? user.publicUserProfileModel.followings!
+              : user.publicUserProfileModel.followers!,
+          what: widget.isFollowing ? "Following" : "Followers",
+          ware: ware),
     );
   }
 }
