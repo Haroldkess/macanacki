@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:macanacki/presentation/allNavigation.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
@@ -17,7 +18,6 @@ import 'package:macanacki/presentation/screens/home/Feed/feed_home.dart';
 import 'package:macanacki/presentation/screens/home/convo/conversation_screen.dart';
 import 'package:macanacki/presentation/screens/home/profile/profile_screen.dart';
 import 'package:macanacki/presentation/screens/home/search/global_search_screen.dart';
-import 'package:macanacki/presentation/screens/home/subscription/subscrtiption_plan.dart';
 import 'package:macanacki/presentation/screens/home/swipes/swipe_card_screen.dart';
 import 'package:macanacki/presentation/uiproviders/screen/tab_provider.dart';
 import 'package:macanacki/presentation/widgets/drawer.dart';
@@ -29,6 +29,7 @@ import 'package:macanacki/services/controllers/notification_controller.dart';
 import 'package:macanacki/services/controllers/swipe_users_controller.dart';
 import 'package:macanacki/services/controllers/update_app.dart';
 import 'package:macanacki/services/controllers/user_profile_controller.dart';
+import 'package:macanacki/services/middleware/gift_ware.dart';
 import 'package:provider/provider.dart';
 import 'package:upgrader/upgrader.dart';
 
@@ -291,7 +292,6 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
                   emitter(e.toString());
                 }
                 //provide.isHomeChange(true);
-
               }
             },
             items: [
@@ -304,7 +304,8 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
                   'assets/icon/profile.svg', tabs.index == 4 ? true : false),
             ],
             activeColor: HexColor(primaryColor),
-            backgroundColor:  Platform.isIOS ? Colors.black : HexColor(backgroundColor),
+            backgroundColor:
+                Platform.isIOS ? Colors.black : HexColor(backgroundColor),
           ),
         ),
       ),
@@ -383,6 +384,7 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
   void initState() {
     //UpdateApp.basicStatusCheck(context);
     super.initState();
+    Get.put(GiftWare());
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       NotificationController.checkNotification(context);
     });

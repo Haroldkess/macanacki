@@ -36,6 +36,7 @@ import '../../notification/notification_screen.dart';
 import '../../onboarding/business/business_info.dart';
 import '../../onboarding/business/business_verification.dart';
 import '../../onboarding/business/sub_plan.dart';
+import '../diamond/balance/diamond_balance_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({
@@ -223,11 +224,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                 children: [
                   ProfileQuickLinks(
                     onClick: () {
-                      // showToast2(context, "Feature coming soon");
+                      PageRouting.pushToPage(
+                          context, const DiamondBalanceScreen());
                     },
-                    name: "Switch Account",
-                    icon: "assets/icon/switch.svg",
-                    color: Colors.grey,
+                    name: "Balance",
+                    icon: "assets/icon/diamond.svg",
+                    color: HexColor(diamondColor),
                     isVerified: false,
                   ),
                   ProfileQuickLinks(

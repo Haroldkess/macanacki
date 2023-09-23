@@ -4,35 +4,22 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexagon/hexagon.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:macanacki/model/following_model.dart';
-import 'package:macanacki/presentation/constants/colors.dart';
-import 'package:macanacki/presentation/constants/params.dart';
-import 'package:macanacki/presentation/widgets/text.dart';
-import 'package:macanacki/services/controllers/action_controller.dart';
-import 'package:macanacki/services/middleware/action_ware.dart';
 import 'package:numeral/numeral.dart';
-import 'package:provider/provider.dart';
 
-import '../../../../allNavigation.dart';
-
+import '../../../../../model/gift_diamond_history_model.dart';
+import '../../../../constants/colors.dart';
+import '../../../../constants/params.dart';
 import '../../../../widgets/loader.dart';
-import '../../../userprofile/user_profile_screen.dart';
+import '../../../../widgets/text.dart';
 
-class FollowTile extends StatelessWidget {
-  final FollowingData data;
-  const FollowTile({super.key, required this.data});
+class GifterView extends StatelessWidget {
+  final GifterInfo data;
+  const GifterView({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
-    ActionWare stream = context.watch<ActionWare>();
     return InkWell(
-      onTap: () {
-        PageRouting.pushToPage(
-            context,
-            UsersProfile(
-              username: data.username!,
-            ));
-      },
+      onTap: () {},
       child: Container(
         height: 100,
         decoration: BoxDecoration(
@@ -43,8 +30,11 @@ class FollowTile extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  dp(context,
-                      data.profilephoto == null ? "" : data.profilephoto!),
+                  dp(
+                      context,
+                      data.sender!.profilephoto == null
+                          ? ""
+                          : data.sender!.profilephoto!),
                   const SizedBox(
                     width: 10,
                   ),
@@ -61,7 +51,7 @@ class FollowTile extends StatelessWidget {
                             child: RichText(
                                 maxLines: 1,
                                 text: TextSpan(
-                                    text: "${data.username}",
+                                    text: "${data.sender!.username}",
                                     style: GoogleFonts.leagueSpartan(
                                         textStyle: const TextStyle(
                                             fontWeight: FontWeight.w700,
@@ -91,7 +81,7 @@ class FollowTile extends StatelessWidget {
                                       // )
                                     ])),
                           ),
-                          data.verified == 1 && data.activePlan != sub
+                          data.sender!.verified == 1
                               ? SvgPicture.asset(
                                   "assets/icon/badge.svg",
                                   height: 15,
@@ -105,7 +95,7 @@ class FollowTile extends StatelessWidget {
                       ),
                       AppText(
                         text:
-                            "${Numeral(data.noOfFollowers!).format()} followers",
+                            "${Numeral(data.sender!.noOfFollowers!).format()} followers",
                         fontWeight: FontWeight.w500,
                         size: 10,
                         color: HexColor("#0597FF"),
@@ -121,12 +111,8 @@ class FollowTile extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       InkWell(
-                          onTap: () {
-                            followAction(context);
-                          },
-                          child: !stream.followIds.contains(data.id!)
-                              ? followCardButton("Follow", true)
-                              : unfollowCardButton("Unfollow")),
+                          onTap: () {},
+                          child: giftButton("${data.value}", true)),
                     ],
                   ),
                 ),
@@ -138,18 +124,7 @@ class FollowTile extends StatelessWidget {
     );
   }
 
-  Future<void> followAction(BuildContext context) async {
-    ActionWare provide = Provider.of<ActionWare>(context, listen: false);
-
-    await ActionController.followOrUnFollowController(
-        context, data.username!, data.id!);
-  }
-
   Widget dp(BuildContext context, String url) {
-    var height = MediaQuery.of(context).size.height;
-    var width = MediaQuery.of(context).size.width;
-    var size = MediaQuery.of(context).size;
-    var padding = 8.0;
     var w = 58.0;
     return Stack(
       children: [
@@ -210,7 +185,7 @@ class FollowTile extends StatelessWidget {
     );
   }
 
-  Widget followCardButton(String title, bool isColor) {
+  Widget giftButton(String title, bool isColor) {
     return Container(
       decoration: BoxDecoration(
           color: HexColor(primaryColor),
@@ -219,34 +194,29 @@ class FollowTile extends StatelessWidget {
           shape: BoxShape.rectangle),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-        child: AppText(
-          text: title,
-          color: HexColor(backgroundColor),
-          size: 13,
-          fontWeight: FontWeight.w500,
+        child: Row(
+          children: [
+            AppText(
+              text: "${Numeral(num.tryParse(title.toString())!).format()}",
+              color: HexColor(backgroundColor),
+              size: 14,
+              fontWeight: FontWeight.w600,
+            ),
+           const SizedBox(
+              width: 2,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 3),
+              child: SvgPicture.asset(
+                "assets/icon/diamond.svg",
+                height: 13,
+                width: 13,
+                color: HexColor(diamondColor),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
-
-  Widget unfollowCardButton(String title) {
-    return Container(
-      decoration: BoxDecoration(
-          color: HexColor(primaryColor),
-          border: Border.all(width: 1, color: HexColor(primaryColor)),
-          borderRadius: BorderRadius.circular(15),
-          shape: BoxShape.rectangle),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-        child: AppText(
-          text: title,
-          color: HexColor(backgroundColor),
-          size: 13,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
-    );
-  }
-
-
 }

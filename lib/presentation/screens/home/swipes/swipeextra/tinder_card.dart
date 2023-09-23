@@ -29,6 +29,7 @@ import '../../../../../services/middleware/chat_ware.dart';
 import '../../../../uiproviders/screen/card_provider.dart';
 import '../../../../widgets/filter_address_modal.dart';
 import '../../../../widgets/snack_msg.dart';
+import '../../diamond/balance/diamond_balance_screen.dart';
 import '../../profile/profileextras/not_mine_buttons.dart';
 
 class TinderCard extends StatefulWidget {
@@ -529,53 +530,86 @@ class _TinderCardState extends State<TinderCard> {
                   : const SizedBox.shrink()
             ],
           ),
-          stream.followIds.contains(id)
-              ? SizedBox.shrink()
-              : Padding(
-                  padding: const EdgeInsets.only(bottom: 15.0),
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: AnimatedContainer(
-                        duration: Duration(seconds: 1),
-                        height: height,
-                        width: width,
-                        child: Card(
-                          color: Colors.transparent,
-                          shadowColor: HexColor(primaryColor),
-                          elevation: 20,
-                          child: ProfileActionButtonNotThisUsers(
-                            icon: "assets/icon/follow.svg",
-                            isSwipe: true,
-                            onClick: () async {
-                              SharedPreferences pref =
-                                  await SharedPreferences.getInstance();
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              stream.followIds.contains(id)
+                  ? SizedBox.shrink()
+                  : Padding(
+                      padding: const EdgeInsets.only(bottom: 15.0),
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: AnimatedContainer(
+                            duration: Duration(seconds: 1),
+                            height: height,
+                            width: width,
+                            child: Card(
+                              color: Colors.transparent,
+                              shadowColor: HexColor(primaryColor),
+                              elevation: 20,
+                              child: ProfileActionButtonNotThisUsers(
+                                icon: "assets/icon/follow.svg",
+                                isSwipe: true,
+                                onClick: () async {
+                                  SharedPreferences pref =
+                                      await SharedPreferences.getInstance();
 
-                              await animateButton(0.0, true).whenComplete(() =>
-                                  mounted
-                                      ? _matchEngine!.currentItem!.like()
-                                      : null);
-                              mounted ? animateButton(60.0, false) : null;
+                                  await animateButton(0.0, true).whenComplete(
+                                      () => mounted
+                                          ? _matchEngine!.currentItem!.like()
+                                          : null);
+                                  mounted ? animateButton(60.0, false) : null;
 
-                              if (username == pref.getString(userNameKey)) {
-                                emitter("can n ot follow your self");
-                              } else {
-                                // ignore: use_build_context_synchronously
-                                followAction(
-                                  context,
-                                  id,
-                                  username,
-                                );
-                              }
-                            },
-                            color: primaryColor,
+                                  if (username == pref.getString(userNameKey)) {
+                                    emitter("can n ot follow your self");
+                                  } else {
+                                    // ignore: use_build_context_synchronously
+                                    followAction(
+                                      context,
+                                      id,
+                                      username,
+                                    );
+                                  }
+                                },
+                                color: primaryColor,
+                              ),
+                            ),
                           ),
                         ),
                       ),
                     ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 15.0),
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: AnimatedContainer(
+                      duration: Duration(seconds: 1),
+                      height: height,
+                      width: width,
+                      child: Card(
+                        color: Colors.transparent,
+                        shadowColor: HexColor(primaryColor),
+                        elevation: 20,
+                        child: ProfileActionButtonNotThisUsers(
+                          icon: "assets/icon/diamond.svg",
+                          isSwipe: true,
+                          onClick: () async {
+                            PageRouting.pushToPage(
+                                context, const DiamondBalanceScreen());
+                          },
+                          color: diamondColor,
+                        ),
+                      ),
+                    ),
                   ),
-                )
+                ),
+              )
+            ],
+          )
         ],
       ),
     );

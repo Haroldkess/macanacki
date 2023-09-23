@@ -82,6 +82,8 @@ class PaymentController {
       }).whenComplete(() => verifyOnServer(ref, context, isFirst, isPayOnly));
     }
 
+    
+
     // Map data = {
     //   "amount": amount,
     //   "email": "${user.userProfileModel.email}",
@@ -213,6 +215,30 @@ class PaymentController {
     return true;
   }
 
+
+
+   static Future<bool> chargeForDiamonds(BuildContext context, int amount,
+      [bool? isFirst, isPayOnly, String? id]) async {
+    //  log(sk);
+    late bool success;
+    UserProfileWare user = Provider.of<UserProfileWare>(context, listen: false);
+    final String ref = await getReference();
+    // ignore: use_build_context_synchronously
+    String access = await createAccessCodeDiamond(ref, context, amount.toString(), id);
+    if (access.isNotEmpty) {
+      PaystackStandard(context).checkout(checkoutUrl: access).then((response) {
+        if (response.success) {
+          verifyOnServer(ref, context, isFirst, isPayOnly);
+        } else {}
+
+// here check for success - verify transaction status with your backend server
+      }).whenComplete(() => verifyOnServer(ref, context, isFirst, isPayOnly));
+    }
+
+    
+    return true;
+  }
+
   static Future<String> createAccessCode(reference, context, String amount,
       [String? id]) async {
     UserProfileWare user = Provider.of<UserProfileWare>(context, listen: false);
@@ -235,6 +261,34 @@ class PaymentController {
       "metadata": {"post_id": id}
     };
     String payload = id == null ? json.encode(data) : json.encode(promoteData);
+    http.Response response = await http
+        .post(Uri.parse('https://api.paystack.co/transaction/initialize'),
+            headers: headers, body: payload)
+        .timeout(const Duration(seconds: 30));
+    var data2 = jsonDecode(response.body);
+    // print(data2.toString());
+    String accessCode = data2['data']['access_code'];
+    String authUrl = data2['data']['authorization_url'];
+    return authUrl;
+  }
+  static Future<String> createAccessCodeDiamond(reference, context, String amount,
+      [String? id]) async {
+    UserProfileWare user = Provider.of<UserProfileWare>(context, listen: false);
+    // skTest -> Secret key
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $sk'
+    };
+ 
+
+    Map data = {
+      "amount": amount,
+      "email": "${user.userProfileModel.email}",
+      "reference": reference,
+      "metadata": {"wallet_email": id}
+    };
+    String payload =  json.encode(data) ;
     http.Response response = await http
         .post(Uri.parse('https://api.paystack.co/transaction/initialize'),
             headers: headers, body: payload)

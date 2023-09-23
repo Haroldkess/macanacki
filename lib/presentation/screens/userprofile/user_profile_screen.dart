@@ -193,6 +193,39 @@ class _UsersProfileState extends State<UsersProfile>
                     child: SizedBox(height: 20),
                   ),
             SliverToBoxAdapter(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ProfileQuickLinks(
+                    onClick: () {
+                      // showToast2(context, "Feature coming soon");
+                    },
+                    name: "Block Account",
+                    icon: "assets/icon/block.svg",
+                    color: Colors.grey,
+                    isVerified: false,
+                  ),
+                  ProfileQuickLinks(
+                    onClick: () async {},
+                    name: "report Account",
+                    icon: "assets/icon/report.svg",
+                    color: Colors.grey,
+                    isVerified: false,
+                  ),
+                  ProfileQuickLinks(
+                    onClick: () {},
+                    name: "Give Diamond",
+                    icon: "assets/icon/diamond.svg",
+                    color: HexColor(diamondColor),
+                    isVerified: true,
+                  )
+                ],
+              ),
+            ),
+            const SliverToBoxAdapter(
+              child: SizedBox(height: 20),
+            ),
+            SliverToBoxAdapter(
               child: stream.loadStatus2
                   ? const ProfilePostGridLoader()
                   : const PublicProfilePostGrid(),
@@ -267,4 +300,58 @@ class _UsersProfileState extends State<UsersProfile>
   @override
   // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
+}
+
+class ProfileQuickLinks extends StatelessWidget {
+  String name;
+  String icon;
+  VoidCallback onClick;
+  Color color;
+  bool isVerified;
+  ProfileQuickLinks(
+      {super.key,
+      required this.name,
+      required this.icon,
+      required this.color,
+      required this.isVerified,
+      required this.onClick});
+
+  @override
+  Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
+    return InkWell(
+      onTap: onClick,
+      child: Card(
+        //  elevation: 10,
+        // shape: RoundedRectangleBorder(
+        //   borderRadius: BorderRadius.circular(80),
+        //   //set border radius more than 50% of height and width to make circle
+        // ),
+        child: Container(
+          height: 61,
+          width: size.width * 0.28,
+          decoration: BoxDecoration(
+              color: HexColor(backgroundColor),
+              borderRadius: BorderRadius.circular(8)),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SvgPicture.asset(icon,
+                  height: 22, width: 25, color: color),
+              const SizedBox(
+                height: 10,
+              ),
+              AppText(
+                text: name,
+                size: 12,
+                fontWeight: FontWeight.w400,
+                color: HexColor("#828282"),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }

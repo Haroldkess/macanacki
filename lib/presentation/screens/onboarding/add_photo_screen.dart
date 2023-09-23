@@ -15,7 +15,7 @@ import '../../constants/colors.dart';
 import '../../constants/params.dart';
 import '../../widgets/buttons.dart';
 import '../../widgets/text.dart';
-import '../home/tab_screen.dart';
+
 
 class AddPhotoScreen extends StatefulWidget {
   const AddPhotoScreen({super.key});

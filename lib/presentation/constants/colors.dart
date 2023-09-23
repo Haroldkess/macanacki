@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 const primaryColor = "#F94C84";
 const backgroundColor = "#FFFFFF";
 const darkColor = "#171717";
+const diamondColor = "#0597FF";
 
 // text colors
 const headings = "#222222";

@@ -90,6 +90,7 @@ dependencies:
   fl_toast: ^3.2.0
   pay_with_paystack: ^1.0.6
   paystack_standard: ^0.0.8
+  in_app_update: ^3.0.0
   # flutter_paystack_plus: ^1.0.2
   # visibility_detector: ^0.4.0+2
   # change_app_package_name: 1.0.0

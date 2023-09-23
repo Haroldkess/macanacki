@@ -1,0 +1,194 @@
+import 'dart:convert';
+
+import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+import 'package:macanacki/model/user_balance.dart';
+import 'package:macanacki/services/backoffice/gifts_office.dart';
+import '../../model/gift_diamond_history_model.dart';
+import '../../model/gift_wallet_balance.dart';
+import '../../presentation/widgets/debug_emitter.dart';
+
+class GiftWare extends GetxController {
+  static GiftWare get instance {
+    return Get.find<GiftWare>();
+  }
+
+  Rx<UserBalanceModel> userBalance = UserBalanceModel().obs;
+  Rx<GiftBalanceModel> gift = GiftBalanceModel().obs;
+  Rx<GiftDiamondHistory> gifterHistory = GiftDiamondHistory().obs;
+  Rx<bool> loadGifters = false.obs;
+  @override
+  void onInit() {
+    getWalletFromApi();
+    getGiftFromApi();
+    getFundWalletHistoryFromApi();
+    getReceivedDiamondsHistoryFromApi();
+    getExchangeRateFromApi();
+    // TODO: implement onInit
+
+    super.onInit();
+  }
+
+  Future<bool> getWalletFromApi() async {
+    late bool isSuccessful;
+    try {
+      http.Response? response = await GiftCalls.walletBalance()
+          .whenComplete(() => emitter("wallet  gotten successfully"));
+      if (response == null) {
+        isSuccessful = false;
+      } else if (response.statusCode == 200) {
+        var jsonData = jsonDecode(response.body);
+
+        var data = UserBalanceModel.fromJson(jsonData);
+        userBalance.value = data;
+
+        isSuccessful = true;
+      } else {
+        var jsonData = jsonDecode(response.body);
+
+        isSuccessful = false;
+      }
+    } catch (e) {
+      isSuccessful = false;
+    }
+
+    return isSuccessful;
+  }
+
+  Future<bool> getGiftFromApi() async {
+    late bool isSuccessful;
+    try {
+      http.Response? response = await GiftCalls.giftBalance()
+          .whenComplete(() => emitter("gift  gotten successfully"));
+      if (response == null) {
+        isSuccessful = false;
+      } else if (response.statusCode == 200) {
+        var jsonData = jsonDecode(response.body);
+        var data = GiftBalanceModel.fromJson(jsonData);
+        gift.value = data;
+
+        isSuccessful = true;
+      } else {
+        var jsonData = jsonDecode(response.body);
+
+        isSuccessful = false;
+      }
+    } catch (e) {
+      isSuccessful = false;
+    }
+
+    return isSuccessful;
+  }
+
+  Future<bool> getFundWalletHistoryFromApi() async {
+    late bool isSuccessful;
+    try {
+      http.Response? response = await GiftCalls.fundWalletHistory()
+          .whenComplete(
+              () => emitter("fund wallet history  gotten successfully"));
+      if (response == null) {
+        isSuccessful = false;
+      } else if (response.statusCode == 200) {
+        var jsonData = jsonDecode(response.body);
+
+        isSuccessful = true;
+      } else {
+        var jsonData = jsonDecode(response.body);
+
+        isSuccessful = false;
+      }
+    } catch (e) {
+      isSuccessful = false;
+    }
+
+    return isSuccessful;
+  }
+
+  Future<bool> getReceivedDiamondsHistoryFromApi() async {
+    late bool isSuccessful;
+    loadGifters.value = true;
+    try {
+      http.Response? response = await GiftCalls.myRecievedDiamondsHistory()
+          .whenComplete(() =>
+              emitter("my Recieved Diamonds History  gotten successfully"));
+      if (response == null) {
+        loadGifters.value = false;
+        isSuccessful = false;
+      } else if (response.statusCode == 200) {
+        var jsonData = jsonDecode(response.body);
+        var data = GiftDiamondHistory.fromJson(jsonData);
+        gifterHistory.value = data;
+        loadGifters.value = false;
+
+        isSuccessful = true;
+      } else {
+        var jsonData = jsonDecode(response.body);
+        loadGifters.value = false;
+
+        isSuccessful = false;
+      }
+    } catch (e) {
+      loadGifters.value = false;
+      isSuccessful = false;
+    }
+    loadGifters.value = false;
+
+    return isSuccessful;
+  }
+
+  Future<bool> doTransferOfDiamondsFromApi(
+      String name, String amount, String narration) async {
+    late bool isSuccessful;
+    var data = {
+      'value': amount,
+      'receiver_username': name,
+      'narrative': narration,
+    };
+    try {
+      http.Response? response = await GiftCalls.transferDiamonds(data)
+          .whenComplete(() => emitter("transferDiamonds"));
+      if (response == null) {
+        isSuccessful = false;
+      } else if (response.statusCode == 200) {
+        var jsonData = jsonDecode(response.body);
+
+        isSuccessful = true;
+      } else {
+        var jsonData = jsonDecode(response.body);
+
+        isSuccessful = false;
+      }
+    } catch (e) {
+      isSuccessful = false;
+    }
+
+    return isSuccessful;
+  }
+
+  Future<bool> getExchangeRateFromApi() async {
+    late bool isSuccessful;
+    try {
+      http.Response? response = await GiftCalls.exchangeRate()
+          .whenComplete(() => emitter("exchange  gotten successfully"));
+      if (response == null) {
+        isSuccessful = false;
+      } else if (response.statusCode == 200) {
+        var jsonData = jsonDecode(response.body);
+
+        // var data = UserBalanceModel.fromJson(jsonData);
+        // userBalance.value = data;
+
+        isSuccessful = true;
+      } else {
+        var jsonData = jsonDecode(response.body);
+
+        isSuccessful = false;
+      }
+    } catch (e) {
+      isSuccessful = false;
+    }
+
+    return isSuccessful;
+  }
+
+}
