@@ -139,11 +139,6 @@ class _FollowFollowingListState extends State<FollowFollowingList> {
                   ],
                 ),
               );
-<<<<<<< HEAD
-            });
-  
-  
-=======
             },
           ),
           scrollController: _controller,
@@ -183,6 +178,5 @@ class _FollowFollowingListState extends State<FollowFollowingList> {
         // ),
       ],
     );
->>>>>>> e2b637bd7988201eca5fd12bddf9e3b43d87b91d
   }
 }

@@ -99,6 +99,7 @@ class GiftCalls {
     SharedPreferences pref = await SharedPreferences.getInstance();
 
     String? token = pref.getString(tokenKey);
+ 
     try {
       response = await http.post(
           Uri.parse('$baseUrl/public/api/v2/user/wallet/transfer/diamonds'),
@@ -107,6 +108,7 @@ class GiftCalls {
             HttpHeaders.authorizationHeader: "Bearer $token",
           },
           body: jsonEncode(data));
+      emitter(response.statusCode.toString());
 
       emitter(response.body.toString());
     } catch (e) {
@@ -115,23 +117,21 @@ class GiftCalls {
     return response;
   }
 
-
-    static Future<http.Response?> exchangeRate() async {
+  static Future<http.Response?> exchangeRate() async {
     http.Response? response;
     SharedPreferences pref = await SharedPreferences.getInstance();
 
     String? token = pref.getString(tokenKey);
     try {
       response = await http.get(
-        Uri.parse(
-            '$baseUrl/public/api/v2/user/wallet/received/diamond/history'),
+        Uri.parse('$baseUrl/public/api/exchange/rate/NGN'),
         headers: {
           HttpHeaders.contentTypeHeader: "application/json",
           HttpHeaders.authorizationHeader: "Bearer $token",
         },
       );
 
-      emitter(response.body.toString());
+      log(response.body.toString());
     } catch (e) {
       response = null;
     }

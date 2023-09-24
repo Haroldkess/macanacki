@@ -5,6 +5,7 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:macanacki/presentation/allNavigation.dart';
@@ -26,10 +27,13 @@ import '../../../../../services/controllers/action_controller.dart';
 import '../../../../../services/controllers/swipe_users_controller.dart';
 import '../../../../../services/middleware/action_ware.dart';
 import '../../../../../services/middleware/chat_ware.dart';
+import '../../../../../services/middleware/gift_ware.dart';
 import '../../../../uiproviders/screen/card_provider.dart';
 import '../../../../widgets/filter_address_modal.dart';
 import '../../../../widgets/snack_msg.dart';
 import '../../diamond/balance/diamond_balance_screen.dart';
+import '../../diamond/diamond_modal/buy_modal.dart';
+import '../../diamond/diamond_modal/give_modal.dart';
 import '../../profile/profileextras/not_mine_buttons.dart';
 
 class TinderCard extends StatefulWidget {
@@ -540,7 +544,7 @@ class _TinderCardState extends State<TinderCard> {
                       child: Align(
                         alignment: Alignment.bottomCenter,
                         child: Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(1.0),
                           child: AnimatedContainer(
                             duration: Duration(seconds: 1),
                             height: height,
@@ -585,27 +589,32 @@ class _TinderCardState extends State<TinderCard> {
                 child: Align(
                   alignment: Alignment.bottomCenter,
                   child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: AnimatedContainer(
-                      duration: Duration(seconds: 1),
-                      height: height,
-                      width: width,
-                      child: Card(
-                        color: Colors.transparent,
-                        shadowColor: HexColor(primaryColor),
-                        elevation: 20,
-                        child: ProfileActionButtonNotThisUsers(
-                          icon: "assets/icon/diamond.svg",
-                          isSwipe: true,
-                          onClick: () async {
-                            PageRouting.pushToPage(
-                                context, const DiamondBalanceScreen());
-                          },
-                          color: diamondColor,
+                      padding: const EdgeInsets.all(1.0),
+                      child: AnimatedContainer(
+                        duration: Duration(seconds: 1),
+                        height: height,
+                        width: width,
+                        child: Card(
+                          color: Colors.transparent,
+                          shadowColor: HexColor(primaryColor),
+                          elevation: 20,
+                          child: ProfileActionButtonNotThisUsers(
+                            icon: "assets/icon/diamond.svg",
+                            isSwipe: true,
+                            onClick: () async {
+                              if (int.tryParse(GiftWare.instance.gift.value.data
+                                      .toString())! <
+                                  50) {
+                                buyDiamondsModal(
+                                    context, GiftWare.instance.rate.value.data);
+                              } else {
+                                giveDiamondsModal(context,username );
+                              }
+                            },
+                            color: diamondColor,
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
+                      )),
                 ),
               )
             ],

@@ -4,9 +4,11 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:macanacki/model/user_balance.dart';
 import 'package:macanacki/services/backoffice/gifts_office.dart';
+import '../../model/exchange_rate_model.dart';
 import '../../model/gift_diamond_history_model.dart';
 import '../../model/gift_wallet_balance.dart';
 import '../../presentation/widgets/debug_emitter.dart';
+import '../../presentation/widgets/dialogue.dart';
 
 class GiftWare extends GetxController {
   static GiftWare get instance {
@@ -16,7 +18,9 @@ class GiftWare extends GetxController {
   Rx<UserBalanceModel> userBalance = UserBalanceModel().obs;
   Rx<GiftBalanceModel> gift = GiftBalanceModel().obs;
   Rx<GiftDiamondHistory> gifterHistory = GiftDiamondHistory().obs;
+  Rx<ExchangeRateModel> rate = ExchangeRateModel().obs;
   Rx<bool> loadGifters = false.obs;
+  Rx<bool> loadTransfer = false.obs;
   @override
   void onInit() {
     getWalletFromApi();
@@ -24,7 +28,6 @@ class GiftWare extends GetxController {
     getFundWalletHistoryFromApi();
     getReceivedDiamondsHistoryFromApi();
     getExchangeRateFromApi();
-    // TODO: implement onInit
 
     super.onInit();
   }
@@ -136,33 +139,61 @@ class GiftWare extends GetxController {
     return isSuccessful;
   }
 
-  Future<bool> doTransferOfDiamondsFromApi(
+  Future<void> doTransferOfDiamondsFromApi(
       String name, String amount, String narration) async {
+    loadTransfer.value = true;
     late bool isSuccessful;
-    var data = {
-      'value': amount,
-      'receiver_username': name,
-      'narrative': narration,
+    Map data = {
+      "value": amount,
+      "receiver_username": name,
+      "narrative": "gift",
     };
     try {
       http.Response? response = await GiftCalls.transferDiamonds(data)
           .whenComplete(() => emitter("transferDiamonds"));
       if (response == null) {
+        loadTransfer.value = false;
         isSuccessful = false;
       } else if (response.statusCode == 200) {
         var jsonData = jsonDecode(response.body);
-
+        loadTransfer.value = false;
         isSuccessful = true;
+        getWalletFromApi();
+        getGiftFromApi();
+        Get.back();
+        Get.dialog(diamondDialog(
+            title: "You Gifted $name 50 Diamonds ",
+            message: "50 Diamonds has been sent to $name",
+            confirmText: "Okay",
+            cancelText: "Go back",
+            onPressedCancel: () {
+              Get.back();
+            },
+            onPressed: () {
+              Get.back();
+            }));
       } else {
         var jsonData = jsonDecode(response.body);
-
+        loadTransfer.value = false;
         isSuccessful = false;
+        Get.back();
+        Get.dialog(diamondDialog(
+            title: "Failed to gift $name",
+            message: "",
+            confirmText: "Okay",
+            cancelText: "Go back",
+            isFail: true,
+            onPressedCancel: () {
+              Get.back();
+            },
+            onPressed: () {
+              Get.back();
+            }));
       }
     } catch (e) {
+      loadTransfer.value = false;
       isSuccessful = false;
     }
-
-    return isSuccessful;
   }
 
   Future<bool> getExchangeRateFromApi() async {
@@ -175,8 +206,8 @@ class GiftWare extends GetxController {
       } else if (response.statusCode == 200) {
         var jsonData = jsonDecode(response.body);
 
-        // var data = UserBalanceModel.fromJson(jsonData);
-        // userBalance.value = data;
+        var data = ExchangeRateModel.fromJson(jsonData);
+        rate.value = data;
 
         isSuccessful = true;
       } else {
@@ -190,5 +221,4 @@ class GiftWare extends GetxController {
 
     return isSuccessful;
   }
-
 }

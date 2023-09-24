@@ -90,12 +90,10 @@ dependencies:
   fl_toast: ^3.2.0
   pay_with_paystack: ^1.0.6
   paystack_standard: ^0.0.8
-<<<<<<< HEAD
   in_app_update: ^3.0.0
   # flutter_paystack_plus: ^1.0.2
   # visibility_detector: ^0.4.0+2
   # change_app_package_name: 1.0.0
-=======
   advance_image_picker: ^0.1.7+1
   video_trimmer: ^2.1.0
   pay: ^1.1.0
@@ -106,7 +104,6 @@ dependencies:
   easy_debounce: ^2.0.3
 
 
->>>>>>> e2b637bd7988201eca5fd12bddf9e3b43d87b91d
   
   
 

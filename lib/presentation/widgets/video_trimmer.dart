@@ -229,7 +229,7 @@ class _VideoTrimmerState extends State<VideoTrimmer> {
             backgroundColor: Colors.transparent,
             color: HexColor(primaryColor),
             minHeight: 7,
-            borderRadius: const BorderRadius.all(Radius.circular(10)),
+          //  borderRadius: const BorderRadius.all(Radius.circular(10)),
           ),
         ),
         const SizedBox(height: 15),

@@ -117,7 +117,8 @@ class BalanceCard extends StatelessWidget {
                   fontWeight: FontWeight.w400,
                 ),
                 GestureDetector(
-                  onTap: () => buyDiamondsModal(context),
+                  onTap: () => buyDiamondsModal(
+                      context, GiftWare.instance.rate.value.data),
                   child: Container(
                     decoration: const BoxDecoration(
                         shape: BoxShape.circle, color: Colors.white),
@@ -128,7 +129,7 @@ class BalanceCard extends StatelessWidget {
                           color: HexColor(primaryColor),
                         )),
                   ),
-                ),
+                )
               ],
             ),
           ),

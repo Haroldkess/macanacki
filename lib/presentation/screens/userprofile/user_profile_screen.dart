@@ -16,10 +16,13 @@ import '../../../services/controllers/feed_post_controller.dart';
 import '../../../services/controllers/user_profile_controller.dart';
 import '../../../services/middleware/chat_ware.dart';
 import '../../../services/middleware/feed_post_ware.dart';
+import '../../../services/middleware/gift_ware.dart';
 import '../../../services/middleware/user_profile_ware.dart';
 import '../../allNavigation.dart';
 import '../../constants/colors.dart';
 import '../../widgets/app_bar.dart';
+import '../home/diamond/diamond_modal/buy_modal.dart';
+import '../home/diamond/diamond_modal/give_modal.dart';
 import '../home/profile/profileextras/profile_info.dart';
 import '../home/profile/profileextras/profile_post_grid.dart';
 import '../notification/notification_screen.dart';
@@ -201,7 +204,6 @@ class _UsersProfileState extends State<UsersProfile>
                     child: SizedBox(height: 20),
                   ),
             SliverToBoxAdapter(
-<<<<<<< HEAD
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -222,7 +224,16 @@ class _UsersProfileState extends State<UsersProfile>
                     isVerified: false,
                   ),
                   ProfileQuickLinks(
-                    onClick: () {},
+                    onClick: () {
+                         if (int.tryParse(GiftWare.instance.gift.value.data
+                                      .toString())! <
+                                  50) {
+                                buyDiamondsModal(
+                                    context, GiftWare.instance.rate.value.data);
+                              } else {
+                                giveDiamondsModal(context,stream.publicUserProfileModel.username!);
+                              }
+                    },
                     name: "Give Diamond",
                     icon: "assets/icon/diamond.svg",
                     color: HexColor(diamondColor),
@@ -235,12 +246,10 @@ class _UsersProfileState extends State<UsersProfile>
               child: SizedBox(height: 20),
             ),
             SliverToBoxAdapter(
-              child: stream.loadStatus2
-                  ? const ProfilePostGridLoader()
-                  : const PublicProfilePostGrid(),
-=======
+              // child: stream.loadStatus2
+              //     ? const ProfilePostGridLoader()
+              //     : const PublicProfilePostGrid(),
               child: PublicProfilePostGrid(ware: stream),
->>>>>>> e2b637bd7988201eca5fd12bddf9e3b43d87b91d
             )
           ],
         ),

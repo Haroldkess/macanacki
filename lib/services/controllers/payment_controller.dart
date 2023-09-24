@@ -16,6 +16,7 @@ import 'package:macanacki/presentation/constants/colors.dart';
 import 'package:macanacki/presentation/screens/home/subscription/sub_successful.dart';
 import 'package:macanacki/presentation/widgets/snack_msg.dart';
 import 'package:macanacki/services/controllers/verify_controller.dart';
+import 'package:macanacki/services/middleware/gift_ware.dart';
 import 'package:macanacki/services/middleware/user_profile_ware.dart';
 import 'package:pay_with_paystack/pay_with_paystack.dart';
 import 'package:paystack_standard/paystack_standard.dart';
@@ -23,6 +24,7 @@ import 'package:provider/provider.dart';
 import '../../presentation/screens/onboarding/business/success.dart';
 import '../../presentation/widgets/debug_emitter.dart';
 import '../../presentation/widgets/dialogue.dart';
+import 'package:get/get.dart';
 //"sk_test_1a9e1524621e4c91e3489926ef37db7337b4c68f";
 
 String sk = dotenv.get('SECRET_KEY').toString();
@@ -81,8 +83,6 @@ class PaymentController {
 // here check for success - verify transaction status with your backend server
       }).whenComplete(() => verifyOnServer(ref, context, isFirst, isPayOnly));
     }
-
-    
 
     // Map data = {
     //   "amount": amount,
@@ -215,27 +215,36 @@ class PaymentController {
     return true;
   }
 
-
-
-   static Future<bool> chargeForDiamonds(BuildContext context, int amount,
-      [bool? isFirst, isPayOnly, String? id]) async {
+  static Future<bool> chargeForDiamonds(
+    BuildContext context,
+    int amount,
+  ) async {
     //  log(sk);
     late bool success;
     UserProfileWare user = Provider.of<UserProfileWare>(context, listen: false);
     final String ref = await getReference();
     // ignore: use_build_context_synchronously
-    String access = await createAccessCodeDiamond(ref, context, amount.toString(), id);
+    String access = await createAccessCodeDiamond(
+      ref,
+      context,
+      amount.toString(),
+    );
     if (access.isNotEmpty) {
       PaystackStandard(context).checkout(checkoutUrl: access).then((response) {
         if (response.success) {
-          verifyOnServer(ref, context, isFirst, isPayOnly);
+          verifyOnServerDiamond(
+            ref,
+            context,
+          );
         } else {}
 
 // here check for success - verify transaction status with your backend server
-      }).whenComplete(() => verifyOnServer(ref, context, isFirst, isPayOnly));
+      }).whenComplete(() => verifyOnServerDiamond(
+            ref,
+            context,
+          ));
     }
 
-    
     return true;
   }
 
@@ -271,8 +280,12 @@ class PaymentController {
     String authUrl = data2['data']['authorization_url'];
     return authUrl;
   }
-  static Future<String> createAccessCodeDiamond(reference, context, String amount,
-      [String? id]) async {
+
+  static Future<String> createAccessCodeDiamond(
+    reference,
+    context,
+    String amount,
+  ) async {
     UserProfileWare user = Provider.of<UserProfileWare>(context, listen: false);
     // skTest -> Secret key
     Map<String, String> headers = {
@@ -280,15 +293,14 @@ class PaymentController {
       'Accept': 'application/json',
       'Authorization': 'Bearer $sk'
     };
- 
 
     Map data = {
       "amount": amount,
       "email": "${user.userProfileModel.email}",
       "reference": reference,
-      "metadata": {"wallet_email": id}
+      "metadata": {"wallet_email": "${user.userProfileModel.email}"}
     };
-    String payload =  json.encode(data) ;
+    String payload = json.encode(data);
     http.Response response = await http
         .post(Uri.parse('https://api.paystack.co/transaction/initialize'),
             headers: headers, body: payload)
@@ -361,6 +373,58 @@ class PaymentController {
         return;
       } else {
         showToast2(context, "Payment not verified try again", isError: true);
+        return;
+      }
+    } catch (e) {
+      // print(e);
+      return;
+    }
+  }
+
+  static void verifyOnServerDiamond(
+    String reference,
+    context,
+  ) async {
+    try {
+      Map<String, String> headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $sk'
+      };
+      http.Response response = await http
+          .get(
+              Uri.parse(
+                  'https://api.paystack.co/transaction/verify/$reference'),
+              headers: headers)
+          .timeout(const Duration(seconds: 30));
+      final Map body = json.decode(response.body);
+      if (body['data']['status'] == 'success') {
+        GiftWare.instance.getGiftFromApi();
+        GiftWare.instance.getWalletFromApi();
+        Get.back();
+        Get.dialog(diamondDialog(
+            title: "You just Got 50 Diamonds ",
+            message: "50 Diamonds has been added to your wallet",
+            confirmText: "Okay",
+            cancelText: "Go back",
+            onPressedCancel: () {
+              Get.back();
+            },
+            onPressed: () {
+              Get.back();
+            }));
+
+        // log("paid");
+
+        //do something with the response. show success}
+        //show error prompt}
+        return;
+      } else {
+       
+
+        try {
+          showToast2(context, "Payment not verified try again", isError: true);
+        } catch (e) {}
         return;
       }
     } catch (e) {

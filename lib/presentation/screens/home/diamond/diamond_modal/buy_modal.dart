@@ -3,15 +3,14 @@ import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:macanacki/presentation/widgets/text.dart';
 
+import '../../../../../services/controllers/payment_controller.dart';
 import '../../../../constants/colors.dart';
 import '../../../../constants/params.dart';
 // import 'package:macanacki/services/middleware/plan_ware.dart';
 // import 'package:macanacki/services/middleware/user_profile_ware.dart';
 // import 'package:provider/provider.dart';
 
-buyDiamondsModal(
-  BuildContext cont,
-) async {
+buyDiamondsModal(BuildContext cont, rate) async {
   bool pay = true;
   return showModalBottomSheet(
       context: cont,
@@ -110,22 +109,37 @@ buyDiamondsModal(
                                       ],
                                     ),
                                   ),
-                                  Container(
-                                    width: 105,
-                                    height: 44,
-                                    decoration: ShapeDecoration(
-                                      color: Color(0xFFFC72A6),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
+                                  GestureDetector(
+                                    onTap: () async {
+                                      int amount =
+                                          (double.tryParse(rate.toString())!
+                                                      .toInt() *
+                                                  double.tryParse(e.amount!)!
+                                                      .toInt()) *
+                                              100;
+                                      await PaymentController.chargeForDiamonds(
+                                        context,
+                                        amount,
+                                      );
+                                    },
+                                    child: Container(
+                                      width: 105,
+                                      height: 44,
+                                      decoration: ShapeDecoration(
+                                        color: Color(0xFFFC72A6),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
                                       ),
-                                    ),
-                                    child: Center(
-                                      child: AppText(
-                                        text:
-                                            '\$${convertToCurrency(e.amount!)}',
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w400,
-                                        size: 17,
+                                      child: Center(
+                                        child: AppText(
+                                          text:
+                                              '\$${convertToCurrency(e.amount!)}',
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w400,
+                                          size: 17,
+                                        ),
                                       ),
                                     ),
                                   )
