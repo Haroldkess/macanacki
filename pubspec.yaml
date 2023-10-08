@@ -6,7 +6,7 @@ description: A new Flutter project.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 
-version: 1.0.0+1
+version: 1.1.0+2
 
 environment:
   sdk: '>=3.0.6 <4.0.0'
@@ -38,8 +38,8 @@ dependencies:
   freezed_annotation: ^0.14.1
   json_annotation: ^4.0.0
   shimmer: ^2.0.0
-  file_picker: ^5.5.0
-  video_player: ^2.5.3
+  file_picker: 
+  video_player: ^2.7.2
   cached_network_image:
   video_thumbnail: ^0.5.3
   numeral: ^2.0.1
@@ -59,7 +59,7 @@ dependencies:
   # flutter_paystack: ^1.0.7
   # geolocator: ^9.0.2
   overlay_support: ^2.1.0
-  restart_app:
+  restart_app: ^1.2.1
   firebase_analytics:
   connectivity_plus: ^3.0.3
   # location: ^4.3.0
@@ -86,7 +86,7 @@ dependencies:
   get: ^4.6.5
   upgrader:
   flutter_phoenix:
-  device_info_plus: ^9.0.3
+  device_info_plus:
   fl_toast: ^3.2.0
   pay_with_paystack: ^1.0.6
   paystack_standard: ^0.0.8
@@ -102,6 +102,12 @@ dependencies:
   scroll_edge_listener: ^0.1.1
   fast_immutable_collections: ^9.1.5
   easy_debounce: ^2.0.3
+  chewie: ^1.7.1
+  preload_page_view: ^0.2.0
+  photo_view: ^0.14.0
+  smooth_video_progress: ^0.0.4
+  persistent_bottom_nav_bar: ^5.0.2
+
 
 
   
@@ -127,7 +133,7 @@ flutter_icons:
   android: true
   ios: true
   remove_alpha_ios: true
-  image_path: "assets/pic/MacaNacki.png"
+  image_path: "assets/pic/MacaNacki.JPEG"
 
 
 

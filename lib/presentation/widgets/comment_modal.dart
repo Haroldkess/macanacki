@@ -53,8 +53,8 @@ commentModal(BuildContext context, int id, String page) async {
           body: Padding(
             padding: const EdgeInsets.only(
               top: 8.0,
-              left: 8.0,
-              right: 8.0,
+              //  left: 8.0,
+              //   right: 8.0,
             ),
             child: Container(
               // height: height,
@@ -82,57 +82,65 @@ commentModal(BuildContext context, int id, String page) async {
                                   color: HexColor(primaryColor),
                                 ),
                               )
-                            : Column(
-                                children: [
-                                  Expanded(
-                                      child: ListView.builder(
-                                          controller: control,
-                                          itemCount: stream.comments
-                                              .where((element) =>
-                                                  element.postId == id)
-                                              .toList()
-                                              .length,
-                                          reverse: stream.comments
-                                                      .where((element) =>
-                                                          element.postId == id)
-                                                      .toList()
-                                                      .length >
-                                                  8
-                                              ? true
-                                              : false,
-                                          itemBuilder: (context, index) {
-                                            return CommentTile(
-                                              e: stream.comments
-                                                  .where((element) =>
-                                                      element.postId == id)
-                                                  .toList()[index],
-                                              id: id,
-                                            );
-                                          })),
-                                  // Column(
-                                  //   // mainAxisSize: MainAxisSize.min,
-                                  //   children: stream.comments
-                                  //       .map((e) => CommentTile(
-                                  //             e: e,
-                                  //             id: id,
-                                  //           ))
-                                  //       .toList(),
-                                  // ),
-                                  const SizedBox(
-                                    height: 77,
-                                  )
-                                ],
+                            : Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: Column(
+                                  children: [
+                                    Expanded(
+                                        child: ListView.builder(
+                                            controller: control,
+                                            itemCount: stream.comments
+                                                .where((element) =>
+                                                    element.postId == id)
+                                                .toList()
+                                                .length,
+                                            reverse: stream.comments
+                                                        .where((element) =>
+                                                            element.postId ==
+                                                            id)
+                                                        .toList()
+                                                        .length >
+                                                    8
+                                                ? true
+                                                : false,
+                                            itemBuilder: (context, index) {
+                                              return CommentTile(
+                                                e: stream.comments
+                                                    .where((element) =>
+                                                        element.postId == id)
+                                                    .toList()[index],
+                                                id: id,
+                                              );
+                                            })),
+                                    // Column(
+                                    //   // mainAxisSize: MainAxisSize.min,
+                                    //   children: stream.comments
+                                    //       .map((e) => CommentTile(
+                                    //             e: e,
+                                    //             id: id,
+                                    //           ))
+                                    //       .toList(),
+                                    // ),
+                                    const SizedBox(
+                                      height: 77,
+                                    )
+                                  ],
+                                ),
                               ),
                       ),
                     ],
                   ),
                   Align(
                       alignment: Alignment.bottomCenter,
-                      child: CommentForm(
-                        comment: comment,
-                        id: id,
-                        page: page,
-                        control: control,
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 5.0),
+                        child: CommentForm(
+                          comment: comment,
+                          id: id,
+                          page: page,
+                          control: control,
+                        ),
                       )),
                   // SizedBox(
                   //   height: MediaQuery.of(context).viewInsets.bottom,
@@ -215,6 +223,7 @@ class _CommentFormState extends State<CommentForm> {
   Widget build(BuildContext context) {
     CreatePostWare ware = Provider.of<CreatePostWare>(context, listen: false);
     CreatePostWare stream = context.watch<CreatePostWare>();
+    StoreComment comment = context.watch<StoreComment>();
     return Card(
       color: Colors.transparent,
       elevation: 10,
@@ -223,7 +232,7 @@ class _CommentFormState extends State<CommentForm> {
         onTap: () => FocusScope.of(context).requestFocus(_focusNode),
         child: Container(
           height: 58,
-          width: 379,
+          width: double.infinity,
           alignment: Alignment.center,
           decoration: BoxDecoration(
               color: HexColor(backgroundColor),
@@ -258,8 +267,8 @@ class _CommentFormState extends State<CommentForm> {
             },
             decoration: InputDecoration(
               hintText: "Write a comment...",
-              hintStyle:
-                  GoogleFonts.leagueSpartan(color: HexColor("#8B8B8B"), fontSize: 14),
+              hintStyle: GoogleFonts.leagueSpartan(
+                  color: HexColor("#8B8B8B"), fontSize: 14),
               contentPadding: EdgeInsets.only(left: 10, top: 15),
               // prefixIcon: Padding(
               //   padding: const EdgeInsets.all(15.0),
@@ -285,11 +294,24 @@ class _CommentFormState extends State<CommentForm> {
                                 widget.id, context, widget.page);
                             _focusNode.unfocus();
                             if (widget.control.hasClients) {
-                              widget.control.animateTo(
-                                widget.control.position.minScrollExtent,
-                                curve: Curves.easeOut,
-                                duration: const Duration(milliseconds: 300),
-                              );
+                              if (comment.comments
+                                      .where((element) =>
+                                          element.postId == widget.id)
+                                      .toList()
+                                      .length >
+                                  8) {
+                                widget.control.animateTo(
+                                  widget.control.position.maxScrollExtent,
+                                  curve: Curves.easeOut,
+                                  duration: const Duration(milliseconds: 300),
+                                );
+                              } else {
+                                widget.control.animateTo(
+                                  widget.control.position.minScrollExtent,
+                                  curve: Curves.easeOut,
+                                  duration: const Duration(milliseconds: 300),
+                                );
+                              }
                             }
                           }
                         },
@@ -645,5 +667,4 @@ class CommentTile extends StatelessWidget {
   //       ),
   //     ),
   //   );
-
 }

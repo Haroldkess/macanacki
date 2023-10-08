@@ -14,6 +14,7 @@ import 'package:macanacki/presentation/screens/onboarding/splash_screen.dart';
 import 'package:macanacki/presentation/widgets/debug_emitter.dart';
 import 'package:macanacki/presentation/widgets/dialogue.dart';
 import 'package:macanacki/presentation/widgets/screen_loader.dart';
+import 'package:macanacki/presentation/widgets/snack_msg.dart';
 import 'package:macanacki/presentation/widgets/text.dart';
 import 'package:macanacki/services/controllers/user_profile_controller.dart';
 import 'package:provider/provider.dart';
@@ -110,10 +111,11 @@ class _DrawerSideState extends State<DrawerSide> {
                           // ignore: use_build_context_synchronously
                           PageRouting.removeAllToPage(context, const Splash());
                           if (Platform.isAndroid) {
-                            //  Restart.restartApp();
+                            Restart.restartApp();
                           } else {
                             try {
-                              Phoenix.rebirth(context);
+                             // Phoenix.rebirth(context);
+                                  Restart.restartApp();
                             } catch (e) {
                               PageRouting.removeAllToPage(
                                   context, const Splash());
@@ -265,6 +267,23 @@ class _DrawerSideState extends State<DrawerSide> {
               ),
               ListTile(
                 onTap: () async {
+                  showToast2(context, "Account not Eligible", isError: true);
+                },
+                title: AppText(
+                  text: "Monetize Account",
+                  color: HexColor(backgroundColor),
+                  fontWeight: FontWeight.w400,
+                  size: 16,
+                ),
+                trailing: const Icon(
+                  Icons.arrow_forward_ios,
+                  color: Colors.white,
+                  size: 15,
+                ),
+              ),
+              
+              ListTile(
+                onTap: () async {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     behavior: SnackBarBehavior.floating,
                     duration: const Duration(seconds: 5),
@@ -306,6 +325,7 @@ class _DrawerSideState extends State<DrawerSide> {
                   size: 15,
                 ),
               )
+
             ],
           ),
         )),

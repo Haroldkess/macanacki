@@ -8,6 +8,8 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
 import 'package:macanacki/presentation/screens/onboarding/splash_screen.dart';
 import 'package:macanacki/services/controllers/IAUpdate.dart';
+import 'package:macanacki/services/controllers/save_media_controller.dart';
+import 'package:macanacki/services/middleware/video/video_ware.dart';
 import 'package:macanacki/services/provider_init.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
@@ -17,6 +19,8 @@ import 'package:upgrader/upgrader.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:advance_image_picker/advance_image_picker.dart';
 import 'package:intl/intl.dart';
+
+import 'presentation/uiproviders/screen/tab_provider.dart';
 
 void main() async {
   dotenv.load(fileName: "secret.env");
@@ -28,6 +32,10 @@ void main() async {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       systemNavigationBarIconBrightness: Brightness.dark,
       systemNavigationBarColor: HexColor(backgroundColor)));
+  Get.put(VideoWare("", 0, false,0));
+  Get.put(VideoWareHome("", 0, false,0));
+  Get.put(MediaDownloadProgress());
+  Get.put(PersistentNavController());
 
   runApp(Phoenix(child: const MyApp()));
 }
@@ -37,6 +45,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        //  systemNavigationBarColor: Colors.transparent,
+        //systemNavigationBarIconBrightness: Brightness.light,
+        systemNavigationBarIconBrightness: Brightness.dark,
+        systemNavigationBarColor: Colors.white,
+        statusBarColor: Colors.black,
+        statusBarIconBrightness: Brightness.light
+        // systemStatusBarContrastEnforced: true
+        ));
+
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     final configs = ImagePickerConfigs();
     // AppBar text color
     configs.appBarTextColor = HexColor(backgroundColor);

@@ -15,6 +15,7 @@ import '../../../../../model/feed_post_model.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../../../../model/public_profile_model.dart';
+import '../../../../services/controllers/feed_post_controller.dart';
 import '../../../allNavigation.dart';
 import '../../../widgets/text.dart';
 import '../../home/Feed/profilefeed/public_profile_feed.dart';
@@ -22,8 +23,12 @@ import '../../home/Feed/profilefeed/public_profile_feed.dart';
 class PublicGridViewItems extends StatefulWidget {
   final PublicUserPost data;
   final int index;
+  final List<PublicUserPost> posts;
   const PublicGridViewItems(
-      {super.key, required this.data, required this.index});
+      {super.key,
+      required this.data,
+      required this.index,
+      required this.posts});
 
   @override
   State<PublicGridViewItems> createState() => _PublicGridViewItemsState();
@@ -35,7 +40,7 @@ class _PublicGridViewItemsState extends State<PublicGridViewItems> {
   void initState() {
     super.initState();
 
-    getThumbnail();
+    //  getThumbnail();
   }
 
 // getgif (){
@@ -46,8 +51,8 @@ class _PublicGridViewItemsState extends State<PublicGridViewItems> {
 //   remoteImageBuilder: (BuildContext context, url) =>
 //       Image.network(url),
 // )
-
 //}
+
   getThumbnail() async {
     if (widget.data.media!.isEmpty) {
       return;
@@ -85,6 +90,7 @@ class _PublicGridViewItemsState extends State<PublicGridViewItems> {
             context,
             PublicUserProfileFeed(
               index: widget.index,
+              data: widget.posts,
             ));
       },
       child: Container(
@@ -93,7 +99,8 @@ class _PublicGridViewItemsState extends State<PublicGridViewItems> {
             image: DecorationImage(
                 fit: BoxFit.cover,
                 image: widget.data.media!.first.contains(".mp4")
-                    ? FileImage(File(thumbnail!))
+                    ? CachedNetworkImageProvider(
+                        widget.data.thumbnails!.first ?? "")
                     : CachedNetworkImageProvider(widget.data.media!.first)
                         as ImageProvider)),
         child: Stack(
@@ -121,7 +128,8 @@ class _PublicGridViewItemsState extends State<PublicGridViewItems> {
                     Padding(
                       padding: const EdgeInsets.only(top: 2, left: 3),
                       child: AppText(
-                        text: Numeral(widget.data.viewCount!).format(),
+                        text: Numeral(widget.data.viewCount!)
+                            .format(fractionDigits: 1),
                         fontWeight: FontWeight.w600,
                         size: 12,
                         color: HexColor(backgroundColor),

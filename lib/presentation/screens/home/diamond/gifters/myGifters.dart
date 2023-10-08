@@ -112,7 +112,7 @@ class _MyGiftersState extends State<MyGifters> {
                               "assets/icon/diamond.svg",
                               height: 30,
                               width: 30,
-                              color: HexColor(primaryColor),
+                            //  color: HexColor(primaryColor),
                             ),
                             const SizedBox(
                               height: 20,

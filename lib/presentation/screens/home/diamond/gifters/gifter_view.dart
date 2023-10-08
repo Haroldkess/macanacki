@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexagon/hexagon.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:macanacki/presentation/operations.dart';
 import 'package:numeral/numeral.dart';
 
 import '../../../../../model/gift_diamond_history_model.dart';
@@ -91,7 +92,7 @@ class GifterView extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(
-                        height: 10,
+                        height: 5,
                       ),
                       AppText(
                         text:
@@ -99,6 +100,15 @@ class GifterView extends StatelessWidget {
                         fontWeight: FontWeight.w500,
                         size: 10,
                         color: HexColor("#0597FF"),
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      AppText(
+                        text: Operations.times(data.createdAt!),
+                        fontWeight: FontWeight.w500,
+                        size: 13,
+                        color: Colors.grey.withOpacity(.7),
                       ),
                     ],
                   ),
@@ -202,7 +212,7 @@ class GifterView extends StatelessWidget {
               size: 14,
               fontWeight: FontWeight.w600,
             ),
-           const SizedBox(
+            const SizedBox(
               width: 2,
             ),
             Padding(
@@ -211,7 +221,7 @@ class GifterView extends StatelessWidget {
                 "assets/icon/diamond.svg",
                 height: 13,
                 width: 13,
-                color: HexColor(diamondColor),
+                //   color: HexColor(diamondColor),
               ),
             ),
           ],

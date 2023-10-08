@@ -6,6 +6,7 @@ import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:macanacki/presentation/constants/params.dart';
 import 'package:macanacki/services/backoffice/user_profile_office.dart';
+import 'package:macanacki/services/middleware/video/video_ware.dart';
 import 'package:macanacki/services/temps/temp.dart';
 import 'package:macanacki/services/temps/temps_id.dart';
 import 'package:provider/provider.dart';
@@ -32,6 +33,8 @@ class UserProfileWare extends ChangeNotifier {
 
   ////////////////////@@@AutoScroll [Getters]
   bool get loading => _loading;
+  List<PublicUserPost> get pubPost => _allPublicUserPostData;
+
   ////////////////////////////////////////////
 
   ////////////////////@@@@AutoScroll [Mutation]
@@ -344,6 +347,9 @@ class UserProfileWare extends ChangeNotifier {
         } else {
           pagingController.appendPage(newItems, _pageNumber);
         }
+        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+          VideoWare.instance.getVideoPostFromApi(_allPublicUserPostData);
+        });
 
         isSuccessful = true;
       } else {

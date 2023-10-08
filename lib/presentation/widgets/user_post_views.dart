@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
 import 'package:macanacki/presentation/operations.dart';
@@ -19,11 +20,18 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
 import '../../model/feed_post_model.dart';
+import '../../model/profile_feed_post.dart';
 import '../../services/controllers/feed_post_controller.dart';
+import '../../services/controllers/save_media_controller.dart';
 import '../../services/controllers/url_launch_controller.dart';
+import '../../services/middleware/gift_ware.dart';
+import '../../services/middleware/user_profile_ware.dart';
+import '../../services/middleware/video/video_ware.dart';
 import '../../services/temps/temps_id.dart';
 import '../allNavigation.dart';
 import '../constants/string.dart';
+import '../screens/home/diamond/diamond_modal/download_modal.dart';
+import '../screens/home/diamond/diamond_modal/give_modal.dart';
 import '../screens/home/profile/promote_post/promote_screen.dart';
 import '../uiproviders/screen/comment_provider.dart';
 import '../uiproviders/screen/tab_provider.dart';
@@ -35,7 +43,9 @@ import 'option_modal.dart';
 class UserTikTokView extends StatefulWidget {
   final List<String> media;
   final List<String> urls;
+  final List<dynamic> thumbails;
   final FeedPost data;
+  final List<dynamic> allPost;
   int? index1;
   int? index2;
   String page;
@@ -44,11 +54,14 @@ class UserTikTokView extends StatefulWidget {
   VideoPlayerController? controller;
   bool? isInView;
   dynamic pageData;
+  final ProfileFeedDatum? thisPost;
   UserTikTokView(
       {super.key,
       required this.media,
       required this.data,
       required this.page,
+      required this.thumbails,
+      required this.allPost,
       this.index1,
       this.index2,
       this.controller,
@@ -56,7 +69,8 @@ class UserTikTokView extends StatefulWidget {
       this.feedPosts,
       required this.urls,
       required this.isInView,
-      required this.pageData});
+      required this.pageData,
+      this.thisPost});
 
   @override
   State<UserTikTokView> createState() => _UserTikTokViewState();
@@ -66,6 +80,10 @@ class _UserTikTokViewState extends State<UserTikTokView>
     with TickerProviderStateMixin {
   VideoPlayerController? _controller;
   FeedPost? thisData;
+  static const _networkCachingMs = 2000;
+  // final _key = GlobalKey<VlcPlayerWithControlsState>();
+
+  static const _subtitlesFontSize = 30;
 
   List<String> savedVid = [];
   bool flag = false;
@@ -79,41 +97,8 @@ class _UserTikTokViewState extends State<UserTikTokView>
   @override
   void initState() {
     super.initState();
+    // log(widget.data.id!.toString());
     initPref();
-    // SchedulerBinding.instance.addPostFrameCallback((_) async {
-    //   // FeedPostWare post = Provider.of<FeedPostWare>(context, listen: false);
-
-    //   FeedPostController.getSingleThumb(
-    //       widget.urls, context, MediaQuery.of(context).size.height);
-    //   // emitter('caching first ${data.length} sent');
-    // });
-
-//  muxClient.initializeDio();
-
-    // SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-    //   Operations.commentOperation(context, false, widget.data.comments!);
-    // });
-
-    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-    //   await Future.forEach(widget.pageData.comments, (dynamic element) async {
-    //     Comment comment = Comment(
-    //         id: element.id,
-    //         body: element.body,
-    //         createdAt: element.createdAt,
-    //         updatedAt: element.updatedAt,
-    //         username: element.username,
-    //         profilePhoto: element.profilePhoto,
-    //         noOfLikes: element.noOfLikes,
-    //         postId: element.postId);
-
-    //     talks.add(comment);
-    //   });
-
-    //   setState(() {
-    //     show = true;
-    //   });
-    // });
-
     controller = AnimationController(
       duration: const Duration(milliseconds: 500), //controll animation duration
       vsync: this,
@@ -130,68 +115,15 @@ class _UserTikTokViewState extends State<UserTikTokView>
       debugPrint("This is the url ${widget.data.media!.first}");
       if (widget.media == null || widget.media.isEmpty) return;
       if (!widget.media.first.contains("https")) {
-        debugPrint(
-            "This is the url ${"$muxStreamBaseUrl/${widget.media.first}.$videoExtension"}");
-        _controller = VideoPlayerController.network(
-            "$muxStreamBaseUrl/${widget.media.first}.$videoExtension"
-
-            //   videoPlayerOptions: VideoPlayerOptions()
-            );
-        if (widget.data.controller == null) {
-          thisData = widget.data.copyWith(
-            controller: _controller,
-          );
-        } else {
-          thisData = widget.data;
-        }
-
-        //  log(thisData.description!);
-        // if (widget.isInView == true) {
-        thisData!.controller!.initialize().whenComplete(() {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (mounted) {
-              TabProvider provide =
-                  Provider.of<TabProvider>(context, listen: false);
-              if (provide.index == 0) {
-                if (widget.isInView == true) {
-                  //   thisData.controller!.play();
-                }
-
-                //   provide.tap(false);
-              } else {
-                if (provide.index == 4 && provide.isHome) {
-                  emitter("heyyyyy");
-                  //  thisData.controller!.play();
-                  //  provide.tap(false);
-                } else {
-                  //  _controller!.pause();
-                }
-              }
-            }
-          });
-
-          setState(() {});
-        }).then((value) => {
-              thisData!.controller!.addListener(() {
-                if (thisData!.controller!.value.position.inSeconds > 7 &&
-                    thisData!.controller!.value.position.inSeconds < 10) {
-                  ViewController.handleView(widget.data.id!);
-                  //log("Watched more than 10 seconds");
-                }
-              })
-            });
-        thisData!.controller!.setLooping(true);
-
         // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        //   FeedPostController.loadBeforeHand(context, thisData!);
+        //   VideoWare.instance.getVideoPostFromApi(widget.allPost);
         // });
-
-        // widget.data.copyWith(controller: _controller);
-
-        //  }
-
-        // Use the controller to loop the video.
-
+        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+          VideoWareHome.instance.initSomeVideo(
+              "$muxStreamBaseUrl/${widget.media.first}.$videoExtension",
+              widget.data.id!,
+              0);
+        });
       } else {
         Future.delayed(const Duration(seconds: 2))
             .whenComplete(() => ViewController.handleView(widget.data.id!));
@@ -214,32 +146,26 @@ class _UserTikTokViewState extends State<UserTikTokView>
         return;
       }
     });
-
-    // setState(() {
-    //   show = true;
-    // });
   }
-
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-  //   emitter("changed oooo");
-  //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-  //     TabProvider tabs = Provider.of<TabProvider>(context, listen: false);
-  //     if (_controller!.value.isInitialized) {
-  //       tabs.tap(true);
-  //       setState(() {
-  //         _controller!.pause();
-  //       });
-  //       _controller!.pause();
-  //     }
-  //   });
-  // }
 
   @override
   void dispose() {
     super.dispose();
     controller.dispose();
+    if (widget.media.length < 2) {
+      debugPrint("This is the url ${widget.data.media!.first}");
+      if (widget.media == null || widget.media.isEmpty) return;
+      if (!widget.media.first.contains("https")) {
+        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+          VideoWare.instance.disposeVideo(widget.data.id!,
+              "$muxStreamBaseUrl/${widget.media.first}.$videoExtension");
+        });
+        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+          VideoWare.instance.disposeAllVideoV2(widget.data.id!,
+              "$muxStreamBaseUrl/${widget.media.first}.$videoExtension");
+        });
+      }
+    }
   }
 
   initPref() async {
@@ -256,6 +182,7 @@ class _UserTikTokViewState extends State<UserTikTokView>
     ActionWare action = Provider.of<ActionWare>(context, listen: false);
     ActionWare stream = context.watch<ActionWare>();
     TabProvider tabs = context.watch<TabProvider>();
+    UserProfileWare user = Provider.of<UserProfileWare>(context, listen: false);
 
     return GestureDetector(
       onDoubleTap: () async {
@@ -297,8 +224,6 @@ class _UserTikTokViewState extends State<UserTikTokView>
             width: width,
             height: height,
             child: Flex(
-              //  mainAxisSize: MainAxisSize.max,
-              //   mainAxisSize: MainAxisSize.min,
               direction: Axis.vertical,
               // clipBehavior: Clip.hardEdge,
               children: <Widget>[
@@ -307,15 +232,18 @@ class _UserTikTokViewState extends State<UserTikTokView>
                         builder: (_, constraints) => widget.media.length < 2
                             ? UserSinglePost(
                                 media: widget.media.first,
-                                controller: thisData == null
-                                    ? null
-                                    : thisData!.controller,
+                                // /  controller: thisData == null
+                                //       ? null
+                                //       : thisData!.controller,
                                 shouldPlay: true,
                                 constraints: constraints,
                                 isHome: widget.isHome,
-                                thumbLink: widget.urls.first,
+                                thumbLink: widget.thumbails.first ?? "",
                                 page: widget.page,
                                 isInView: widget.isInView,
+                                postId: widget.data.id!,
+                                data: widget.data,
+                                //   vlcController: _vlcController,
                               )
                             : UserMultiplePost(
                                 media: widget.media,
@@ -361,17 +289,91 @@ class _UserTikTokViewState extends State<UserTikTokView>
                   //           ],
                   //         ),
                   //       ),
-                  IconButton(
-                      onPressed: () => PageRouting.popToPage(context),
-                      icon: const Icon(
-                        Icons.arrow_back_ios,
-                        color: Colors.white,
-                      )),
+
+                  Row(
+                    children: [
+                      IconButton(
+                          onPressed: () => PageRouting.popToPage(context),
+                          icon: const Icon(
+                            Icons.arrow_back_ios,
+                            color: Colors.white,
+                          )),
+                      // SizedBox(
+                      //   width: 2,
+                      // ),
+                      widget.data.user!.username! ==
+                              user.userProfileModel.username
+                          ? SizedBox.shrink()
+                          : GestureDetector(
+                              onTap: () => giveDiamondsModal(
+                                  context, widget.data.user!.username!),
+                              child: Container(
+                                height: 20,
+                                width: 20,
+                                child: SvgPicture.asset(
+                                  "assets/icon/diamond.svg",
+                                  //  color: HexColor(diamondColor),
+                                ),
+                              )),
+                      widget.data.user!.username! ==
+                              user.userProfileModel.username
+                          ? SizedBox.shrink()
+                          : SizedBox(
+                              width: 10,
+                            ),
+                      GestureDetector(
+                          onTap: () async {
+                            if (widget.data.user!.username! ==
+                                user.userProfileModel.username) {
+                              if (widget.media.length > 1) {
+                                await Future.forEach(widget.media,
+                                    (element) async {
+                                  if (element.isNotEmpty) {
+                                    try {
+                                      if (element.contains('.mp4')) {
+                                        await SaveMediaController
+                                            .saveNetworkVideo(context, element);
+                                      } else {
+                                        await SaveMediaController
+                                            .saveNetworkImage(context, element);
+                                      }
+                                    } catch (e) {
+                                      debugPrint(e.toString());
+                                    }
+                                  }
+                                });
+                              } else {
+                                if (widget.media.first.contains('.mp4')) {
+                                  await SaveMediaController.saveNetworkVideo(
+                                      context, widget.media.first);
+                                } else {
+                                  await SaveMediaController.saveNetworkImage(
+                                      context, widget.media.first);
+                                }
+                              }
+                            } else {
+                              downloadDiamondsModal(
+                                context,
+                                widget.data.id!,
+                              );
+                            }
+                          },
+                          child: Container(
+                            height: 25,
+                            width: 25,
+                            child: SvgPicture.asset(
+                              "assets/icon/d.svg",
+                              color: HexColor(backgroundColor),
+                            ),
+                          )),
+                    ],
+                  ),
+
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 30),
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 28),
                     child: InkWell(
                         onTap: () => optionModal(context, widget.urls,
-                            widget.data.user!.id, widget.data.id),
+                            widget.data.user!.id, widget.data.id, widget.data),
                         child: SvgPicture.asset(
                           "assets/icon/new_option.svg",
                           height: 15,
@@ -392,6 +394,7 @@ class _UserTikTokViewState extends State<UserTikTokView>
                   page: widget.page,
                   media: widget.urls,
                   controller: _controller,
+                  isHome: false,
                 )
 
                 // : FollowSection(
@@ -404,7 +407,7 @@ class _UserTikTokViewState extends State<UserTikTokView>
           ),
           widget.data.promoted == "yes"
               ? Positioned(
-                  bottom: 150,
+                  bottom: 100,
                   left: 0,
                   child: Align(
                       alignment: Alignment.bottomLeft,
@@ -422,7 +425,7 @@ class _UserTikTokViewState extends State<UserTikTokView>
                           AdsDisplay(
                             sponsored: true,
                             //  color: HexColor('#00B074'),
-                            color: HexColor('#C0C0C0'),
+                            color: Colors.transparent,
                             title: 'Sponsored Ad',
                           ),
                         ],
@@ -446,6 +449,7 @@ class _UserTikTokViewState extends State<UserTikTokView>
                                       context,
                                       PromoteScreen(
                                         postId: widget.data.id.toString(),
+                                        thisPost: widget.thisPost,
                                       ));
                                 },
                                 sponsored: false,
@@ -486,7 +490,7 @@ class _UserTikTokViewState extends State<UserTikTokView>
 
           widget.data.btnLink != null && widget.data.button != null
               ? Positioned(
-                  bottom: 0.1,
+                  bottom: .1,
                   child: Align(
                     alignment: Alignment.bottomCenter,
                     child: Row(

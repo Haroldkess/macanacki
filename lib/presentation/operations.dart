@@ -227,75 +227,7 @@ class Operations {
     }
   }
 
-  // static Future<void> uploadTestImage() async {
-  //   try {
-  //     FilePickerResult? result =
-  //         await FilePicker.platform.pickFiles(type: FileType.image);
-  //
-  //     if (result != null) {
-  //       CroppedFile? croppedFile = await ImageCropper().cropImage(
-  //         sourcePath: result.files.single.path!,
-  //       );
-  //       if (croppedFile == null) {
-  //         return;
-  //       }
-  //
-  //       File file = File(croppedFile.path);
-  //       String fileName = file.path.split('/').last;
-  //       print("--------------------/// $fileName");
-  //       FormData formData = FormData.fromMap({
-  //         "media": await MultipartFile.fromFile(
-  //           file.path,
-  //           filename: fileName,
-  //         ),
-  //
-  //         // "media": [
-  //         //   await MultipartFile.fromFile(file.path, filename: fileName),
-  //         //   await MultipartFile.fromFile(file.path, filename: fileName)
-  //         // ]
-  //       });
-  //
-  //       final response = await Dio().post(
-  //         "https://api.macanacki.com/api/test/upload",
-  //         //"http://localhost:8000/api/tester",
-  //         data: formData,
-  //         options: Options(
-  //           headers: {
-  //             'Accept': 'application/json'
-  //             //'Authorization': 'Bearer $token',
-  //           },
-  //         ),
-  //       );
-  //
-  //       print(
-  //           "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ ${response.statusCode} - ${response.data.toString()}");
-  //       print(response.toString());
-  //       Fluttertoast.showToast(
-  //           msg: "Upload Successful",
-  //           toastLength: Toast.LENGTH_SHORT,
-  //           gravity: ToastGravity.CENTER,
-  //           timeInSecForIosWeb: 1,
-  //           backgroundColor: Colors.red,
-  //           textColor: Colors.white,
-  //           fontSize: 16.0);
-  //     } else {
-  //       // User canceled the picker
-  //     }
-  //   } on DioError catch (e) {
-  //     Fluttertoast.showToast(
-  //         msg: "${e.response.toString()} - ${e.message.toString()}",
-  //         toastLength: Toast.LENGTH_SHORT,
-  //         gravity: ToastGravity.CENTER,
-  //         timeInSecForIosWeb: 1,
-  //         backgroundColor: Colors.red,
-  //         textColor: Colors.white,
-  //         fontSize: 16.0);
-  //     print(
-  //         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 222222 ${e.response.toString()}");
-  //     print(e.message.toString());
-  //   }
-  // }
-
+ 
   static Future<File> saveImage(Uint8List imageByte) async {
     //获取临时目录
     var tempDir = await getTemporaryDirectory();
@@ -314,174 +246,6 @@ class Operations {
     // });
   }
 
-  // static Future pickForPostExt(BuildContext context) async {
-  //   try {
-  //     //Initialize both [CreatePost] && [UserProfile] State
-  //     CreatePostWare picked =
-  //         Provider.of<CreatePostWare>(context, listen: false);
-  //     UserProfileWare user =
-  //         Provider.of<UserProfileWare>(context, listen: false);
-  //
-  //     // set picker theme based on app theme primary color
-  //     final theme = InstaAssetPicker.themeData(Theme.of(context).primaryColor);
-  //     InstaAssetPicker.pickAssets(
-  //       context,
-  //       pickerTheme: theme.copyWith(
-  //         canvasColor: Colors.black, // body background color
-  //         //splashColor: Color.gra, // ontap splash color
-  //         colorScheme: theme.colorScheme.copyWith(
-  //           background: Colors.black87, // albums list background color
-  //         ),
-  //         appBarTheme: theme.appBarTheme.copyWith(
-  //           backgroundColor: Colors.black, // app bar background color
-  //           titleTextStyle: Theme.of(context).appBarTheme.titleTextStyle?.copyWith(
-  //               color: Colors
-  //                   .white), // change app bar title text style to be like app theme
-  //         ),
-  //         // edit `confirm` button style
-  //         textButtonTheme: TextButtonThemeData(
-  //           style: TextButton.styleFrom(
-  //             foregroundColor: Colors.blue,
-  //             disabledForegroundColor: Colors.red,
-  //           ),
-  //         ),
-  //       ),
-  //       onCompleted: (_) {},
-  //     );
-  //   } catch (e) {
-  //     //Display error to user
-  //     // ignore: use_build_context_synchronously
-  //     showToast2(context, "Oops!! ${e.toString()}", isError: true);
-  //     return;
-  //   }
-  // }
-
-  // static Future pickForPostExt(BuildContext context) async {
-  //   try {
-  //     //Initialize both [CreatePost] && [UserProfile] State
-  //     CreatePostWare picked =
-  //         Provider.of<CreatePostWare>(context, listen: false);
-  //     UserProfileWare user =
-  //         Provider.of<UserProfileWare>(context, listen: false);
-  //
-  //     // // Allow Users select images from their devices
-  //     // FilePickerResult? result = await FilePicker.platform
-  //     //     .pickFiles(type: FileType.image, allowMultiple: true);
-  //     //
-  //     // // Check if selected images is not empty
-  //     // if (result == null) return;
-  //     //
-  //     // // Converts result into usable file
-  //     // List<File> recievedFiles =
-  //     //     result.paths.map((path) => File(path!)).toList();
-  //
-  //     // //Check if the recievedFiles is not more than 10
-  //     // if (recievedFiles.length > 10) {
-  //     //   throw "You can only select maximum of 10 media files";
-  //     // }
-  //
-  //     // Pick Selected Images
-  //     List<Uint8List>? res = await MultiCropPicker.selectMedia(
-  //       context,
-  //       maxLength: 10,
-  //       aspectRatio: 1,
-  //       previewHeight: MediaQuery.of(context).size.width,
-  //       previewShowingRatio: 1.0,
-  //       textColor: Colors.black26,
-  //       backgroundColor: Colors.white,
-  //       tagColor: Colors.yellow,
-  //       // loadingWidget: const LoadingCircle(),
-  //       tagTextColor: Colors.black,
-  //     );
-  //
-  //     // Check if selected images is not empty
-  //     if (res != null) {
-  //       // if (res.length > 10) {
-  //       //   // ignore: use_build_context_synchronously
-  //       //   showToast2(context, "You can only select maximum of 10 media files",
-  //       //       isError: true);
-  //       //   return;
-  //       // }
-  //
-  //       // Convert the selectedImages to file
-  //       // res.map((Uint8List ul) {
-  //       //   return saveImage(ul);
-  //       // }).toList();
-  //
-  //       // List<File> files = [];
-  //       // await Future.forEach(res, (Uint8List uint8list) async {
-  //       //   files.add(await saveImage(uint8list));
-  //       // });
-  //
-  //       List<File> files = res.map((path) => File.fromRawPath(path)).toList();
-  //
-  //       //Save it to [CreatePost] State
-  //       picked.addFile(files);
-  //
-  //       //Navigate to [CreatePostScreen] to complete the process
-  //       // ignore: use_build_context_synchronously
-  //       PageRouting.pushToPage(context, const CreatePostScreen());
-  //     }
-  //   } catch (e) {
-  //     //Display error to user
-  //     // ignore: use_build_context_synchronously
-  //     showToast2(context, "Oops!! ${e.toString()}", isError: true);
-  //     return;
-  //   }
-  // }
-
-  // static Future pickForMartins(BuildContext context) async {
-  //   try {
-  //     final List<ImageObject>? objects = await Navigator.of(context)
-  //         .push(PageRouteBuilder(pageBuilder: (context, animation, __) {
-  //       return const ImagePicker(
-  //         maxCount: 10,
-  //       );
-  //     }));
-  //
-  //     if ((objects?.length ?? 0) > 0) {
-  //       print(objects!.first.originalPath);
-  //       print("----fff---------- ${objects.toString()}");
-  //     }
-  //   } catch (e) {}
-  //   // if ((objects?.length ?? 0) > 0) {
-  //   //   setState(() {
-  //   //     _imgObjs = objects!;
-  //   //   });
-  //   // }
-  //   // try {
-  //   //   //Initialize both [CreatePost] && [UserProfile] State
-  //   //   CreatePostWare picked =
-  //   //       Provider.of<CreatePostWare>(context, listen: false);
-  //   //   UserProfileWare user =
-  //   //       Provider.of<UserProfileWare>(context, listen: false);
-  //   //
-  //   //   // Allow Users select images from their devices
-  //   //   FilePickerResult? result = await FilePicker.platform
-  //   //       .pickFiles(type: FileType.image, allowMultiple: true);
-  //   //
-  //   //   // Check if selected images is not empty
-  //   //   if (result == null) return;
-  //   //
-  //   //   // Converts result into usable file
-  //   //   List<File> recievedFiles =
-  //   //       result.paths.map((path) => File(path!)).toList();
-  //   //
-  //   //   //Check if the recievedFiles is not more than 10
-  //   //   if (recievedFiles.length > 10) {
-  //   //     throw "You can only select maximum of 10 media files";
-  //   //   }
-  //   //
-  //   //   MultiImageCrop.startCropping(
-  //   //       context: context,
-  //   //       aspectRatio: 4 / 3,
-  //   //       activeColor: Colors.amber,
-  //   //       pixelRatio: 3,
-  //   //       files: List.generate(recievedFiles!.length,
-  //   //           (index) => File(recievedFiles![index].path)),
-  //   //       callBack: (List<File> images) {});
-  //   // } catch (e) {}
-  // }
 
   static Future pickForPost(BuildContext context) async {
     CreatePostWare picked = Provider.of<CreatePostWare>(context, listen: false);
@@ -613,6 +377,39 @@ class Operations {
     return realTime;
   }
 
+  static String feedTimes(DateTime time) {
+    late String realTime;
+
+    String value = timeago.format(time).toString();
+    String timeOfDay =
+        TimeOfDay(hour: time.hour, minute: time.minute).period.name;
+
+    if (value == "a moment ago") {
+      realTime = "just now";
+    } else if (value == "a minute ago") {
+      realTime = value;
+    } else if (value.contains("hour")) {
+      realTime = value;
+    } else if (value.contains("hours")) {
+      realTime = value;
+    } else if (value == 'a day ago') {
+      realTime = "yesterday";
+    } else if (value.contains("days")) {
+      realTime = "$value ";
+    } else {
+      realTime = value;
+    }
+
+    if (realTime.contains("about")) {
+      var val = realTime.split("about");
+
+      realTime = val.last;
+    }
+    emitter("Time is" + value);
+
+    return realTime;
+  }
+
   static Future<bool?> showWarning(BuildContext context) async {
     late bool? isClolsing;
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -696,9 +493,11 @@ class Operations {
   }
 
   static Future controlSystemColor() async {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        systemNavigationBarIconBrightness: Brightness.dark,
-        systemNavigationBarColor: HexColor(backgroundColor)));
+    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    //     statusBarColor: Colors.black,
+    //     statusBarIconBrightness: Brightness.light,
+    //     systemNavigationBarIconBrightness: Brightness.dark,
+    //     systemNavigationBarColor: HexColor(backgroundColor)));
   }
 
   static Future<void> filterLocaton(context,
@@ -856,4 +655,10 @@ class Operations {
       }
     }
   }
+
+  static String convertToCurrency(String e) {
+  String newStr = e.replaceAllMapped(
+      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => "${m[0]},");
+  return newStr;
+}
 }

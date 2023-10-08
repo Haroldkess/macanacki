@@ -35,6 +35,12 @@ const String categoryKey = "categoryKey";
 const String categoryIdKey = "categoryIdKey";
 const String isVerifiedKey = "isVerifiedKey";
 const String isVerifiedFirstKey = "isVerifiedFirstKey";
+const String bankAdded = "bankAdded";
+const String bankName = "bankName";
+const String accountNumber = "accountNumber";
+const String bankshortName = "bankshortName";
+const String accountName = "accountName";
+const String bankInfo = "bankInfo";
 
 Future runTask(context, [String? name, String? dp]) async {
   SharedPreferences pref = await SharedPreferences.getInstance();

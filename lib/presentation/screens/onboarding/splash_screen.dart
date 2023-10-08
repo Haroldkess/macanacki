@@ -19,7 +19,8 @@ class _SplashState extends State<Splash> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: HexColor(primaryColor),
+      backgroundColor: Colors.black,
+    //  backgroundColor: HexColor(primaryColor),
       body: Center(
         child: SvgPicture.asset("assets/icon/crown.svg",
             color: Colors.white, height: 50, width: 50),

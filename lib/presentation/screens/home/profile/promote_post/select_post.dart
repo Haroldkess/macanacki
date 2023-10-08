@@ -62,28 +62,23 @@ Future selectPost(BuildContext context, List<ProfileFeedDatum> post) async {
                                         children: [
                                           Column(
                                             children: [
-                                            Container(
-                                                      width: 70,
-                                                      height: 70,
-                                                      decoration: BoxDecoration(
-                                                          color: Colors.black,
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(8),
-                                                          image:
-                                                              DecorationImage(
-                                                            image:
-                                                                CachedNetworkImageProvider(
-                                                              e.media!.first
-                                                                  .replaceAll(
-                                                                      '\\',
-                                                                      '/'),
-                                                            ),
-                                                            fit: BoxFit.fill,
-                                                          )),
-                                                    )
-                                            
-                                           
+                                              Container(
+                                                width: 70,
+                                                height: 70,
+                                                decoration: BoxDecoration(
+                                                    color: Colors.black,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8),
+                                                    image: DecorationImage(
+                                                      image:
+                                                          CachedNetworkImageProvider(
+                                                        e.thumbnails!.first ??
+                                                            e.media!.first,
+                                                      ),
+                                                      fit: BoxFit.fill,
+                                                    )),
+                                              )
                                             ],
                                           ),
                                           SizedBox(

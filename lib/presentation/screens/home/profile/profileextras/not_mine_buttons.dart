@@ -20,7 +20,7 @@ import '../../../../widgets/text.dart';
 class ProfileActionButtonNotThisUsers extends StatelessWidget {
   final String icon;
   VoidCallback onClick;
-  String color;
+  String? color;
   bool isSwipe;
 
   ProfileActionButtonNotThisUsers(
@@ -48,7 +48,7 @@ class ProfileActionButtonNotThisUsers extends StatelessWidget {
               icon,
               height: isSwipe ? 22 : null,
               width: isSwipe ? 22 : null,
-              color: HexColor(color),
+              color: color == null ? null : HexColor(color!),
             ),
           ),
         ),
@@ -120,7 +120,7 @@ class UserProfileActions extends StatelessWidget {
                     : const SizedBox.shrink(),
                 InkWell(
                   onTap: () async {
-                 //   print("dfdd");
+                    //   print("dfdd");
                     await followAction(context, data.publicUserProfileModel.id!,
                         data.publicUserProfileModel.username!);
                   },
@@ -296,7 +296,6 @@ class UserProfileActions extends StatelessWidget {
                                 if (seen) {
                                   return;
                                   // ignore: use_build_context_synchronously
-
                                 } else {
                                   List<ChatData> checker = chatWareStream
                                       .chatList2
@@ -361,7 +360,6 @@ class UserProfileActions extends StatelessWidget {
                                   }
 
                                   // ignore: use_build_context_synchronously
-
                                 }
 
                                 // chat = chatWare.chatList
@@ -447,7 +445,7 @@ class UserProfileActions extends StatelessWidget {
                         height: 5,
                       ),
                       Container(
-                         constraints: BoxConstraints(maxWidth: 70, minWidth: 50) ,
+                        constraints: BoxConstraints(maxWidth: 70, minWidth: 50),
                         alignment: Alignment.center,
                         // color: Colors.amber,
                         child: AppText(
@@ -489,7 +487,8 @@ class UserProfileActions extends StatelessWidget {
                           height: 5,
                         ),
                         AnimatedContainer(
-                         constraints: BoxConstraints(maxWidth: 70, minWidth: 50) ,
+                          constraints:
+                              BoxConstraints(maxWidth: 70, minWidth: 50),
                           alignment: Alignment.center,
                           //color: Colors.amber,
                           duration: Duration(seconds: 2),
@@ -635,7 +634,6 @@ class UserProfileActions extends StatelessWidget {
                                 if (seen) {
                                   return;
                                   // ignore: use_build_context_synchronously
-
                                 } else {
                                   List<ChatData> checker = chatWareStream
                                       .chatList2
@@ -700,7 +698,6 @@ class UserProfileActions extends StatelessWidget {
                                   }
 
                                   // ignore: use_build_context_synchronously
-
                                 }
 
                                 // chat = chatWare.chatList
@@ -735,7 +732,7 @@ class UserProfileActions extends StatelessWidget {
                         height: 5,
                       ),
                       Container(
-                        constraints: BoxConstraints(maxWidth: 70, minWidth: 50) ,
+                        constraints: BoxConstraints(maxWidth: 70, minWidth: 50),
                         alignment: Alignment.center,
                         //color: Colors.amber,
                         child: AppText(

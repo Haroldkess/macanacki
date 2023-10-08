@@ -55,57 +55,60 @@ class _PublicUserFollowerFollowingScreenState
     UserProfileWare user = context.watch<UserProfileWare>();
     UserProfileExtWare ware = context.watch<UserProfileExtWare>();
 
-    return Scaffold(
-      backgroundColor: HexColor("#F5F2F9"),
-      appBar: AppBar(
-        bottom: PreferredSize(
-          preferredSize: Size(0, 20),
-          child: Align(
-            alignment: Alignment.bottomLeft,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 15.0, bottom: 15, right: 15),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  FollowSearch(
-                      controller: controller,
-                      onChanged: (val) {
-                        ware.updateRequestMode("search");
-                        ware.updateSearch(val);
-                        if (widget.isFollowing == 'Following') {
-                          ware.getUserPublicFollowingsFromApi();
-                        } else {
-                          ware.getUserPublicFollowersFromApi();
-                        }
-                      }),
-                ],
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: HexColor("#F5F2F9"),
+        appBar: AppBar(
+          bottom: PreferredSize(
+            preferredSize: Size(0, 20),
+            child: Align(
+              alignment: Alignment.bottomLeft,
+              child: Padding(
+                padding:
+                    const EdgeInsets.only(left: 15.0, bottom: 15, right: 15),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    FollowSearch(
+                        controller: controller,
+                        onChanged: (val) {
+                          ware.updateRequestMode("search");
+                          ware.updateSearch(val);
+                          if (widget.isFollowing == 'Following') {
+                            ware.getUserPublicFollowingsFromApi();
+                          } else {
+                            ware.getUserPublicFollowersFromApi();
+                          }
+                        }),
+                  ],
+                ),
               ),
             ),
           ),
+          title: AppText(
+            text: widget.isFollowing
+                ? "Following ${widget.title}"
+                : "${widget.title} Followers",
+            color: Colors.black,
+            size: 14,
+            fontWeight: FontWeight.w700,
+          ),
+          centerTitle: true,
+          leading: const BackButton(color: Colors.black),
+          elevation: 0,
+          backgroundColor: HexColor(backgroundColor),
+          toolbarHeight: 110,
         ),
-        title: AppText(
-          text: widget.isFollowing
-              ? "Following ${widget.title}"
-              : "${widget.title} Followers",
-          color: Colors.black,
-          size: 14,
-          fontWeight: FontWeight.w700,
-        ),
-        centerTitle: true,
-        leading: const BackButton(color: Colors.black),
-        elevation: 0,
-        backgroundColor: HexColor(backgroundColor),
-        toolbarHeight: 110,
+        body: PublicFollowFollowingList(
+            data: widget.isFollowing
+                ? user.publicUserProfileModel.followings!
+                : user.publicUserProfileModel.followers!,
+            what: widget.isFollowing ? "Following" : "Followers",
+            ware: ware),
       ),
-      body: PublicFollowFollowingList(
-          data: widget.isFollowing
-              ? user.publicUserProfileModel.followings!
-              : user.publicUserProfileModel.followers!,
-          what: widget.isFollowing ? "Following" : "Followers",
-          ware: ware),
     );
   }
 }

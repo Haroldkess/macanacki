@@ -20,12 +20,12 @@ import '../../../../../services/middleware/chat_ware.dart';
 import '../../../../../services/temps/temps_id.dart';
 import '../../../../allNavigation.dart';
 import '../../../../constants/colors.dart';
+import '../../../../uiproviders/screen/tab_provider.dart';
 import '../../../../widgets/hexagon_avatar.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:macanacki/services/api_url.dart';
 import '../../../userprofile/user_profile_screen.dart';
 import '../../profile/profile_screen.dart';
-
 
 class ChatScreen extends StatefulWidget {
   ChatData user;
@@ -56,6 +56,18 @@ class _ChatScreenState extends State<ChatScreen> {
   String? toId;
   @override
   void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      if (PersistentNavController.instance.hide.value == false) {
+        PersistentNavController.instance.toggleHide();
+      }
+
+      // Future.delayed(Duration(seconds: 3), () {
+      //   if (VideoWareHome.instance.hide.value == true) {
+      //     //fadeOutAndUpdateState();
+      //     //  VideoWareHome.instance.hideButtons();
+      //   }
+      // });
+    });
     ChatController.initSocket(context)
         .whenComplete(() => ChatController.addUserToSocket(context));
     super.initState();
@@ -160,11 +172,26 @@ class _ChatScreenState extends State<ChatScreen> {
     // socket!.dispose();
 
     super.dispose();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      PersistentNavController.instance.toggleHide();
+    });
   }
 
   bool leaving = false;
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      if (PersistentNavController.instance.hide.value == false) {
+        PersistentNavController.instance.toggleHide();
+      }
+
+      // Future.delayed(Duration(seconds: 3), () {
+      //   if (VideoWareHome.instance.hide.value == true) {
+      //     //fadeOutAndUpdateState();
+      //     //  VideoWareHome.instance.hideButtons();
+      //   }
+      // });
+    });
     bool? isOnline;
     dynamic id;
     var size = MediaQuery.of(context).size;
@@ -221,7 +248,6 @@ class _ChatScreenState extends State<ChatScreen> {
         return Future.value(false);
       },
       child: SafeArea(
-        top: false,
         child: Scaffold(
           backgroundColor: HexColor("#F5F2F9"),
           appBar: AppBar(
@@ -492,34 +518,33 @@ class _ChatScreenState extends State<ChatScreen> {
                               ? ChatForm(
                                   controller: controiller!,
                                   msgController: msgController,
-                                  sendTo:
-                                      ware.publicUserProfileModel.username!,
+                                  sendTo: ware.publicUserProfileModel.username!,
                                   chat: widget.user,
                                   socket: myChat.socket == null
                                       ? null
                                       : myChat.socket!,
-                                  toId: ware.publicUserProfileModel.id!
-                                      .toString()
+                                  toId:
+                                      ware.publicUserProfileModel.id!.toString()
 
                                   //  val: controiller!.position.maxScrollExtent,
                                   )
                               : ChatForm(
                                   controller: controiller!,
                                   msgController: msgController,
-                                  sendTo: widget.user.conversations!.last
-                                              .sender ==
-                                          stream.userName
-                                      ? widget.user.userTwo!
-                                      : widget.user.userOne!,
+                                  sendTo:
+                                      widget.user.conversations!.last.sender ==
+                                              stream.userName
+                                          ? widget.user.userTwo!
+                                          : widget.user.userOne!,
                                   chat: widget.user,
                                   socket: myChat.socket == null
                                       ? null
                                       : myChat.socket!,
-                                  toId: widget.user.conversations!.last
-                                              .sender ==
-                                          stream.userName
-                                      ? widget.user.userTwoId.toString()
-                                      : widget.user.userOneId.toString(),
+                                  toId:
+                                      widget.user.conversations!.last.sender ==
+                                              stream.userName
+                                          ? widget.user.userTwoId.toString()
+                                          : widget.user.userOneId.toString(),
                                   //  val: controiller!.position.maxScrollExtent,
                                 ))
                     ],

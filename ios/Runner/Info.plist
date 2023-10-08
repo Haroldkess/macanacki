@@ -37,6 +37,11 @@
 <string>This app needs access to location when open.</string>
 <key>NSLocationAlwaysUsageDescription</key>
 <string>This app needs access to location when in the background.</string>
+<key>NSAppTransportSecurity</key>
+<dict>
+  <key>NSAllowsArbitraryLoads</key>
+  <true/>
+</dict>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
@@ -63,6 +68,7 @@
 	<key>NSLocationTemporaryUsageDescriptionDictionary</key>
 	<key>UIBackgroundModes</key>
 	<key>NSPhotoLibraryAddUsageDescription</key>
+	
 <string>获取相册权限</string>
 <key>NSPhotoLibraryUsageDescription</key>
 <string>获取相册权限</string>
@@ -70,12 +76,36 @@
    <string>fetch</string>
    <string>remote-notification</string>
 </array>
+
+<key>NSLocalNetworkUsageDescription</key>
+<string>Used to search for chromecast devices</string>
+<key>NSBonjourServices</key>
+<array>
+  <string>_googlecast._tcp</string>
+</array>
 <key>NSAppleMusicUsageDescription</key>
 <string>Explain why your app uses music</string>
 <key>UISupportsDocumentBrowser</key>
 <true/>
 <key>NSPhotoLibraryUsageDescription</key>
 <string>Explain why your app uses photo library</string>
+
+
+<key>CFBundleURLTypes</key>
+<array>
+  <dict>
+    <key>CFBundleTypeRole</key>
+    <string>Editor</string>
+    <key>CFBundleURLName</key>
+	<!-- You can find it on /ios/project.pbxproj - 'PRODUCT_BUNDLE_IDENTIFIER' -->
+    <string>com.example.macanacki</string>
+    <key>CFBundleURLSchemes</key>
+    <array>
+      <!-- Your app title -->
+      <string>example</string>
+    </array>
+  </dict>
+</array>
 
 	
 <dict>

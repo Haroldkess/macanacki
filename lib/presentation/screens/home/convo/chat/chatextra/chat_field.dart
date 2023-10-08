@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:macanacki/presentation/screens/home/diamond/diamond_modal/give_modal.dart';
 import 'package:macanacki/presentation/widgets/loader.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:macanacki/services/controllers/chat_controller.dart';
@@ -101,17 +102,22 @@ class ChatForm extends StatelessWidget {
           keyboardType: TextInputType.text,
           decoration: InputDecoration(
             hintText: "  Your message",
-            hintStyle:
-                GoogleFonts.leagueSpartan
-                (color: HexColor("#8B8B8B"), fontSize: 14),
+            hintStyle: GoogleFonts.leagueSpartan(
+                color: HexColor("#8B8B8B"), fontSize: 14),
             contentPadding: const EdgeInsets.only(top: 15, bottom: 16),
-            prefixIcon: Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: SvgPicture.asset(
-                "assets/icon/sticker.svg",
-                height: 5,
-                width: 5,
-                color: const Color.fromRGBO(0, 0, 0, 0.4),
+            prefixIcon: GestureDetector(
+              onTap: () {
+              //  print(sendTo);
+                giveDiamondsModal(context, sendTo);
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: SvgPicture.asset(
+                  "assets/icon/diamond.svg",
+                  height: 5,
+                  width: 5,
+                  //  color: const Color.fromRGBO(0, 0, 0, 0.4),
+                ),
               ),
             ),
             suffixIcon: stream.isTyping

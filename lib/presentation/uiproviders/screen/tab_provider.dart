@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
+import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 class TabProvider extends ChangeNotifier {
   int index = 0;
@@ -8,11 +10,14 @@ class TabProvider extends ChangeNotifier {
   String image = "";
   VideoPlayerController? controller;
   VideoPlayerController? controllerHolder;
-   VideoPlayerController? previousController;
+  VideoPlayerController? previousController;
   VideoPlayerController? nextController;
   bool isTapped = false;
   bool isHome = false;
   PageController? pageController = PageController();
+  PersistentTabController persistentPagecontroller =
+      PersistentTabController(initialIndex: 0);
+
   int tapTracker = 0;
 
   void tapTrack(int _index) {
@@ -45,12 +50,12 @@ class TabProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-   Future addNextControl(VideoPlayerController control) async {
+  Future addNextControl(VideoPlayerController control) async {
     nextController = control;
     notifyListeners();
   }
 
-     Future addPreviousControl(VideoPlayerController control) async {
+  Future addPreviousControl(VideoPlayerController control) async {
     previousController = control;
     notifyListeners();
   }
@@ -73,7 +78,8 @@ class TabProvider extends ChangeNotifier {
     controllerHolder = control;
     notifyListeners();
   }
-    Future disposeHolldControl() async {
+
+  Future disposeHolldControl() async {
     if (controllerHolder != null) {
       controllerHolder!.dispose();
       controllerHolder = null;
@@ -82,7 +88,7 @@ class TabProvider extends ChangeNotifier {
     notifyListeners();
   }
 
- Future disposeNextControl() async {
+  Future disposeNextControl() async {
     if (nextController != null) {
       nextController!.dispose();
       nextController = null;
@@ -91,8 +97,7 @@ class TabProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-
- Future disposePreviousControl() async {
+  Future disposePreviousControl() async {
     if (previousController != null) {
       previousController!.dispose();
       previousController = null;
@@ -121,7 +126,7 @@ class TabProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-   Future pausePreviousControl() async {
+  Future pausePreviousControl() async {
     previousController!.pause();
     notifyListeners();
   }
@@ -159,5 +164,24 @@ class TabProvider extends ChangeNotifier {
   Future<void> changePage(bool change) async {
     isChanged = change;
     notifyListeners();
+  }
+}
+
+class PersistentNavController extends GetxController {
+    static PersistentNavController get instance {
+    return Get.find<PersistentNavController>();
+  }
+  PersistentTabController persistentPagecontroller =
+      PersistentTabController(initialIndex: 0);
+  RxBool hide = false.obs;
+
+  @override
+  void onInit() {
+    // TODO: implement onInit
+    super.onInit();
+  }
+
+  void toggleHide() {
+    hide.toggle();
   }
 }

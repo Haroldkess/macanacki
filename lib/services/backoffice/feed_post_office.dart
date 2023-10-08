@@ -20,13 +20,53 @@ Future<http.Response?> getFeedPost(int pageNum) async {
         HttpHeaders.authorizationHeader: "Bearer $token",
       },
     ).timeout(Duration(minutes: 1));
-
-    // log(response.body.toString());
+    //  log(response.statusCode.toString());
+    //   log(response.body.toString());
   } catch (e) {
     response = null;
   }
   return response;
 }
+Future<http.Response?> getVideoPost(int pageNum) async {
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  String? token = pref.getString(tokenKey);
+  http.Response? response;
+  try {
+    response = await http.get(
+      Uri.parse('$baseUrl/public/api/v2/post/videos/list?page=$pageNum'),
+      headers: {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $token",
+      },
+    );
+    // log(response.statusCode.toString());
+    //  log(response.body.toString());
+  } catch (e) {
+    response = null;
+  }
+  return response;
+}
+
+Future<http.Response?> getVideo(int id) async {
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  String? token = pref.getString(tokenKey);
+  http.Response? response;
+  try {
+    response = await http.get(
+      Uri.parse('$baseUrl/public/api/v2/post/videos/list?post_id=$id'),
+      headers: {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $token",
+      },
+    );
+    log(response.statusCode.toString());
+     log(response.body.toString());
+  } catch (e) {
+    response = null;
+  }
+  return response;
+}
+
 
 Future<http.Response?> getUserFeedPost(
     int pageNumber, int numberOfPostPerRequest) async {

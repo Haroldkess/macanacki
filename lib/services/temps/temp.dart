@@ -27,6 +27,12 @@ class Temp extends ChangeNotifier {
     notifyListeners();
   }
 
+    Future<void> addBank(bank) async {
+    await initPref();
+    _pref!.setString(bankInfo, bank);
+    notifyListeners();
+  }
+
   Future<void> addDp(String photo) async {
     await initPref();
     _pref!.setString(dpKey, photo);

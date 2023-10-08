@@ -94,7 +94,7 @@ class _SelectUserNameState extends State<SelectUserName> {
                         cursorColor: HexColor(primaryColor),
                         style: GoogleFonts.leagueSpartan(
                           color: HexColor(darkColor),
-                          fontSize: 14,
+                          fontSize: 16,
                         ),
                         onChanged: (value) {
                           if (value.isNotEmpty) {
@@ -130,7 +130,7 @@ class _SelectUserNameState extends State<SelectUserName> {
                               const EdgeInsets.only(left: 20, top: 17),
                           hintText: "Enter your User name here",
                           hintStyle: GoogleFonts.leagueSpartan(
-                              color: HexColor('#C0C0C0'), fontSize: 12),
+                              color: HexColor('#C0C0C0'), fontSize: 16),
                           border: InputBorder.none,
                           enabledBorder: InputBorder.none,
                           focusedBorder: InputBorder.none,

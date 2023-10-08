@@ -14,92 +14,113 @@ class SearchLoader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Shimmer.fromColors(
-      baseColor: baseColor,
-      highlightColor: highlightColor.withOpacity(0.4),
-      child: Stack(
-        children: [
-          Container(
-            height: 100,
-            decoration: BoxDecoration(
-                color: Colors.white, borderRadius: BorderRadius.circular(5)),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Row(
-                children: [
-                  dp(context, url),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      RichText(
-                          text: TextSpan(
-                              text: "     , ",
-                              style: GoogleFonts.leagueSpartan(
-                                  textStyle: const TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.black,
-                                      decorationStyle:
-                                          TextDecorationStyle.solid,
-                                      fontSize: 14)),
-                              children: [
-                            TextSpan(
-                              text: "   ",
-                              style: GoogleFonts.leagueSpartan(
-                                  textStyle: const TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.black,
-                                      decorationStyle:
-                                          TextDecorationStyle.solid,
-                                      fontSize: 14)),
-                            ),
-                            // TextSpan(
-                            //   text: data.isMatched ? "Matched" : " ",
-                            //   style: GoogleFonts.spartan(
-                            //       textStyle: TextStyle(
-                            //           fontWeight: FontWeight.w400,
-                            //           color: HexColor("#0597FF"),
-                            //           decorationStyle: TextDecorationStyle.solid,
-                            //           fontSize: 10)),
-                            // )
-                          ])),
-                      const SizedBox(
-                        height: 10,
+    return Stack(
+      children: [
+        Container(
+          height: 100,
+          decoration: BoxDecoration(
+              color: Colors.white, borderRadius: BorderRadius.circular(5)),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Row(
+              children: [
+                Shimmer.fromColors(
+                    baseColor: baseColor,
+                    highlightColor: highlightColor.withOpacity(0.4),
+                    child: dp(context, url)),
+                const SizedBox(
+                  width: 10,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Shimmer.fromColors(
+                      baseColor: baseColor,
+                      highlightColor: highlightColor.withOpacity(0.4),
+                      child: Container(
+                        width: 100,
+                        height: 20,
+                        color: Colors.white,
+                        child: RichText(
+                            text: TextSpan(
+                                text: "     , ",
+                                style: GoogleFonts.leagueSpartan(
+                                    textStyle: const TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.black,
+                                        decorationStyle:
+                                            TextDecorationStyle.solid,
+                                        fontSize: 14)),
+                                children: [
+                              TextSpan(
+                                text: "   ",
+                                style: GoogleFonts.leagueSpartan(
+                                    textStyle: const TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.black,
+                                        decorationStyle:
+                                            TextDecorationStyle.solid,
+                                        fontSize: 14)),
+                              ),
+                              // TextSpan(
+                              //   text: data.isMatched ? "Matched" : " ",
+                              //   style: GoogleFonts.spartan(
+                              //       textStyle: TextStyle(
+                              //           fontWeight: FontWeight.w400,
+                              //           color: HexColor("#0597FF"),
+                              //           decorationStyle: TextDecorationStyle.solid,
+                              //           fontSize: 10)),
+                              // )
+                            ])),
                       ),
-                      AppText(
-                        text: "Online",
-                        fontWeight: FontWeight.w500,
-                        size: 12,
-                        color: HexColor("#0597FF"),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Shimmer.fromColors(
+                      baseColor: baseColor,
+                      highlightColor: highlightColor.withOpacity(0.4),
+                      child: Container(
+                        width: 50,
+                        height: 20,
+                        color: Colors.white,
+                        child: AppText(
+                          text: "",
+                          fontWeight: FontWeight.w500,
+                          size: 12,
+                          color: HexColor("#0597FF"),
+                        ),
                       ),
-                    ],
-                  ),
-                ],
-              ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
-          Positioned(
-            bottom: 10.0,
-            right: 10.0,
-            child: Align(
-              alignment: Alignment.bottomRight,
+        ),
+        Positioned(
+          bottom: 40.0,
+          right: 10.0,
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: Shimmer.fromColors(
+              baseColor: baseColor,
+              highlightColor: highlightColor.withOpacity(0.4),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  cardButton("Profile", false),
-                  const SizedBox(
-                    width: 20,
-                  ),
+                  // cardButton("Profile", false),
+                  // const SizedBox(
+                  //   width: 20,
+                  // ),
                   cardButton("Match", true),
                 ],
               ),
             ),
-          )
-        ],
-      ),
+          ),
+        )
+      ],
     );
   }
 

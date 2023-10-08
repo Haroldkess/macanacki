@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -17,6 +18,7 @@ import '../../../services/middleware/action_ware.dart';
 import '../../../services/temps/temps_id.dart';
 import '../../allNavigation.dart';
 import '../../constants/colors.dart';
+import '../../constants/string.dart';
 import '../../operations.dart';
 import '../../screens/home/profile/profile_screen.dart';
 import '../../screens/userprofile/user_profile_screen.dart';
@@ -25,14 +27,17 @@ import '../../uiproviders/screen/tab_provider.dart';
 import '../comment_modal.dart';
 import '../hexagon_avatar.dart';
 import '../text.dart';
+import 'package:macanacki/services/middleware/video/video_ware.dart';
 
 class NewDesignTest extends StatefulWidget {
   final FeedPost data;
   String page;
   final List<String> media;
   VideoPlayerController? controller;
+  bool isHome;
   NewDesignTest(
       {super.key,
+      required this.isHome,
       required this.data,
       required this.page,
       required this.media,
@@ -83,22 +88,28 @@ class _NewDesignTestState extends State<NewDesignTest> {
         height: showMore
             ? height / 1.4
             : widget.data.user!.gender == "Business"
-                ? 119
-                : 119,
+                ? 124
+                : 124,
         width: width,
         decoration: BoxDecoration(
           //    backgroundBlendMode: BlendMode.colorDodge,
           gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Colors.transparent,
-              Colors.transparent,
-              Colors.black.withOpacity(.05),
-              Colors.black.withOpacity(.1),
-              Colors.black.withOpacity(.1),
-            ],
-          ),
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Colors.black.withOpacity(.0),
+                Colors.black.withOpacity(.1),
+                Colors.black.withOpacity(.4),
+                Colors.black.withOpacity(.5),
+                Colors.black.withOpacity(.6),
+              ],
+              stops: [
+                0.0,
+                0.1,
+                0.3,
+                0.8,
+                0.9
+              ]),
         ),
         child: Padding(
           padding: const EdgeInsets.only(left: 8.0),
@@ -118,97 +129,111 @@ class _NewDesignTestState extends State<NewDesignTest> {
                             TabProvider action = Provider.of<TabProvider>(
                                 context,
                                 listen: false);
-                            if (widget.data.media!.length > 1) {
-                              for (var i = 0;
-                                  i < widget.data.media!.length;
-                                  i++) {
-                                if (widget.data.media![i].contains(".mp4")) {
-                                  if (action.controller != null) {
-                                    if (action
-                                        .controller!.value.isInitialized) {
-                                      if (mounted) {
-                                        action.controller!.pause();
-                                      }
-                                    } else {
-                                      if (mounted) {
-                                        action.controller!.pause();
-                                      }
-                                    }
-                                  }
-                                  if (action.controller != null) {
-                                    if (action
-                                        .controller!.value.isInitialized) {
-                                      if (action
-                                              .controller!.value.isBuffering ||
-                                          action.controller!.value.isPlaying) {
-                                        if (mounted) {
-                                          action.tap(true);
-                                          action.pauseControl();
-                                        }
-                                      } else {
-                                        if (mounted) {
-                                          action.tap(true);
-                                          action.pauseControl();
-                                        }
+                            // if (widget.data.media!.length > 1) {
+                            //   for (var i = 0;
+                            //       i < widget.data.media!.length;
+                            //       i++) {
+                            //     if (widget.data.media![i].contains(".mp4")) {
+                            //       if (action.controller != null) {
+                            //         if (action
+                            //             .controller!.value.isInitialized) {
+                            //           if (mounted) {
+                            //             action.controller!.pause();
+                            //           }
+                            //         } else {
+                            //           if (mounted) {
+                            //             action.controller!.pause();
+                            //           }
+                            //         }
+                            //       }
+                            //       if (action.controller != null) {
+                            //         if (action
+                            //             .controller!.value.isInitialized) {
+                            //           if (action
+                            //                   .controller!.value.isBuffering ||
+                            //               action.controller!.value.isPlaying) {
+                            //             if (mounted) {
+                            //               action.tap(true);
+                            //               action.pauseControl();
+                            //             }
+                            //           } else {
+                            //             if (mounted) {
+                            //               action.tap(true);
+                            //               action.pauseControl();
+                            //             }
 
-                                        //  return;
-                                      }
-                                    }
-                                  }
+                            //             //  return;
+                            //           }
+                            //         }
+                            //       }
 
-                                  // widget.controller!.pause();
-                                }
-                              }
-                            } else {
-                              if (widget.data.media!.first.contains(".mp4")) {
-                                if (action.controller != null) {
-                                  if (action.controller!.value.isInitialized) {
-                                    if (action.controller!.value.isBuffering ||
-                                        action.controller!.value.isPlaying) {
-                                      if (mounted) {
-                                        action.tap(true);
-                                        action.pauseControl();
-                                      }
-                                      // action.tap(true);
-                                      // action.pauseControl();
-                                    } else {
-                                      // action.tap(true);
-                                      // action.pauseControl();
-                                      //  return;
-                                    }
-                                  }
-                                }
-                                widget.controller!.pause();
-                              }
-                            }
+                            //       // widget.controller!.pause();
+                            //     }
+                            //   }
+                            // } else {
+                            //   if (widget.data.media!.first.contains(".mp4")) {
+                            //     if (action.controller != null) {
+                            //       if (action.controller!.value.isInitialized) {
+                            //         if (action.controller!.value.isBuffering ||
+                            //             action.controller!.value.isPlaying) {
+                            //           if (mounted) {
+                            //             action.tap(true);
+                            //             action.pauseControl();
+                            //           }
+                            //           // action.tap(true);
+                            //           // action.pauseControl();
+                            //         } else {
+                            //           // action.tap(true);
+                            //           // action.pauseControl();
+                            //           //  return;
+                            //         }
+                            //       }
+                            //     }
+                            //     widget.controller!.pause();
+                            //   }
+                            // }
 
                             if (widget.data.user!.username! ==
                                 user.userProfileModel.username) {
-                              action.tap(true);
-                              action.tapTrack(0);
-                              action.changeIndex(4);
-                              if (action.controller != null) {
-                                action.pauseControl();
-                              }
-                              action.pageController!.animateToPage(
-                                4,
-                                duration: const Duration(milliseconds: 1),
-                                curve: Curves.easeIn,
-                              );
+                              // action.pageController!.animateToPage(
+                              //   4,
+                              //   duration: const Duration(milliseconds: 1),
+                              //   curve: Curves.easeIn,
+                              // );
                               // PageRouting.pushToPage(
                               //     context, const ProfileScreen());
                             } else {
+                              if (widget.isHome == false) {
+                                return;
+                              }
+                              try {
+                                WidgetsBinding.instance
+                                    .addPostFrameCallback((timeStamp) {
+                                  VideoWareHome.instance.pauseAnyVideo();
+                                  WidgetsBinding.instance
+                                      .addPostFrameCallback((timeStamp) {
+                                    VideoWareHome.instance.disposeVideo(
+                                        widget.data.id!,
+                                        "$muxStreamBaseUrl/${widget.media.first}.$videoExtension");
+                                  });
+                                  WidgetsBinding.instance
+                                      .addPostFrameCallback((timeStamp) {
+                                    VideoWareHome.instance.disposeAllVideoV2(
+                                        widget.data.id!,
+                                        "$muxStreamBaseUrl/${widget.media.first}.$videoExtension");
+                                  });
+                                });
+                              } catch (e) {
+                                WidgetsBinding.instance
+                                    .addPostFrameCallback((timeStamp) {
+                                  VideoWareHome.instance.pauseAnyVideo();
+                                });
+                              }
                               PageRouting.pushToPage(
                                   context,
                                   UsersProfile(
                                     username: widget.data.user!.username!,
                                   ));
-                              if (mounted) {
-                                action.tap(true);
-                                if (action.controller != null) {
-                                  action.pauseControl();
-                                }
-                              }
                             }
                           },
                           child: Row(
@@ -216,55 +241,83 @@ class _NewDesignTestState extends State<NewDesignTest> {
                               Stack(
                                 alignment: Alignment.center,
                                 children: [
-                                  HexagonWidget.pointy(
-                                    width: w - 3,
-                                    elevation: 2.0,
-                                    color: Colors.white,
-                                    cornerRadius: 2.0,
-                                    child: AspectRatio(
-                                      aspectRatio: HexagonType.POINTY.ratio,
-                                      // child: Image.asset(
-                                      //   'assets/tram.jpg',
-                                      //   fit: BoxFit.fitWidth,
-                                      // ),
-                                    ),
-                                  ),
-                                  HexagonAvatar(
+                                  // HexagonWidget.pointy(
+                                  //   width: w - 3,
+                                  //   elevation: 2.0,
+                                  //   color: Colors.white,
+                                  //   cornerRadius: 2.0,
+                                  //   child: AspectRatio(
+                                  //     aspectRatio: HexagonType.POINTY.ratio,
+                                  //     // child: Image.asset(
+                                  //     //   'assets/tram.jpg',
+                                  //     //   fit: BoxFit.fitWidth,
+                                  //     // ),
+                                  //   ),
+                                  // ),
+                                  DpAvatar(
                                     url: widget.data.user!.profilephoto!,
-                                    w: w,
+                                    w: 13,
                                   ),
                                 ],
                               ),
                               const SizedBox(
                                 width: 5.5,
                               ),
-                              Row(
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Container(
-                                    constraints: const BoxConstraints(
-                                      maxWidth: 139,
-                                    ),
-                                    //   color: Colors.amber,
-                                    child: AppText(
-                                      text: widget.data.user!.username!,
-                                      size: 16,
-                                      fontWeight: FontWeight.w700,
-                                      maxLines: 1,
-                                      overflow:
-                                          widget.data.user!.username!.length >
+                                  Row(
+                                    children: [
+                                      Container(
+                                        constraints: const BoxConstraints(
+                                          maxWidth: 139,
+                                        ),
+                                        //   color: Colors.amber,
+                                        child: AppText(
+                                          text: widget.data.user!.username!,
+                                          size: 16,
+                                          fontWeight: FontWeight.w700,
+                                          maxLines: 1,
+                                          overflow: widget.data.user!.username!
+                                                      .length >
                                                   20
                                               ? TextOverflow.ellipsis
                                               : TextOverflow.ellipsis,
-                                      color: HexColor(backgroundColor),
-                                    ),
+                                          color: HexColor(backgroundColor),
+                                        ),
+                                      ),
+                                      widget.data.user!.verified == 1 &&
+                                              widget.data.user!.activePlan !=
+                                                  sub
+                                          ? SvgPicture.asset(
+                                              "assets/icon/badge.svg",
+                                              height: 13,
+                                              width: 13)
+                                          : const SizedBox.shrink()
+                                    ],
                                   ),
-                                  widget.data.user!.verified == 1 &&
-                                          widget.data.user!.activePlan != sub
-                                      ? SvgPicture.asset(
-                                          "assets/icon/badge.svg",
-                                          height: 13,
-                                          width: 13)
-                                      : const SizedBox.shrink()
+                                  SizedBox(
+                                    height: 3,
+                                  ),
+                                  Row(
+                                    children: [
+                                      Container(
+                                        constraints: const BoxConstraints(
+                                          maxWidth: 139,
+                                        ),
+                                        //   color: Colors.amber,
+                                        child: AppText(
+                                          text: Operations.feedTimes(
+                                              widget.data.createdAt!),
+                                          size: 12,
+                                          fontWeight: FontWeight.w400,
+                                          maxLines: 1,
+                                          color: HexColor(backgroundColor)
+                                              .withOpacity(.6),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ],
                               ),
                             ],
@@ -384,7 +437,7 @@ class _NewDesignTestState extends State<NewDesignTest> {
                                             seeMoreVal &&
                                         showMore == false
                                     ? widget.data.description!
-                                        .substring(0, seeMoreVal - 3)
+                                        .substring(0, seeMoreVal - 5)
                                     : widget.data.description!,
                                 style: GoogleFonts.leagueSpartan(
                                     textStyle: TextStyle(
@@ -412,9 +465,8 @@ class _NewDesignTestState extends State<NewDesignTest> {
                                   widget.data.description!.length < seeMoreVal
                                       ? const TextSpan(text: "")
                                       : TextSpan(
-                                          text: showMore
-                                              ? " less"
-                                              : "...see more",
+                                          text:
+                                              showMore ? " less" : " see more",
                                           style: TextStyle(
                                             fontSize: 14,
                                             color: HexColor(backgroundColor),
@@ -448,7 +500,7 @@ class _NewDesignTestState extends State<NewDesignTest> {
                     widget.data.btnLink != null && widget.data.button != null
                         ? 40
                         : 10,
-              )
+              ),
             ],
           ),
         ),
@@ -652,5 +704,379 @@ class _NewDesignTestState extends State<NewDesignTest> {
     }
 
     // return !isLiked;
+  }
+}
+
+class VideoUser extends StatefulWidget {
+  final FeedPost data;
+  String page;
+  final List<String> media;
+  VideoPlayerController? controller;
+  VideoUser(
+      {super.key,
+      required this.data,
+      required this.page,
+      required this.media,
+      this.controller});
+
+  @override
+  State<VideoUser> createState() => _VideoUserState();
+}
+
+class _VideoUserState extends State<VideoUser> {
+  bool showMore = false;
+  late SharedPreferences pref;
+  // String myUsername = "";
+  TapGestureRecognizer tapGestureRecognizer = TapGestureRecognizer();
+  String test =
+      "Users description will appear here eg. Video description here. description should be two lines before...see moreUsers description will appear here eg. Video description here. description should be two lines before...see more";
+
+  @override
+  void initState() {
+    super.initState();
+    // initPref();
+  }
+
+  initPref() async {
+    pref = await SharedPreferences.getInstance();
+    setState(() {
+      //   myUsername = pref.getString(userNameKey)!;
+    });
+  }
+
+  int seeMoreVal = 89;
+
+  @override
+  Widget build(BuildContext context) {
+    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
+    var size = MediaQuery.of(context).size;
+    var padding = 8.0;
+    //_checkIfLikedBefore();
+    var w = 30.0;
+    UserProfileWare user = Provider.of<UserProfileWare>(context, listen: false);
+    ActionWare stream = context.watch<ActionWare>();
+    ActionWare action = Provider.of<ActionWare>(context, listen: false);
+    StoreComment comment = context.watch<StoreComment>();
+    return Padding(
+      padding: const EdgeInsets.only(left: 0.0),
+      child: Container(
+        height: showMore
+            ? height / 1.4
+            : widget.data.user!.gender == "Business"
+                ? 124
+                : 124,
+        width: width,
+        decoration: BoxDecoration(
+          //    backgroundBlendMode: BlendMode.colorDodge,
+          gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Colors.black.withOpacity(.0),
+                Colors.black.withOpacity(.1),
+                Colors.black.withOpacity(.4),
+                Colors.black.withOpacity(.5),
+                Colors.black.withOpacity(.6),
+              ],
+              stops: [
+                0.0,
+                0.1,
+                0.3,
+                0.8,
+                0.9
+              ]),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.only(left: 8.0),
+          child: FadeInRight(
+            duration: Duration(seconds: 1),
+            animate: true,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      //  color: Colors.amber,
+                      //475
+                      constraints: BoxConstraints(maxWidth: width * 0.75),
+                      child: Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () async {
+                              TabProvider action = Provider.of<TabProvider>(
+                                  context,
+                                  listen: false);
+
+                              if (widget.data.user!.username! ==
+                                  user.userProfileModel.username) {
+                                // action.pageController!.animateToPage(
+                                //   4,
+                                //   duration: const Duration(milliseconds: 1),
+                                //   curve: Curves.easeIn,
+                                // );
+                              } else {
+                                try {
+                                  WidgetsBinding.instance
+                                      .addPostFrameCallback((timeStamp) {
+                                    VideoWareHome.instance.pauseAnyVideo();
+                                  });
+                                } catch (e) {}
+                                PageRouting.pushToPage(
+                                    context,
+                                    UsersProfile(
+                                      username: widget.data.user!.username!,
+                                    ));
+                              }
+                            },
+                            child: Row(
+                              children: [
+                                Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    // HexagonWidget.pointy(
+                                    //   width: w - 3,
+                                    //   elevation: 2.0,
+                                    //   color: Colors.white,
+                                    //   cornerRadius: 2.0,
+                                    //   child: AspectRatio(
+                                    //     aspectRatio: HexagonType.POINTY.ratio,
+                                    //     // child: Image.asset(
+                                    //     //   'assets/tram.jpg',
+                                    //     //   fit: BoxFit.fitWidth,
+                                    //     // ),
+                                    //   ),
+                                    // ),
+                                    // HexagonAvatar(
+                                    //   url: widget.data.user!.profilephoto!,
+                                    //   w: w,
+                                    // ),
+                                    DpAvatar(
+                                      url: widget.data.user!.profilephoto!,
+                                      w: w,
+                                    )
+                                  ],
+                                ),
+                                const SizedBox(
+                                  width: 5.5,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Container(
+                                          constraints: const BoxConstraints(
+                                            maxWidth: 139,
+                                          ),
+                                          //   color: Colors.amber,
+                                          child: AppText(
+                                            text: widget.data.user!.username!,
+                                            size: 16,
+                                            fontWeight: FontWeight.w700,
+                                            maxLines: 1,
+                                            overflow: widget.data.user!
+                                                        .username!.length >
+                                                    20
+                                                ? TextOverflow.ellipsis
+                                                : TextOverflow.ellipsis,
+                                            color: HexColor(backgroundColor),
+                                          ),
+                                        ),
+                                        widget.data.user!.verified == 1 &&
+                                                widget.data.user!.activePlan !=
+                                                    sub
+                                            ? SvgPicture.asset(
+                                                "assets/icon/badge.svg",
+                                                height: 13,
+                                                width: 13)
+                                            : const SizedBox.shrink(),
+                                        // SizedBox(
+                                        //   width: 7,
+                                        // ),
+                                        // user.userProfileModel.username ==
+                                        //         widget.data.user!.username!
+                                        //     ? const SizedBox.shrink()
+                                        //     : Row(
+                                        //         children: [
+                                        //           followButton(() async {
+                                        //             followAction(
+                                        //               context,
+                                        //             );
+                                        //           },
+                                        //               stream.followIds.contains(
+                                        //                       widget.data.user!
+                                        //                           .id!)
+                                        //                   ? "Following"
+                                        //                   : "Follow"),
+                                        //         ],
+                                        //       ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 3,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Container(
+                                          constraints: const BoxConstraints(
+                                            maxWidth: 139,
+                                          ),
+                                          //   color: Colors.amber,
+                                          child: AppText(
+                                            text: Operations.feedTimes(
+                                                widget.data.createdAt!),
+                                            size: 12,
+                                            fontWeight: FontWeight.w400,
+                                            maxLines: 1,
+                                            color: HexColor(backgroundColor)
+                                                .withOpacity(.6),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 5.5,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 36, top: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        //   width: width * 0.5,
+                        constraints: BoxConstraints(maxWidth: width * 0.85),
+                        child: SingleChildScrollView(
+                          child: RichText(
+                              textAlign: TextAlign.start,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: showMore ? 50 : 2,
+                              text: TextSpan(
+                                  text: widget.data.description!.length >=
+                                              seeMoreVal &&
+                                          showMore == false
+                                      ? widget.data.description!
+                                          .substring(0, seeMoreVal - 3)
+                                      : widget.data.description!,
+                                  style: GoogleFonts.leagueSpartan(
+                                      textStyle: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    color: HexColor(backgroundColor)
+                                        .withOpacity(0.9),
+                                    decorationStyle: TextDecorationStyle.solid,
+                                    fontSize: 12,
+                                    fontFamily: '',
+                                  )),
+                                  recognizer: tapGestureRecognizer
+                                    ..onTap = () async {
+                                      //    print("object");
+                                      if (showMore) {
+                                        setState(() {
+                                          showMore = false;
+                                        });
+                                      } else {
+                                        setState(() {
+                                          showMore = true;
+                                        });
+                                      }
+                                    },
+                                  children: [
+                                    widget.data.description!.length < seeMoreVal
+                                        ? const TextSpan(text: "")
+                                        : TextSpan(
+                                            text: showMore
+                                                ? " less"
+                                                : "...see more",
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: HexColor(backgroundColor),
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                            recognizer: tapGestureRecognizer
+                                              ..onTap = () async {
+                                                //    print("object");
+                                                if (showMore) {
+                                                  setState(() {
+                                                    showMore = false;
+                                                  });
+                                                } else {
+                                                  setState(() {
+                                                    showMore = true;
+                                                  });
+                                                }
+                                              },
+                                          )
+                                  ])),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: widget.data.user!.gender == "Business" ? 10 : 10,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget followButton(VoidCallback onTap, String title) {
+    //  ActionWare stream = context.watch<ActionWare>();
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        //  duration: const Duration(milliseconds: 500),
+        height: 20,
+
+        width: title == "Follow" ? null : null,
+        constraints: BoxConstraints(
+          maxWidth: title == "Follow" ? 54 : 65,
+        ),
+        decoration: BoxDecoration(
+            shape: BoxShape.rectangle,
+            color: HexColor(primaryColor),
+            border: Border.all(
+                style: BorderStyle.solid,
+                width: 1.2,
+                color: title == "Follow"
+                    ? HexColor(primaryColor).withOpacity(.9)
+                    : HexColor(primaryColor).withOpacity(.9)),
+            borderRadius: BorderRadius.circular(7)),
+        child: Center(
+          child: AppText(
+            text: title,
+            color: HexColor(backgroundColor),
+            size: 10,
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> followAction(BuildContext context) async {
+    ActionWare provide = Provider.of<ActionWare>(context, listen: false);
+
+    //  provide.addFollowId(widget.data.id!);
+    await ActionController.followOrUnFollowController(
+        context, widget.data.user!.username!, widget.data.user!.id!);
   }
 }

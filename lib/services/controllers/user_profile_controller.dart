@@ -109,6 +109,8 @@ class UserProfileController {
       } else {
         try {
           Phoenix.rebirth(context);
+          
+               Restart.restartApp();
         } catch (e) {
           PageRouting.removeAllToPage(context, const Splash());
           Restart.restartApp();

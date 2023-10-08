@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -16,6 +17,7 @@ import 'package:provider/provider.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 import '../../model/feed_post_model.dart';
+import '../../model/public_profile_model.dart';
 import '../../presentation/widgets/debug_emitter.dart';
 import '../middleware/feed_post_ware.dart';
 import 'action_controller.dart';
@@ -230,7 +232,7 @@ class FeedPostController {
     // emitter(
     //     "----------------STARTING THE CACHING PROCESS ---------------------------------");
     List<String> storeThumb = [];
-    await Future.forEach(data, (element) async {
+    Future.forEach(data, (element) async {
       // late File hold;
 
       for (var i = 0; i < element.media!.length; i++) {
@@ -242,7 +244,7 @@ class FeedPostController {
             }).toList();
             if (element.media![i].contains(".mp4")) {
               if (find.isNotEmpty) {
-                //  emitter("thumbnail Exists already");
+                emitter("thumbnail Exists already");
               } else {
                 String? thumbs = await genThumbnail(element.media![i], height);
                 String newThumb = thumbs! + element.media![i];
@@ -254,10 +256,10 @@ class FeedPostController {
                 }
               }
             } else {
-              // emitter("not a video we are skip[ping] this one ");
+              emitter("not a video we are skip[ping] this one ");
             }
           } catch (e) {
-            // emitter("Download Failed.\n\n" + e.toString());
+            emitter("Download Failed.\n\n" + e.toString());
           }
         }
 
@@ -267,11 +269,64 @@ class FeedPostController {
         // }
       }
     }).whenComplete(() {
-      // emitter("CACHE COMPLETED WAITING FOR NEXT BATCH");
+      emitter("CACHE COMPLETED WAITING FOR NEXT BATCH");
     });
 
     return;
   }
+
+
+  static Future<void> downloadThumbsPublic(
+      List<PublicUserPost> data, BuildContext context, height) async {
+    // emitter("-------------------------------------------------");
+    FeedPostWare ware = Provider.of<FeedPostWare>(context, listen: false);
+
+    // emitter(
+    //     "----------------STARTING THE CACHING PROCESS ---------------------------------");
+    List<String> storeThumb = [];
+    Future.forEach(data, (element) async {
+      // late File hold;
+
+      for (var i = 0; i < element.media!.length; i++) {
+        if (element.media == null || element.media!.isEmpty) {
+        } else {
+          try {
+            List<String> find = ware.thumbs.where((val) {
+              return val.contains(element.media![i]);
+            }).toList();
+            if (element.media![i].contains(".mp4")) {
+              if (find.isNotEmpty) {
+                emitter("thumbnail Exists already");
+              } else {
+                String? thumbs = await genThumbnail(element.media![i], height);
+                String newThumb = thumbs! + element.media![i];
+                storeThumb.add(newThumb);
+                if (i + 1 == element.media!.length) {
+                  ware
+                      .addThumbs(storeThumb)
+                      .whenComplete(() => storeThumb.clear());
+                }
+              }
+            } else {
+              emitter("not a video we are skip[ping] this one ");
+            }
+          } catch (e) {
+            emitter("Download Failed.\n\n" + e.toString());
+          }
+        }
+
+        // if (i % 5 == 0) {
+        //   await Future.delayed(const Duration(minutes: 1))
+        //       .whenComplete(() => emitter(" Can continue"));
+        // }
+      }
+    }).whenComplete(() {
+      emitter("CACHE COMPLETED WAITING FOR NEXT BATCH");
+    });
+
+    return;
+  }
+
 
   static Future<void> getSingleThumb(List<String> url, context, height) async {
     FeedPostWare ware = Provider.of<FeedPostWare>(context, listen: false);
@@ -282,11 +337,12 @@ class FeedPostController {
         return el.media!.contains(element);
       }).toList();
       if (check.isNotEmpty) {
-        //   emitter("======== Already exists  ========");
+           emitter("======== Already exists  ========");
       } else {
         String? thumbs = await genThumbnail(element, height);
         String newThumb = thumbs! + element;
         storeThumb.add(newThumb);
+         emitter("======== CACHED  ========");
       }
     });
 
@@ -347,5 +403,9 @@ class FeedPostController {
   static Future<void> loadBeforeHand(context, FeedPost data) async {
     FeedPostWare feed = Provider.of(context, listen: false);
     await feed.initializeBeforeHand(data);
+  }
+
+  static Future<void> cacheImages(context, String image) async {
+    CachedNetworkImage(imageUrl: image);
   }
 }

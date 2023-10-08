@@ -50,7 +50,7 @@ class _EditProfileState extends State<EditProfile> {
       });
     });
 
-    Operations.controlSystemColor();
+  //  Operations.controlSystemColor();
   }
 
   @override
@@ -59,125 +59,127 @@ class _EditProfileState extends State<EditProfile> {
     var width = MediaQuery.of(context).size.width;
     UserProfileWare user = context.watch<UserProfileWare>();
     EditProfileWare stream = context.watch<EditProfileWare>();
-    return Scaffold(
-      appBar: AppBar(
-        title: AppText(
-          text: 'Profile',
-          fontWeight: FontWeight.w400,
-          size: 24,
-          color: Colors.black,
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: AppText(
+            text: 'Profile',
+            fontWeight: FontWeight.w400,
+            size: 24,
+            color: Colors.black,
+          ),
+          centerTitle: true,
+          backgroundColor: HexColor(backgroundColor),
+          elevation: 0,
+          leading: BackButton(color: Colors.black),
         ),
-        centerTitle: true,
-        backgroundColor: HexColor(backgroundColor),
-        elevation: 0,
-        leading: BackButton(color: Colors.black),
-      ),
-      body: Container(
-        height: height,
-        width: width,
-        color: HexColor("#F5F2F9"),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              const ProfilePicture(),
-              const SizedBox(
-                height: 20,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Column(
-                  children: [
-                    EditAboutMe(
-                      about: about,
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    MyPhone(
-                      phone: phone,
-                    ),
-                    // EditSelectGender(),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 16, left: 30),
-                          child: Row(
-                            children: [
-                              AppText(
-                                text: "Your Location",
-                                fontWeight: FontWeight.w600,
-                                size: 17,
-                                color: HexColor("#0C0C0C"),
-                              )
-                            ],
-                          ),
-                        ),
-                        CSCPicker(
-                          key: _cscPickerKey,
-                          layout: Layout.vertical,
-                          countryDropdownLabel: "Select country",
-                          stateDropdownLabel: "Select state",
-                          cityDropdownLabel: "Select city",
-                          currentCity:
-                              user.userProfileModel.city ?? "Select city",
-                          currentState:
-                              user.userProfileModel.state ?? "Select state",
-                          currentCountry:
-                              user.userProfileModel.country ?? "Select country",
-                          flagState: CountryFlag.DISABLE,
-                          onCountryChanged: (country) {
-                             if(country  != "Select country"){
-                            setState(() {
-                              selectedCountry = country;
-                            });
-                              }
-
-                            // log(country);
-                          },
-                          onStateChanged: (state) {
-                            if (state != null && state != "Select state") {
-                              setState(() {
-                                selectedState = state;
-                              });
-                            }
-                          },
-                          onCityChanged: (city) {
-                            if (city != null && city != "Select city") {
-                              setState(() {
-                                selectedCity = city;
-                              });
-                            }
-                          },
-                        ),
-                      ],
-                    ),
-
-                    //  EditStudies(),
-                    // SizedBox(
-                    //   height: 30,
-                    // ),
-                    //   EditProfileSetting(),
-                  ],
+        body: Container(
+          height: height,
+          width: width,
+          color: HexColor("#F5F2F9"),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                const ProfilePicture(),
+                const SizedBox(
+                  height: 20,
                 ),
-              ),
-              const SizedBox(
-                height: 50,
-              ),
-              stream.loadStatus
-                  ? Loader(color: HexColor(primaryColor))
-                  : AppButton(
-                      width: 0.8,
-                      height: 0.09,
-                      color: primaryColor,
-                      text: "Save",
-                      backColor: primaryColor,
-                      onTap: () => submit(context),
-                      curves: 40,
-                      textColor: backgroundColor)
-            ],
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Column(
+                    children: [
+                      EditAboutMe(
+                        about: about,
+                      ),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      MyPhone(
+                        phone: phone,
+                      ),
+                      // EditSelectGender(),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 16, left: 30),
+                            child: Row(
+                              children: [
+                                AppText(
+                                  text: "Your Location",
+                                  fontWeight: FontWeight.w600,
+                                  size: 17,
+                                  color: HexColor("#0C0C0C"),
+                                )
+                              ],
+                            ),
+                          ),
+                          CSCPicker(
+                            key: _cscPickerKey,
+                            layout: Layout.vertical,
+                            countryDropdownLabel: "Select country",
+                            stateDropdownLabel: "Select state",
+                            cityDropdownLabel: "Select city",
+                            currentCity:
+                                user.userProfileModel.city ?? "Select city",
+                            currentState:
+                                user.userProfileModel.state ?? "Select state",
+                            currentCountry:
+                                user.userProfileModel.country ?? "Select country",
+                            flagState: CountryFlag.DISABLE,
+                            onCountryChanged: (country) {
+                               if(country  != "Select country"){
+                              setState(() {
+                                selectedCountry = country;
+                              });
+                                }
+    
+                              // log(country);
+                            },
+                            onStateChanged: (state) {
+                              if (state != null && state != "Select state") {
+                                setState(() {
+                                  selectedState = state;
+                                });
+                              }
+                            },
+                            onCityChanged: (city) {
+                              if (city != null && city != "Select city") {
+                                setState(() {
+                                  selectedCity = city;
+                                });
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+    
+                      //  EditStudies(),
+                      // SizedBox(
+                      //   height: 30,
+                      // ),
+                      //   EditProfileSetting(),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 50,
+                ),
+                stream.loadStatus
+                    ? Loader(color: HexColor(primaryColor))
+                    : AppButton(
+                        width: 0.8,
+                        height: 0.09,
+                        color: primaryColor,
+                        text: "Save",
+                        backColor: primaryColor,
+                        onTap: () => submit(context),
+                        curves: 40,
+                        textColor: backgroundColor)
+              ],
+            ),
           ),
         ),
       ),

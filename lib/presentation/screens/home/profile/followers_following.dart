@@ -54,58 +54,61 @@ class _FollowersAndFollowingScreenState
   @override
   Widget build(BuildContext context) {
     ActionWare stream = context.watch<ActionWare>();
-    return Scaffold(
-      backgroundColor: HexColor("#F5F2F9"),
-      appBar: AppBar(
-        bottom: PreferredSize(
-          preferredSize: Size(0, 20),
-          child: Align(
-            alignment: Alignment.bottomLeft,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 15.0, bottom: 15, right: 15),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  //FOLLOW SEARCH
-                  FollowSearch(
-                      controller: controller,
-                      onChanged: (val) {
-                        stream.updateRequestMode("search");
-                        stream.updateSearch(val);
-                        if (widget.isFollowing == 'Following') {
-                          stream.getFollowingFromApi();
-                        } else {
-                          stream.getFollowersFromApi();
-                        }
-                      }),
-                ],
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: HexColor("#F5F2F9"),
+        appBar: AppBar(
+          bottom: PreferredSize(
+            preferredSize: Size(0, 20),
+            child: Align(
+              alignment: Alignment.bottomLeft,
+              child: Padding(
+                padding:
+                    const EdgeInsets.only(left: 15.0, bottom: 15, right: 15),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    //FOLLOW SEARCH
+                    FollowSearch(
+                        controller: controller,
+                        onChanged: (val) {
+                          stream.updateRequestMode("search");
+                          stream.updateSearch(val);
+                          if (widget.isFollowing == 'Following') {
+                            stream.getFollowingFromApi();
+                          } else {
+                            stream.getFollowersFromApi();
+                          }
+                        }),
+                  ],
+                ),
               ),
             ),
           ),
+          title: AppText(
+            text: widget.isFollowing
+                ? "Following ${widget.title}"
+                : "${widget.title} Followers",
+            color: Colors.black,
+            size: 14,
+            fontWeight: FontWeight.w700,
+          ),
+          centerTitle: true,
+          leading: const BackButton(color: Colors.black),
+          elevation: 0,
+          backgroundColor: HexColor(backgroundColor),
+          toolbarHeight: 110,
         ),
-        title: AppText(
-          text: widget.isFollowing
-              ? "Following ${widget.title}"
-              : "${widget.title} Followers",
-          color: Colors.black,
-          size: 14,
-          fontWeight: FontWeight.w700,
-        ),
-        centerTitle: true,
-        leading: const BackButton(color: Colors.black),
-        elevation: 0,
-        backgroundColor: HexColor(backgroundColor),
-        toolbarHeight: 110,
+        body: stream.loadStatusAllFollowing || stream.loadStatusFollower
+            ? Center(child: Loader(color: HexColor(primaryColor)))
+            : FollowFollowingList(
+                ware: stream,
+                what: widget.isFollowing ? "Following" : "Followers",
+              ),
       ),
-      body: stream.loadStatusAllFollowing || stream.loadStatusFollower
-          ? Center(child: Loader(color: HexColor(primaryColor)))
-          : FollowFollowingList(
-              ware: stream,
-              what: widget.isFollowing ? "Following" : "Followers",
-            ),
     );
   }
 }

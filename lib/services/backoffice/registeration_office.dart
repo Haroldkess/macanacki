@@ -8,7 +8,6 @@ import 'package:macanacki/services/api_url.dart';
 import 'package:macanacki/services/temps/temps_id.dart';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../model/register_model.dart';
 import '../../presentation/screens/onboarding/business/business_modal.dart';
 import '../../presentation/widgets/debug_emitter.dart';

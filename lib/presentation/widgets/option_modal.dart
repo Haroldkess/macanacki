@@ -4,6 +4,7 @@ import 'package:macanacki/presentation/allNavigation.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
 import 'package:macanacki/presentation/model/ui_model.dart';
 import 'package:macanacki/presentation/screens/home/subscription/subscrtiption_plan.dart';
+import 'package:macanacki/presentation/widgets/debug_emitter.dart';
 import 'package:macanacki/presentation/widgets/loader.dart';
 import 'package:macanacki/presentation/widgets/text.dart';
 import 'package:macanacki/services/controllers/create_post_controller.dart';
@@ -12,9 +13,12 @@ import 'package:macanacki/services/controllers/save_media_controller.dart';
 import 'package:macanacki/services/middleware/plan_ware.dart';
 import 'package:macanacki/services/middleware/user_profile_ware.dart';
 import 'package:provider/provider.dart';
+import '../../model/feed_post_model.dart';
+import '../screens/home/diamond/diamond_modal/download_modal.dart';
 import '../screens/home/profile/createpost/edit_post.dart';
 
-optionModal(BuildContext cont, List<String> url, [int? id, int? postId]) async {
+optionModal(BuildContext cont, List<String> url,
+    [int? id, int? postId, FeedPost? data]) async {
   bool pay = true;
   return showModalBottomSheet(
       context: cont,
@@ -52,36 +56,46 @@ optionModal(BuildContext cont, List<String> url, [int? id, int? postId]) async {
                                           //   await PlanController
                                           //       .retrievPlanController(context);
                                           // } else {
-                                          if (url.length > 1) {
-                                            await Future.forEach(url,
-                                                (element) async {
-                                              if (element.isNotEmpty) {
-                                                try {
-                                                  if (element
-                                                      .contains('.mp4')) {
-                                                    await SaveMediaController
-                                                        .saveNetworkVideo(
-                                                            context, element);
-                                                  } else {
-                                                    await SaveMediaController
-                                                        .saveNetworkImage(
-                                                            context, element);
+                                          //   emitter(data!.user!.username!);
+                                          if (data!.user!.username! ==
+                                              user.userProfileModel.username) {
+                                            if (data.media!.length > 1) {
+                                              await Future.forEach(data.media!,
+                                                  (element) async {
+                                                if (element.isNotEmpty) {
+                                                  try {
+                                                    if (element
+                                                        .contains('.mp4')) {
+                                                      await SaveMediaController
+                                                          .saveNetworkVideo(
+                                                              context, element);
+                                                    } else {
+                                                      await SaveMediaController
+                                                          .saveNetworkImage(
+                                                              context, element);
+                                                    }
+                                                  } catch (e) {
+                                                    debugPrint(e.toString());
                                                   }
-                                                } catch (e) {
-                                                  debugPrint(e.toString());
                                                 }
-                                              }
-                                            });
-                                          } else {
-                                            if (url.first.contains('.mp4')) {
-                                              await SaveMediaController
-                                                  .saveNetworkVideo(
-                                                      context, url.first);
+                                              });
                                             } else {
-                                              await SaveMediaController
-                                                  .saveNetworkImage(
-                                                      context, url.first);
+                                              if (data.media!.first
+                                                  .contains('.mp4')) {
+                                                await SaveMediaController
+                                                    .saveNetworkVideo(context,
+                                                        data.media!.first);
+                                              } else {
+                                                await SaveMediaController
+                                                    .saveNetworkImage(context,
+                                                        data.media!.first);
+                                              }
                                             }
+                                          } else {
+                                            downloadDiamondsModal(
+                                              context,
+                                              postId!,
+                                            );
                                           }
 
                                           // }
@@ -161,36 +175,45 @@ optionModal(BuildContext cont, List<String> url, [int? id, int? postId]) async {
                                           //   await PlanController
                                           //       .retrievPlanController(context);
                                           // } else {
-                                          if (url.length > 1) {
-                                            await Future.forEach(url,
-                                                (element) async {
-                                              if (element.isNotEmpty) {
-                                                try {
-                                                  if (element
-                                                      .contains('.mp4')) {
-                                                    await SaveMediaController
-                                                        .saveNetworkVideo(
-                                                            context, element);
-                                                  } else {
-                                                    await SaveMediaController
-                                                        .saveNetworkImage(
-                                                            context, element);
+                                          if (data!.user!.username! ==
+                                              user.userProfileModel.username) {
+                                            if (data.media!.length > 1) {
+                                              await Future.forEach(data.media!,
+                                                  (element) async {
+                                                if (element.isNotEmpty) {
+                                                  try {
+                                                    if (element
+                                                        .contains('.mp4')) {
+                                                      await SaveMediaController
+                                                          .saveNetworkVideo(
+                                                              context, element);
+                                                    } else {
+                                                      await SaveMediaController
+                                                          .saveNetworkImage(
+                                                              context, element);
+                                                    }
+                                                  } catch (e) {
+                                                    debugPrint(e.toString());
                                                   }
-                                                } catch (e) {
-                                                  debugPrint(e.toString());
                                                 }
-                                              }
-                                            });
-                                          } else {
-                                            if (url.first.contains('.mp4')) {
-                                              await SaveMediaController
-                                                  .saveNetworkVideo(
-                                                      context, url.first);
+                                              });
                                             } else {
-                                              await SaveMediaController
-                                                  .saveNetworkImage(
-                                                      context, url.first);
+                                              if (data.media!.first
+                                                  .contains('.mp4')) {
+                                                await SaveMediaController
+                                                    .saveNetworkVideo(context,
+                                                        data.media!.first);
+                                              } else {
+                                                await SaveMediaController
+                                                    .saveNetworkImage(context,
+                                                        data.media!.first);
+                                              }
                                             }
+                                          } else {
+                                            downloadDiamondsModal(
+                                              context,
+                                              postId!,
+                                            );
                                           }
 
                                           // }

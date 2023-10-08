@@ -51,12 +51,13 @@ class ProfileFeedDatum {
     this.creator,
     this.media,
     this.mux,
+    this.thumbnails,
     this.comments,
     this.noOfLikes,
     this.viewCount,
     this.button,
     this.user,
-     this.promoted,
+    this.promoted,
   });
 
   int? id;
@@ -67,13 +68,14 @@ class ProfileFeedDatum {
   String? btnLink;
   String? creator;
   List<String>? media;
-   List<String>? mux;
+  List<String>? mux;
+  List<dynamic>? thumbnails;
   List<ProfileComment>? comments;
   int? noOfLikes;
   int? viewCount;
   String? button;
   ProfileUser? user;
-    String? promoted;
+  String? promoted;
 
   factory ProfileFeedDatum.fromJson(Map<String, dynamic> json) =>
       ProfileFeedDatum(
@@ -88,8 +90,15 @@ class ProfileFeedDatum {
             : DateTime.parse(json["updated_at"]),
         btnLink: json["btn_link"],
         creator: json["creator"],
-               media: json["media"] == null ? [] : List<String>.from(json["media"]!.map((x) => x)),
-                      mux: json["mux"] == null ? [] : List<String>.from(json["mux"]!.map((x) => x)),
+        media: json["media"] == null
+            ? []
+            : List<String>.from(json["media"]!.map((x) => x)),
+        mux: json["mux"] == null
+            ? []
+            : List<String>.from(json["mux"]!.map((x) => x)),
+        thumbnails: json["thumbnails"] == null
+            ? []
+            : List<dynamic>.from(json["thumbnails"]!.map((x) => x)),
         comments: json["comments"] == null
             ? []
             : List<ProfileComment>.from(
@@ -98,7 +107,7 @@ class ProfileFeedDatum {
         viewCount: json["view_count"],
         button: json["button"],
         user: json["user"] == null ? null : ProfileUser.fromJson(json["user"]),
-         promoted: json["promoted"],
+        promoted: json["promoted"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -110,7 +119,10 @@ class ProfileFeedDatum {
         "btn_link": btnLink,
         "creator": creator,
         "media": media == null ? [] : List<dynamic>.from(media!.map((x) => x)),
-         "mux": mux == null ? [] : List<dynamic>.from(mux!.map((x) => x)),
+        "mux": mux == null ? [] : List<dynamic>.from(mux!.map((x) => x)),
+        "thumbnails": thumbnails == null
+            ? []
+            : List<dynamic>.from(thumbnails!.map((x) => x)),
         "comments": comments == null
             ? []
             : List<dynamic>.from(comments!.map((x) => x.toJson())),
@@ -118,7 +130,7 @@ class ProfileFeedDatum {
         "view_count": viewCount,
         "button": button,
         "user": user?.toJson(),
-         "promoted": promoted,
+        "promoted": promoted,
       };
 }
 
@@ -132,7 +144,7 @@ class ProfileComment {
     this.profilePhoto,
     this.noOfLikes,
     this.postId,
-      this.isVerified,
+    this.isVerified,
   });
 
   int? id;
@@ -143,7 +155,7 @@ class ProfileComment {
   String? profilePhoto;
   int? noOfLikes;
   int? postId;
-    int? isVerified;
+  int? isVerified;
 
   factory ProfileComment.fromJson(Map<String, dynamic> json) => ProfileComment(
         id: json["id"],
@@ -158,7 +170,7 @@ class ProfileComment {
         profilePhoto: json["profile_photo"],
         noOfLikes: json["no_of_likes"],
         postId: json["post_id"],
-           isVerified: json["user_verified"],
+        isVerified: json["user_verified"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -170,7 +182,7 @@ class ProfileComment {
         "profile_photo": profilePhoto,
         "no_of_likes": noOfLikes,
         "post_id": postId,
-           "user_verified": isVerified
+        "user_verified": isVerified
       };
 }
 
@@ -204,7 +216,7 @@ class ProfileUser {
   DateTime? createdAt;
   DateTime? updatedAt;
   String? gender;
-   int? verified;
+  int? verified;
   String? profilephoto;
   int? noOfFollowers;
   int? noOfFollowing;
@@ -227,7 +239,7 @@ class ProfileUser {
             ? null
             : DateTime.parse(json["updated_at"]),
         gender: json["gender"],
-          verified: json["verified"],
+        verified: json["verified"],
         profilephoto: json["profilephoto"],
         noOfFollowers: json["no_of_followers"],
         noOfFollowing: json["no_of_following"],
@@ -245,7 +257,7 @@ class ProfileUser {
         "created_at": createdAt?.toIso8601String(),
         "updated_at": updatedAt?.toIso8601String(),
         "gender": gender,
-         "verified": verified,
+        "verified": verified,
         "profilephoto": profilephoto,
         "no_of_followers": noOfFollowers,
         "no_of_following": noOfFollowing,

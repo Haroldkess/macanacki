@@ -12,9 +12,14 @@ import '../../../model/asset_data.dart';
 import '../../../model/feed_post_model.dart';
 import '../../../services/backoffice/mux_client.dart';
 import '../../../services/controllers/action_controller.dart';
+import '../../../services/controllers/save_media_controller.dart';
 import '../../../services/middleware/action_ware.dart';
+import '../../../services/middleware/gift_ware.dart';
+import '../../../services/middleware/user_profile_ware.dart';
 import '../../constants/colors.dart';
 import '../../operations.dart';
+import '../../screens/home/diamond/diamond_modal/download_modal.dart';
+import '../../screens/home/diamond/diamond_modal/give_modal.dart';
 import '../../uiproviders/screen/comment_provider.dart';
 import '../comment_modal.dart';
 import '../text.dart';
@@ -22,14 +27,15 @@ import '../text.dart';
 class LikeSection extends StatefulWidget {
   final FeedPost data;
   String page;
-  final List<String> media;
-  final List<String> urls;
-  LikeSection(
-      {super.key,
-      required this.data,
-      required this.page,
-      required this.media,
-      required this.urls});
+  // final List<String> media;
+  // final List<String> urls;
+  LikeSection({
+    super.key,
+    required this.data,
+    required this.page,
+    // required this.media,
+    // required this.urls
+  });
 
   @override
   State<LikeSection> createState() => _LikeSectionState();
@@ -40,12 +46,13 @@ class _LikeSectionState extends State<LikeSection> {
   Widget build(BuildContext context) {
     ActionWare stream = context.watch<ActionWare>();
     StoreComment comment = context.watch<StoreComment>();
+    UserProfileWare user = Provider.of<UserProfileWare>(context, listen: false);
     return Padding(
       padding: const EdgeInsets.only(
         right: 10,
       ),
       child: Container(
-        height: 300,
+        height: 250,
         width: 70,
         color: Colors.transparent,
         alignment: Alignment.centerRight,
@@ -91,10 +98,10 @@ class _LikeSectionState extends State<LikeSection> {
               child: Padding(
                 padding: const EdgeInsets.only(right: 3.0),
                 child: myIcon(
-                    "assets/icon/tick_comment.svg",
+                    "assets/icon/coment.svg",
                     backgroundColor,
-                    30,
-                    30,
+                    20,
+                    20,
                     comment.comments
                         .where((element) => element.postId == widget.data.id)
                         .toList()
@@ -102,22 +109,131 @@ class _LikeSectionState extends State<LikeSection> {
               ),
             ),
 
-            InkWell(
-                onTap: () => optionModal(
-                    context, widget.urls, widget.data.user!.id, widget.data.id),
-                child: myIcon(
-                  "assets/icon/more.svg",
-                  backgroundColor,
-                  30,
-                  30,
-                )),
+            widget.data.user!.username! == user.userProfileModel.username
+                ? InkWell(
+                    onTap: () async {
+                      if (widget.data.media == null) return;
+                      if (widget.data.user!.username! ==
+                          user.userProfileModel.username) {
+                        if (widget.data.media!.length > 1) {
+                          await Future.forEach(widget.data.media!,
+                              (element) async {
+                            if (element.isNotEmpty) {
+                              try {
+                                if (element.contains('.mp4')) {
+                                  await SaveMediaController.saveNetworkVideo(
+                                      context, element);
+                                } else {
+                                  await SaveMediaController.saveNetworkImage(
+                                      context, element);
+                                }
+                              } catch (e) {
+                                debugPrint(e.toString());
+                              }
+                            }
+                          });
+                        } else {
+                          if (widget.data.media!.first.contains('.mp4')) {
+                            await SaveMediaController.saveNetworkVideo(
+                                context, widget.data.media!.first);
+                          } else {
+                            await SaveMediaController.saveNetworkImage(
+                                context, widget.data.media!.first);
+                          }
+                        }
+                      } else {
+                        downloadDiamondsModal(
+                          context,
+                          widget.data.id!,
+                        );
+                      }
+
+                      //  GiftWare.instance.giftForDownloadFromApi(
+                      //             widget.data.id!, context);
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 3.0),
+                      child: myIcon(
+                          "assets/icon/d.svg", backgroundColor, 20, 20, null),
+                    ),
+                  )
+                : InkWell(
+                    onTap: () async {
+                      giveDiamondsModal(context, widget.data.user!.username!);
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 3.0),
+                      child:
+                          myIcon("assets/icon/diamond.svg", null, 20, 20, null),
+                    ),
+                  ),
+
+            widget.data.user!.username! == user.userProfileModel.username
+                ? SizedBox.shrink()
+                : InkWell(
+                    onTap: () async {
+                      if (widget.data.media == null) return;
+                      if (widget.data.user!.username! ==
+                          user.userProfileModel.username) {
+                        if (widget.data.media!.length > 1) {
+                          await Future.forEach(widget.data.media!,
+                              (element) async {
+                            if (element.isNotEmpty) {
+                              try {
+                                if (element.contains('.mp4')) {
+                                  await SaveMediaController.saveNetworkVideo(
+                                      context, element);
+                                } else {
+                                  await SaveMediaController.saveNetworkImage(
+                                      context, element);
+                                }
+                              } catch (e) {
+                                debugPrint(e.toString());
+                              }
+                            }
+                          });
+                        } else {
+                          if (widget.data.media!.first.contains('.mp4')) {
+                            await SaveMediaController.saveNetworkVideo(
+                                context, widget.data.media!.first);
+                          } else {
+                            await SaveMediaController.saveNetworkImage(
+                                context, widget.data.media!.first);
+                          }
+                        }
+                      } else {
+                        downloadDiamondsModal(
+                          context,
+                          widget.data.id!,
+                        );
+                      }
+
+                      //  GiftWare.instance.giftForDownloadFromApi(
+                      //             widget.data.id!, context);
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 3.0),
+                      child: myIcon(
+                          "assets/icon/d.svg", backgroundColor, 20, 20, null),
+                    ),
+                  ),
+
+            // InkWell(
+            //     onTap: () => optionModal(
+            //         context, widget.urls, widget.data.user!.id, widget.data.id),
+            //     child: myIcon(
+            //       "assets/icon/more.svg",
+            //       backgroundColor,
+            //       30,
+            //       30,
+            //     )),
           ],
         ),
       ),
     );
   }
 
-  Column myIcon(String svgPath, String hexString, double height, double width,
+  Column myIcon(String svgPath, String? hexString, double height, double width,
       [int? text]) {
     StoreComment comment = context.watch<StoreComment>();
     return Column(
@@ -127,22 +243,24 @@ class _LikeSectionState extends State<LikeSection> {
             svgPath,
             height: height,
             width: width,
-            color: HexColor(hexString),
+            color: hexString == null ? null : HexColor(hexString),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: AppText(
-            text: text == null
-                ? ""
-                : Numeral(text == 0 ? widget.data.comments!.length : text)
-                    .format(),
-            size: 16,
-            align: TextAlign.center,
-            fontWeight: FontWeight.w400,
-            color: HexColor(backgroundColor),
-          ),
-        )
+        text == null
+            ? SizedBox.shrink()
+            : Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: AppText(
+                  text: text == null
+                      ? ""
+                      : Numeral(text == 0 ? widget.data.comments!.length : text)
+                          .format(fractionDigits: 1),
+                  size: 16,
+                  align: TextAlign.center,
+                  fontWeight: FontWeight.w700,
+                  color: HexColor(backgroundColor),
+                ),
+              )
       ],
     );
   }
@@ -166,7 +284,7 @@ class _LikeSectionState extends State<LikeSection> {
           countPostion: CountPostion.bottom,
           crossAxisAlignment: CrossAxisAlignment.end,
           mainAxisAlignment: MainAxisAlignment.end,
-          likeCountPadding: EdgeInsets.only(top: 10, left: 40),
+          likeCountPadding: EdgeInsets.only(top: 5, left: 40),
           onTap: (isLiked) async {
             likeAction(context, isLiked);
             return !isLiked;
@@ -178,23 +296,37 @@ class _LikeSectionState extends State<LikeSection> {
                 text: Numeral(likeCount!).format(),
                 color: Colors.white,
                 align: TextAlign.center,
+                fontWeight: FontWeight.w700,
               ),
             ),
           ),
-          padding: EdgeInsets.only(right: 5),
+          padding: EdgeInsets.only(left: 7),
           likeCount: int.tryParse(Numeral(likes).format()),
           likeBuilder: (bool isLiked) {
             return isLiked
-                ? Icon(
-                    Icons.favorite,
-                    color: HexColor(primaryColor),
-                    size: 35,
+                ? Padding(
+                    padding: EdgeInsets.only(left: 5),
+                    child: Icon(
+                      Icons.favorite,
+                      color: HexColor(primaryColor),
+                      size: 25,
+                    ),
                   )
-                : SvgPicture.asset(
-                    "assets/icon/tick_heart.svg",
-                    color: HexColor(backgroundColor),
-                    height: 45,
-                    width: 45,
+                : Padding(
+                    padding: EdgeInsets.only(left: 7),
+                    child: Container(
+                      height: 10,
+                      width: 10,
+                      child: Padding(
+                        padding: const EdgeInsets.all(2.0),
+                        child: SvgPicture.asset(
+                          "assets/icon/hert.svg",
+                          color: HexColor(backgroundColor),
+                          height: 10,
+                          width: 10,
+                        ),
+                      ),
+                    ),
                   );
           },
         ),

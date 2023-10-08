@@ -44,7 +44,8 @@ class _ResetPassScreenState extends State<ResetPassScreen> {
     var w = (size.width - 4 * 1) / 6;
     RegisterationWare stream = context.watch<RegisterationWare>();
     return Scaffold(
-      backgroundColor: HexColor(primaryColor),
+      //backgroundColor: HexColor(primaryColor),
+      backgroundColor: Colors.black,
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,7 +86,8 @@ class _ResetPassScreenState extends State<ResetPassScreen> {
                           HexagonWidget.pointy(
                             width: w,
                             elevation: 0.0,
-                            color: HexColor('#FC9DBF'),
+                            //  color: HexColor('#FC9DBF'),
+                            color: Colors.grey,
                             padding: 2,
                             cornerRadius: 20.0,
                             child: AspectRatio(
@@ -166,13 +168,14 @@ class _ResetPassScreenState extends State<ResetPassScreen> {
                                 children: [
                                   Container(
                                     decoration: BoxDecoration(
-                                        color: HexColor('#FC9DBF'),
+                                        color: HexColor(backgroundColor),
+                                        // color: HexColor('#FC9DBF'),
                                         shape: BoxShape.rectangle,
                                         borderRadius: const BorderRadius.all(
                                             Radius.circular(8.0))),
                                     child: TextFormField(
                                       controller: otp,
-                                      cursorColor: Colors.white,
+                                      cursorColor: Colors.black,
                                       obscureText: false,
                                       validator: (value) {
                                         return value!.length > 4
@@ -180,16 +183,18 @@ class _ResetPassScreenState extends State<ResetPassScreen> {
                                             : "otp too short";
                                       },
                                       style: GoogleFonts.leagueSpartan(
-                                        color: HexColor('#F5F2F9'),
-                                        fontSize: 14,
+                                        //   color: HexColor('#F5F2F9'),
+                                        fontSize: 16,
+                                        color: Colors.black,
                                       ),
                                       decoration: InputDecoration(
                                         contentPadding: const EdgeInsets.only(
                                             left: 20, top: 17),
                                         hintText: "Enter your otp here",
                                         hintStyle: GoogleFonts.leagueSpartan(
-                                            color: HexColor('#F5F2F9'),
-                                            fontSize: 12),
+                                            //   color: HexColor('#F5F2F9'),
+                                            color: Colors.black,
+                                            fontSize: 16),
                                         border: InputBorder.none,
                                         suffixIcon: Column(
                                           mainAxisAlignment:
@@ -232,13 +237,14 @@ class _ResetPassScreenState extends State<ResetPassScreen> {
                                 children: [
                                   Container(
                                     decoration: BoxDecoration(
-                                        color: HexColor('#FC9DBF'),
+                                        //    color: HexColor('#FC9DBF'),
+                                        color: HexColor(backgroundColor),
                                         shape: BoxShape.rectangle,
                                         borderRadius: const BorderRadius.all(
                                             Radius.circular(8.0))),
                                     child: TextFormField(
                                       controller: password,
-                                      cursorColor: Colors.white,
+                                      cursorColor: Colors.black,
                                       obscureText: hide1 ? true : false,
                                       validator: (value) {
                                         return value!.length > 5
@@ -246,16 +252,18 @@ class _ResetPassScreenState extends State<ResetPassScreen> {
                                             : "Password too short";
                                       },
                                       style: GoogleFonts.leagueSpartan(
-                                        color: HexColor('#F5F2F9'),
-                                        fontSize: 14,
+                                        //  color: HexColor('#F5F2F9'),
+                                        color: Colors.black,
+                                        fontSize: 16,
                                       ),
                                       decoration: InputDecoration(
                                         contentPadding: const EdgeInsets.only(
                                             left: 20, top: 17),
                                         hintText: "Enter your password here",
                                         hintStyle: GoogleFonts.leagueSpartan(
-                                            color: HexColor('#F5F2F9'),
-                                            fontSize: 12),
+                                            //     color: HexColor('#F5F2F9'),
+                                            color: Colors.black,
+                                            fontSize: 16),
                                         border: InputBorder.none,
                                         suffixIcon: Column(
                                           mainAxisAlignment:
@@ -281,8 +289,12 @@ class _ResetPassScreenState extends State<ResetPassScreen> {
                                                         : Icons
                                                             .remove_red_eye_outlined,
                                                     size: 13,
-                                                    color:
-                                                        HexColor('#F5F2F9'))),
+                                                    color: Colors.black,
+                                                    // color:
+                                                    //     HexColor('#F5F2F9')
+                                                        
+                                                        
+                                                        )),
                                           ],
                                         ),
                                         enabledBorder: InputBorder.none,
@@ -313,13 +325,14 @@ class _ResetPassScreenState extends State<ResetPassScreen> {
                                 children: [
                                   Container(
                                     decoration: BoxDecoration(
-                                        color: HexColor('#FC9DBF'),
+                                        //  color: HexColor('#FC9DBF'),
+                                        color: HexColor(backgroundColor),
                                         shape: BoxShape.rectangle,
                                         borderRadius: const BorderRadius.all(
                                             Radius.circular(8.0))),
                                     child: TextFormField(
                                       controller: confirmPassword,
-                                      cursorColor: Colors.white,
+                                      cursorColor: Colors.black,
                                       obscureText: hide2 ? true : false,
                                       validator: (value) {
                                         return value! == password.text
@@ -327,16 +340,18 @@ class _ResetPassScreenState extends State<ResetPassScreen> {
                                             : "Password does not match";
                                       },
                                       style: GoogleFonts.leagueSpartan(
-                                        color: HexColor('#F5F2F9'),
-                                        fontSize: 14,
+                                        //    color: HexColor('#F5F2F9'),
+                                        color: Colors.black,
+                                        fontSize: 16,
                                       ),
                                       decoration: InputDecoration(
                                         contentPadding: const EdgeInsets.only(
                                             left: 20, top: 17),
                                         hintText: "Confirm password",
                                         hintStyle: GoogleFonts.leagueSpartan(
-                                            color: HexColor('#F5F2F9'),
-                                            fontSize: 12),
+                                            //   color: HexColor('#F5F2F9'),
+                                            color: Colors.black,
+                                            fontSize: 16),
                                         border: InputBorder.none,
                                         suffixIcon: Column(
                                           mainAxisAlignment:
@@ -362,8 +377,11 @@ class _ResetPassScreenState extends State<ResetPassScreen> {
                                                         : Icons
                                                             .remove_red_eye_outlined,
                                                     size: 13,
-                                                    color:
-                                                        HexColor('#F5F2F9'))),
+                                                    // color:
+                                                    //     HexColor('#F5F2F9')
+                                                    color: Colors.black
+                                                        
+                                                        )),
                                           ],
                                         ),
                                         enabledBorder: InputBorder.none,
@@ -388,7 +406,7 @@ class _ResetPassScreenState extends State<ResetPassScreen> {
                               text: "Continue",
                               backColor: backgroundColor,
                               curves: buttonCurves * 5,
-                              textColor: primaryColor,
+                              textColor: "#000000",
                               onTap: () {
                                 _submit(context);
                                 // PageRouting.pushToPage(context, const TabScreen());

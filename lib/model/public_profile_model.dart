@@ -47,6 +47,7 @@ class PublicUserPost {
       this.creator,
       this.media,
       this.mux,
+      this.thumbnails,
       this.comments,
       this.noOfLikes,
       this.viewCount,
@@ -63,6 +64,7 @@ class PublicUserPost {
   String? creator;
   List<String>? media;
   List<String>? mux;
+  List<dynamic>? thumbnails;
   List<PublicComment>? comments;
   int? noOfLikes;
   int? viewCount;
@@ -88,6 +90,9 @@ class PublicUserPost {
         mux: json["mux"] == null
             ? []
             : List<String>.from(json["mux"]!.map((x) => x)),
+        thumbnails: json["thumbnails"] == null
+            ? []
+            : List<dynamic>.from(json["thumbnails"]!.map((x) => x)),
         comments: json["comments"] == null
             ? []
             : List<PublicComment>.from(
@@ -110,6 +115,9 @@ class PublicUserPost {
         "creator": creator,
         "media": media == null ? [] : List<dynamic>.from(media!.map((x) => x)),
         "mux": mux == null ? [] : List<dynamic>.from(mux!.map((x) => x)),
+        "thumbnails":  thumbnails == null
+            ? []
+            : List<dynamic>.from(thumbnails!.map((x) => x)),
         "comments": comments == null
             ? []
             : List<dynamic>.from(comments!.map((x) => x.toJson())),
@@ -119,6 +127,7 @@ class PublicUserPost {
         "user": user?.toJson(),
         "promoted": promoted,
       };
+
 }
 
 class PublicUserData {

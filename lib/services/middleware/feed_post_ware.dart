@@ -14,6 +14,7 @@ import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:macanacki/services/backoffice/user_profile_office.dart';
 import 'package:macanacki/services/controllers/feed_post_controller.dart';
+import 'package:macanacki/services/middleware/video/video_ware.dart';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
@@ -227,10 +228,55 @@ class FeedPostWare extends ChangeNotifier {
         //emitter(pageNum.toString());
 
         if (pageNum == 1) {
-          _feedPosts = _feedData.data!;
+          _feedPosts = incomingData.data!;
+          try {
+            var lister = incomingData.data!
+                .where((element) => !element.mux!.first.contains("https"))
+                .toList();
+
+            if (lister.isNotEmpty) {
+              log("loading them");
+              Future.forEach(
+                  lister,
+                  (element) =>
+                      VideoWareHome.instance.getVideoFromApi(element.id!));
+            }
+          } catch (e) {
+            log(e.toString());
+          }
+
+          // for (var element in _feedData.data!) {
+          //   if (!element.media!.first.contains("https")) {
+          //     log("loading them");
+          //     VideoWareHome.instance.getVideoFromApi(element.id!);
+          //   } else {}
+          // }
         } else {
           _moreFeedPosts = incomingData.data!;
           _feedPosts.addAll(_moreFeedPosts);
+
+          final data = _moreFeedPosts;
+          try {
+            var lister = incomingData.data!
+                .where((element) => !element.mux!.first.contains("https"))
+                .toList();
+
+            if (lister.isNotEmpty) {
+              log("loading them");
+              Future.forEach(
+                  lister,
+                  (element) =>
+                      VideoWareHome.instance.getVideoFromApi(element.id!));
+            }
+          } catch (e) {
+            log(e.toString());
+          }
+          // for (var element in incomingData.data!) {
+          //   if (!element.media!.first.contains("https")) {
+          //     log("loading them");
+          //     VideoWareHome.instance.getVideoFromApi(element.id!);
+          //   } else {}
+          // }
           // if (_moreFeedPosts.length > 5) {
           // //  _moreFeedPosts.shuffle();
 
@@ -253,7 +299,7 @@ class FeedPostWare extends ChangeNotifier {
     } catch (e) {
       isSuccessful = false;
       // log("get feed posts data  request failed");
-      // log(e.toString());
+      log(e.toString());
     }
 
     //notifyListeners();
@@ -325,6 +371,10 @@ class FeedPostWare extends ChangeNotifier {
         } else {
           pagingController.appendPage(newItems, _pageNumber);
         }
+
+        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+          VideoWare.instance.getVideoPostFromApi(_profileFeedPosts);
+        });
 
         isSuccessful = true;
       } else {

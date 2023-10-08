@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:macanacki/model/feed_post_model.dart';
@@ -9,6 +10,7 @@ import 'package:macanacki/model/profile_feed_post.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
 import 'package:macanacki/presentation/screens/home/profile/profileextras/grid_view_items.dart';
 import 'package:macanacki/presentation/widgets/debug_emitter.dart';
+import 'package:macanacki/presentation/widgets/text.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
@@ -138,6 +140,22 @@ class _ProfilePostGridState extends State<ProfilePostGrid> {
         firstPageProgressIndicatorBuilder: (context) {
           return const ProfilePostGridLoader();
         },
+        noItemsFoundIndicatorBuilder: (_) => const Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox()
+            // SvgPicture.asset(
+            //   "assets/icon/gallery.svg",
+            //   height: 60,
+            //   width: 60,
+            // ),
+            // SizedBox(
+            //   height: 10,
+            // ),
+            // AppText(text: "The list is currently empty")
+          ],
+        ),
       ),
       //scrollController: _controller,
     );
@@ -197,6 +215,7 @@ class _PublicProfilePostGridState extends State<PublicProfilePostGrid> {
       //physics: const NeverScrollableScrollPhysics(),
       primary: false,
       padding: const EdgeInsets.only(top: 0),
+
       // itemCount: stream.publicUserProfileModel.posts == null
       //     ? 0
       //     : stream.publicUserProfileModel.posts!.length,
@@ -211,6 +230,7 @@ class _PublicProfilePostGridState extends State<PublicProfilePostGrid> {
           return PublicGridViewItems(
             data: post,
             index: index,
+            posts: widget.ware.pubPost,
           );
         },
         newPageProgressIndicatorBuilder: (context) {
@@ -219,6 +239,22 @@ class _PublicProfilePostGridState extends State<PublicProfilePostGrid> {
         firstPageProgressIndicatorBuilder: (context) {
           return const ProfilePostGridLoader();
         },
+        noItemsFoundIndicatorBuilder: (_) => const Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox()
+            // SvgPicture.asset(
+            //   "assets/icon/gallery.svg",
+            //   height: 60,
+            //   width: 60,
+            // ),
+            // SizedBox(
+            //   height: 10,
+            // ),
+            // AppText(text: "The list is currently empty")
+          ],
+        ),
       ),
     );
   }

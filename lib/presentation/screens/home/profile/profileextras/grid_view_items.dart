@@ -137,7 +137,7 @@ class _MyGridViewItemsState extends State<MyGridViewItems> {
   void initState() {
     super.initState();
     Operations.controlSystemColor();
-    getThumbnail();
+    // getThumbnail();
   }
 
 // getgif (){
@@ -198,7 +198,8 @@ class _MyGridViewItemsState extends State<MyGridViewItems> {
             image: DecorationImage(
                 fit: BoxFit.cover,
                 image: widget.data.media!.first.contains(".mp4")
-                    ? FileImage(File(thumbnail!))
+                    ? CachedNetworkImageProvider(
+                        widget.data.thumbnails!.first ?? "")
                     : CachedNetworkImageProvider(widget.data.media!.first)
                         as ImageProvider)),
         child: Stack(
@@ -226,7 +227,8 @@ class _MyGridViewItemsState extends State<MyGridViewItems> {
                     Padding(
                       padding: const EdgeInsets.only(top: 2, left: 3),
                       child: AppText(
-                        text: Numeral(widget.data.viewCount!).format(),
+                        text: Numeral(widget.data.viewCount!)
+                            .format(fractionDigits: 1),
                         fontWeight: FontWeight.w600,
                         size: 12,
                         color: HexColor(backgroundColor),

@@ -99,7 +99,7 @@ class GiftCalls {
     SharedPreferences pref = await SharedPreferences.getInstance();
 
     String? token = pref.getString(tokenKey);
- 
+
     try {
       response = await http.post(
           Uri.parse('$baseUrl/public/api/v2/user/wallet/transfer/diamonds'),
@@ -111,6 +111,8 @@ class GiftCalls {
       emitter(response.statusCode.toString());
 
       emitter(response.body.toString());
+    } on SocketException {
+      response = null;
     } catch (e) {
       response = null;
     }
@@ -132,6 +134,95 @@ class GiftCalls {
       );
 
       log(response.body.toString());
+    } catch (e) {
+      response = null;
+    }
+    return response;
+  }
+
+  static Future<http.Response?> withdraw(data) async {
+    http.Response? response;
+    SharedPreferences pref = await SharedPreferences.getInstance();
+
+    String? token = pref.getString(tokenKey);
+
+    try {
+      response = await http.post(
+          Uri.parse('$baseUrl/public/api/v2/user/wallet/withdrawal/request'),
+          headers: {
+            HttpHeaders.contentTypeHeader: "application/json",
+            HttpHeaders.authorizationHeader: "Bearer $token",
+          },
+          body: jsonEncode(data));
+      emitter(response.statusCode.toString());
+
+      emitter(response.body.toString());
+    } catch (e) {
+      response = null;
+    }
+    return response;
+  }
+
+  static Future<http.Response?> addBank(data) async {
+    http.Response? response;
+    SharedPreferences pref = await SharedPreferences.getInstance();
+
+    String? token = pref.getString(tokenKey);
+
+    try {
+      response = await http.post(
+          Uri.parse('$baseUrl/public/api/v2/user/wallet/add/bank/account'),
+          headers: {
+            HttpHeaders.contentTypeHeader: "application/json",
+            HttpHeaders.authorizationHeader: "Bearer $token",
+          },
+          body: jsonEncode(data));
+      emitter(response.statusCode.toString());
+
+      emitter(response.body.toString());
+    } catch (e) {
+      response = null;
+    }
+    return response;
+  }
+
+  static Future<http.Response?> listBank() async {
+    http.Response? response;
+    SharedPreferences pref = await SharedPreferences.getInstance();
+
+    String? token = pref.getString(tokenKey);
+    try {
+      response = await http.get(
+        Uri.parse('$baseUrl/public/api/v2/user/wallet/bank/list'),
+        headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+          HttpHeaders.authorizationHeader: "Bearer $token",
+        },
+      );
+
+      log(response.body.toString());
+    } catch (e) {
+      response = null;
+    }
+    return response;
+  }
+
+  static Future<http.Response?> downloadPost(int id) async {
+    http.Response? response;
+    SharedPreferences pref = await SharedPreferences.getInstance();
+
+    String? token = pref.getString(tokenKey);
+    try {
+      response = await http.post(
+        Uri.parse('$baseUrl/public/api/v2/user/wallet/download/gift/$id'),
+        headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+          HttpHeaders.authorizationHeader: "Bearer $token",
+        },
+      );
+
+      log(response.body.toString());
+      log(response.statusCode.toString());
     } catch (e) {
       response = null;
     }

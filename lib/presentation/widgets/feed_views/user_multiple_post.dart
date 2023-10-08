@@ -8,12 +8,14 @@ import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 import '../../../model/feed_post_model.dart';
 import '../../../services/controllers/view_controller.dart';
+import '../../allNavigation.dart';
 import '../../constants/string.dart';
 import '../../screens/home/Feed/feed_video_cache.dart';
 import '../../screens/home/Feed/feed_video_holder.dart';
 import '../../uiproviders/screen/tab_provider.dart';
 import '../debug_emitter.dart';
 import '../loader.dart';
+import 'image_holder.dart';
 
 class UserMultiplePost extends StatelessWidget {
   final List<String>? media;
@@ -54,32 +56,41 @@ class UserMultiplePost extends StatelessWidget {
               isHome: isHome,
               thumbLink: thumbLinks![index],
               page: page,
+              images: media!,
               isInView: isInView,
             );
           },
         ),
-        Column(
-          children: [
-            const SizedBox(
-              height: 40,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ...media!.map((e) => Container(
-                      color: e.replaceAll('\\', '/') ==
-                              stream.image.replaceAll('\\', '/')
-                          ? HexColor(primaryColor)
-                          : HexColor("#6A6A6A"),
-                      width: 25,
-                      height: 3,
-                    ))
-              ],
-            ),
-          ],
+        Align(
+          alignment: Alignment.topCenter,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+                const   SizedBox(
+                height:
+                    100,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ...media!.map((e) => Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: CircleAvatar(
+                          backgroundColor: e.replaceAll('\\', '/') ==
+                                  stream.image.replaceAll('\\', '/')
+                              ? HexColor(primaryColor)
+                              : HexColor("#6A6A6A"),
+                          radius: 3,
+                          //   width: 25,
+                          //   height: 3,
+                        ),
+                      ))
+                ],
+              ),
+             
+            ],
+          ),
         )
-   
-   
       ],
     );
   }
@@ -94,6 +105,7 @@ class UserMultipleView extends StatefulWidget {
   final String thumbLink;
   final String page;
   bool? isInView;
+  final List<String> images;
 
   UserMultipleView(
       {super.key,
@@ -104,7 +116,8 @@ class UserMultipleView extends StatefulWidget {
       required this.isHome,
       required this.thumbLink,
       required this.page,
-      required this.isInView});
+      required this.isInView,
+      required this.images});
 
   @override
   State<UserMultipleView> createState() => _UserMultipleViewState();
@@ -117,51 +130,51 @@ class _UserMultipleViewState extends State<UserMultipleView> {
   void initState() {
     super.initState();
     if (!widget.media!.contains("https")) {
-      _controller = VideoPlayerController.network(
-          "$muxStreamBaseUrl/${widget.media}.$videoExtension"
+      // _controller = VideoPlayerController.network(
+      //     "$muxStreamBaseUrl/${widget.media}.$videoExtension"
 
-          //   videoPlayerOptions: VideoPlayerOptions()
-          );
-      thisData = widget.data.copyWith(controller: _controller);
+      //     //   videoPlayerOptions: VideoPlayerOptions()
+      //     );
+      // thisData = widget.data.copyWith(controller: _controller);
 
-      thisData!.controller!.initialize().whenComplete(() {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          TabProvider provide =
-              Provider.of<TabProvider>(context, listen: false);
-          if (provide.index == 0) {
-            //  thisData!.controller!.play();
-            // provide.tap(false);
-          } else {
-            if (provide.index == 4 && provide.isHome) {
-              emitter("heyyyyy");
-              //  thisData!.controller!.play();
-              //   provide.tap(false);
-            } else {
-              //   thisData!.controller!.pause();
-            }
-          }
-        });
-        //_controller!.play();
-        setState(() {});
-      }).then((value) => {
-            thisData!.controller!.addListener(() {
-              if (thisData!.controller!.value.position.inSeconds > 7 &&
-                  thisData!.controller!.value.position.inSeconds < 10) {
-                ViewController.handleView(widget.data.id!);
-                //log("Watched more than 10 seconds");
-              }
-            })
-          });
+      // thisData!.controller!.initialize().whenComplete(() {
+      //   WidgetsBinding.instance.addPostFrameCallback((_) {
+      //     TabProvider provide =
+      //         Provider.of<TabProvider>(context, listen: false);
+      //     if (provide.index == 0) {
+      //       //  thisData!.controller!.play();
+      //       // provide.tap(false);
+      //     } else {
+      //       if (provide.index == 4 && provide.isHome) {
+      //         emitter("heyyyyy");
+      //         //  thisData!.controller!.play();
+      //         //   provide.tap(false);
+      //       } else {
+      //         //   thisData!.controller!.pause();
+      //       }
+      //     }
+      //   });
+      //   //_controller!.play();
+      //   setState(() {});
+      // }).then((value) => {
+      //       thisData!.controller!.addListener(() {
+      //         if (thisData!.controller!.value.position.inSeconds > 7 &&
+      //             thisData!.controller!.value.position.inSeconds < 10) {
+      //           ViewController.handleView(widget.data.id!);
+      //           //log("Watched more than 10 seconds");
+      //         }
+      //       })
+      //     });
 
-      // Use the controller to loop the video.
+      // // Use the controller to loop the video.
 
-      thisData!.controller!.setLooping(true);
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        TabProvider action = Provider.of<TabProvider>(context, listen: false);
+      // thisData!.controller!.setLooping(true);
+      // WidgetsBinding.instance.addPostFrameCallback((_) {
+      //   TabProvider action = Provider.of<TabProvider>(context, listen: false);
 
-        action.addHoldControl(thisData!.controller!);
-        action.tap(true);
-      });
+      //   action.addHoldControl(thisData!.controller!);
+      //   action.tap(true);
+      // });
     } else {
       Future.delayed(const Duration(seconds: 2))
           .whenComplete(() => ViewController.handleView(widget.data.id!));
@@ -194,28 +207,28 @@ class _UserMultipleViewState extends State<UserMultipleView> {
     return !widget.media!.contains("https")
         ? FeedVideoHolderPrivate(
             file: "$muxStreamBaseUrl/${widget.media}.$videoExtension",
-            controller: thisData == null ? null : thisData!.controller!,
+            //  controller: thisData == null ? null : thisData!.controller!,
             shouldPlay: true,
             isHome: widget.isHome,
             thumbLink: widget.thumbLink,
             page: widget.page,
             isInView: widget.isInView,
+            postId: 0,
+            data: widget.data,
           )
         : Stack(
             alignment: Alignment.center,
             children: [
-                Container(
-                  width: width,
-                  height: height,
-                  decoration: BoxDecoration(
-                    color: Colors.black
-                   ),
-                 ),
+              Container(
+                width: width,
+                height: height,
+                decoration: BoxDecoration(color: Colors.black),
+              ),
               // Container(
               //   width: width,
               //   height: height,
               //   decoration: BoxDecoration(
-              
+
               //         image: DecorationImage(
               //       image: CachedNetworkImageProvider(
               //         widget.media!.replaceAll('\\', '/'),
@@ -232,25 +245,61 @@ class _UserMultipleViewState extends State<UserMultipleView> {
               //     ),
               //   )
               // ),
-               CachedNetworkImage(
-                imageUrl:  widget.media!.replaceAll('\\', '/'),
-                imageBuilder: (context, imageProvider) => Container(
-                  width: width,
-                  height: height,
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                    image: imageProvider,
-                    //  fit: BoxFit.fill,
-                  )),
-                ),
-                progressIndicatorBuilder: (context, url, downloadProgress) =>
-                    Center(
-                        child: Loader(
-                  color: HexColor(primaryColor),
-                )),
-                errorWidget: (context, url, error) => Icon(
-                  Icons.error,
-                  color: HexColor(primaryColor),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 0),
+                child: GestureDetector(
+                  onTap: () {
+                    PageRouting.pushToPage(
+                        context,
+                        EnlargeImageHolder(
+                            images: widget.images,
+                            page: "feed",
+                            data: widget.data,
+                            index: widget.index));
+                  },
+                  child: Container(
+                    height: 330,
+                    //  color: Colors.amber,
+                    width: double.infinity,
+                    child: CachedNetworkImage(
+                      imageUrl: widget.media!.replaceAll('\\', '/'),
+                      fit: BoxFit.cover,
+                      imageBuilder: (context, imageProvider) => Container(
+                        width: width,
+                        height: height,
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                          image: imageProvider,
+                          fit: BoxFit.cover,
+                        )),
+                      ),
+                      progressIndicatorBuilder:
+                          (context, url, downloadProgress) => Center(
+                              child: Loader(
+                        color: HexColor(primaryColor),
+                      )),
+                      errorWidget: (context, url, error) => CachedNetworkImage(
+                          imageUrl: widget.media!.replaceAll('\\', '/'),
+                          fit: BoxFit.cover,
+                          imageBuilder: (context, imageProvider) => Container(
+                                width: width,
+                                height: height,
+                                decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                  image: imageProvider,
+                                  fit: BoxFit.cover,
+                                )),
+                              ),
+                          progressIndicatorBuilder:
+                              (context, url, downloadProgress) => Center(
+                                      child: Loader(
+                                    color: HexColor(primaryColor),
+                                  )),
+                          errorWidget: (context, url, error) {
+                            return SizedBox();
+                          }),
+                    ),
+                  ),
                 ),
               ),
               // CachedNetworkImage(

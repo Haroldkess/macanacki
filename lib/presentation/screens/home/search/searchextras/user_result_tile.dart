@@ -120,8 +120,7 @@ class UserResultTile extends StatelessWidget {
                                       // )
                                     ])),
                           ),
-                          data.verified == 1 &&
-                                  data.activePlan != sub
+                          data.verified == 1 && data.activePlan != sub
                               ? SvgPicture.asset("assets/icon/badge.svg",
                                   height: 15, width: 15)
                               : const SizedBox.shrink()
@@ -206,9 +205,26 @@ class UserResultTile extends StatelessWidget {
                           child: Loader(
                     color: HexColor(primaryColor),
                   )),
-                  errorWidget: (context, url, error) => Icon(
-                    Icons.error,
-                    color: HexColor(primaryColor),
+                  errorWidget: (context, url, error) => CachedNetworkImage(
+                    imageUrl: url,
+                    progressIndicatorBuilder:
+                        (context, url, downloadProgress) => Center(
+                            child: Loader(
+                      color: HexColor(primaryColor),
+                    )),
+                    errorWidget: (context, url, error) => CachedNetworkImage(
+                      imageUrl: url,
+                      progressIndicatorBuilder:
+                          (context, url, downloadProgress) => Center(
+                              child: Loader(
+                        color: HexColor(primaryColor),
+                      )),
+                      errorWidget: (context, url, error) => Icon(
+                        Icons.person_2_outlined,
+                        color: HexColor(primaryColor),
+                        //size: 20,
+                      ),
+                    ),
                   ),
                 ),
               )),

@@ -33,7 +33,8 @@ class _EmailOtpState extends State<EmailOtp> {
     var width = MediaQuery.of(context).size.width;
     OtpWare stream = context.watch<OtpWare>();
     return Scaffold(
-      backgroundColor: HexColor(primaryColor),
+      //  backgroundColor: HexColor(primaryColor),
+      backgroundColor: Colors.black,
       body: SizedBox(
         height: height,
         child: SingleChildScrollView(
@@ -69,7 +70,8 @@ class _EmailOtpState extends State<EmailOtp> {
                           children: [
                             CircleAvatar(
                               radius: 40,
-                              backgroundColor: HexColor('#FC9DBF'),
+                              backgroundColor: Colors.grey,
+                              // backgroundColor: HexColor('#FC9DBF'),
                               child: SvgPicture.asset("assets/icon/email.svg"),
                             )
                           ],
@@ -139,7 +141,7 @@ class _EmailOtpState extends State<EmailOtp> {
                                 text: "Continue",
                                 backColor: backgroundColor,
                                 curves: buttonCurves * 5,
-                                textColor: primaryColor,
+                                textColor: "#000000",
                                 onTap: () {
                                   _Submit(context);
                                   // PageRouting.pushToPage(
@@ -155,7 +157,8 @@ class _EmailOtpState extends State<EmailOtp> {
                       children: [
                         AppText(
                           text: "Did not recieve otp?",
-                          color: HexColor("#FF94B7"),
+                          // color: HexColor("#FF94B7"),
+                          color: Colors.white,
                         ),
                         InkWell(
                           onTap: () => resend(context, widget.email),
@@ -176,9 +179,9 @@ class _EmailOtpState extends State<EmailOtp> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             AppText(
-                              text: "Not You? ",
-                              color: HexColor("#FF94B7"),
-                            ),
+                                text: "Not You? ",
+                                //   color: HexColor("#FF94B7"),
+                                color: Colors.white),
                             InkWell(
                               onTap: () => PageRouting.removeAllToPage(
                                   context, const LoginScreen()),

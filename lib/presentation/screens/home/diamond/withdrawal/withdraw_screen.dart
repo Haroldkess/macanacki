@@ -1,73 +1,123 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:macanacki/presentation/widgets/form.dart';
+import 'package:macanacki/presentation/widgets/loader.dart';
+import 'package:macanacki/presentation/widgets/snack_msg.dart';
 
+import '../../../../../services/middleware/gift_ware.dart';
 import '../../../../constants/colors.dart';
+import '../../../../operations.dart';
 import '../../../../widgets/text.dart';
+import '../diamond_modal/bank_list_modal.dart';
 
 class WithdrawDiamonds extends StatelessWidget {
   const WithdrawDiamonds({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: HexColor("#F5F2F9"),
-      appBar: AppBar(
-        backgroundColor: HexColor(backgroundColor),
-        elevation: 0,
-        leading: BackButton(
-          color: Colors.black,
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: HexColor("#F5F2F9"),
+        appBar: AppBar(
+          backgroundColor: HexColor(backgroundColor),
+          elevation: 0,
+          leading: BackButton(
+            color: Colors.black,
+          ),
+          centerTitle: true,
+          title: AppText(
+            text: "Withdraw Diamond",
+            color: Colors.black,
+            size: 24,
+          ),
         ),
-        centerTitle: true,
-        title: AppText(
-          text: "Withdraw Diamond",
-          color: Colors.black,
-          size: 24,
-        ),
-      ),
-      body: Column(
-        children: [
-          SizedBox(
-            height: 20,
-          ),
-          BalanceCard(),
-          SizedBox(
-            height: 20,
-          ),
-          WithdrawalInput(),
-          SizedBox(
-            height: 20,
-          ),
-          Row(
+        body: SingleChildScrollView(
+          child: Column(
             children: [
               SizedBox(
-                width: 20,
+                height: 20,
               ),
-              Column(
+              BalanceCard(),
+              SizedBox(
+                height: 20,
+              ),
+              WithdrawalInput(),
+              SizedBox(
+                height: 20,
+              ),
+              Row(
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle, color: HexColor("#C0C0C0")),
-                    child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Icon(
-                          Icons.add,
-                          color: HexColor(primaryColor),
-                        )),
-                  ),
                   SizedBox(
-                    height: 5,
+                    width: 20,
                   ),
-                  AppText(
-                    text: "Add Bank",
-                    size: 14,
-                    fontWeight: FontWeight.w400,
-                  ),
+                  ObxValue((addedBank) {
+                    return addedBank.value
+                        ? Visibility(
+                            visible: addedBank.value,
+                            child: GestureDetector(
+                              onTap: () {
+                                myBankModal(context);
+                              },
+                              child: Column(
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: HexColor("#C0C0C0")),
+                                    child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Icon(
+                                          Icons.credit_card_rounded,
+                                          color: HexColor(primaryColor),
+                                        )),
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  AppText(
+                                    text: "My Bank",
+                                    size: 14,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ],
+                              ),
+                            ))
+                        : GestureDetector(
+                            onTap: () {
+                              bankModal(context);
+                            },
+                            child: Column(
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: HexColor("#C0C0C0")),
+                                  child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Icon(
+                                        Icons.add,
+                                        color: HexColor(primaryColor),
+                                      )),
+                                ),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                AppText(
+                                  text: "Add Bank",
+                                  size: 14,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ],
+                            ),
+                          );
+                  }, GiftWare.instance.localBankExist),
                 ],
-              ),
+              )
             ],
-          )
-        ],
+          ),
+        ),
       ),
     );
   }
@@ -103,16 +153,44 @@ class BalanceCard extends StatelessWidget {
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    AppText(
-                      text: "\$ 0.00",
-                      size: 24,
-                      fontWeight: FontWeight.w400,
-                    ),
-                    AppText(
-                      text: "Diamond Received: 50,000",
-                      size: 13,
-                      fontWeight: FontWeight.w400,
-                    ),
+                    ObxValue((gift) {
+                      return Container(
+                        constraints: BoxConstraints(maxWidth: 100),
+                        child: AppText(
+                          text:
+                              "\$${Operations.convertToCurrency(((num.tryParse(gift.value.data.toString())! / 50) / 2).toString())}",
+                          size: 24,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      );
+                    }, GiftWare.instance.gift),
+                    ObxValue((balance) {
+                      return Row(
+                        children: [
+                          AppText(
+                            text: "Diamond Received: ",
+                            size: 13,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          SvgPicture.asset(
+                            "assets/icon/diamond.svg",
+                            height: 10,
+                            width: 10,
+                          ),
+                          SizedBox(
+                            width: 3,
+                          ),
+                          Container(
+                            constraints: BoxConstraints(maxWidth: 200),
+                            child: AppText(
+                              text: "${balance.value.data}",
+                              size: 13,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ],
+                      );
+                    }, GiftWare.instance.gift),
                   ],
                 ),
               ],
@@ -124,9 +202,15 @@ class BalanceCard extends StatelessWidget {
   }
 }
 
-class WithdrawalInput extends StatelessWidget {
+class WithdrawalInput extends StatefulWidget {
   const WithdrawalInput({super.key});
 
+  @override
+  State<WithdrawalInput> createState() => _WithdrawalInputState();
+}
+
+class _WithdrawalInputState extends State<WithdrawalInput> {
+  TextEditingController amount = TextEditingController();
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -151,6 +235,8 @@ class WithdrawalInput extends StatelessWidget {
                   backColor: HexColor(backgroundColor),
                   hint: "Enter Amount",
                   hintColor: HexColor("#C0C0C0"),
+                  controller: amount,
+                  textInputType: TextInputType.number,
                 ),
                 SizedBox(
                   height: 10,
@@ -164,7 +250,7 @@ class WithdrawalInput extends StatelessWidget {
                       fontWeight: FontWeight.w400,
                     ),
                     AppText(
-                      text: "\$500",
+                      text: "\$100",
                       size: 16,
                       fontWeight: FontWeight.w500,
                     ),
@@ -173,32 +259,71 @@ class WithdrawalInput extends StatelessWidget {
                 SizedBox(
                   height: 20,
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    InkWell(
-                      onTap: () {},
-                      child: Container(
-                        decoration: const BoxDecoration(
-                            shape: BoxShape.circle, color: Colors.white),
-                        child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Icon(
-                              Icons.remove,
-                              color: HexColor(primaryColor),
-                            )),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    AppText(
-                      text: "withdraw",
-                      size: 16,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ],
-                ),
+                ObxValue((loadWithdraw) {
+                  return loadWithdraw.value
+                      ? Visibility(
+                          visible: loadWithdraw.value,
+                          child: Center(
+                            child: Loader(color: HexColor(primaryColor)),
+                          ))
+                      : Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            ObxValue((balance) {
+                              return InkWell(
+                                onTap: () async {
+                                  if (amount.text.isEmpty) {
+                                    showToast2(context, "Input amount",
+                                        isError: true);
+
+                                    return;
+                                  }
+                                  if (num.tryParse(
+                                          balance.value.data.toString())! <=
+                                      1) {
+                                    showToast2(context,
+                                        "You can only withdraw this amount",
+                                        isError: true);
+
+                                    return;
+                                  }
+
+                                  GiftWare.instance
+                                      .doWithdrawalFromApi(null, amount.text);
+                                },
+                                child: Column(
+                                  children: [
+                                    Visibility(
+                                        visible: false,
+                                        child: AppText(
+                                            text:
+                                                balance.value.data.toString())),
+                                    Container(
+                                      decoration: const BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.white),
+                                      child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Icon(
+                                            Icons.remove,
+                                            color: HexColor(primaryColor),
+                                          )),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }, GiftWare.instance.gift),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            AppText(
+                              text: "withdraw",
+                              size: 16,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ],
+                        );
+                }, GiftWare.instance.loadWithdrawal),
               ],
             ),
           ),

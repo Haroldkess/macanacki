@@ -36,9 +36,29 @@ class HexagonAvatar extends StatelessWidget {
                       height: double.infinity,
                       width: double.infinity,
                     )),
-            errorWidget: (context, url, error) => Icon(
-              Icons.error,
-              color: HexColor(primaryColor),
+            errorWidget: (context, url, error) => CachedNetworkImage(
+              imageUrl: url,
+              fit: BoxFit.cover,
+              progressIndicatorBuilder: (context, url, downloadProgress) =>
+                  Shimmer.fromColors(
+                      baseColor: Colors.grey,
+                      highlightColor: Colors.pink,
+                      child: Container(
+                        height: double.infinity,
+                        width: double.infinity,
+                      )),
+              errorWidget: (context, url, error) => CachedNetworkImage(
+                  imageUrl: url,
+                  fit: BoxFit.cover,
+                  progressIndicatorBuilder: (context, url, downloadProgress) =>
+                      Shimmer.fromColors(
+                          baseColor: Colors.grey,
+                          highlightColor: Colors.pink,
+                          child: Container(
+                            height: double.infinity,
+                            width: double.infinity,
+                          )),
+                  errorWidget: (context, url, error) => SizedBox()),
             ),
           ),
         ),
@@ -47,8 +67,62 @@ class HexagonAvatar extends StatelessWidget {
   }
 }
 
+class DpAvatar extends StatelessWidget {
+  final double w;
+  final String url;
+  VoidCallback? onTap;
+  DpAvatar({super.key, required this.url, required this.w, this.onTap});
 
-            //            Center(
-            //         child: Loader(
-            //   color: HexColor(primaryColor).withOpacity(.7),
-            // )),
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        height: 30,
+        width: 30,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+        ),
+        child: ClipOval(
+          child: CachedNetworkImage(
+            imageUrl: url,
+            fit: BoxFit.cover,
+            progressIndicatorBuilder: (context, url, downloadProgress) =>
+                Shimmer.fromColors(
+                    baseColor: Colors.grey,
+                    highlightColor: HexColor(primaryColor).withOpacity(.7),
+                    child: CircleAvatar(
+                      radius: 10,
+                      backgroundColor: Colors.white,
+                    )),
+            errorWidget: (context, url, error) => CachedNetworkImage(
+              imageUrl: url,
+              fit: BoxFit.cover,
+              progressIndicatorBuilder: (context, url, downloadProgress) =>
+                  Shimmer.fromColors(
+                      baseColor: Colors.grey,
+                      highlightColor: HexColor(primaryColor).withOpacity(.7),
+                      child: CircleAvatar(
+                        radius: 10,
+                        backgroundColor: Colors.white,
+                      )),
+              errorWidget: (context, url, error) => CachedNetworkImage(
+                  imageUrl: url,
+                  fit: BoxFit.cover,
+                  progressIndicatorBuilder: (context, url, downloadProgress) =>
+                      Shimmer.fromColors(
+                          baseColor: Colors.grey,
+                          highlightColor:
+                              HexColor(primaryColor).withOpacity(.7),
+                          child: CircleAvatar(
+                            radius: 10,
+                            backgroundColor: Colors.white,
+                          )),
+                  errorWidget: (context, url, error) => SizedBox()),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

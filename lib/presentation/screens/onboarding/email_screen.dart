@@ -35,7 +35,8 @@ class _EmailScreenState extends State<EmailScreen> {
     RegisterationWare stream = context.watch<RegisterationWare>();
 
     return Scaffold(
-      backgroundColor: HexColor(primaryColor),
+      backgroundColor: Colors.black,
+      //   backgroundColor: HexColor(primaryColor),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -97,7 +98,8 @@ class _EmailScreenState extends State<EmailScreen> {
                   ),
                   Container(
                     decoration: BoxDecoration(
-                        color: HexColor('#FC9DBF'),
+                        color: Colors.white,
+                        //   color: HexColor('#FC9DBF'),
                         shape: BoxShape.rectangle,
                         borderRadius:
                             const BorderRadius.all(Radius.circular(8.0))),
@@ -105,21 +107,24 @@ class _EmailScreenState extends State<EmailScreen> {
                       key: _formKey,
                       child: TextFormField(
                         controller: email,
-                        cursorColor: Colors.white,
+                        cursorColor: Colors.black,
                         validator: (value) {
                           return EmailValidator.validate(value!)
                               ? null
                               : "Enter a valid email";
                         },
                         style: GoogleFonts.leagueSpartan(
-                          color: HexColor('#F5F2F9'),
-                          fontSize: 14,
+                          color: Colors.black,
+                          //  color: HexColor('#F5F2F9'),
+                          fontSize: 16,
                         ),
                         decoration: InputDecoration(
                           contentPadding: const EdgeInsets.only(left: 20),
                           hintText: "Enter your email here",
                           hintStyle: GoogleFonts.leagueSpartan(
-                              color: HexColor('#F5F2F9'), fontSize: 12),
+                              //  color: HexColor('#F5F2F9'),
+                              color: Colors.black,
+                              fontSize: 16),
                           border: InputBorder.none,
                           enabledBorder: InputBorder.none,
                           focusedBorder: InputBorder.none,
@@ -140,7 +145,7 @@ class _EmailScreenState extends State<EmailScreen> {
                           text: "Continue",
                           backColor: backgroundColor,
                           curves: buttonCurves * 5,
-                          textColor: primaryColor,
+                          textColor: "#000000",
                           onTap: () async {
                             await _submit(context);
                             //  PageRouting.pushToPage(context, const EmailOtp());
@@ -160,7 +165,8 @@ class _EmailScreenState extends State<EmailScreen> {
                     children: [
                       AppText(
                         text: "Already have an account? ",
-                        color: HexColor("#FF94B7"),
+                        // color: HexColor("#FF94B7"),
+                        color: Colors.white,
                       ),
                       InkWell(
                         onTap: () async {

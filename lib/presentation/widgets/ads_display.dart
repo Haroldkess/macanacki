@@ -34,14 +34,19 @@ class AdsDisplay extends StatelessWidget {
                     topRight: Radius.circular(8),
                     bottomRight: Radius.circular(8),
                   )),
-        child: Center(
-          child: AppText(
-            text: title!,
-            color: HexColor(backgroundColor),
-            size: 10,
-            fontWeight: FontWeight.w600,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              AppText(
+                text: title!,
+                color: HexColor(backgroundColor),
+                size: 10,
+                fontWeight: FontWeight.w600,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
           ),
         ),
       ),

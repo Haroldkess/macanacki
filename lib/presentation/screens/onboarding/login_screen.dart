@@ -43,7 +43,8 @@ class _LoginScreenState extends State<LoginScreen> {
     var w = (size.width - 4 * 1) / 6;
     LoginWare stream = context.watch<LoginWare>();
     return Scaffold(
-      backgroundColor: HexColor(primaryColor),
+      backgroundColor: Colors.black,
+      // backgroundColor: HexColor(primaryColor),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,7 +85,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       HexagonWidget.pointy(
                         width: w,
                         elevation: 0.0,
-                        color: HexColor('#FC9DBF'),
+                        //  color: HexColor('#FC9DBF'),
+                        color: Colors.grey,
                         padding: 2,
                         cornerRadius: 20.0,
                         child: AspectRatio(
@@ -180,28 +182,32 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             Container(
                               decoration: BoxDecoration(
-                                  color: HexColor('#FC9DBF'),
+                                  // color: HexColor('#FC9DBF'),
+                                  color: Colors.white,
                                   shape: BoxShape.rectangle,
                                   borderRadius: const BorderRadius.all(
                                       Radius.circular(8.0))),
                               child: TextFormField(
                                 controller: email,
-                                cursorColor: Colors.white,
+                                cursorColor: Colors.black,
                                 validator: (value) {
                                   return EmailValidator.validate(value!)
                                       ? null
                                       : "Enter a valid email";
                                 },
                                 style: GoogleFonts.leagueSpartan(
-                                  color: HexColor('#F5F2F9'),
-                                  fontSize: 14,
+                                  //   color: HexColor('#F5F2F9'),
+                                  color: Colors.black,
+                                  fontSize: 16,
                                 ),
                                 decoration: InputDecoration(
                                   contentPadding:
                                       const EdgeInsets.only(left: 20),
                                   hintText: "Enter your email here",
                                   hintStyle: GoogleFonts.leagueSpartan(
-                                      color: HexColor('#F5F2F9'), fontSize: 12),
+                                      // color: HexColor('#F5F2F9'),
+                                      color: Colors.black,
+                                      fontSize: 16),
                                   border: InputBorder.none,
                                   enabledBorder: InputBorder.none,
                                   focusedBorder: InputBorder.none,
@@ -229,13 +235,14 @@ class _LoginScreenState extends State<LoginScreen> {
                               children: [
                                 Container(
                                   decoration: BoxDecoration(
-                                      color: HexColor('#FC9DBF'),
+                                      //    color: HexColor('#FC9DBF'),
+                                      color: Colors.white,
                                       shape: BoxShape.rectangle,
                                       borderRadius: const BorderRadius.all(
                                           Radius.circular(8.0))),
                                   child: TextFormField(
                                     controller: password,
-                                    cursorColor: Colors.white,
+                                    cursorColor: Colors.black,
                                     obscureText: hide1 ? true : false,
                                     validator: (value) {
                                       return value!.length > 5
@@ -243,16 +250,18 @@ class _LoginScreenState extends State<LoginScreen> {
                                           : "Password too short";
                                     },
                                     style: GoogleFonts.leagueSpartan(
-                                      color: HexColor('#F5F2F9'),
-                                      fontSize: 14,
+                                      //    color: HexColor('#F5F2F9'),
+                                      color: Colors.black,
+                                      fontSize: 16,
                                     ),
                                     decoration: InputDecoration(
                                       contentPadding: const EdgeInsets.only(
                                           left: 20, top: 17),
                                       hintText: "Enter your password here",
                                       hintStyle: GoogleFonts.leagueSpartan(
-                                          color: HexColor('#F5F2F9'),
-                                          fontSize: 12),
+                                          // color: HexColor('#F5F2F9'),
+                                          color: Colors.black,
+                                          fontSize: 16),
                                       border: InputBorder.none,
                                       suffixIcon: Column(
                                         mainAxisAlignment:
@@ -272,13 +281,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                                 }
                                               },
                                               icon: Icon(
-                                                  hide1 == false
-                                                      ? Icons
-                                                          .hide_source_outlined
-                                                      : Icons
-                                                          .remove_red_eye_outlined,
-                                                  size: 13,
-                                                  color: HexColor('#F5F2F9'))),
+                                                hide1 == false
+                                                    ? Icons.hide_source_outlined
+                                                    : Icons
+                                                        .remove_red_eye_outlined,
+                                                size: 13,
+                                                //  color: HexColor('#F5F2F9')
+                                                color: Colors.black,
+                                              )),
                                         ],
                                       ),
                                       enabledBorder: InputBorder.none,
@@ -338,7 +348,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               text: "Continue",
                               backColor: backgroundColor,
                               curves: buttonCurves * 5,
-                              textColor: primaryColor,
+                              textColor: "#000000",
                               onTap: () async {
                                 _submit(context);
                                 // PageRouting.pushToPage(
@@ -356,7 +366,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         children: [
                           AppText(
                             text: "Don't have an account? ",
-                            color: HexColor("#FF94B7"),
+                            //color: HexColor("#FF94B7"),
+                            color: Colors.white,
                           ),
                           InkWell(
                             onTap: () {

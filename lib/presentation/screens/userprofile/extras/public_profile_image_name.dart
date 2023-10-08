@@ -4,12 +4,15 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexagon/hexagon.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:macanacki/presentation/allNavigation.dart';
 import 'package:macanacki/presentation/constants/params.dart';
 import 'package:macanacki/presentation/widgets/text.dart';
 import 'package:macanacki/services/middleware/user_profile_ware.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../../constants/colors.dart';
+import '../../../widgets/feed_views/image_holder.dart';
 import '../../../widgets/loader.dart';
 
 class PublicProfileImageAndName extends StatelessWidget {
@@ -17,60 +20,94 @@ class PublicProfileImageAndName extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var height = MediaQuery.of(context).size.height;
-    var width = MediaQuery.of(context).size.width;
-    var size = MediaQuery.of(context).size;
-    var padding = 8.0;
     var w = 100.0;
     UserProfileWare stream = context.watch<UserProfileWare>();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Stack(
-          children: [
-            HexagonWidget.pointy(
-              width: w,
-              elevation: 10.0,
-              color: Colors.white,
-              cornerRadius: 20.0,
-              child: AspectRatio(
-                aspectRatio: HexagonType.POINTY.ratio,
-                // child: Image.asset(
-                //   'assets/tram.jpg',
-                //   fit: BoxFit.fitWidth,
-                // ),
-              ),
-            ),
-            HexagonWidget.pointy(
-              width: w,
-              elevation: 10.0,
-              color: HexColor("#5F5F5F"),
-              padding: 10,
-              cornerRadius: 20.0,
-              child: AspectRatio(
+        GestureDetector(
+          onTap: () {
+            stream.publicUserProfileModel.profilephoto == null
+                ? null
+                : PageRouting.pushToPage(
+                    context,
+                    ImageHolder(
+                      images: [
+                        stream.publicUserProfileModel.profilephoto!.isEmpty
+                            ? ""
+                            : stream.publicUserProfileModel.profilephoto!
+                      ],
+                    ));
+          },
+          child: Stack(
+            children: [
+              HexagonWidget.pointy(
+                width: w,
+                elevation: 10.0,
+                color: Colors.white,
+                cornerRadius: 20.0,
+                child: AspectRatio(
                   aspectRatio: HexagonType.POINTY.ratio,
-                  child: Center(
+                  // child: Image.asset(
+                  //   'assets/tram.jpg',
+                  //   fit: BoxFit.fitWidth,
+                  // ),
+                ),
+              ),
+              HexagonWidget.pointy(
+                width: w,
+                elevation: 10.0,
+                color: HexColor("#5F5F5F"),
+                padding: 10,
+                cornerRadius: 20.0,
+                child: AspectRatio(
+                    aspectRatio: HexagonType.POINTY.ratio,
                     child: CachedNetworkImage(
                       imageUrl:
                           stream.publicUserProfileModel.profilephoto ?? "",
+                      fit: BoxFit.cover,
                       progressIndicatorBuilder:
-                          (context, url, downloadProgress) => Center(
-                              child: Loader(
-                        color: HexColor(primaryColor),
-                      )),
-                      errorWidget: (context, url, error) => Icon(
-                        Icons.error,
-                        color: HexColor(primaryColor),
+                          (context, url, downloadProgress) =>
+                              Shimmer.fromColors(
+                                  baseColor: Colors.grey,
+                                  highlightColor:
+                                      HexColor(primaryColor).withOpacity(.7),
+                                  child: CircleAvatar(
+                                    radius: 15,
+                                    backgroundColor: Colors.white,
+                                  )),
+                      errorWidget: (context, url, error) => CachedNetworkImage(
+                        imageUrl:
+                            stream.publicUserProfileModel.profilephoto ?? "",
+                        fit: BoxFit.cover,
+                        progressIndicatorBuilder:
+                            (context, url, downloadProgress) =>
+                                Shimmer.fromColors(
+                                    baseColor: Colors.grey,
+                                    highlightColor:
+                                        HexColor(primaryColor).withOpacity(.7),
+                                    child: CircleAvatar(
+                                      radius: 15,
+                                      backgroundColor: Colors.white,
+                                    )),
+                        errorWidget: (context, url, error) =>
+                            CachedNetworkImage(
+                                imageUrl: stream
+                                        .publicUserProfileModel.profilephoto ??
+                                    "",
+                                fit: BoxFit.cover,
+                                progressIndicatorBuilder:
+                                    (context, url, downloadProgress) => Center(
+                                            child: Loader(
+                                          color: HexColor(primaryColor),
+                                        )),
+                                errorWidget: (context, url, error) =>
+                                    SizedBox()),
                       ),
-                    ),
-
-                    //  Image.network(
-                    //     stream.publicUserProfileModel.profilephoto == null
-                    //         ? url
-                    //         : stream.publicUserProfileModel.profilephoto!)
-                  )),
-            ),
-          ],
+                    )),
+              ),
+            ],
+          ),
         ),
         const SizedBox(
           height: 10.0,
@@ -107,8 +144,7 @@ class PublicProfileImageAndName extends StatelessWidget {
                       ),
                     ),
                     stream.publicUserProfileModel.verified == 1 &&
-                            stream.publicUserProfileModel.activePlan !=
-                                sub
+                            stream.publicUserProfileModel.activePlan != sub
                         ? SvgPicture.asset(
                             "assets/icon/badge.svg",
                             height: 15,

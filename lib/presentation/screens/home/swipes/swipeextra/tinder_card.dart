@@ -318,51 +318,58 @@ class _TinderCardState extends State<TinderCard> {
                                           widget.users[indexer].username!));
                             }
                           },
-                          child: Row(
-                            children: [
-                              Container(
-                                constraints: BoxConstraints(maxWidth: 250),
-                                child: RichText(
-                                    maxLines: 1,
-                                    overflow: TextOverflow.visible,
-                                    text: TextSpan(
-                                        text: widget.users[indexer].username ??
-                                            "",
-                                        style: GoogleFonts.leagueSpartan(
-                                          color: HexColor(darkColor),
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w700,
-                                        ),
-                                        children: [
-                                          TextSpan(
-                                            text: "",
-                                            style: GoogleFonts.leagueSpartan(
-                                                color: HexColor("#C0C0C0"),
-                                                fontSize: 20),
-                                          )
-                                        ])),
-                              ),
+                          child: Container(
+                            height: 20,
+                            constraints:
+                                BoxConstraints(maxWidth: 250, minHeight: 10),
+                            //     color: Colors.amber,
+                            child: Row(
+                              children: [
+                                Container(
+                                  constraints: BoxConstraints(maxWidth: 250),
+                                  child: RichText(
+                                      maxLines: 1,
+                                      overflow: TextOverflow.visible,
+                                      text: TextSpan(
+                                          text:
+                                              widget.users[indexer].username ??
+                                                  "",
+                                          style: GoogleFonts.leagueSpartan(
+                                            color: HexColor(darkColor),
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                          children: [
+                                            TextSpan(
+                                              text: "",
+                                              style: GoogleFonts.leagueSpartan(
+                                                  color: HexColor("#C0C0C0"),
+                                                  fontSize: 20),
+                                            )
+                                          ])),
+                                ),
 
-                              widget.users[indexer].verified == 1 &&
-                                      widget.users[indexer].activePlan != sub
-                                  ? SvgPicture.asset(
-                                      "assets/icon/badge.svg",
-                                      height: 15,
-                                      width: 15,
-                                    )
-                                  : const SizedBox.shrink()
-                              // Image.asset(
-                              //   "assets/pic/verified.png",
-                              //   height: 27,
-                              //   width: 27,
-                              // )
-                            ],
+                                widget.users[indexer].verified == 1 &&
+                                        widget.users[indexer].activePlan != sub
+                                    ? SvgPicture.asset(
+                                        "assets/icon/badge.svg",
+                                        height: 15,
+                                        width: 15,
+                                      )
+                                    : const SizedBox.shrink()
+                                // Image.asset(
+                                //   "assets/pic/verified.png",
+                                //   height: 27,
+                                //   width: 27,
+                                // )
+                              ],
+                            ),
                           ),
                         ),
                       ],
                     ),
                     const SizedBox(
-                      height: 10,
+                      height: 5,
                     ),
                     Column(
                       children: [
@@ -608,10 +615,10 @@ class _TinderCardState extends State<TinderCard> {
                                 buyDiamondsModal(
                                     context, GiftWare.instance.rate.value.data);
                               } else {
-                                giveDiamondsModal(context,username );
+                                giveDiamondsModal(context, username);
                               }
                             },
-                            color: diamondColor,
+                            color: null,
                           ),
                         ),
                       )),

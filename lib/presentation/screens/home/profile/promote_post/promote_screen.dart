@@ -28,7 +28,8 @@ import '../profileextras/profile_action_buttons.dart';
 
 class PromoteScreen extends StatefulWidget {
   final String? postId;
-  const PromoteScreen({super.key, this.postId});
+  final ProfileFeedDatum? thisPost;
+  const PromoteScreen({super.key, this.postId, this.thisPost});
   @override
   State<PromoteScreen> createState() => _PromoteScreenState();
 }
@@ -42,9 +43,16 @@ class _PromoteScreenState extends State<PromoteScreen> {
   @override
   void initState() {
     super.initState();
+    if (widget.postId != null) {
+      if (widget.thisPost != null) {
+        setState(() {
+          post = widget.thisPost;
+        });
+      }
+    }
     // plugin.initialize(
     //     publicKey: publicKey);
-         //dotenv.get('PUBLIC_KEY').toString()
+    //dotenv.get('PUBLIC_KEY').toString()
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       AdsController.retrievAdsController(context);
     });
@@ -59,270 +67,272 @@ class _PromoteScreenState extends State<PromoteScreen> {
     var width = MediaQuery.of(context).size.width;
     AdsWare stream = context.watch<AdsWare>();
     FeedPostWare feed = context.watch<FeedPostWare>();
-    return Scaffold(
-      backgroundColor: HexColor("#F5F2F9"),
-      appBar: AppBar(
-        title: AppText(
-          text: 'Preview',
-          fontWeight: FontWeight.w500,
-          size: 22,
-          color: Colors.black,
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: HexColor("#F5F2F9"),
+        appBar: AppBar(
+          title: AppText(
+            text: 'Preview',
+            fontWeight: FontWeight.w500,
+            size: 22,
+            color: Colors.black,
+          ),
+          centerTitle: true,
+          backgroundColor: HexColor(backgroundColor),
+          elevation: 0,
+          leading: BackButton(color: Colors.black),
         ),
-        centerTitle: true,
-        backgroundColor: HexColor(backgroundColor),
-        elevation: 0,
-        leading: BackButton(color: Colors.black),
-      ),
-      body: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10),
-            child: Column(
-              children: [
-                const SizedBox(
-                  height: 10,
-                ),
-                AdsAction(
-                    title: "select country ",
-                    subTitle: choosenCountry.isEmpty
-                        ? "Pick a country"
-                        : choosenCountry,
-                    name: "Audience",
-                    SubName: "Choose your preferred country",
-                    action: () async {
-                      showCountryPicker(
-                        context: context,
-                        //Optional.  Can be used to exclude(remove) one ore more country from the countries list (optional).
-                        exclude: <String>['KN', 'MF'],
-                        favorite: <String>['NG'],
-                        //Optional. Shows phone code before the country name.
-                        showPhoneCode: false,
-                        onSelect: (Country country) {
-                          print('Select country: ${country.name}');
-                          setState(() {
-                            choosenCountry = country.name;
-                          });
-                        },
-                        // Optional. Sets the theme for the country list picker.
-                        countryListTheme: CountryListThemeData(
-                          // Optional. Sets the border radius for the bottomsheet.
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(40.0),
-                            topRight: Radius.circular(40.0),
-                          ),
-                          // Optional. Styles the search field.
-                          inputDecoration: InputDecoration(
-                            labelText: 'Search',
-                            hintText: 'Start typing to search',
-                            prefixIcon: const Icon(Icons.search),
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: const Color(0xFF8C98A8).withOpacity(0.2),
+        body: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              child: Column(
+                children: [
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  AdsAction(
+                      title: "select country ",
+                      subTitle: choosenCountry.isEmpty
+                          ? "Pick a country"
+                          : choosenCountry,
+                      name: "Audience",
+                      SubName: "Choose your preferred country",
+                      action: () async {
+                        showCountryPicker(
+                          context: context,
+                          //Optional.  Can be used to exclude(remove) one ore more country from the countries list (optional).
+                          exclude: <String>['KN', 'MF'],
+                          favorite: <String>['NG'],
+                          //Optional. Shows phone code before the country name.
+                          showPhoneCode: false,
+                          onSelect: (Country country) {
+                            print('Select country: ${country.name}');
+                            setState(() {
+                              choosenCountry = country.name;
+                            });
+                          },
+                          // Optional. Sets the theme for the country list picker.
+                          countryListTheme: CountryListThemeData(
+                            // Optional. Sets the border radius for the bottomsheet.
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(40.0),
+                              topRight: Radius.circular(40.0),
+                            ),
+                            // Optional. Styles the search field.
+                            inputDecoration: InputDecoration(
+                              labelText: 'Search',
+                              hintText: 'Start typing to search',
+                              prefixIcon: const Icon(Icons.search),
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: const Color(0xFF8C98A8).withOpacity(0.2),
+                                ),
                               ),
                             ),
+                            // Optional. Styles the text in the search field
+                            searchTextStyle: TextStyle(
+                              color: Colors.blue,
+                              fontSize: 18,
+                            ),
                           ),
-                          // Optional. Styles the text in the search field
-                          searchTextStyle: TextStyle(
-                            color: Colors.blue,
-                            fontSize: 18,
-                          ),
-                        ),
-                      );
-                    }),
-                const SizedBox(
-                  height: 20,
-                ),
-                AdsAction(
-                    title: "select budget  ",
-                    subTitle:
-                        "Price: N${convertToCurrency(stream.selected.price == null ? "0" : stream.selected.price.toString())}      Reach: ${convertToCurrency(stream.selected.reach ?? "0")}",
-                    name: "Budget & Reach",
-                    SubName: "Select your preferred budget and reach ",
-                    action: () {
-                      priceOptionModal(context);
-                    }),
-                const SizedBox(
-                  height: 20,
-                ),
-                AdsAction(
-                    title: "select Duration  ",
-                    subTitle: stream.duration,
-                    name: "Ad Duration",
-                    SubName: "Select Ad Duration ",
-                    action: () {
-                      durationOptionModal(context);
-                    }),
-                const SizedBox(
-                  height: 40,
-                ),
-                Column(
-                  children: [
-                    post == null
-                        ? SizedBox.shrink()
-                        : Row(
-                            children: [
-                              Column(
-                                children: [
-                                  Container(
-                                    width: 70,
-                                    height: 70,
-                                    decoration: BoxDecoration(
-                                        color: Colors.black,
-                                        borderRadius: BorderRadius.circular(8),
-                                        image: DecorationImage(
-                                          image: CachedNetworkImageProvider(
-                                            post!.media!.first
-                                                .replaceAll('\\', '/'),
-                                          ),
-                                          fit: BoxFit.fill,
-                                        )),
-                                  )
-                                ],
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  AppText(
-                                    text:
-                                        post == null ? '' : post!.description!,
-                                    fontWeight: FontWeight.w500,
-                                    size: 13,
-                                    color: HexColor("#797979"),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                    ProfileActionButton(
-                      icon: "assets/icon/post.svg",
-                      onClick: () async {
-                        var data =
-                            await selectPost(context, feed.profileFeedPosts);
-                        if (data != null) {
-                          setState(() {
-                            post = data;
-                          });
-                        }
-                      },
-                      color: "#F94C84",
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    AppText(
-                      text: 'select post',
-                      fontWeight: FontWeight.w500,
-                      size: 16,
-                      color: HexColor("#797979"),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 40,
-                ),
-                Row(
-                  children: [
-                    Checkbox(
-                        fillColor:
-                            MaterialStatePropertyAll(HexColor(primaryColor)),
-                        value: iAgree,
-                        onChanged: ((value) {
-                          setState(() {
-                            iAgree = value!;
-                          });
-                        })),
-                    const SizedBox(
-                      height: 50,
-                    ),
-                    SizedBox(
-                      width: width * 0.75,
-                      child: RichText(
-                        text: TextSpan(
-                            text: "I consent to the use of MacaNacki ",
-                            style: GoogleFonts.leagueSpartan(
-                                textStyle: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    color: HexColor(darkColor),
-                                    decorationStyle: TextDecorationStyle.solid,
-                                    fontSize: 12)),
-                            children: [
-                              TextSpan(
-                                text: "Terms of Use",
-                                style: GoogleFonts.leagueSpartan(
-                                    textStyle: TextStyle(
-                                        fontWeight: FontWeight.w400,
-                                        color: HexColor(primaryColor),
-                                        decorationStyle:
-                                            TextDecorationStyle.solid,
-                                        fontSize: 12)),
-                                recognizer: tapGestureRecognizer
-                                  ..onTap = () async {
-                                    await UrlLaunchController
-                                        .launchInWebViewOrVC(Uri.parse(terms));
-                                  },
-                              ),
-                              TextSpan(
-                                text: " and ",
-                                style: GoogleFonts.leagueSpartan(
-                                    textStyle: TextStyle(
-                                        fontWeight: FontWeight.w400,
-                                        color: HexColor(darkColor),
-                                        decorationStyle:
-                                            TextDecorationStyle.solid,
-                                        fontSize: 12)),
-                              ),
-                              TextSpan(
-                                text: "Privacy Policy",
-                                style: GoogleFonts.leagueSpartan(
-                                    textStyle: TextStyle(
-                                        fontWeight: FontWeight.w400,
-                                        color: HexColor(primaryColor),
-                                        decorationStyle:
-                                            TextDecorationStyle.solid,
-                                        fontSize: 12)),
-                                recognizer: tapGestureRecognizer
-                                  ..onTap = () async {
-                                    await UrlLaunchController
-                                        .launchInWebViewOrVC(Uri.parse(terms));
-                                  },
-                              )
-                            ]),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 40,
-                ),
-                stream.loadStatus2
-                    ? Loader(color: HexColor(primaryColor))
-                    : AppButton(
-                        width: 0.9,
-                        height: 0.06,
-                        color: primaryColor,
-                        text: "Continue",
-                        backColor: primaryColor,
-                        curves: buttonCurves * 5,
-                        textColor: backgroundColor,
-                        onTap: () async {
-                          if (widget.postId == null) {
-                            if (post == null) {
-                              showToast2(context,
-                                  "Please select the post you want to promote");
-                              return;
-                            } else {
-                              _submit(context, post!.id!);
-                            }
-                          } else {
-                            _submit(context, widget.postId);
+                        );
+                      }),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  AdsAction(
+                      title: "select budget  ",
+                      subTitle:
+                          "Price: N${convertToCurrency(stream.selected.price == null ? "0" : stream.selected.price.toString())}      Reach: ${convertToCurrency(stream.selected.reach ?? "0")}",
+                      name: "Budget & Reach",
+                      SubName: "Select your preferred budget and reach ",
+                      action: () {
+                        priceOptionModal(context);
+                      }),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  AdsAction(
+                      title: "select Duration  ",
+                      subTitle: stream.duration,
+                      name: "Ad Duration",
+                      SubName: "Select Ad Duration ",
+                      action: () {
+                        durationOptionModal(context);
+                      }),
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  Column(
+                    children: [
+                      post == null
+                          ? SizedBox.shrink()
+                          : Row(
+                              children: [
+                                Column(
+                                  children: [
+                                    Container(
+                                      width: 70,
+                                      height: 70,
+                                      decoration: BoxDecoration(
+                                          color: Colors.black,
+                                          borderRadius: BorderRadius.circular(8),
+                                          image: DecorationImage(
+                                            image: CachedNetworkImageProvider(
+                                              post!.media!.first
+                                                  .replaceAll('\\', '/'),
+                                            ),
+                                            fit: BoxFit.fill,
+                                          )),
+                                    )
+                                  ],
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    AppText(
+                                      text:
+                                          post == null ? '' : post!.description!,
+                                      fontWeight: FontWeight.w500,
+                                      size: 13,
+                                      color: HexColor("#797979"),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                      ProfileActionButton(
+                        icon: "assets/icon/post.svg",
+                        onClick: () async {
+                          var data =
+                              await selectPost(context, feed.profileFeedPosts);
+                          if (data != null) {
+                            setState(() {
+                              post = data;
+                            });
                           }
-                        })
-              ],
-            ),
-          )),
+                        },
+                        color: "#F94C84",
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      AppText(
+                        text: 'select post',
+                        fontWeight: FontWeight.w500,
+                        size: 16,
+                        color: HexColor("#797979"),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  Row(
+                    children: [
+                      Checkbox(
+                          fillColor:
+                              MaterialStatePropertyAll(HexColor(primaryColor)),
+                          value: iAgree,
+                          onChanged: ((value) {
+                            setState(() {
+                              iAgree = value!;
+                            });
+                          })),
+                      const SizedBox(
+                        height: 50,
+                      ),
+                      SizedBox(
+                        width: width * 0.75,
+                        child: RichText(
+                          text: TextSpan(
+                              text: "I consent to the use of MacaNacki ",
+                              style: GoogleFonts.leagueSpartan(
+                                  textStyle: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      color: HexColor(darkColor),
+                                      decorationStyle: TextDecorationStyle.solid,
+                                      fontSize: 12)),
+                              children: [
+                                TextSpan(
+                                  text: "Terms of Use",
+                                  style: GoogleFonts.leagueSpartan(
+                                      textStyle: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          color: HexColor(primaryColor),
+                                          decorationStyle:
+                                              TextDecorationStyle.solid,
+                                          fontSize: 12)),
+                                  recognizer: tapGestureRecognizer
+                                    ..onTap = () async {
+                                      await UrlLaunchController
+                                          .launchInWebViewOrVC(Uri.parse(terms));
+                                    },
+                                ),
+                                TextSpan(
+                                  text: " and ",
+                                  style: GoogleFonts.leagueSpartan(
+                                      textStyle: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          color: HexColor(darkColor),
+                                          decorationStyle:
+                                              TextDecorationStyle.solid,
+                                          fontSize: 12)),
+                                ),
+                                TextSpan(
+                                  text: "Privacy Policy",
+                                  style: GoogleFonts.leagueSpartan(
+                                      textStyle: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          color: HexColor(primaryColor),
+                                          decorationStyle:
+                                              TextDecorationStyle.solid,
+                                          fontSize: 12)),
+                                  recognizer: tapGestureRecognizer
+                                    ..onTap = () async {
+                                      await UrlLaunchController
+                                          .launchInWebViewOrVC(Uri.parse(terms));
+                                    },
+                                )
+                              ]),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 40,
+                  ),
+                  stream.loadStatus2
+                      ? Loader(color: HexColor(primaryColor))
+                      : AppButton(
+                          width: 0.9,
+                          height: 0.06,
+                          color: primaryColor,
+                          text: "Continue",
+                          backColor: primaryColor,
+                          curves: buttonCurves * 5,
+                          textColor: backgroundColor,
+                          onTap: () async {
+                            if (widget.postId == null) {
+                              if (post == null) {
+                                showToast2(context,
+                                    "Please select the post you want to promote");
+                                return;
+                              } else {
+                                _submit(context, post!.id!);
+                              }
+                            } else {
+                              _submit(context, widget.postId);
+                            }
+                          })
+                ],
+              ),
+            )),
+      ),
     );
   }
 

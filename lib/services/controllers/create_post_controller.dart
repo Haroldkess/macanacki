@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:macanacki/model/comments_model.dart';
 import 'package:macanacki/model/create_post_model.dart';
@@ -54,6 +55,7 @@ class CreatePostController {
     CreatePostWare ware = Provider.of<CreatePostWare>(context, listen: false);
     ButtonWare button = Provider.of<ButtonWare>(context, listen: false);
     Temp temp = Provider.of<Temp>(context, listen: false);
+    FeedPostWare stream = Provider.of<FeedPostWare>(context, listen: false);
 
     CreatePostModel data = await regData(context, caption);
     ware.isLoading(true);
@@ -63,7 +65,12 @@ class CreatePostController {
         .whenComplete(() => emitter("api function done"));
 
     // ignore: use_build_context_synchronously
+    stream.disposeAutoScroll();
+    stream.pagingController.refresh();
+    //  await UserProfileController.retrievProfileController(context, false);
+    // ignore: use_build_context_synchronously
     await FeedPostController.getUserPostController(context);
+    //  await FeedPostController.getUserPostController(context);
 
     if (isDone) {
       button.addIndex(0);
@@ -74,7 +81,8 @@ class CreatePostController {
       showToast2(context, ware.message, isError: false);
       await Future.delayed(const Duration(seconds: 2));
       // ignore: use_build_context_synchronously
-      PageRouting.popToPage(context);
+      Get.close(2);
+      // PageRouting.popToPage(context);
     } else {
       ware.isLoading(false);
       // ignore: use_build_context_synchronously

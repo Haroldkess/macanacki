@@ -4,7 +4,6 @@
 
 import 'dart:convert';
 
-
 import 'package:video_player/video_player.dart';
 
 FeedPostModel feedPostModelFromJson(String str) =>
@@ -120,6 +119,7 @@ class FeedPost {
     this.creator,
     this.media,
     this.mux,
+    this.thumbnails,
     this.comments,
     this.noOfLikes,
     this.viewCount,
@@ -140,6 +140,7 @@ class FeedPost {
   List<String>? media;
   List<String>? media2;
   List<String>? mux;
+  List<dynamic>? thumbnails;
   List<Comment>? comments;
   int? noOfLikes;
   int? viewCount;
@@ -159,6 +160,7 @@ class FeedPost {
     List<String>? media,
     List<String>? media2,
     List<String>? mux,
+    List<dynamic>? thumbnails,
     List<Comment>? comments,
     int? noOfLikes,
     int? viewCount,
@@ -177,6 +179,7 @@ class FeedPost {
           media: media ?? this.media,
           media2: media2 ?? this.media2,
           mux: mux ?? this.mux,
+          thumbnails: thumbnails ?? this.thumbnails,
           comments: comments ?? this.comments,
           noOfLikes: noOfLikes ?? this.noOfLikes,
           viewCount: viewCount ?? this.viewCount,
@@ -205,6 +208,9 @@ class FeedPost {
         mux: json["mux"] == null
             ? []
             : List<String>.from(json["mux"]!.map((x) => x)),
+        thumbnails: json["thumbnails"] == null
+            ? []
+            : List<dynamic>.from(json["thumbnails"]!.map((x) => x)),
         comments: json["comments"] == null
             ? []
             : List<Comment>.from(
@@ -227,6 +233,9 @@ class FeedPost {
         "media2":
             media2 == null ? [] : List<dynamic>.from(media2!.map((x) => x)),
         "mux": mux == null ? [] : List<dynamic>.from(mux!.map((x) => x)),
+        "thumbnails": thumbnails == null
+            ? []
+            : List<dynamic>.from(thumbnails!.map((x) => x)),
         "comments": comments == null
             ? []
             : List<dynamic>.from(comments!.map((x) => x.toJson())),

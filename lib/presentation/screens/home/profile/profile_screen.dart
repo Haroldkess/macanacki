@@ -69,204 +69,213 @@ class _ProfileScreenState extends State<ProfileScreen>
 
     UserProfileWare user = context.watch<UserProfileWare>();
 
-    return Scaffold(
-      key: key,
-      backgroundColor: HexColor("#F5F2F9"),
-      drawer: DrawerSide(
-        scafKey: key,
-      ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          _getUserPost(true);
-        },
-        backgroundColor: HexColor(primaryColor),
-        color: Colors.white,
-        child: CustomScrollView(
-          controller: _controller,
-          slivers: [
-            SliverAppBar(
-              automaticallyImplyLeading: false,
+    return SafeArea(
+      child: Scaffold(
+        key: key,
+        backgroundColor: HexColor("#F5F2F9"),
+        drawer: DrawerSide(
+          scafKey: key,
+        ),
+        body: RefreshIndicator(
+          onRefresh: () async {
+            _getUserPost(true);
+          },
+          backgroundColor: HexColor(primaryColor),
+          color: Colors.white,
+          child: CustomScrollView(
+            controller: _controller,
+            slivers: [
+              SliverAppBar(
+                automaticallyImplyLeading: false,
 
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  InkWell(
-                      onTap: () => key.currentState!.openDrawer(),
-                      child: SvgPicture.asset(
-                        "assets/icon/drawer.svg",
-                        height: 15,
-                        width: 20,
-                      )),
-                  // myIcon("assets/icon/macanackiicon.svg", primaryColor, 16.52,
-                  //     70, false),
-                  InkWell(
-                    onTap: () => PageRouting.pushToPage(
-                        context, const NotificationScreen()),
-                    child: Stack(
-                      children: [
-                        SvgPicture.asset(
-                          "assets/icon/notification.svg",
-                        ),
-                        notify.readAll
-                            ? SizedBox.shrink()
-                            : Positioned(
-                                right: 5,
-                                child: Align(
-                                  alignment: Alignment.topCenter,
-                                  child: Container(
-                                    height: 10,
-                                    width: 10,
-                                    decoration: const BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: Colors.red),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(0.0),
-                                      child: Center(
-                                        child: AppText(
-                                          text: notify.notifyData.length > 9
-                                              ? ""
-                                              : "",
-                                          size: 8,
-                                          fontWeight: FontWeight.bold,
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    InkWell(
+                        onTap: () => key.currentState!.openDrawer(),
+                        child: SvgPicture.asset(
+                          "assets/icon/drawer.svg",
+                          height: 15,
+                          width: 20,
+                        )),
+                    // myIcon("assets/icon/macanackiicon.svg", primaryColor, 16.52,
+                    //     70, false),
+                    InkWell(
+                      onTap: () => PageRouting.pushToPage(
+                          context, const NotificationScreen()),
+                      child: Stack(
+                        children: [
+                          SvgPicture.asset(
+                            "assets/icon/notification.svg",
+                          ),
+                          notify.readAll
+                              ? SizedBox.shrink()
+                              : Positioned(
+                                  right: 5,
+                                  child: Align(
+                                    alignment: Alignment.topCenter,
+                                    child: Container(
+                                      height: 10,
+                                      width: 10,
+                                      decoration: const BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.red),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(0.0),
+                                        child: Center(
+                                          child: AppText(
+                                            text: notify.notifyData.length > 9
+                                                ? ""
+                                                : "",
+                                            size: 8,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              )
-                      ],
-                    ),
+                                )
+                        ],
+                      ),
 
-                    // myIcon("assets/icon/notification.svg", "#828282",
-                    //     19.13, 17.31, true),
+                      // myIcon("assets/icon/notification.svg", "#828282",
+                      //     19.13, 17.31, true),
+                    ),
+                  ],
+                ),
+                // floating: true,
+                pinned: true,
+                backgroundColor: HexColor("#F5F2F9"),
+                expandedHeight: 370,
+                // foregroundColor: Colors.amber,
+                flexibleSpace: const FlexibleSpaceBar(
+                  background: ProfileInfo(
+                    isMine: true,
                   ),
-                ],
-              ),
-              // floating: true,
-              pinned: true,
-              backgroundColor: HexColor("#F5F2F9"),
-              expandedHeight: 370,
-              // foregroundColor: Colors.amber,
-              flexibleSpace: const FlexibleSpaceBar(
-                background: ProfileInfo(
-                  isMine: true,
                 ),
               ),
-            ),
-            user.userProfileModel.aboutMe != null
-                ? SliverToBoxAdapter(
-                    child: Row(
-                      children: [
-                        Expanded(
-                            child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 20, horizontal: 20),
-                          child: RichText(
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: showMore ? 3 : 2,
-                              text: TextSpan(
-                                  text: user.userProfileModel.aboutMe!.length >=
-                                              seeMoreVal &&
-                                          showMore == false
-                                      ? user.userProfileModel.aboutMe!
-                                          .substring(0, seeMoreVal - 3)
-                                      : user.userProfileModel.aboutMe!,
-                                  style: GoogleFonts.leagueSpartan(
-                                      textStyle: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    color: HexColor(darkColor).withOpacity(0.6),
-                                    decorationStyle: TextDecorationStyle.solid,
-                                    fontSize: 12,
-                                    fontFamily: '',
-                                  )),
-                                  recognizer: tapGestureRecognizer
-                                    ..onTap = () async {
-                                      //    print("object");
-                                      if (showMore) {
-                                        setState(() {
-                                          showMore = false;
-                                        });
-                                      } else {
-                                        setState(() {
-                                          showMore = true;
-                                        });
-                                      }
-                                    },
-                                  children: [
-                                    user.userProfileModel.aboutMe!.length <
-                                            seeMoreVal
-                                        ? const TextSpan(text: "")
-                                        : TextSpan(
-                                            text: showMore ? "" : "...see more",
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: HexColor(darkColor)
-                                                  .withOpacity(0.6),
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                            recognizer: tapGestureRecognizer
-                                              ..onTap = () async {
-                                                //    print("object");
-                                                if (showMore) {
-                                                  setState(() {
-                                                    showMore = false;
-                                                  });
-                                                } else {
-                                                  setState(() {
-                                                    showMore = true;
-                                                  });
-                                                }
-                                              },
-                                          )
-                                  ])),
-                        )),
-                      ],
+              user.userProfileModel.aboutMe != null
+                  ? SliverToBoxAdapter(
+                      child: Row(
+                        children: [
+                          Expanded(
+                              child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 20, horizontal: 20),
+                            child: RichText(
+                                textAlign: TextAlign.center,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: showMore ? 3 : 2,
+                                text: TextSpan(
+                                    text:
+                                        user.userProfileModel.aboutMe!.length >=
+                                                    seeMoreVal &&
+                                                showMore == false
+                                            ? user.userProfileModel.aboutMe!
+                                                .substring(0, seeMoreVal - 3)
+                                            : user.userProfileModel.aboutMe!,
+                                    style: GoogleFonts.leagueSpartan(
+                                        textStyle: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      color:
+                                          HexColor(darkColor).withOpacity(0.6),
+                                      decorationStyle:
+                                          TextDecorationStyle.solid,
+                                      fontSize: 12,
+                                      fontFamily: '',
+                                    )),
+                                    recognizer: tapGestureRecognizer
+                                      ..onTap = () async {
+                                        //    print("object");
+                                        if (showMore) {
+                                          setState(() {
+                                            showMore = false;
+                                          });
+                                        } else {
+                                          setState(() {
+                                            showMore = true;
+                                          });
+                                        }
+                                      },
+                                    children: [
+                                      user.userProfileModel.aboutMe!.length <
+                                              seeMoreVal
+                                          ? const TextSpan(text: "")
+                                          : TextSpan(
+                                              text:
+                                                  showMore ? "" : "...see more",
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                color: HexColor(darkColor)
+                                                    .withOpacity(0.6),
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                              recognizer: tapGestureRecognizer
+                                                ..onTap = () async {
+                                                  //    print("object");
+                                                  if (showMore) {
+                                                    setState(() {
+                                                      showMore = false;
+                                                    });
+                                                  } else {
+                                                    setState(() {
+                                                      showMore = true;
+                                                    });
+                                                  }
+                                                },
+                                            )
+                                    ])),
+                          )),
+                        ],
+                      ),
+                    )
+                  : const SliverToBoxAdapter(
+                      child: SizedBox(height: 20),
                     ),
-                  )
-                : const SliverToBoxAdapter(
-                    child: SizedBox(height: 20),
-                  ),
-            SliverToBoxAdapter(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ProfileQuickLinks(
-                    onClick: () {
-                      PageRouting.pushToPage(
-                          context, const DiamondBalanceScreen());
-                    },
-                    name: "Balance",
-                    icon: "assets/icon/diamond.svg",
-                    color: HexColor(diamondColor),
-                    isVerified: false,
-                  ),
-                  ProfileQuickLinks(
-                    onClick: () async {
-                      PageRouting.pushToPage(context, const PromoteScreen());
-                    },
-                    name: "Promote post",
-                    icon: "assets/icon/promote.svg",
-                    color: Colors.grey,
-                    isVerified: false,
-                  ),
-                  ProfileQuickLinks(
-                    onClick: () => Operations.verifyOperation(context),
-                    name: "Verify account",
-                    icon: "assets/icon/badge.svg",
-                    color: HexColor("#0597FF"),
-                    isVerified: true,
-                  )
-                ],
+              SliverToBoxAdapter(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ProfileQuickLinks(
+                      onClick: () {
+                        PageRouting.pushToPage(
+                            context, const DiamondBalanceScreen());
+                      },
+                      name: "Account balance",
+                      icon: "assets/icon/diamond.svg",
+                      color: null,
+                      isVerified: false,
+                    ),
+                    ProfileQuickLinks(
+                      onClick: () async {
+                        PageRouting.pushToPage(context, const PromoteScreen());
+                      },
+                      name: "Promote post",
+                      icon: "assets/icon/promote.svg",
+                      color: Colors.grey,
+                      isVerified: false,
+                    ),
+                    ProfileQuickLinks(
+                      onClick: () => Operations.verifyOperation(context),
+                      name: "Verify account",
+                      icon: "assets/icon/badge.svg",
+                      color: HexColor("#0597FF"),
+                      isVerified: true,
+                    )
+                  ],
+                ),
               ),
-            ),
-            const SliverToBoxAdapter(
-              child: SizedBox(height: 20),
-            ),
-            SliverToBoxAdapter(
-              child: ProfilePostGrid(ware: stream),
-            )
-          ],
+              const SliverToBoxAdapter(
+                child: SizedBox(height: 20),
+              ),
+              SliverToBoxAdapter(
+                child: ProfilePostGrid(ware: stream),
+              ),
+              const SliverToBoxAdapter(
+                child: SizedBox(height: 20),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -371,7 +380,7 @@ class ProfileQuickLinks extends StatelessWidget {
   String name;
   String icon;
   VoidCallback onClick;
-  Color color;
+  Color? color;
   bool isVerified;
   ProfileQuickLinks(
       {super.key,
@@ -403,7 +412,9 @@ class ProfileQuickLinks extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SvgPicture.asset(icon,
-                  height: 22, width: 25, color: isVerified ? null : color),
+                  height: name == "Promote post" || isVerified ? 22 : 19,
+                  width: name == "Promote post" || isVerified ? 22 : 19,
+                  color: isVerified ? null : color),
               const SizedBox(
                 height: 10,
               ),

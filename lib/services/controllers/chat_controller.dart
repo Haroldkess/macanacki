@@ -194,20 +194,20 @@ class ChatController {
       //   //msg.clear();
       // }
       // ignore: use_build_context_synchronously
-      bool isDone2 = await ware.getChatFromApi().whenComplete(
-          () => emitter("everything from api and provider is done"));
-      if (isDone2) {
-        // if (isForm) {
-        //   ware.isLoading(false);
-        // }
-        //  debugPrint("we  have fetched all Chat");
-      } else {
-        // if (isForm) {
-        //   ware.isLoading(false);
-        // }
-        // ignore: use_build_context_synchronously
-        //  showToast2(context, ware.message, isError: false);
-      }
+      // bool isDone2 = await ware.getChatFromApi().whenComplete(
+      //     () => emitter("everything from api and provider is done"));
+      //  if (isDone2) {
+      // if (isForm) {
+      //   ware.isLoading(false);
+      // }
+      //  debugPrint("we  have fetched all Chat");
+      //  } else {
+      // if (isForm) {
+      //   ware.isLoading(false);
+      // }
+      // ignore: use_build_context_synchronously
+      //  showToast2(context, ware.message, isError: false);
+      //  }
       //  ware.isLoading(false);
     } else {
       sent = false;

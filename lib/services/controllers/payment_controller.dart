@@ -28,6 +28,7 @@ import 'package:get/get.dart';
 //"sk_test_1a9e1524621e4c91e3489926ef37db7337b4c68f";
 
 String sk = dotenv.get('SECRET_KEY').toString();
+//String sk = "sk_test_1a9e1524621e4c91e3489926ef37db7337b4c68f";
 // dotenv.get('SECRET_KEY').toString();
 
 //dotenv.get('SECRET_KEY').toString();
@@ -260,6 +261,7 @@ class PaymentController {
     Map data = {
       "amount": amount,
       "email": "${user.userProfileModel.email}",
+      "plan": "PLN_ojmkb58irexmavd",
       "reference": reference,
     };
 
@@ -403,8 +405,8 @@ class PaymentController {
         GiftWare.instance.getWalletFromApi();
         Get.back();
         Get.dialog(diamondDialog(
-            title: "You just Got 50 Diamonds ",
-            message: "50 Diamonds has been added to your wallet",
+            title: "You just Got some Diamonds ",
+            message: "Diamonds has been added to your wallet",
             confirmText: "Okay",
             cancelText: "Go back",
             onPressedCancel: () {
@@ -420,8 +422,6 @@ class PaymentController {
         //show error prompt}
         return;
       } else {
-       
-
         try {
           showToast2(context, "Payment not verified try again", isError: true);
         } catch (e) {}

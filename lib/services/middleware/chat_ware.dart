@@ -64,7 +64,7 @@ class ChatWare extends ChangeNotifier {
         .where((element) => element.id == dat!.id)
         .first
         .conversations!
-        .insert(0,dat!.conversations!.first);
+        .insert(0, dat!.conversations!.first);
 
     //  tempData.;
     // Conversation toBeAdded = Conversation(
@@ -257,12 +257,16 @@ class ChatWare extends ChangeNotifier {
     Conversation msg,
   ) async {
     // emitter(msg.createdAt);
+
+    List<Conversation> find =
+        justChat.where((element) => element.id == msg.id).toList();
     if (justChat.isEmpty) {
       justChat.insert(0, msg);
     } else {
       if (justChat[0].body == msg.body &&
           "${justChat[0].createdAt!.year}-${justChat[0].createdAt!.month}-${justChat[0].createdAt!.day} ${justChat[0].createdAt!.hour}:${justChat[0].createdAt!.minute} ${justChat[0].createdAt!.second}" ==
-              "${msg.createdAt!.year}-${msg.createdAt!.month}-${msg.createdAt!.day} ${msg.createdAt!.hour}:${msg.createdAt!.minute} ${msg.createdAt!.second}") {
+              "${msg.createdAt!.year}-${msg.createdAt!.month}-${msg.createdAt!.day} ${msg.createdAt!.hour}:${msg.createdAt!.minute} ${msg.createdAt!.second}" &&
+          find.isEmpty) {
       } else {
         justChat.insert(0, msg);
       }
@@ -503,6 +507,7 @@ class ChatWare extends ChangeNotifier {
         //  emitter(jsonData.ToString());
         //  log(jsonData["message"]);
         emitter("message sent successfully");
+        getChatFromApi();
         isSuccessful = true;
         //  var res = http.Response.fromStream(response);
       } else {

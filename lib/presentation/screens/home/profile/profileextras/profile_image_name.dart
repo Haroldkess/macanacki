@@ -4,12 +4,14 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexagon/hexagon.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:macanacki/presentation/allNavigation.dart';
 import 'package:macanacki/presentation/constants/params.dart';
 import 'package:macanacki/presentation/widgets/text.dart';
 import 'package:macanacki/services/middleware/user_profile_ware.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../constants/colors.dart';
+import '../../../../widgets/feed_views/image_holder.dart';
 import '../../../../widgets/loader.dart';
 
 class ProfileImageAndName extends StatelessWidget {
@@ -26,48 +28,81 @@ class ProfileImageAndName extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Stack(
-          children: [
-            HexagonWidget.pointy(
-              width: w,
-              elevation: 10.0,
-              color: Colors.white,
-              cornerRadius: 20.0,
-              child: AspectRatio(
-                aspectRatio: HexagonType.POINTY.ratio,
-                // child: Image.asset(
-                //   'assets/tram.jpg',
-                //   fit: BoxFit.fitWidth,
-                // ),
-              ),
-            ),
-            HexagonWidget.pointy(
-              width: w,
-              elevation: 10.0,
-              color: HexColor("#5F5F5F"),
-              padding: 10,
-              cornerRadius: 20.0,
-              child: AspectRatio(
+        GestureDetector(
+          onTap: () {
+            stream.userProfileModel.profilephoto == null
+                ? null
+                : PageRouting.pushToPage(
+                    context,
+                    ImageHolder(
+                      images: [
+                        stream.userProfileModel.profilephoto!.isEmpty
+                            ? ""
+                            : stream.userProfileModel.profilephoto!
+                      ],
+                    ));
+          },
+          child: Stack(
+            children: [
+              HexagonWidget.pointy(
+                width: w,
+                elevation: 10.0,
+                color: Colors.white,
+                cornerRadius: 20.0,
+                child: AspectRatio(
                   aspectRatio: HexagonType.POINTY.ratio,
-                  child: Center(
-                    child: CachedNetworkImage(
-                      imageUrl: stream.userProfileModel.profilephoto ?? "",
-                      progressIndicatorBuilder:
-                          (context, url, downloadProgress) => Center(
-                              child: Loader(
-                        color: HexColor(primaryColor),
-                      )),
-                      errorWidget: (context, url, error) => Icon(
-                        Icons.error,
-                        color: HexColor(primaryColor),
+                  // child: Image.asset(
+                  //   'assets/tram.jpg',
+                  //   fit: BoxFit.fitWidth,
+                  // ),
+                ),
+              ),
+              HexagonWidget.pointy(
+                width: w,
+                elevation: 10.0,
+                color: HexColor("#5F5F5F"),
+                padding: 10,
+                cornerRadius: 20.0,
+                child: AspectRatio(
+                    aspectRatio: HexagonType.POINTY.ratio,
+                    child: Center(
+                      child: CachedNetworkImage(
+                        imageUrl: stream.userProfileModel.profilephoto ?? "",
+                        progressIndicatorBuilder:
+                            (context, url, downloadProgress) => Center(
+                                child: Loader(
+                          color: HexColor(primaryColor),
+                        )),
+                        errorWidget: (context, url, error) =>
+                            CachedNetworkImage(
+                          imageUrl: stream.userProfileModel.profilephoto ?? "",
+                          progressIndicatorBuilder:
+                              (context, url, downloadProgress) => Center(
+                                  child: Loader(
+                            color: HexColor(primaryColor),
+                          )),
+                          errorWidget: (context, url, error) =>
+                              CachedNetworkImage(
+                                  imageUrl:
+                                      stream.userProfileModel.profilephoto ??
+                                          "",
+                                  progressIndicatorBuilder:
+                                      (context, url, downloadProgress) =>
+                                          Center(
+                                              child: Loader(
+                                            color: HexColor(primaryColor),
+                                          )),
+                                  errorWidget: (context, url, error) =>
+                                      SizedBox()),
+                        ),
                       ),
-                    ),
 
-                    // Image.network(
-                    //     stream.userProfileModel.profilephoto ?? "")
-                  )),
-            ),
-          ],
+                      // Image.network(
+                      //     stream.userProfileModel.profilephoto ?? "")
+                    )),
+              ),
+            ],
+          ),
         ),
         const SizedBox(
           height: 10.0,
