@@ -405,7 +405,7 @@ class Operations {
 
       realTime = val.last;
     }
-    emitter("Time is" + value);
+  //  emitter("Time is" + value);
 
     return realTime;
   }

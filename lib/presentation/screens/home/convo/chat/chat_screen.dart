@@ -92,6 +92,8 @@ class _ChatScreenState extends State<ChatScreen> {
               widget.user.conversations!.last.sender == temp.userName
                   ? widget.user.userTwoId!
                   : widget.user.userOneId!);
+
+      chat.chatPageChange(0);
     });
 
     // ModeController.handleMode("online");
@@ -175,6 +177,8 @@ class _ChatScreenState extends State<ChatScreen> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       PersistentNavController.instance.toggleHide();
     });
+
+    
   }
 
   bool leaving = false;

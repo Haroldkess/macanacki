@@ -119,10 +119,12 @@ class _UserTikTokViewState extends State<UserTikTokView>
         //   VideoWare.instance.getVideoPostFromApi(widget.allPost);
         // });
         WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-          VideoWareHome.instance.initSomeVideo(
-              "$muxStreamBaseUrl/${widget.media.first}.$videoExtension",
-              widget.data.id!,
-              0);
+          VideoWareHome.instance.disposeAllVideoV2(widget.data.id!,
+              "$muxStreamBaseUrl/${widget.media.first}.$videoExtension");
+          // VideoWareHome.instance.initSomeVideo(
+          //     "$muxStreamBaseUrl/${widget.media.first}.$videoExtension",
+          //     widget.data.id!,
+          //     0);
         });
       } else {
         Future.delayed(const Duration(seconds: 2))

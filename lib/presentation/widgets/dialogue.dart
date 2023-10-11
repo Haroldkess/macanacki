@@ -210,8 +210,8 @@ AlertDialog diamondDialog(
                 () {
                   if (isFail == true) {
                     Get.back();
-                    buyDiamondsModal(
-                        context!, GiftWare.instance.rate.value.data);
+                    // buyDiamondsModal(
+                    //     context!, GiftWare.instance.rate.value.data);
                   } else {
                     Get.back();
                   }

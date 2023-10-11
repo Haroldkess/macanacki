@@ -33,6 +33,8 @@ class VideoWare extends GetxController {
 
   RxBool isFirst = false.obs;
 
+  RxBool isLoadVideo = false.obs;
+
   RxBool hide = true.obs;
   RxBool paginating = false.obs;
 
@@ -61,6 +63,10 @@ class VideoWare extends GetxController {
     isFirst.value = val;
   }
 
+  void loadVideo(bool val) {
+    isLoadVideo.value = val;
+  }
+
   void hideButtons() {
     hide.toggle();
   }
@@ -80,7 +86,7 @@ class VideoWare extends GetxController {
     feedPosts.value = [];
     List<FeedPost> newList = [];
 
-   await Future.wait([
+    await Future.wait([
       Future.forEach(data, (x) {
         if (!x.mux.first.contains("https")) {
           List<Comment> talks = [];
@@ -138,17 +144,17 @@ class VideoWare extends GetxController {
     ]);
 
     for (var element in feedPosts) {
-    final lister = videoController.where((item) => item.id == element.id).toList();
-    if(lister.isEmpty){
-       addVideo("$muxStreamBaseUrl/${element.mux!.first}.$videoExtension",
-          element.id!);
-
-    }
-     
+      final lister =
+          videoController.where((item) => item.id == element.id).toList();
+      if (lister.isEmpty) {
+        addVideo("$muxStreamBaseUrl/${element.mux!.first}.$videoExtension",
+            element.id!);
+      }
     }
   }
 
   Future initController(int id) async {
+    loadVideo(true);
     final lister = videoController.where((item) => item.id == id).toList();
 
     if (lister.isNotEmpty) {
@@ -159,7 +165,7 @@ class VideoWare extends GetxController {
                 .first
                 .controller!
                 .value,
-            autoPlay: false,
+            autoPlay: true,
             looping: true,
             allowMuting: false,
             isLive: true,
@@ -197,6 +203,7 @@ class VideoWare extends GetxController {
             update();
           }
         });
+        loadVideo(false);
       });
 
       final VideoPlayerController newControl = lister.first.controller!.value;
@@ -502,6 +509,8 @@ class VideoWareHome extends GetxController {
   RxBool hide = true.obs;
   RxBool paginating = false.obs;
 
+  RxBool isLoadVideo = false.obs;
+
   RxInt view2 = 0.obs;
   Rx<FeedData> feedData = FeedData().obs;
 
@@ -535,6 +544,10 @@ class VideoWareHome extends GetxController {
     view2.value = val;
   }
 
+  void loadVideo(bool val) {
+    isLoadVideo.value = val;
+  }
+
   Future<void> addVideoToList(FeedPost data) async {
     feedPosts.removeWhere((element) => element.id == data.id);
     feedPosts.insert(0, data);
@@ -542,6 +555,8 @@ class VideoWareHome extends GetxController {
 
   Future getVideoPostFromApi(int pageNum, [bool? load]) async {
     log("getting video posts");
+
+    emitter(pageNum.toString());
 
     if (load == true) {
       paginating.value = true;
@@ -659,6 +674,7 @@ class VideoWareHome extends GetxController {
   }
 
   Future initController(int id) async {
+    loadVideo(true);
     final lister = videoController.where((item) => item.id == id).toList();
 
     if (lister.isNotEmpty) {
@@ -669,14 +685,13 @@ class VideoWareHome extends GetxController {
                 .first
                 .controller!
                 .value,
-            autoPlay: false,
+            autoPlay: true,
             looping: true,
             allowMuting: false,
             isLive: true,
             draggableProgressBar: false,
             hideControlsTimer: Duration(seconds: 3),
             allowFullScreen: false,
-            
 
             //  allowFullScreen: false,
 
@@ -708,6 +723,8 @@ class VideoWareHome extends GetxController {
             update();
           }
         });
+
+        loadVideo(false);
       });
 
       final VideoPlayerController newControl = lister.first.controller!.value;
@@ -965,7 +982,7 @@ class VideoWareHome extends GetxController {
     //  }
   }
 
-  void disposeAllVideoV2(int id, String link) async {
+  Future disposeAllVideoV2(int id, String link) async {
     // if (videoController.value.value.isInitialized) {
     //   chewieController.value.videoPlayerController.dispose();
     final lister = videoController.where((item) => item.id == id).toList();

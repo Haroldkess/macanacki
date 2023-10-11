@@ -70,99 +70,100 @@ class SinglePost extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () async {
-                  if (data.promoted == "yes") {
-                    await VideoWareHome.instance
-                        .disposeVideo(data.id!,
-                            "$muxStreamBaseUrl/$media.$videoExtension")
-                        .whenComplete(() async {
-                      await VideoWareHome.instance
-                          .addVideoToList(data)
-                          .whenComplete(() => PageRouting.pushToPage(
-                                context,
-                                FeedVideoHolder(
-                                  file:
-                                      "$muxStreamBaseUrl/$media.$videoExtension",
-                                  // controller: controller!,
-                                  shouldPlay: true,
-                                  isHome: isHome,
-                                  thumbLink: thumbLink ?? "",
-                                  page: "feed",
-                                  isInView: isInView,
-                                  postId: postId,
-                                  data: data,
-                                ),
-                              ));
-                    });
-                  } else {
-                    await VideoWareHome.instance
-                        .addVideoToList(data)
-                        .whenComplete(() => PageRouting.pushToPage(
-                              context,
-                              FeedVideoHolder(
-                                file:
-                                    "$muxStreamBaseUrl/$media.$videoExtension",
-                                // controller: controller!,
-                                shouldPlay: true,
-                                isHome: isHome,
-                                thumbLink: thumbLink ?? "",
-                                page: "feed",
-                                isInView: isInView,
-                                postId: postId,
-                                data: data,
-                              ),
-                            ));
-                  }
+                  // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                  VideoWareHome.instance.loadVideo(true);
+                  WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                    VideoWareHome.instance.viewToggle(0);
+                    VideoWareHome.instance.loadVideo(true);
+                  });
+                  //    });
+                  // WidgetsBinding.instance
+                  //     .addPostFrameCallback((timeStamp) async {
+                  VideoWareHome.instance.addVideoToList(data).whenComplete(() {
+                    VideoWareHome.instance.initSomeVideo(
+                        "$muxStreamBaseUrl/$media.$videoExtension",
+                        data.id!,
+                        0);
+                    PageRouting.pushToPage(
+                      context,
+                      FeedVideoHolder(
+                        file: "$muxStreamBaseUrl/$media.$videoExtension",
+                        // controller: controller!,
+                        shouldPlay: true,
+                        isHome: isHome,
+                        thumbLink: thumbLink ?? "",
+                        page: "feed",
+                        isInView: isInView,
+                        postId: postId,
+                        data: data,
+                      ),
+                    );
+                  });
+
+                  // });
+                  // if (data.promoted == "yes") {
+                  //   await VideoWareHome.instance
+                  //       .disposeVideo(data.id!,
+                  //           "$muxStreamBaseUrl/$media.$videoExtension")
+                  //       .whenComplete(() async {
+                  //     await VideoWareHome.instance
+                  //         .addVideoToList(data)
+                  //         .whenComplete(() => PageRouting.pushToPage(
+                  //               context,
+                  //               FeedVideoHolder(
+                  //                 file:
+                  //                     "$muxStreamBaseUrl/$media.$videoExtension",
+                  //                 // controller: controller!,
+                  //                 shouldPlay: true,
+                  //                 isHome: isHome,
+                  //                 thumbLink: thumbLink ?? "",
+                  //                 page: "feed",
+                  //                 isInView: isInView,
+                  //                 postId: postId,
+                  //                 data: data,
+                  //               ),
+                  //             ));
+                  //   });
+                  // } else {
+
+                  //  }
                 },
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 10),
-                  child: data.promoted == "yes"
-                      ? Container(
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Container(
                           height: 350,
                           width: double.infinity,
-                          child: VideoView(
-                              //   data2: null,
-                              isHome: true,
-                              thumbLink: thumbLink!,
-                              page: "feed",
-                              postId: postId!,
-                              index: 0,
-                              //   video: null,
-                              data: data),
-                        )
-                      : Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Container(
-                                height: 350,
-                                width: double.infinity,
-                                child: thumbLink == null
-                                    ? Container(
-                                        height: 350,
-                                        width: double.infinity,
-                                        color: Colors.black,
-                                      )
-                                    : Container(
-                                        height: 350,
-                                        width: double.infinity,
-                                        decoration: BoxDecoration(
-                                            color: Colors.black,
-                                            image: DecorationImage(
-                                              image: CachedNetworkImageProvider(
-                                                  thumbLink!),
-                                              fit: BoxFit.cover,
-                                            )),
+                          child: thumbLink == null
+                              ? Container(
+                                  height: 350,
+                                  width: double.infinity,
+                                  color: Colors.black,
+                                )
+                              : Container(
+                                  height: 350,
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                      color: Colors.black,
+                                      image: DecorationImage(
+                                        image: CachedNetworkImageProvider(
+                                            thumbLink!),
+                                        fit: BoxFit.cover,
                                       )),
-                            CircleAvatar(
-                              backgroundColor: Colors.white.withOpacity(.7),
-                              radius: 30,
-                              child: const Icon(
-                                Icons.play_arrow_outlined,
-                                size: 25,
-                                color: Colors.black,
-                              ),
-                            )
-                          ],
+                                )),
+                      CircleAvatar(
+                        backgroundColor: Colors.white.withOpacity(.7),
+                        radius: 30,
+                        child: const Icon(
+                          Icons.play_arrow_outlined,
+                          size: 25,
+                          color: Colors.black,
                         ),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -326,24 +327,33 @@ class UserSinglePost extends StatelessWidget {
                             .addPostFrameCallback((timeStamp) {
                           VideoWare.instance.viewToggle(0);
                         });
+                        WidgetsBinding.instance
+                            .addPostFrameCallback((timeStamp) {
+                          VideoWare.instance.loadVideo(true);
+                        });
 
                         VideoWare.instance
                             .addVideoToList(data)
-                            .whenComplete(() => PageRouting.pushToPage(
-                                  context,
-                                  FeedVideoHolderPrivate(
-                                    file:
-                                        "$muxStreamBaseUrl/$media.$videoExtension",
-                                    // controller: controller!,
-                                    shouldPlay: true,
-                                    isHome: isHome,
-                                    thumbLink: thumbLink ?? "",
-                                    page: "public",
-                                    isInView: isInView,
-                                    postId: postId,
-                                    data: data,
-                                  ),
-                                ));
+                            .whenComplete(() {
+                          // VideoWareHome.instance.initSomeVideo(
+                          //     "$muxStreamBaseUrl/$media.$videoExtension",
+                          //     data.id!,
+                          //     0);
+                          PageRouting.pushToPage(
+                            context,
+                            FeedVideoHolderPrivate(
+                              file: "$muxStreamBaseUrl/$media.$videoExtension",
+                              // controller: controller!,
+                              shouldPlay: true,
+                              isHome: isHome,
+                              thumbLink: thumbLink ?? "",
+                              page: "public",
+                              isInView: isInView,
+                              postId: postId,
+                              data: data,
+                            ),
+                          );
+                        });
                       },
                       child: Padding(
                         padding: const EdgeInsets.only(top: 0),

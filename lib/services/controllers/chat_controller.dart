@@ -320,6 +320,7 @@ class ChatController {
   }
 
   static void handleMessage(context, data) async {
+   // log(data.toString());
     //   emitter(data.toString());
     ChatWare ware = Provider.of<ChatWare>(context, listen: false);
     final jsonData = jsonDecode(data);
@@ -348,7 +349,9 @@ class ChatController {
       conversations: dat.conversations,
     );
 
-    emitter(chatData.conversations!.first.body!);
+    // emitter(chatData.conversations!.first.body! +
+    //     " ${chatData.conversations!.first.id}" +
+    //     " ${chatData.conversations!.first.createdAt}");
 
     ware.testAddToChatData(chatData);
 
@@ -429,6 +432,7 @@ class ChatController {
         determineId: chat.id);
     ware.addNewChatData(chat);
     ware.addNewConvoData(data);
+    ware.allowed(true);
 
     ware.addMsg(data);
     msgController.clear();

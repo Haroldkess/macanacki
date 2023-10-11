@@ -104,6 +104,7 @@ class _MessageWidgetState extends State<MessageWidget> {
     return InkWell(
       onTap: () async {
         ChatWare ware = Provider.of<ChatWare>(context, listen: false);
+        ware.chatPageChange(0);
         ChatController.readAll(
             context,
             widget.people.conversations!.last.sender == temp.userName
@@ -126,6 +127,11 @@ class _MessageWidgetState extends State<MessageWidget> {
 
         // ignore: use_build_context_synchronously
         await ChatController.addToList(context, data);
+        try {
+          ware.chatPageChange(1);
+        } catch (e) {
+          emitter(e.toString());
+        }
         //  emitter("hello ${data.first.conversations.first.body}");
 
         // ignore: use_build_context_synchronously

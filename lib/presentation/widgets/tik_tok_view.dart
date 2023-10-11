@@ -111,10 +111,14 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
       if (widget.media == null || widget.media.isEmpty) return;
       if (!widget.media.first.contains("https")) {
         WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-          VideoWareHome.instance.initSomeVideo(
-              "$muxStreamBaseUrl/${widget.media.first}.$videoExtension",
-              widget.data.id!,
-              0);
+          // VideoWareHome.instance.initSomeVideo(
+          //     "$muxStreamBaseUrl/${widget.media.first}.$videoExtension",
+          //     widget.data.id!,
+          //     0);
+   
+
+          VideoWareHome.instance.disposeAllVideoV2(widget.data.id!,
+              "$muxStreamBaseUrl/${widget.media.first}.$videoExtension");
         });
         // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         //   VideoWareHome.instance.initVideo(

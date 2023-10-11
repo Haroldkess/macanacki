@@ -27,6 +27,7 @@ Future<http.Response?> getFeedPost(int pageNum) async {
   }
   return response;
 }
+
 Future<http.Response?> getVideoPost(int pageNum) async {
   SharedPreferences pref = await SharedPreferences.getInstance();
   String? token = pref.getString(tokenKey);
@@ -59,14 +60,13 @@ Future<http.Response?> getVideo(int id) async {
         HttpHeaders.authorizationHeader: "Bearer $token",
       },
     );
-    log(response.statusCode.toString());
-     log(response.body.toString());
+    //  log(response.statusCode.toString());
+    // log(response.body.toString());
   } catch (e) {
     response = null;
   }
   return response;
 }
-
 
 Future<http.Response?> getUserFeedPost(
     int pageNumber, int numberOfPostPerRequest) async {

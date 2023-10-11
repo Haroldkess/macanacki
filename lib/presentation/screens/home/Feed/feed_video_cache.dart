@@ -80,6 +80,9 @@ class _FeedVideoHolderPrivateState extends State<FeedVideoHolderPrivate>
         PersistentNavController.instance.toggleHide();
       }
     });
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      VideoWare.instance.loadVideo(true);
+    });
   }
 
   @override
@@ -94,6 +97,9 @@ class _FeedVideoHolderPrivateState extends State<FeedVideoHolderPrivate>
         widget.postId,
         "$muxStreamBaseUrl/${widget.data.mux!.first}.$videoExtension",
       );
+
+      VideoWare.instance.disposeAllVideoV2(widget.data.id!,
+          "$muxStreamBaseUrl/${widget.data.mux!.first}.$videoExtension");
     });
 
     super.dispose();
@@ -117,116 +123,136 @@ class _FeedVideoHolderPrivateState extends State<FeedVideoHolderPrivate>
       resizeToAvoidBottomInset: false,
       body: ObxValue((allVideos) {
         return PageView.builder(
-            itemCount: allVideos.length,
-            controller: pageController,
-            //  preloadPagesCount: 0,
-            scrollDirection: Axis.vertical,
-            itemBuilder: ((context, index) {
-              FeedPost post = allVideos[index];
-              return GestureDetector(
-                onDoubleTap: () async {
-                  var lister = VideoWare.instance.videoController
-                      .where((p0) => p0.id == widget.data.id!)
-                      .toList();
+          itemCount: allVideos.length,
+          controller: pageController,
+          //  preloadPagesCount: 0,
+          scrollDirection: Axis.vertical,
+          itemBuilder: ((context, index) {
+            FeedPost post = allVideos[index];
+            return GestureDetector(
+              onTap: () {
+                if (index != 0) {
+                  VideoWare.instance.loadVideo(true);
 
-                  if (lister.isNotEmpty) {
-                    if (lister.first.controller!.value.value.isPlaying) {
-                      if (mounted) {
-                        if (controller.value == 1) {
-                          controller.reset();
-                          controller.forward();
-                        } else {
-                          controller.forward();
-                        }
+                  WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                    VideoWare.instance.initSomeVideo(
+                        "$muxStreamBaseUrl/${post.mux!.first}.$videoExtension",
+                        post.id!,
+                        index);
+                  });
+                }
+              },
+              onDoubleTap: () async {
+                var lister = VideoWare.instance.videoController
+                    .where((p0) => p0.id == widget.data.id!)
+                    .toList();
 
-                        if (action.likeIds.contains(widget.data.id!)) {
-                          setState(() {
-                            flag = true;
-                          });
-                          await Future.delayed(const Duration(seconds: 2));
+                if (lister.isNotEmpty) {
+                  if (lister.first.controller!.value.value.isPlaying) {
+                    if (mounted) {
+                      if (controller.value == 1) {
+                        controller.reset();
+                        controller.forward();
+                      } else {
+                        controller.forward();
+                      }
 
-                          setState(() {
-                            flag = false;
-                          });
-
-                          return;
-                        }
+                      if (action.likeIds.contains(widget.data.id!)) {
                         setState(() {
                           flag = true;
                         });
-
-                        await likeAction(context, true, widget.data.id!);
-
                         await Future.delayed(const Duration(seconds: 2));
 
                         setState(() {
                           flag = false;
                         });
+
+                        return;
                       }
+                      setState(() {
+                        flag = true;
+                      });
+
+                      await likeAction(context, true, widget.data.id!);
+
+                      await Future.delayed(const Duration(seconds: 2));
+
+                      setState(() {
+                        flag = false;
+                      });
                     }
                   }
-                },
-                child: Stack(
-                  children: [
-                    VideoView2(
-                        thumbLink: post.thumbnails!.first ?? "",
-                        page: widget.page,
-                        postId: post.id!,
-                        index: index,
-                        data: post,
-                        isHome: false),
-                    widget.data.promoted == "yes"
-                        ? Positioned(
-                            bottom: 140,
-                            left: 0,
-                            child: Align(
-                                alignment: Alignment.bottomLeft,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    // AdsDisplay(
-                                    //   sponsored: false,
-                                    //   color: HexColor('#00B074'),
-                                    //   title: '\$10.000.00',
-                                    // ),
-                                    // SizedBox(
-                                    //   height: 10,
-                                    // ),
-                                    AdsDisplay(
-                                      sponsored: true,
-                                      //  color: HexColor('#00B074'),
-                                      color: Colors.grey.shade400,
-                                      title: 'Sponsored Ad',
-                                    ),
-                                  ],
-                                )),
-                          )
-                        : SizedBox.shrink(),
-                    flag
-                        ? Center(
-                            child: Align(
-                              alignment: Alignment.center,
-                              child: AnimatedContainer(
-                                duration: const Duration(seconds: 3),
-                                curve: Curves.bounceInOut,
-                                onEnd: () {
-                                  setState(() {
-                                    flag = false;
-                                  });
-                                },
-                                child: Icon(
-                                  Icons.favorite,
-                                  size: Get.width * 0.4,
-                                  color: animation.value,
-                                ),
+                }
+              },
+              child: Stack(
+                children: [
+                  VideoView2(
+                      thumbLink: post.thumbnails!.first ?? "",
+                      page: widget.page,
+                      postId: post.id!,
+                      index: index,
+                      data: post,
+                      isHome: false),
+                  widget.data.promoted == "yes"
+                      ? Positioned(
+                          bottom: 140,
+                          left: 0,
+                          child: Align(
+                              alignment: Alignment.bottomLeft,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // AdsDisplay(
+                                  //   sponsored: false,
+                                  //   color: HexColor('#00B074'),
+                                  //   title: '\$10.000.00',
+                                  // ),
+                                  // SizedBox(
+                                  //   height: 10,
+                                  // ),
+                                  AdsDisplay(
+                                    sponsored: true,
+                                    //  color: HexColor('#00B074'),
+                                    color: Colors.grey.shade400,
+                                    title: 'Sponsored Ad',
+                                  ),
+                                ],
+                              )),
+                        )
+                      : SizedBox.shrink(),
+                  flag
+                      ? Center(
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: AnimatedContainer(
+                              duration: const Duration(seconds: 3),
+                              curve: Curves.bounceInOut,
+                              onEnd: () {
+                                setState(() {
+                                  flag = false;
+                                });
+                              },
+                              child: Icon(
+                                Icons.favorite,
+                                size: Get.width * 0.4,
+                                color: animation.value,
                               ),
                             ),
-                          )
-                        : const SizedBox.shrink(),
-                  ],
-                ),
-              );
-            }));
+                          ),
+                        )
+                      : const SizedBox.shrink(),
+                ],
+              ),
+            );
+          }),
+          onPageChanged: (index) {
+            if (index != 0) {
+              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                VideoWare.instance.loadVideo(false);
+              });
+            }
+          },
+        );
       }, VideoWare.instance.feedPosts),
     );
   }
@@ -305,13 +331,16 @@ class _VideoView2State extends State<VideoView2> {
   @override
   void initState() {
     super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      VideoWare.instance.initSomeVideo(
-          "$muxStreamBaseUrl/${widget.data.mux!.first}.$videoExtension",
-          widget.data.id!,
-          widget.index);
-    });
+    if (widget.index == 0) {
+          VideoWare.instance.loadVideo(true);
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+            VideoWare.instance.loadVideo(true);
+        VideoWare.instance.initSomeVideo(
+            "$muxStreamBaseUrl/${widget.data.mux!.first}.$videoExtension",
+            widget.data.id!,
+            widget.index);
+      });
+    }
 
     final find = VideoWare.instance.videoController
         .where((item) => item.id == widget.postId)
@@ -356,14 +385,8 @@ class _VideoView2State extends State<VideoView2> {
       //  if (widget.index == 0) return;
       VideoWare.instance.disposeVideo(widget.data.id!,
           "$muxStreamBaseUrl/${widget.data.mux!.first}.$videoExtension");
-
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        //  if (widget.index == 0) return;
-        //  if (widget.data2 != null) {
-        // VideoWareHome.instance.disposeAllVideo(widget.data2!.id!,
-        //     "$muxStreamBaseUrl/${widget.data2!.mux!.first}.$videoExtension");
-        //}
-      });
+      // VideoWare.instance.disposeAllVideoV2(widget.data.id!,
+      //     "$muxStreamBaseUrl/${widget.data.mux!.first}.$videoExtension");
     });
 
     super.dispose();
@@ -390,7 +413,7 @@ class _VideoView2State extends State<VideoView2> {
                             emitter("yes lets play the video");
                             val.value.play();
                           } else {
-                            val.value.pause();
+                            //   val.value.pause();
                           }
                         }
                       });
@@ -445,16 +468,48 @@ class _VideoView2State extends State<VideoView2> {
                 }
 
                 return val.value.value.isInitialized == false
-                    ? Container(
-                        width: Get.width,
-                        height: Get.height,
-                        decoration: BoxDecoration(
-                            color: Colors.black,
-                            image: DecorationImage(
-                              image: CachedNetworkImageProvider(
-                                  widget.thumbLink.toString()),
-                              fit: BoxFit.cover,
-                            )),
+                    ? Stack(
+                        children: [
+                          Container(
+                            width: Get.width,
+                            height: Get.height,
+                            decoration: BoxDecoration(
+                                color: Colors.black,
+                                image: DecorationImage(
+                                  image: CachedNetworkImageProvider(
+                                      widget.thumbLink.toString()),
+                                  fit: BoxFit.cover,
+                                )),
+                          ),
+                          Align(
+                            alignment: Alignment.center,
+                            child: ObxValue((load) {
+                              return load.value
+                                  ? CircleAvatar(
+                                      backgroundColor:
+                                          Colors.white.withOpacity(.7),
+                                      radius: 30,
+                                      child: Center(
+                                        child: Loader(
+                                            color: HexColor(primaryColor)),
+                                      ),
+                                    )
+                                  : Visibility(
+                                      visible: load.value ? false : true,
+                                      child: CircleAvatar(
+                                        backgroundColor:
+                                            Colors.white.withOpacity(.7),
+                                        radius: 30,
+                                        child: const Icon(
+                                          Icons.play_arrow_outlined,
+                                          size: 25,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    );
+                            }, VideoWare.instance.isLoadVideo),
+                          ),
+                        ],
                       )
                     : Stack(
                         alignment: Alignment.center,
@@ -488,18 +543,22 @@ class _VideoView2State extends State<VideoView2> {
                                                 .first
                                                 .chewie ==
                                             null
-                                        ? Container(
-                                            width: Get.width,
-                                            height: Get.height,
-                                            decoration: BoxDecoration(
-                                                color: Colors.black,
-                                                image: DecorationImage(
-                                                  image:
-                                                      CachedNetworkImageProvider(
-                                                          widget.thumbLink
-                                                              .toString()),
-                                                  fit: BoxFit.cover,
-                                                )),
+                                        ? Stack(
+                                            children: [
+                                              Container(
+                                                width: Get.width,
+                                                height: Get.height,
+                                                decoration: BoxDecoration(
+                                                    color: Colors.black,
+                                                    image: DecorationImage(
+                                                      image:
+                                                          CachedNetworkImageProvider(
+                                                              widget.thumbLink
+                                                                  .toString()),
+                                                      fit: BoxFit.cover,
+                                                    )),
+                                              ),
+                                            ],
                                           )
                                         : Chewie(
                                             controller: cheiwe

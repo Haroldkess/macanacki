@@ -82,7 +82,7 @@ buyDiamondsModal(BuildContext cont, rate) async {
                           child: AppFormAmount(
                             borderRad: 5.0,
                             backColor: Colors.transparent,
-                            hint: "Enter Amount",
+                            hint: "\$Enter Amount",
                             hintColor: HexColor("#C0C0C0"),
                             controller: amount,
                             fontSize: 13,
@@ -95,7 +95,7 @@ buyDiamondsModal(BuildContext cont, rate) async {
                             onTap: () {
                               if (amount.text.isNotEmpty) {
                                 if (int.tryParse(amount.text)! < 10) {
-                                  showToast2(context, "Minimum is 10 diamonds");
+                                  showToast2(context, "Minimum is \$10");
                                   return;
                                 } else {
                                   buyGiftPaystackModal(

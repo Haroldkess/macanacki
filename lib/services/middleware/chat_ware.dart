@@ -146,6 +146,8 @@ class ChatWare extends ChangeNotifier {
     chatAdd.conversations!.insert(0, toBeAdded);
 
     ChatData newChat = chatAdd;
+    allowed(true);
+    addMsg(toBeAdded);
 
     for (var i = 0; i < tempData.length; i++) {
       List<ChatData> forCheck =
@@ -156,10 +158,8 @@ class ChatWare extends ChangeNotifier {
         _chatList = [];
         _chatList.clear();
         _chatList = tempData;
-
-        addMsg(toBeAdded);
         notifyListeners();
-      }
+      } else {}
 
       // if(forCheck.isNotEmpty){
 
@@ -253,6 +253,7 @@ class ChatWare extends ChangeNotifier {
     yield data ?? "nothing";
   }
 
+  bool allow = true;
   Future addMsg(
     Conversation msg,
   ) async {
@@ -266,12 +267,22 @@ class ChatWare extends ChangeNotifier {
       if (justChat[0].body == msg.body &&
           "${justChat[0].createdAt!.year}-${justChat[0].createdAt!.month}-${justChat[0].createdAt!.day} ${justChat[0].createdAt!.hour}:${justChat[0].createdAt!.minute} ${justChat[0].createdAt!.second}" ==
               "${msg.createdAt!.year}-${msg.createdAt!.month}-${msg.createdAt!.day} ${msg.createdAt!.hour}:${msg.createdAt!.minute} ${msg.createdAt!.second}" &&
+          "${justChat[0].createdAt!.year}-${justChat[0].createdAt!.month}-${justChat[0].createdAt!.day} ${justChat[0].createdAt!.hour}:${justChat[0].createdAt!.minute} ${justChat[0].createdAt!.second}.${msg.createdAt!.millisecond}" ==
+              "${msg.createdAt!.year}-${msg.createdAt!.month}-${msg.createdAt!.day} ${msg.createdAt!.hour}:${msg.createdAt!.minute} ${msg.createdAt!.second}.${msg.createdAt!.millisecond}" &&
           find.isEmpty) {
       } else {
-        justChat.insert(0, msg);
+        if (allow == true) {
+          justChat.insert(0, msg);
+          allowed(false);
+        } else {}
       }
     }
 
+    notifyListeners();
+  }
+
+  void allowed(bool val) {
+    allow = val;
     notifyListeners();
   }
 

@@ -350,6 +350,12 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
   }
 
   List<PersistentBottomNavBarItem> _navBarsItems() {
+    ChatWare streams = context.watch<ChatWare>();
+    int unread = 0;
+
+    streams.unreadMsgs.forEach((element) {
+      unread += element.totalUnread!;
+    });
     return [
       PersistentBottomNavBarItem(
         icon: SvgPicture.asset(
@@ -409,20 +415,86 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
         ),
       ),
       PersistentBottomNavBarItem(
-        icon: SvgPicture.asset(
-          'assets/icon/chat.svg',
-          height: 18,
-          width: 18,
-          color: HexColor(primaryColor),
+        icon: Stack(
+          alignment: Alignment.center,
+          children: [
+            SvgPicture.asset(
+              'assets/icon/chat.svg',
+              height: 18,
+              width: 18,
+              color: HexColor(primaryColor),
+            ),
+            unread < 1
+                ? const SizedBox.shrink()
+                : Positioned(
+                    right: 1,
+                    top: 5,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 0.0, top: 0),
+                      child: Align(
+                        alignment: Alignment.topCenter,
+                        //top: -2,
+                        child: Container(
+                          constraints:
+                              BoxConstraints(maxHeight: 10, maxWidth: 10),
+                          decoration: const BoxDecoration(
+                              color: Colors.red, shape: BoxShape.circle),
+                          child: Center(
+                            child: AppText(
+                              size: 8,
+                              text: "",
+                              //   text: unread > 99 ? "99+" : unread.toString(),
+                              color: HexColor(backgroundColor),
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+          ],
         ),
         title: ("Chat"),
         activeColorPrimary: HexColor(primaryColor),
         inactiveColorPrimary: HexColor("#C0C0C0"),
-        inactiveIcon: SvgPicture.asset(
-          'assets/icon/chat.svg',
-          height: 18,
-          width: 18,
-          color: HexColor("#C0C0C0"),
+        inactiveIcon: Stack(
+          alignment: Alignment.center,
+          children: [
+            SvgPicture.asset(
+              'assets/icon/chat.svg',
+              height: 18,
+              width: 18,
+              color: HexColor("#C0C0C0"),
+            ),
+            unread < 1
+                ? const SizedBox.shrink()
+                : Positioned(
+                    right: 1,
+                    top: 5,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 0.0, top: 0),
+                      child: Align(
+                        alignment: Alignment.topCenter,
+                        //top: -2,
+                        child: Container(
+                          constraints:
+                              BoxConstraints(maxHeight: 10, maxWidth: 10),
+                          decoration: const BoxDecoration(
+                              color: Colors.red, shape: BoxShape.circle),
+                          child: Center(
+                            child: AppText(
+                              size: 8,
+                              text: "",
+                              //   text: unread > 99 ? "99+" : unread.toString(),
+                              color: HexColor(backgroundColor),
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+          ],
         ),
       ),
       PersistentBottomNavBarItem(
@@ -518,18 +590,18 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
       provide.tapTrack(0);
 
       try {
-        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-          VideoWareHome.instance.pauseAnyVideo();
-        });
-        if (index == 0) {
-          WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-            VideoWareHome.instance.playAnyVideo();
-          });
-        } else {
-          WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-            VideoWareHome.instance.pauseAnyVideo();
-          });
-        }
+        // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        //   VideoWareHome.instance.pauseAnyVideo();
+        // });
+        // if (index == 0) {
+        //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        //     VideoWareHome.instance.playAnyVideo();
+        //   });
+        // } else {
+        //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        //     VideoWareHome.instance.pauseAnyVideo();
+        //   });
+        // }
 
         // if (provide.controller != null) {
         //   if (provide.controller!.value.isInitialized) {
@@ -629,9 +701,7 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
     Get.put(GiftWare());
     WidgetsBinding.instance.addPostFrameCallback((_) {
       VideoWareHome.instance.getVideoPostFromApi(1);
-      //  VideoWareHome.instance.getVideoPostFromApi(2);
-      // VideoWareHome.instance.getVideoPostFromApi(3);
-      //  VideoWareHome.instance.getVideoPostFromApi(4);
+
     });
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
