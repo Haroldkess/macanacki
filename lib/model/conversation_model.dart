@@ -12,20 +12,31 @@ String allConversationModelToJson(AllConversationModel data) =>
     json.encode(data.toJson());
 
 class AllConversationModel {
-  AllConversationModel({
-    this.status,
-    this.message,
-    this.data,
-  });
+  AllConversationModel(
+      {this.status,
+      this.message,
+      this.data,
+      this.currentPage,
+      this.lastPageNo,
+      this.noPerPage,
+      this.totalConversionCount});
 
   bool? status;
   String? message;
+  int? noPerPage;
+  int? totalConversionCount;
+  int? lastPageNo;
+  String? currentPage;
   List<ChatData>? data;
 
   factory AllConversationModel.fromJson(Map<String, dynamic> json) =>
       AllConversationModel(
         status: json["status"],
         message: json["message"],
+        currentPage: json["current_page"],
+        noPerPage: json["no_per_page"],
+        totalConversionCount: json["total_conversion_count"],
+        lastPageNo: json["last_page_no"],
         data: json["data"] == null
             ? []
             : List<ChatData>.from(
@@ -35,6 +46,10 @@ class AllConversationModel {
   Map<String, dynamic> toJson() => {
         "status": status,
         "message": message,
+        "no_per_page": noPerPage,
+        "current_page": currentPage,
+        "total_conversion_count": totalConversionCount,
+        "last_page_no": lastPageNo,
         "data": data == null
             ? []
             : List<dynamic>.from(data!.map((x) => x.toJson())),
@@ -66,6 +81,7 @@ class ChatData {
   dynamic blockedBy;
   DateTime? createdAt;
   DateTime? updatedAt;
+  // String? lastMessageTime;
   String? userOne;
   int? userOneId;
   String? userOneMode;
@@ -127,17 +143,16 @@ class ChatData {
 }
 
 class Conversation {
-  Conversation({
-    this.id,
-    this.body,
-    this.read,
-    this.senderId,
-    this.createdAt,
-    this.updatedAt,
-    this.sender,
-    this.media,
-    this.determineId
-  });
+  Conversation(
+      {this.id,
+      this.body,
+      this.read,
+      this.senderId,
+      this.createdAt,
+      this.updatedAt,
+      this.sender,
+      this.media,
+      this.determineId});
 
   int? id;
   String? body;
@@ -162,7 +177,7 @@ class Conversation {
             : DateTime.parse(json["updated_at"]),
         sender: json["sender"],
         media: json["media"],
-         determineId: json["determineId"],
+        determineId: json["determineId"],
       );
 
   Map<String, dynamic> toJson() => {

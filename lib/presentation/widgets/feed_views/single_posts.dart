@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import 'package:hexcolor/hexcolor.dart';
 import 'package:macanacki/presentation/widgets/feed_views/image_holder.dart';
@@ -13,6 +14,8 @@ import 'package:video_player/video_player.dart';
 
 import '../../../model/feed_post_model.dart';
 import '../../../services/middleware/feed_post_ware.dart';
+import '../../../services/middleware/post_security.dart';
+import '../../../services/middleware/user_profile_ware.dart';
 import '../../allNavigation.dart';
 import '../../constants/colors.dart';
 import '../../constants/string.dart';
@@ -59,6 +62,13 @@ class SinglePost extends StatelessWidget {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     FeedPostWare stream = context.watch<FeedPostWare>();
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //   if (!media.contains("https")) {
+    //     PostSecurity.instance.toggleSecure(false);
+    //   } else {
+    //     PostSecurity.instance.toggleSecure(true);
+    //   }
+    // });
     return !media.contains("https")
         ? Stack(
             alignment: Alignment.center,
@@ -71,19 +81,19 @@ class SinglePost extends StatelessWidget {
               GestureDetector(
                 onTap: () async {
                   // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                  VideoWareHome.instance.loadVideo(true);
+                  //   VideoWareHome.instance.loadVideo(true);
                   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
                     VideoWareHome.instance.viewToggle(0);
-                    VideoWareHome.instance.loadVideo(true);
+                    // VideoWareHome.instance.loadVideo(true);
                   });
                   //    });
                   // WidgetsBinding.instance
                   //     .addPostFrameCallback((timeStamp) async {
                   VideoWareHome.instance.addVideoToList(data).whenComplete(() {
-                    VideoWareHome.instance.initSomeVideo(
-                        "$muxStreamBaseUrl/$media.$videoExtension",
-                        data.id!,
-                        0);
+                    // VideoWareHome.instance.initSomeVideo(
+                    //     "$muxStreamBaseUrl/$media.$videoExtension",
+                    //     data.id!,
+                    //     0);
                     PageRouting.pushToPage(
                       context,
                       FeedVideoHolder(
@@ -214,7 +224,8 @@ class SinglePost extends StatelessWidget {
                     child: CachedNetworkImage(
                         imageUrl: media,
                         fit: BoxFit.fitWidth,
-                        imageBuilder: (context, imageProvider) => Container(
+                        imageBuilder: (context, imageProvider) =>
+                            Container(
                               width: width,
                               height: height,
                               decoration: BoxDecoration(
@@ -242,7 +253,8 @@ class SinglePost extends StatelessWidget {
                                     )),
                                   ),
                               progressIndicatorBuilder:
-                                  (context, url, downloadProgress) => Center(
+                                  (context, url, downloadProgress) =>
+                                      Center(
                                           child: Loader(
                                         color: HexColor(primaryColor),
                                       )),
@@ -299,6 +311,18 @@ class UserSinglePost extends StatelessWidget {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     FeedPostWare stream = context.watch<FeedPostWare>();
+    UserProfileWare user = context.watch<UserProfileWare>();
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //   if (data.user!.username! == user.userProfileModel.username) {
+    //     PostSecurity.instance.toggleSecure(false);
+    //   } else {
+    //     if (!media.contains("https")) {
+    //       PostSecurity.instance.toggleSecure(false);
+    //     } else {
+    //       PostSecurity.instance.toggleSecure(true);
+    //     }
+    //   }
+    // });
     return !media.contains("https")
         ? Stack(
             alignment: Alignment.center,

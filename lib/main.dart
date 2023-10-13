@@ -9,6 +9,7 @@ import 'package:macanacki/presentation/constants/colors.dart';
 import 'package:macanacki/presentation/screens/onboarding/splash_screen.dart';
 import 'package:macanacki/services/controllers/IAUpdate.dart';
 import 'package:macanacki/services/controllers/save_media_controller.dart';
+import 'package:macanacki/services/middleware/post_security.dart';
 import 'package:macanacki/services/middleware/video/video_ware.dart';
 import 'package:macanacki/services/provider_init.dart';
 import 'package:overlay_support/overlay_support.dart';
@@ -32,10 +33,11 @@ void main() async {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       systemNavigationBarIconBrightness: Brightness.dark,
       systemNavigationBarColor: HexColor(backgroundColor)));
-  Get.put(VideoWare("", 0, false,0));
-  Get.put(VideoWareHome("", 0, false,0));
+  Get.put(VideoWare("", 0, false, 0));
+  Get.put(VideoWareHome("", 0, false, 0));
   Get.put(MediaDownloadProgress());
   Get.put(PersistentNavController());
+  Get.put(PostSecurity());
 
   runApp(Phoenix(child: const MyApp()));
 }

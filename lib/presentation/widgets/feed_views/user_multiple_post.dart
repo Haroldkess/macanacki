@@ -8,6 +8,8 @@ import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 import '../../../model/feed_post_model.dart';
 import '../../../services/controllers/view_controller.dart';
+import '../../../services/middleware/post_security.dart';
+import '../../../services/middleware/user_profile_ware.dart';
 import '../../allNavigation.dart';
 import '../../constants/string.dart';
 import '../../screens/home/Feed/feed_video_cache.dart';
@@ -39,6 +41,15 @@ class UserMultiplePost extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TabProvider stream = context.watch<TabProvider>();
+    UserProfileWare user = context.watch<UserProfileWare>();
+
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //   if (data!.user!.username! == user.userProfileModel.username) {
+    //     PostSecurity.instance.toggleSecure(false);
+    //   } else {
+    //     PostSecurity.instance.toggleSecure(true);
+    //   }
+    // });
     return Stack(
       children: [
         PageView.builder(
@@ -66,9 +77,8 @@ class UserMultiplePost extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-                const   SizedBox(
-                height:
-                    100,
+              const SizedBox(
+                height: 100,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -87,7 +97,6 @@ class UserMultiplePost extends StatelessWidget {
                       ))
                 ],
               ),
-             
             ],
           ),
         )

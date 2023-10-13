@@ -45,14 +45,16 @@ class _FeedHomeState extends State<FeedHome>
 
     return RefreshIndicator(
         onRefresh: () => callFeedPost(true),
-        backgroundColor: HexColor(primaryColor),
+        backgroundColor:HexColor(primaryColor),
         color: HexColor(backgroundColor),
+        triggerMode: RefreshIndicatorTriggerMode.anywhere,
+        strokeWidth: 2,
         child: stream.loadStatusReferesh
             ? const Center(
                 child: ScanningPerimeter(
                 msg: "Getting new posts for you...",
               ))
-            : const PeopleHome() );
+            : const PeopleHome());
   }
 
   callFeedPost(bool isRefreshed) async {
@@ -60,11 +62,10 @@ class _FeedHomeState extends State<FeedHome>
     if (isRefreshed == false) {
       if (provide.feedPosts.isEmpty) {
         SchedulerBinding.instance.addPostFrameCallback((_) async {
-        await FeedPostController.getFeedPostController(context, 1, false);
-      });
-        
+          await FeedPostController.getFeedPostController(context, 1, false);
+        });
       }
-      
+
       SchedulerBinding.instance.addPostFrameCallback((_) {
         ActionController.retrievAllUserLikedController(context);
       });

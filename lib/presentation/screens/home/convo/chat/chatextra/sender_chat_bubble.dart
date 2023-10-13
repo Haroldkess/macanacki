@@ -8,7 +8,7 @@ import 'package:macanacki/presentation/constants/colors.dart';
 import 'package:macanacki/presentation/model/ui_model.dart';
 import 'package:macanacki/presentation/widgets/text.dart';
 import 'package:macanacki/services/controllers/chat_controller.dart';
-
+import 'package:animate_do/animate_do.dart';
 import '../../../../../../model/conversation_model.dart';
 import '../../../../../operations.dart';
 
@@ -36,7 +36,7 @@ class SenderBubble extends StatelessWidget {
             width: MediaQuery.of(context).size.width * 0.8,
             alignment: Alignment.topLeft,
             decoration: BoxDecoration(
-                color: HexColor(primaryColor),
+                color: HexColor(primaryColor).withOpacity(.7),
                 shape: BoxShape.rectangle,
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(10),
@@ -61,8 +61,9 @@ class SenderBubble extends StatelessWidget {
                   AppText(
                     text: chat.body!,
                     color: HexColor(backgroundColor),
-                    size: 12,
-                    fontWeight: FontWeight.w500,
+                    size: 14,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.2,
                   ),
                 ],
               ),

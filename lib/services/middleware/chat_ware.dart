@@ -13,8 +13,10 @@ import '../backoffice/chat_office.dart';
 
 class ChatWare extends ChangeNotifier {
   bool _loadStatus = false;
+  bool isTexted = false;
   ChatData? newChatData;
   Conversation? newConversationData;
+  AllConversationModel? initialConverstation;
   String message = "Something went wrong";
   ScrollController controller = ScrollController();
   List<SockerUserModel> allSocketUsers = [];
@@ -25,6 +27,7 @@ class ChatWare extends ChangeNotifier {
   List<UnreadData> unreadMsgs = [];
   String searchName = "";
   List<ChatData> _chatList = [];
+  List<ChatData> _holdingChatList = [];
   List<ChatData> chatList2 = [];
   AllConversationModel _chat = AllConversationModel();
   IO.Socket? socket;
@@ -35,6 +38,11 @@ class ChatWare extends ChangeNotifier {
 
   void addNewChatData(newData) {
     newChatData = newData;
+    notifyListeners();
+  }
+
+  void texted(bool val) {
+    isTexted = val;
     notifyListeners();
   }
 
@@ -59,12 +67,24 @@ class ChatWare extends ChangeNotifier {
     notifyListeners();
   }
 
+  void addHoldingChats() {
+    _chatList = _holdingChatList;
+    notifyListeners();
+  }
+
   Future<void> replaceChatData(ChatData? dat) async {
     _chatList
         .where((element) => element.id == dat!.id)
         .first
         .conversations!
         .insert(0, dat!.conversations!.first);
+
+    //         final holdList = _chatList.where((element) => element.id == dat!.id).first;
+    // _chatList.removeWhere((element) => element.id == dat!.id);
+
+    // final value = holdList.conversations!.insert(0, dat!.conversations!.first);
+
+    // _chatList.insert(0, value as ChatData);
 
     //  tempData.;
     // Conversation toBeAdded = Conversation(
@@ -130,40 +150,86 @@ class ChatWare extends ChangeNotifier {
 
   Future<void> testAddToChatData(ChatData? dat) async {
     List<ChatData> tempData = _chatList;
-    ChatData chatAdd = tempData.where((element) => element.id == dat!.id).first;
-    Conversation toBeAdded = Conversation(
-      id: dat!.conversations!.first.id,
-      body: dat.conversations!.first.body,
-      read: dat.conversations!.first.read,
-      senderId: dat.conversations!.first.senderId,
-      createdAt: dat.conversations!.first.createdAt,
-      updatedAt: dat.conversations!.first.updatedAt,
-      sender: dat.conversations!.first.sender,
-      media: dat.conversations!.first.media,
-      determineId: dat.id,
-    );
+    List<ChatData> chatAddList =
+        tempData.where((element) => element.id == dat!.id).toList();
 
-    chatAdd.conversations!.insert(0, toBeAdded);
+    if (chatAddList.isEmpty) {
+      await getChatFromApi(false, 1, false).whenComplete(() async {
+        tempData = _chatList;
+        ChatData chatAdd =
+            tempData.where((element) => element.id == dat!.id).first;
+        Conversation toBeAdded = Conversation(
+          id: dat!.conversations!.first.id,
+          body: dat.conversations!.first.body,
+          read: dat.conversations!.first.read,
+          senderId: dat.conversations!.first.senderId,
+          createdAt: dat.conversations!.first.createdAt,
+          updatedAt: dat.conversations!.first.updatedAt,
+          sender: dat.conversations!.first.sender,
+          media: dat.conversations!.first.media,
+          determineId: dat.id,
+        );
 
-    ChatData newChat = chatAdd;
-    allowed(true);
-    addMsg(toBeAdded);
+        chatAdd.conversations!.insert(0, toBeAdded);
 
-    for (var i = 0; i < tempData.length; i++) {
-      List<ChatData> forCheck =
-          tempData.where((element) => element.id == dat.id).toList();
-      if (tempData[i].id == dat.id) {
-        tempData.removeAt(i);
-        tempData.add(newChat);
-        _chatList = [];
-        _chatList.clear();
-        _chatList = tempData;
-        notifyListeners();
-      } else {}
+        ChatData newChat = chatAdd;
+        // allowed(true);
+        addMsg(toBeAdded);
 
-      // if(forCheck.isNotEmpty){
+        for (var i = 0; i < tempData.length; i++) {
+          List<ChatData> forCheck =
+              tempData.where((element) => element.id == dat.id).toList();
+          if (tempData[i].id == dat.id) {
+            tempData.removeAt(i);
+            tempData.add(newChat);
+            _chatList = [];
+            _chatList.clear();
+            _chatList = tempData;
+            notifyListeners();
+          } else {}
 
-      // }
+          // if(forCheck.isNotEmpty){
+
+          // }
+        }
+      });
+    } else {
+      ChatData chatAdd =
+          tempData.where((element) => element.id == dat!.id).first;
+      Conversation toBeAdded = Conversation(
+        id: dat!.conversations!.first.id,
+        body: dat.conversations!.first.body,
+        read: dat.conversations!.first.read,
+        senderId: dat.conversations!.first.senderId,
+        createdAt: dat.conversations!.first.createdAt,
+        updatedAt: dat.conversations!.first.updatedAt,
+        sender: dat.conversations!.first.sender,
+        media: dat.conversations!.first.media,
+        determineId: dat.id,
+      );
+
+      chatAdd.conversations!.insert(0, toBeAdded);
+
+      ChatData newChat = chatAdd;
+      // allowed(true);
+      addMsg(toBeAdded);
+
+      for (var i = 0; i < tempData.length; i++) {
+        List<ChatData> forCheck =
+            tempData.where((element) => element.id == dat.id).toList();
+        if (tempData[i].id == dat.id) {
+          tempData.removeAt(i);
+          tempData.add(newChat);
+          _chatList = [];
+          _chatList.clear();
+          _chatList = tempData;
+          notifyListeners();
+        } else {}
+
+        // if(forCheck.isNotEmpty){
+
+        // }
+      }
     }
 
     // _chatList
@@ -265,16 +331,17 @@ class ChatWare extends ChangeNotifier {
       justChat.insert(0, msg);
     } else {
       if (justChat[0].body == msg.body &&
-          "${justChat[0].createdAt!.year}-${justChat[0].createdAt!.month}-${justChat[0].createdAt!.day} ${justChat[0].createdAt!.hour}:${justChat[0].createdAt!.minute} ${justChat[0].createdAt!.second}" ==
-              "${msg.createdAt!.year}-${msg.createdAt!.month}-${msg.createdAt!.day} ${msg.createdAt!.hour}:${msg.createdAt!.minute} ${msg.createdAt!.second}" &&
-          "${justChat[0].createdAt!.year}-${justChat[0].createdAt!.month}-${justChat[0].createdAt!.day} ${justChat[0].createdAt!.hour}:${justChat[0].createdAt!.minute} ${justChat[0].createdAt!.second}.${msg.createdAt!.millisecond}" ==
-              "${msg.createdAt!.year}-${msg.createdAt!.month}-${msg.createdAt!.day} ${msg.createdAt!.hour}:${msg.createdAt!.minute} ${msg.createdAt!.second}.${msg.createdAt!.millisecond}" &&
+          "${justChat[0].updatedAt!.year}-${justChat[0].updatedAt!.month}-${justChat[0].updatedAt!.day} ${justChat[0].updatedAt!.hour}:${justChat[0].updatedAt!.minute} ${justChat[0].updatedAt!.second}" ==
+              "${msg.updatedAt!.year}-${msg.updatedAt!.month}-${msg.updatedAt!.day} ${msg.updatedAt!.hour}:${msg.updatedAt!.minute} ${msg.updatedAt!.second}" &&
+          "${justChat[0].updatedAt!.year}-${justChat[0].updatedAt!.month}-${justChat[0].updatedAt!.day} ${justChat[0].updatedAt!.hour}:${justChat[0].updatedAt!.minute} ${justChat[0].updatedAt!.second}.${msg.updatedAt!.millisecond}" ==
+              "${msg.updatedAt!.year}-${msg.updatedAt!.month}-${msg.updatedAt!.day} ${msg.updatedAt!.hour}:${msg.updatedAt!.minute} ${msg.updatedAt!.second}.${msg.updatedAt!.millisecond}" &&
           find.isEmpty) {
       } else {
-        if (allow == true) {
-          justChat.insert(0, msg);
-          allowed(false);
-        } else {}
+        // if (allow == true) {
+        justChat.insert(0, msg);
+        texted(true);
+        //  allowed(false);
+        //  } else {}
       }
     }
 
@@ -347,10 +414,12 @@ class ChatWare extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> getChatFromApi() async {
+  Future<bool> getChatFromApi(
+      [bool? isChatPage, int? pageNum, bool? isPaginated]) async {
     late bool isSuccessful;
+    // log("page $pageNum");
     try {
-      http.Response? response = await getAllConversation()
+      http.Response? response = await getAllConversation(pageNum ?? 1)
           .whenComplete(() => emitter("chats gotten successfully"));
       if (response == null) {
         isSuccessful = false;
@@ -359,7 +428,29 @@ class ChatWare extends ChangeNotifier {
         var jsonData = jsonDecode(response.body);
 
         var incomingData = AllConversationModel.fromJson(jsonData);
-        _chatList = incomingData.data!;
+        if (isPaginated == true) {
+          for (ChatData value in incomingData.data!) {
+            var lister =
+                _chatList.where((element) => element.id == value.id).toList();
+
+            if (lister.isEmpty) {
+              _chatList.add(value);
+            } else {}
+          }
+          //_chatList.addAll(incomingData.data!);
+          _holdingChatList = _holdingChatList;
+        } else {
+          if (isChatPage == false) {
+            _chatList = incomingData.data!;
+            _holdingChatList = incomingData.data!;
+          } else {
+            _holdingChatList = incomingData.data!;
+          }
+        }
+
+        initialConverstation = incomingData;
+        //  _holdingChatList = incomingData.data!;
+
         message = jsonData["message"];
 
         //  log("chats  request success");
@@ -371,7 +462,7 @@ class ChatWare extends ChangeNotifier {
     } catch (e) {
       isSuccessful = false;
       // log("chats  request failed");
-      // log(e.toString());
+      log(e.toString());
     }
 
     notifyListeners();
@@ -445,39 +536,39 @@ class ChatWare extends ChangeNotifier {
     return isSuccessful;
   }
 
-  Future<bool> getChatFromApi2() async {
-    late bool isSuccessful;
-    try {
-      http.Response? response = await getAllConversation()
-          .whenComplete(() => emitter("chats gotten successfully"));
-      if (response == null) {
-        isSuccessful = false;
-        // log("chats request failed");
-      } else if (response.statusCode == 201) {
-        print("omooooooooo");
-        var jsonData = jsonDecode(response.body);
+  // Future<bool> getChatFromApi2() async {
+  //   late bool isSuccessful;
+  //   try {
+  //     http.Response? response = await getAllConversation(1)
+  //         .whenComplete(() => emitter("chats gotten successfully"));
+  //     if (response == null) {
+  //       isSuccessful = false;
+  //       // log("chats request failed");
+  //     } else if (response.statusCode == 201) {
+  //       print("omooooooooo");
+  //       var jsonData = jsonDecode(response.body);
 
-        var incomingData = AllConversationModel.fromJson(jsonData);
-        chatList2 = incomingData.data!;
-        _chatList = incomingData.data!;
-        message = jsonData["message"];
+  //       var incomingData = AllConversationModel.fromJson(jsonData);
+  //       chatList2 = incomingData.data!;
+  //       _chatList = incomingData.data!;
+  //       message = jsonData["message"];
 
-        log(incomingData.data!.first.userTwo!);
-        isSuccessful = true;
-      } else {
-        //  log("chats  request failed");
-        isSuccessful = false;
-      }
-    } catch (e) {
-      isSuccessful = false;
-      // log("chats  request failed");
-      log(e.toString());
-    }
+  //       log(incomingData.data!.first.userTwo!);
+  //       isSuccessful = true;
+  //     } else {
+  //       //  log("chats  request failed");
+  //       isSuccessful = false;
+  //     }
+  //   } catch (e) {
+  //     isSuccessful = false;
+  //     // log("chats  request failed");
+  //     log(e.toString());
+  //   }
 
-    notifyListeners();
+  //   notifyListeners();
 
-    return isSuccessful;
-  }
+  //   return isSuccessful;
+  // }
 
   void addUser(List<SockerUserModel> val) async {
     allSocketUsers.clear();
@@ -518,7 +609,7 @@ class ChatWare extends ChangeNotifier {
         //  emitter(jsonData.ToString());
         //  log(jsonData["message"]);
         emitter("message sent successfully");
-        getChatFromApi();
+        getChatFromApi(chatPage == 1 ? false : true, 1, false);
         isSuccessful = true;
         //  var res = http.Response.fromStream(response);
       } else {

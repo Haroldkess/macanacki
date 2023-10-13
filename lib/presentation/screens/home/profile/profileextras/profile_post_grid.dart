@@ -15,12 +15,12 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:scroll_edge_listener/scroll_edge_listener.dart';
-
 import '../../../../../model/public_profile_model.dart';
 import '../../../../../services/api_url.dart';
 import '../../../../../services/controllers/feed_post_controller.dart';
 import '../../../../../services/middleware/feed_post_ware.dart';
 import '../../../../../services/middleware/user_profile_ware.dart';
+import '../../../../../services/middleware/video/video_ware.dart';
 import '../../../../../services/temps/temps_id.dart';
 import '../../../../widgets/loader.dart';
 import '../../../userprofile/extras/public_grid_view_items.dart';
@@ -103,6 +103,17 @@ class _ProfilePostGridState extends State<ProfilePostGrid> {
   @override
   void initState() {
     super.initState();
+
+
+            WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+               FeedPostWare stream = Provider.of<FeedPostWare>(context,listen: false);
+                   if (stream.profileFeedPosts.isNotEmpty) {
+              VideoWare.instance.getVideoPostFromApi(stream.profileFeedPosts);
+               }
+               
+            emitter("ADDED TO POSTS TO LIST");
+            });
+         
   }
 
   @override

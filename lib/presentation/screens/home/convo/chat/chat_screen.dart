@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -177,8 +178,6 @@ class _ChatScreenState extends State<ChatScreen> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       PersistentNavController.instance.toggleHide();
     });
-
-    
   }
 
   bool leaving = false;
@@ -496,25 +495,25 @@ class _ChatScreenState extends State<ChatScreen> {
                                 user: widget.user,
                               )
                             : ChatList(
-                                chat: widget.chat,
-                                me: widget.user.conversations!.last.sender ==
-                                        stream.userName
-                                    ? widget.user.userOne!
-                                    : widget.user.userTwo!,
-                                myUserId: ware.userProfileModel.id.toString(),
-                                to: widget.user.conversations!.last.sender ==
-                                        stream.userName
-                                    ? widget.user.userTwo
-                                    : widget.user.userOne,
-                                toUserId:
-                                    widget.user.conversations!.last.sender ==
-                                            stream.userName
-                                        ? widget.user.userTwoId.toString()
-                                        : widget.user.userOneId.toString(),
-                                controller: controiller!,
-                                isHome: widget.isHome,
-                                user: widget.user,
-                              ),
+                              chat: widget.chat,
+                              me: widget.user.conversations!.last.sender ==
+                                      stream.userName
+                                  ? widget.user.userOne!
+                                  : widget.user.userTwo!,
+                              myUserId: ware.userProfileModel.id.toString(),
+                              to: widget.user.conversations!.last.sender ==
+                                      stream.userName
+                                  ? widget.user.userTwo
+                                  : widget.user.userOne,
+                              toUserId:
+                                  widget.user.conversations!.last.sender ==
+                                          stream.userName
+                                      ? widget.user.userTwoId.toString()
+                                      : widget.user.userOneId.toString(),
+                              controller: controiller!,
+                              isHome: widget.isHome,
+                              user: widget.user,
+                            ),
                       ),
                       Align(
                           alignment: Alignment.bottomCenter,

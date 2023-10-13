@@ -35,8 +35,7 @@ class PeopleHome extends StatefulWidget {
 
 class _PeopleHomeState extends State<PeopleHome> {
   PageController? controller;
-  final RefreshController _refreshController =
-      RefreshController(initialRefresh: false);
+
   @override
   Widget build(BuildContext context) {
     FeedPostWare stream = context.watch<FeedPostWare>();

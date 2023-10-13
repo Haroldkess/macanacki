@@ -36,7 +36,7 @@ import '../middleware/user_profile_ware.dart';
 
 class LoginController {
   static Future<void> loginUserController(BuildContext context, String email,
-      String password, bool isSplash) async {
+      String password, bool isSplash,[bool? isLogin]) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     if (!pref.containsKey(readAllKey)) {
       pref.setBool(readAllKey, false);
@@ -121,7 +121,12 @@ class LoginController {
       ware.isLoading(false);
       showToast2(context, ware.message, isError: true);
       if (isSplash) {
-        PageRouting.pushToPage(context, const LoginScreen());
+        if(isLogin == true){
+
+        }else{
+  PageRouting.pushToPage(context, const LoginScreen());
+        }
+      
       }
     }
     ware.isLoading(false);
@@ -131,7 +136,7 @@ class LoginController {
     await FeedPostController.getFeedPostController(context, 1, false);
     //  await UserProfileController.retrievProfileController(context, true);
     ChatController.retreiveUnread(context);
-    ChatController.retrievChatController(context, false);
+    ChatController.retrievChatController(context, false,false);
     FeedPostController.getUserPostController(context);
     //  ActionController.retrievAllUserFollowingController(context);
     // ActionController.retrievAllUserLikedCommentsController(context);

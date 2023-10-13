@@ -24,14 +24,19 @@ import '../../../../widgets/loader.dart';
 class MessageList extends StatelessWidget {
   List<ChatData> peopleChats;
   String? search;
-  MessageList({super.key, required this.peopleChats, this.search});
+  ScrollController scrollControl;
+  MessageList(
+      {super.key,
+      required this.peopleChats,
+      this.search,
+      required this.scrollControl});
 
   @override
   Widget build(BuildContext context) {
     ChatWare stream = context.watch<ChatWare>();
     List<ChatData> peopleChat = stream.chatList
-      ..sort((a, b) => b.conversations!.first.createdAt!
-          .compareTo(a.conversations!.first.createdAt!));
+      ..sort((a, b) => b.conversations!.first.updatedAt!
+          .compareTo(a.conversations!.first.updatedAt!));
 
     return StreamBuilder(
         stream: null,
@@ -42,12 +47,15 @@ class MessageList extends StatelessWidget {
                   element.userTwo!.contains(stream.searchName.toLowerCase()))
               .toList();
 
-          return ListBody(
+          return Column(
             //  reverse:  true,
             children: filtered
                 .map((e) => Padding(
                       padding: const EdgeInsets.symmetric(vertical: 5.0),
-                      child: MessageWidget(people: e),
+                      child: MessageWidget(
+                        people: e,
+                        scrollControl: scrollControl,
+                      ),
                     ))
                 .toList(),
           );
@@ -68,7 +76,8 @@ class MessageList extends StatelessWidget {
 
 class MessageWidget extends StatefulWidget {
   ChatData people;
-  MessageWidget({super.key, required this.people});
+  ScrollController scrollControl;
+  MessageWidget({super.key, required this.people, required this.scrollControl});
 
   @override
   State<MessageWidget> createState() => _MessageWidgetState();
@@ -124,11 +133,21 @@ class _MessageWidgetState extends State<MessageWidget> {
                     verified: verify,
                   )),
         );
+        
 
         // ignore: use_build_context_synchronously
         await ChatController.addToList(context, data);
         try {
           ware.chatPageChange(1);
+          ware.addHoldingChats();
+          if (ware.isTexted == true) {
+            ware.getChatFromApi(false, 1, false);
+            // if (widget.scrollControl.hasClients) {
+            //   widget.scrollControl
+            //       .jumpTo(widget.scrollControl.position.maxScrollExtent + 300);
+            // }
+          } else {}
+          ware.texted(false);
         } catch (e) {
           emitter(e.toString());
         }

@@ -409,6 +409,8 @@ class VideoWare extends GetxController {
   }
 
   Future disposeVideo(int id, String link) async {
+    loadVideo(false);
+
     // if (videoController.value.value.isInitialized) {
     //   chewieController.value.videoPlayerController.dispose();
     final lister = videoController.where((item) => item.id == id).toList();
@@ -752,6 +754,7 @@ class VideoWareHome extends GetxController {
 
   void initSomeVideo(String link, int postId, int index) async {
     emitter("initializing");
+
     final lister = videoController.where((p0) => p0.id == postId).toList();
 
     if (lister.length > 1) {
@@ -932,6 +935,7 @@ class VideoWareHome extends GetxController {
   Future disposeVideo(int id, String link) async {
     // if (videoController.value.value.isInitialized) {
     //   chewieController.value.videoPlayerController.dispose();
+    loadVideo(false);
     final lister = videoController.where((item) => item.id == id).toList();
 
     if (lister.isNotEmpty) {

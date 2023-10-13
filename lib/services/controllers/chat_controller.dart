@@ -49,43 +49,46 @@ StreamSocket streamSocket = StreamSocket();
 StreamSocketMsgs streamSocketMsgs = StreamSocketMsgs();
 
 class ChatController {
-  static Future<void> retrievChatCompare(
-      BuildContext context, bool isForm) async {
-    ChatWare ware = Provider.of<ChatWare>(context, listen: false);
+  // static Future<void> retrievChatCompare(
+  //     BuildContext context, bool isForm) async {
+  //   ChatWare ware = Provider.of<ChatWare>(context, listen: false);
 
-    bool isDone = await ware.getChatFromApi2().whenComplete(
-        () => emitter("everything from api and provider is done"));
+  //   bool isDone = await ware.getChatFromApi2().whenComplete(
+  //       () => emitter("everything from api and provider is done"));
 
-    if (isDone) {
-      // if (isForm) {
-      //   ware.isLoading(false);
-      // }
-      //   debugPrint("we  have fetched all Chat");
+  //   if (isDone) {
+  //     // if (isForm) {
+  //     //   ware.isLoading(false);
+  //     // }
+  //     //   debugPrint("we  have fetched all Chat");
 
-      // if (isForm) {
-      //   ware.isLoading(false);
-      // }
-      // ignore: use_build_context_synchronously
-      //  showToast2(context, ware.message, isError: false);
-    } else {
-      //   debugPrint("we  have fetched all Chat");
-    }
+  //     // if (isForm) {
+  //     //   ware.isLoading(false);
+  //     // }
+  //     // ignore: use_build_context_synchronously
+  //     //  showToast2(context, ware.message, isError: false);
+  //   } else {
+  //     //   debugPrint("we  have fetched all Chat");
+  //   }
 
-    // if (isForm) {
-    //   ware.isLoading(true);
-    // }
-  }
+  //   // if (isForm) {
+  //   //   ware.isLoading(true);
+  //   // }
+  // }
 
   static Future<void> retrievChatController(
-      BuildContext context, bool isForm) async {
+      BuildContext context, bool isForm, bool isPaginated,
+      [int? pageNum]) async {
     ChatWare ware = Provider.of(context, listen: false);
 
     if (isForm) {
       ware.isLoading(true);
     }
 
-    bool isDone = await ware.getChatFromApi().whenComplete(
-        () => emitter("everything from api and provider is done"));
+    bool isDone = await ware
+        .getChatFromApi(false, pageNum ?? 1, isPaginated)
+        .whenComplete(
+            () => emitter("everything from api and provider is done"));
 
     if (isDone) {
       if (isForm) {
@@ -320,7 +323,7 @@ class ChatController {
   }
 
   static void handleMessage(context, data) async {
-   // log(data.toString());
+    // log(data.toString());
     //   emitter(data.toString());
     ChatWare ware = Provider.of<ChatWare>(context, listen: false);
     final jsonData = jsonDecode(data);
@@ -349,9 +352,9 @@ class ChatController {
       conversations: dat.conversations,
     );
 
-    // emitter(chatData.conversations!.first.body! +
-    //     " ${chatData.conversations!.first.id}" +
-    //     " ${chatData.conversations!.first.createdAt}");
+    emitter(chatData.conversations!.first.body! +
+        " ${chatData.conversations!.first.id}" +
+        " ${chatData.conversations!.first.createdAt}");
 
     ware.testAddToChatData(chatData);
 
@@ -432,9 +435,27 @@ class ChatController {
         determineId: chat.id);
     ware.addNewChatData(chat);
     ware.addNewConvoData(data);
-    ware.allowed(true);
+    //  ware.allowed(true);
 
     ware.addMsg(data);
+    // ChatData newData = ChatData(
+    //     id: chat.id,
+    //     status: chat.status,
+    //     blockedBy: chat.blockedBy,
+    //     createdAt: DateTime.now(),
+    //     updatedAt: DateTime.now(),
+    //     userOne: chat.userOne,
+    //     userOneId: chat.userOneId,
+    //     userOneMode: chat.userOneMode,
+    //     userOneVerify: chat.userOneVerify,
+    //     userOneProfilePhoto: chat.userOneProfilePhoto,
+    //     userTwo: chat.userTwo,
+    //     userTwoId: chat.userTwoId,
+    //     userTwoMode: chat.userTwoMode,
+    //     userTwoVerify: chat.userTwoVerify,
+    //     userTwoProfilePhoto: chat.userTwoProfilePhoto,
+    //     conversations: [data]);
+    // ware.testAddToChatData(newData);
     msgController.clear();
     provide.typeMsg(false);
 

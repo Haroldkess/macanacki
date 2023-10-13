@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:animate_do/animate_do.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -61,8 +62,9 @@ class ReceivingBubble extends StatelessWidget {
                   AppText(
                     text: chat.body!,
                     color: HexColor("#5F5F5F"),
-                    size: 12,
-                    fontWeight: FontWeight.w500,
+                    size: 14,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.2,
                   ),
                 ],
               ),

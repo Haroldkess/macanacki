@@ -197,7 +197,7 @@ class UserProfileActions extends StatelessWidget {
                                     context,
                                     listen: false);
                                 await ChatController.retrievChatController(
-                                    context, true);
+                                    context, true, false);
                                 List<Conversation> empty = [];
 
                                 late int statusId;
@@ -533,7 +533,7 @@ class UserProfileActions extends StatelessWidget {
                                     context,
                                     listen: false);
                                 await ChatController.retrievChatController(
-                                    context, true);
+                                    context, true, false);
                                 late ChatData chat;
 
                                 List<Conversation> empty = [];

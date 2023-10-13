@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -18,6 +19,7 @@ import 'package:macanacki/services/controllers/chat_controller.dart';
 import 'package:macanacki/services/middleware/chat_ware.dart';
 import 'package:provider/provider.dart';
 import 'package:async/async.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../../constants/params.dart';
@@ -34,6 +36,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
   final AsyncMemoizer _memoizer = AsyncMemoizer();
   late Timer reloadTime;
   TextEditingController searchChat = TextEditingController();
+  ScrollController scrollControl = ScrollController();
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -47,7 +50,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ChatWare stream = Provider.of<ChatWare>(context, listen: false);
       searchChat = TextEditingController(text: stream.searchName);
-      ChatController.retrievChatController(context, false)
+      ChatController.retrievChatController(context, false, false)
           .whenComplete(() => emitter("chat gotten at init"));
     });
   }
@@ -61,6 +64,52 @@ class _ConversationScreenState extends State<ConversationScreen> {
     // }
   }
 
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
+
+  void _onRefresh() async {
+    // monitor network fetch
+    await ChatController.retrievChatController(context, true, false);
+    // if failed,use refreshFailed()
+    _refreshController.refreshCompleted();
+  }
+
+  void _onLoading() async {
+    ChatWare provide = Provider.of<ChatWare>(context, listen: false);
+
+    int pageNum = int.tryParse(
+        provide.initialConverstation!.currentPage!)!; // api current  page num
+    int maxPages = provide.initialConverstation!.lastPageNo!;
+    if (pageNum >= maxPages) {
+      await Future.delayed(Duration(milliseconds: 1000));
+      if (mounted) setState(() {});
+      _refreshController.loadComplete();
+    } else {
+      emitter("$pageNum  $maxPages");
+      //  emitter("PAGINTATING");
+      // if (provide.loadStatus) {
+      //   return;
+      // }
+      //   await Future.delayed(Duration(milliseconds: 1000));
+      await ChatController.retrievChatController(
+              context, false, true, pageNum + 1)
+          .whenComplete(() => emitter("paginated"));
+      if (scrollControl.hasClients) {
+        scrollControl.jumpTo(scrollControl.position.maxScrollExtent);
+      }
+      if (mounted) {
+        setState(() {
+          scrollControl.jumpTo(scrollControl.position.maxScrollExtent);
+        });
+      }
+      _refreshController.loadComplete();
+    }
+    // monitor network fetch
+
+    // if failed,use loadFailed(),if no data return,use LoadNodata()
+    // items.add((items.length+1).toString());
+  }
+
   @override
   Widget build(BuildContext context) {
     ChatWare stream = context.watch<ChatWare>();
@@ -68,12 +117,13 @@ class _ConversationScreenState extends State<ConversationScreen> {
     // if (stream.chatPage != 0) {
     //   ChatController.changeChatPage(context, 0);
     // }
+    // emitter("rebuilt");
     return SafeArea(
       child: Scaffold(
           backgroundColor: HexColor(backgroundColor),
           appBar: AppBar(
             backgroundColor: HexColor(backgroundColor),
-            automaticallyImplyLeading: false,
+            //  automaticallyImplyLeading: false,
             elevation: 0,
             title: AppText(
               text: "Conversations",
@@ -93,13 +143,51 @@ class _ConversationScreenState extends State<ConversationScreen> {
             onPanDown: (_) {
               FocusScope.of(context).requestFocus(FocusNode());
             },
-            child: RefreshIndicator(
-              onRefresh: () =>
-                  ChatController.retrievChatController(context, true),
-              backgroundColor: HexColor(primaryColor),
-              color: HexColor(backgroundColor),
+            child: SmartRefresher(
+              // onRefresh: () =>
+              //     ChatController.retrievChatController(context, true),
+              // backgroundColor: HexColor(primaryColor),
+              // color: HexColor(backgroundColor),
+              enablePullDown: true,
+              enablePullUp: true,
+
+              header: WaterDropHeader(
+                waterDropColor: HexColor(primaryColor),
+                refresh: CircleAvatar(
+                  radius: 5,
+                  backgroundColor: Colors.transparent,
+                  child: CircularProgressIndicator(
+                    valueColor:
+                        AlwaysStoppedAnimation<Color?>(HexColor(primaryColor)),
+                  ),
+                ),
+              ),
+              footer: CustomFooter(
+                builder: (BuildContext context, LoadStatus? mode) {
+                  Widget body;
+                  if (mode == LoadStatus.idle) {
+                    body = Text("pull up load");
+                  } else if (mode == LoadStatus.loading) {
+                    body = CupertinoActivityIndicator();
+                  } else if (mode == LoadStatus.failed) {
+                    body = const Text("Load Failed!Click retry!");
+                  } else if (mode == LoadStatus.canLoading) {
+                    body = Text("release to load more");
+                  } else {
+                    body = Text("No more Data");
+                  }
+                  return Container(
+                    height: 55.0,
+                    child: Center(child: body),
+                  );
+                },
+              ),
+              controller: _refreshController,
+              onRefresh: _onRefresh,
+              onLoading: _onLoading,
               child: SingleChildScrollView(
-                physics: const AlwaysScrollableScrollPhysics(),
+                //   physics: const AlwaysScrollableScrollPhysics(),
+                controller: scrollControl,
                 child: Column(
                   children: [
                     Padding(
@@ -186,6 +274,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                 : MessageList(
                                     peopleChats: stream.chatList,
                                     search: searchChat.text,
+                                    scrollControl: scrollControl,
                                   ),
                           ),
                   ],

@@ -331,15 +331,17 @@ class _VideoView2State extends State<VideoView2> {
   @override
   void initState() {
     super.initState();
-    if (widget.index == 0) {
+    if (mounted) {
+      if (widget.index == 0) {
+        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
           VideoWare.instance.loadVideo(true);
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-            VideoWare.instance.loadVideo(true);
-        VideoWare.instance.initSomeVideo(
-            "$muxStreamBaseUrl/${widget.data.mux!.first}.$videoExtension",
-            widget.data.id!,
-            widget.index);
-      });
+          VideoWare.instance.initSomeVideo(
+              "$muxStreamBaseUrl/${widget.data.mux!.first}.$videoExtension",
+              widget.data.id!,
+              widget.index);
+          setState(() {});
+        });
+      }
     }
 
     final find = VideoWare.instance.videoController
@@ -380,6 +382,10 @@ class _VideoView2State extends State<VideoView2> {
             .pause();
       }
     });
+       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+          VideoWareHome.instance.loadVideo(false);
+        
+        });
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       //  if (widget.index == 0) return;
@@ -517,72 +523,64 @@ class _VideoView2State extends State<VideoView2> {
                           AspectRatio(
                             aspectRatio: val.value.value.aspectRatio,
                             // Use the VideoPlayer widget to display the video.
-                            child: widget.isHome
-                                ? Stack(
-                                    alignment: Alignment.center,
-                                    children: [
-                                      VideoPlayer(val.value),
-                                      val.value.value.isPlaying
-                                          ? SizedBox.shrink()
-                                          : CircleAvatar(
-                                              backgroundColor:
-                                                  Colors.white.withOpacity(.7),
-                                              radius: 30,
-                                              child: const Icon(
-                                                Icons.play_arrow_outlined,
-                                                size: 25,
-                                                color: Colors.black,
-                                              ),
-                                            )
-                                    ],
-                                  )
-                                : ObxValue((cheiwe) {
-                                    return cheiwe
-                                                .where((p0) =>
-                                                    p0.id == widget.data.id)
-                                                .first
-                                                .chewie ==
-                                            null
-                                        ? Stack(
-                                            children: [
-                                              Container(
-                                                width: Get.width,
-                                                height: Get.height,
-                                                decoration: BoxDecoration(
-                                                    color: Colors.black,
-                                                    image: DecorationImage(
-                                                      image:
-                                                          CachedNetworkImageProvider(
-                                                              widget.thumbLink
-                                                                  .toString()),
-                                                      fit: BoxFit.cover,
-                                                    )),
-                                              ),
-                                            ],
-                                          )
-                                        : Chewie(
-                                            controller: cheiwe
-                                                .where((p0) =>
-                                                    p0.id == widget.data.id)
-                                                .first
-                                                .chewie!);
-                                  }, VideoWare.instance.videoController),
+                            child: ObxValue((cheiwe) {
+                              return cheiwe
+                                          .where(
+                                              (p0) => p0.id == widget.data.id)
+                                          .first
+                                          .chewie ==
+                                      null
+                                  ? Stack(
+                                      children: [
+                                        Container(
+                                          width: Get.width,
+                                          height: Get.height,
+                                          decoration: BoxDecoration(
+                                              color: Colors.black,
+                                              image: DecorationImage(
+                                                image:
+                                                    CachedNetworkImageProvider(
+                                                        widget.thumbLink
+                                                            .toString()),
+                                                fit: BoxFit.cover,
+                                              )),
+                                        ),
+                                      ],
+                                    )
+                                  : Chewie(
+                                      controller: cheiwe
+                                          .where(
+                                              (p0) => p0.id == widget.data.id)
+                                          .first
+                                          .chewie!);
+                            }, VideoWare.instance.videoController),
                           ),
-                          widget.isHome
-                              ? SizedBox.shrink()
-                              : Align(
-                                  alignment: Alignment.bottomCenter,
-                                  child: Align(
-                                    alignment: Alignment.bottomCenter,
-                                    child: VideoProgressIndicator(
-                                      val.value,
-                                      allowScrubbing: true,
-                                      colors: VideoProgressColors(
-                                          playedColor: HexColor(primaryColor)
-                                              .withOpacity(.6)),
-                                    ),
-                                  ),
-                                )
+
+                          Align(
+                            alignment: Alignment.bottomCenter,
+                            child: VideoProgressIndicator(
+                              val.value,
+                              allowScrubbing: true,
+                              colors: VideoProgressColors(
+                                  playedColor: HexColor(backgroundColor)
+                                      .withOpacity(.9)),
+                            ),
+                          ),
+                          // widget.isHome
+                          //     ? SizedBox.shrink()
+                          //     : Align(
+                          //         alignment: Alignment.bottomCenter,
+                          //         child: Align(
+                          //           alignment: Alignment.bottomCenter,
+                          //           child: VideoProgressIndicator(
+                          //             val.value,
+                          //             allowScrubbing: true,
+                          //             colors: VideoProgressColors(
+                          //                 playedColor: HexColor(primaryColor)
+                          //                     .withOpacity(.6)),
+                          //           ),
+                          //         ),
+                          //       )
                         ],
                       );
               },

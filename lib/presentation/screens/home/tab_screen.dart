@@ -39,6 +39,7 @@ import '../../../model/feed_post_model.dart';
 import '../../../services/controllers/action_controller.dart';
 import '../../../services/middleware/chat_ware.dart';
 import '../../../services/middleware/feed_post_ware.dart';
+import '../../../services/middleware/post_security.dart';
 import '../../../services/middleware/swipe_ware.dart';
 import '../../../services/middleware/user_profile_ware.dart';
 import '../../uiproviders/screen/find_people_provider.dart';
@@ -520,6 +521,7 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
   Future runTask(index) async {
     TabProvider provide = Provider.of<TabProvider>(context, listen: false);
     ChatWare chat = Provider.of<ChatWare>(context, listen: false);
+    FeedPostWare stream = Provider.of<FeedPostWare>(context, listen: false);
     // Operations.controlSystemColor();
 
     provide.changeIndex(index);
@@ -533,6 +535,9 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
     }
 
     if (provide.index == 0) {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        PostSecurity.instance.toggleSecure(true);
+      });
       provide.addtapTrack();
       if (provide.index == 0 && index == 0 && provide.tapTracker > 1) {
         await FeedPostController.reloadPage(context);
@@ -561,9 +566,19 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
       }
       provide.isHomeChange(false);
     } else {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        PostSecurity.instance.toggleSecure(false);
+      });
       if (index == 4) {
         try {
           NotificationController.retrievNotificationController(context, false);
+          if (stream.profileFeedPosts.isNotEmpty) {
+            WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+              VideoWare.instance.getVideoPostFromApi(stream.profileFeedPosts);
+            });
+            emitter("ADDED TO POSTS TO LIST");
+          }
+
           // if (provide.controller != null) {
           //   if (provide.controller!.value.isInitialized) {
           //     if (provide.controller!.value.isBuffering ||
@@ -701,7 +716,6 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
     Get.put(GiftWare());
     WidgetsBinding.instance.addPostFrameCallback((_) {
       VideoWareHome.instance.getVideoPostFromApi(1);
-
     });
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -737,7 +751,7 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
     });
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ChatController.retrievChatController(context, false);
+      ChatController.retrievChatController(context, false, false);
     });
 
     // WidgetsBinding.instance.addPostFrameCallback((_) {

@@ -51,19 +51,20 @@ Future<http.StreamedResponse?> sendMessageTo(
   return response;
 }
 
-Future<http.Response?> getAllConversation() async {
+Future<http.Response?> getAllConversation(int page) async {
   http.Response? response;
   SharedPreferences pref = await SharedPreferences.getInstance();
   String? token = pref.getString(tokenKey);
 
   try {
     response = await http.get(
-      Uri.parse('$baseUrl/public/api/chat/get/all'),
+      Uri.parse('$baseUrl/public/api/v2/chat/get/all?page=$page'),
       headers: {
         HttpHeaders.contentTypeHeader: "application/json",
         HttpHeaders.authorizationHeader: "Bearer $token",
       },
     );
+    log(response.body.toString());
   } catch (e) {
     response = null;
   }

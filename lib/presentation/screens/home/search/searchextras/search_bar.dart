@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:macanacki/presentation/widgets/debug_emitter.dart';
 import 'package:macanacki/services/controllers/search_controller.dart';
 
 import '../../../../constants/colors.dart';
@@ -39,10 +40,17 @@ class GlobalSearchBar extends StatelessWidget {
           //     () =>
           //         SearchController.retrievSearchUserController(context, value));
         },
+        onFieldSubmitted: (val) {
+          if (val.isNotEmpty) {
+            SearchAppController.retrievSearchUserController(context, val);
+          }
+
+          emitter("submitted");
+        },
         decoration: InputDecoration(
           hintText: " Search",
-          hintStyle:
-              GoogleFonts.leagueSpartan(color: HexColor("#C0C0C0"), fontSize: 14),
+          hintStyle: GoogleFonts.leagueSpartan(
+              color: HexColor("#C0C0C0"), fontSize: 14),
           border: InputBorder.none,
           enabledBorder: InputBorder.none,
           disabledBorder: UnderlineInputBorder(

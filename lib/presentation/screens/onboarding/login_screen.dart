@@ -400,7 +400,7 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     } else {
       LoginController.loginUserController(
-          context, email.text, password.text, true);
+          context, email.text, password.text, true, true);
       //  RegisterEmailController.registerationController(context, email.text);
     }
     _formKey.currentState?.save();

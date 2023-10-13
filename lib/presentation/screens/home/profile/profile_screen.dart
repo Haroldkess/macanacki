@@ -2,6 +2,7 @@
 
 import 'package:dio/dio.dart';
 import 'package:easy_debounce/easy_debounce.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -26,7 +27,7 @@ import 'package:macanacki/services/temps/temps_id.dart';
 import 'package:provider/provider.dart';
 import 'package:scroll_edge_listener/scroll_edge_listener.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../../../model/gender_model.dart';
 import '../../../../services/controllers/plan_controller.dart';
 import '../../../../services/middleware/feed_post_ware.dart';
@@ -61,6 +62,28 @@ class _ProfileScreenState extends State<ProfileScreen>
   TapGestureRecognizer tapGestureRecognizer = TapGestureRecognizer();
   final ScrollController _controller = ScrollController();
 
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
+
+  void _onRefresh() async {
+    // monitor network fetch
+    //  await Future.delayed(Duration(milliseconds: 1000));
+    await _getUserPost(true);
+    // if failed,use refreshFailed()
+    _refreshController.refreshCompleted();
+  }
+
+  void _onLoading() async {
+    await Future.delayed(Duration(milliseconds: 1000));
+    if (mounted) setState(() {});
+    _refreshController.loadComplete();
+
+    // monitor network fetch
+
+    // if failed,use loadFailed(),if no data return,use LoadNodata()
+    // items.add((items.length+1).toString());
+  }
+
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -76,12 +99,51 @@ class _ProfileScreenState extends State<ProfileScreen>
         drawer: DrawerSide(
           scafKey: key,
         ),
-        body: RefreshIndicator(
-          onRefresh: () async {
-            _getUserPost(true);
-          },
-          backgroundColor: HexColor(primaryColor),
-          color: Colors.white,
+        body: SmartRefresher(
+          // onRefresh: () async {
+          //   _getUserPost(true);
+          // },
+          // backgroundColor: HexColor(primaryColor),
+          // color: Colors.white,
+          enablePullDown: true,
+          enablePullUp: false,
+
+          header: WaterDropHeader(
+            waterDropColor: HexColor(primaryColor),
+            refresh: CircleAvatar(
+              radius: 5,
+              backgroundColor: Colors.transparent,
+              child: CircularProgressIndicator(
+                valueColor:
+                    AlwaysStoppedAnimation<Color?>(HexColor(primaryColor)),
+              ),
+            ),
+          ),
+          footer: CustomFooter(
+            builder: (BuildContext context, LoadStatus? mode) {
+              Widget body;
+              if (mode == LoadStatus.idle) {
+                body = Text("pull up load");
+              } else if (mode == LoadStatus.loading) {
+                body = CupertinoActivityIndicator(
+                  color: HexColor(primaryColor),
+                );
+              } else if (mode == LoadStatus.failed) {
+                body = const Text("Load Failed!Click retry!");
+              } else if (mode == LoadStatus.canLoading) {
+                body = Text("release to load more");
+              } else {
+                body = Text("No more Data");
+              }
+              return Container(
+                height: 55.0,
+                child: Center(child: body),
+              );
+            },
+          ),
+          controller: _refreshController,
+          onRefresh: _onRefresh,
+          onLoading: _onLoading,
           child: CustomScrollView(
             controller: _controller,
             slivers: [

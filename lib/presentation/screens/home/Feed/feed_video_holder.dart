@@ -15,6 +15,7 @@ import 'package:video_player/video_player.dart';
 import '../../../../model/feed_post_model.dart';
 import '../../../../services/controllers/action_controller.dart';
 import '../../../../services/middleware/action_ware.dart';
+import '../../../../services/middleware/post_security.dart';
 import '../../../../services/middleware/video/video_ware.dart';
 import '../../../allNavigation.dart';
 import '../../../constants/colors.dart';
@@ -59,6 +60,9 @@ class _FeedVideoHolderState extends State<FeedVideoHolder>
   @override
   void initState() {
     super.initState();
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        PostSecurity.instance.toggleSecure(false);
+      });
     controller = AnimationController(
       duration: const Duration(milliseconds: 500), //controll animation duration
       vsync: this,
@@ -98,6 +102,9 @@ class _FeedVideoHolderState extends State<FeedVideoHolder>
       VideoWareHome.instance.disposeAllVideoV2(widget.data.id!,
           "$muxStreamBaseUrl/${widget.data.mux!.first}.$videoExtension");
     });
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        PostSecurity.instance.toggleSecure(true);
+      });
 
     super.dispose();
 
@@ -119,6 +126,12 @@ class _FeedVideoHolderState extends State<FeedVideoHolder>
       backgroundColor: Colors.black,
       resizeToAvoidBottomInset: false,
       body: ObxValue((allVideos) {
+        List<dynamic> allThumbs = [];
+        if (allVideos.isNotEmpty) {
+          for (var i in allVideos) {
+            allThumbs.add(i.thumbnails!.first);
+          }
+        }
         return PageView.builder(
           itemCount: allVideos.length,
           controller: pageController,
@@ -127,7 +140,7 @@ class _FeedVideoHolderState extends State<FeedVideoHolder>
           itemBuilder: ((context, index) {
             FeedPost post = allVideos[index];
             // FeedPost? post2 =
-            //     index < (allVideos.length - 2) ? allVideos[index + 1] : null;
+            //     index < (allVideos.length - 1) ? allVideos[index + 1] : null;
 
             return GestureDetector(
               onTap: () {
@@ -187,7 +200,7 @@ class _FeedVideoHolderState extends State<FeedVideoHolder>
               child: Stack(
                 children: [
                   VideoView(
-                      //   data2: post2,
+                      allThumb: allThumbs,
                       thumbLink: post.thumbnails!.first,
                       page: widget.page,
                       postId: post.id!,
@@ -502,12 +515,12 @@ class VideoView extends StatefulWidget {
   bool isHome;
   int postId;
   final FeedPost data;
-  // final FeedPost? data2;
+  final List? allThumb;
   // VideoModel? video;
 
   VideoView(
       {super.key,
-      //   required this.data2,
+      required this.allThumb,
       // required this.video,
       required this.thumbLink,
       required this.index,
@@ -527,17 +540,25 @@ class _VideoViewState extends State<VideoView> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       VideoWareHome.instance.viewToggle(0);
     });
+    if (mounted) {
+      if (widget.index == 0) {
+        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+          VideoWareHome.instance.loadVideo(true);
+          VideoWareHome.instance.initSomeVideo(
+              "$muxStreamBaseUrl/${widget.data.mux!.first}.$videoExtension",
+              widget.data.id!,
+              widget.index);
 
-    if (widget.index == 0) {
-      VideoWareHome.instance.loadVideo(true);
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        VideoWareHome.instance.loadVideo(true);
-        VideoWareHome.instance.initSomeVideo(
-            "$muxStreamBaseUrl/${widget.data.mux!.first}.$videoExtension",
-            widget.data.id!,
-            widget.index);
-      });
+          setState(() {});
+        });
+      } else {
+        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+          VideoWareHome.instance.loadVideo(false);
+          setState(() {});
+        });
+      }
     }
+
     // if (widget.data2 != null) {
     //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
     //     if (VideoWareHome.instance.videoController
@@ -598,6 +619,10 @@ class _VideoViewState extends State<VideoView> {
             .pause();
       }
     });
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+          VideoWareHome.instance.loadVideo(false);
+        
+        });
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       //  if (widget.index == 0) return;
@@ -622,6 +647,18 @@ class _VideoViewState extends State<VideoView> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
+        Column(
+          children: widget.allThumb == null
+              ? []
+              : List.generate(
+                  widget.allThumb == null ? 0 : widget.allThumb!.length,
+                  (index) => Container(
+                    height: 5,
+                    child: CachedNetworkImage(
+                        imageUrl: widget.allThumb![index] ?? ""),
+                  ),
+                ),
+        ),
         Center(
           child: Stack(
             alignment: Alignment.center,
@@ -710,6 +747,14 @@ class _VideoViewState extends State<VideoView> {
                           Align(
                             alignment: Alignment.center,
                             child: ObxValue((load) {
+                              // WidgetsBinding.instance
+                              //     .addPostFrameCallback((timeStamp) {
+                              //   Future.delayed(Duration(milliseconds: 500), () {
+                              //     if (mounted) {
+                              //       setState(() {});
+                              //     }
+                              //   });
+                              // });
                               return load.value
                                   ? CircleAvatar(
                                       backgroundColor:
@@ -792,6 +837,18 @@ class _VideoViewState extends State<VideoView> {
                                           .chewie!);
                             }, VideoWareHome.instance.videoController),
                           ),
+
+                          Align(
+                            alignment: Alignment.bottomCenter,
+                            child: VideoProgressIndicator(
+                              val.value,
+                              allowScrubbing: true,
+                              colors: VideoProgressColors(
+                                  playedColor:
+                                      HexColor(backgroundColor).withOpacity(.9)),
+                            ),
+                          ),
+
                           // Align(
                           //   alignment: Alignment.center,
                           //   child: ObxValue((load) {
