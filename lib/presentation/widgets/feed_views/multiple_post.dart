@@ -44,6 +44,18 @@ class MultiplePost extends StatelessWidget {
     // });
     return Stack(
       children: [
+        Row(
+          children: media == null
+              ? []
+              : List.generate(
+                  media == null ? 0 : media!.length,
+                  (index) => Container(
+                    height: 1,
+                    width: 1,
+                    child: CachedNetworkImage(imageUrl: media![index] ?? ""),
+                  ),
+                ),
+        ),
         PageView.builder(
           itemCount: media!.length,
           scrollDirection: Axis.horizontal,
@@ -65,9 +77,8 @@ class MultiplePost extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-            const   SizedBox(
-                height:
-                    100,
+              const SizedBox(
+                height: 100,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -86,7 +97,6 @@ class MultiplePost extends StatelessWidget {
                       ))
                 ],
               ),
-             
             ],
           ),
         )

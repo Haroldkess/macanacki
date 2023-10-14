@@ -52,6 +52,18 @@ class UserMultiplePost extends StatelessWidget {
     // });
     return Stack(
       children: [
+        Row(
+          children: media == null
+              ? []
+              : List.generate(
+                  media == null ? 0 : media!.length,
+                  (index) => Container(
+                    height: 1,
+                    width: 1,
+                    child: CachedNetworkImage(imageUrl: media![index] ?? ""),
+                  ),
+                ),
+        ),
         PageView.builder(
           itemCount: media!.length,
           scrollDirection: Axis.horizontal,

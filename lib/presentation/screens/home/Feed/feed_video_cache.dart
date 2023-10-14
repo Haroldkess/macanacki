@@ -339,7 +339,9 @@ class _VideoView2State extends State<VideoView2> {
               "$muxStreamBaseUrl/${widget.data.mux!.first}.$videoExtension",
               widget.data.id!,
               widget.index);
-          setState(() {});
+          if (mounted) {
+            setState(() {});
+          }
         });
       }
     }
@@ -382,10 +384,9 @@ class _VideoView2State extends State<VideoView2> {
             .pause();
       }
     });
-       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-          VideoWareHome.instance.loadVideo(false);
-        
-        });
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      VideoWareHome.instance.loadVideo(false);
+    });
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       //  if (widget.index == 0) return;
@@ -566,21 +567,7 @@ class _VideoView2State extends State<VideoView2> {
                                       .withOpacity(.9)),
                             ),
                           ),
-                          // widget.isHome
-                          //     ? SizedBox.shrink()
-                          //     : Align(
-                          //         alignment: Alignment.bottomCenter,
-                          //         child: Align(
-                          //           alignment: Alignment.bottomCenter,
-                          //           child: VideoProgressIndicator(
-                          //             val.value,
-                          //             allowScrubbing: true,
-                          //             colors: VideoProgressColors(
-                          //                 playedColor: HexColor(primaryColor)
-                          //                     .withOpacity(.6)),
-                          //           ),
-                          //         ),
-                          //       )
+                    
                         ],
                       );
               },
