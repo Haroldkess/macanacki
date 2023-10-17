@@ -2,10 +2,65 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
+	<key>ITSAppUsesNonExemptEncryption</key>
+    <false/>
+
+
+
+    <key>NSAppTransportSecurity</key>
+    <dict>
+      <key>NSAllowsArbitraryLoads</key>
+      <true/>
+    </dict>
+
+    <key>NSLocalNetworkUsageDescription</key>
+    <string>Used to search for chromecast devices</string>
+    <key>NSBonjourServices</key>
+    <array>
+      <string>_googlecast._tcp</string>
+    </array>
+
+
+
+        <key>NSCameraUsageDescription</key>
+        <string>Chatty requires access to the camera so you can take photos to show profile.</string>
+        <key>NSMicrophoneUsageDescription</key>
+        <string>Chatty requires access to the Microphone so you can take call.</string>
+        <key>NSLocationWhenInUseUsageDescription</key>
+        <string>The app needs the location, Get the location of your city and match the corresponding profile</string>
+        <key>NSPhotoLibraryUsageDescription</key>
+        <string>Chatty requires access to the photos library so you can upload photos of profile.</string>
+        <key>UIApplicationSupportsIndirectInputEvents</key>
+        <true/>
+
+
+
+    <key>CFBundleURLTypes</key>
+    <array>
+      <dict>
+        <key>CFBundleTypeRole</key>
+        <string>Editor</string>
+        <key>CFBundleURLName</key>
+        <!-- You can find it on /ios/project.pbxproj - 'PRODUCT_BUNDLE_IDENTIFIER' -->
+        <string>com.example.macanacki</string>
+        <key>CFBundleURLSchemes</key>
+        <array>
+          <!-- Your app title -->
+          <string>example</string>
+        </array>
+      </dict>
+    </array>
+
+
+
+
+
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>macanacki</string>
+	<string>Macanacki</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -13,7 +68,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>macanacki</string>
+	<string>Macanacki</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -23,25 +78,48 @@
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSApplicationQueriesSchemes</key>
-<array>
-  <string>sms</string>
-  <string>tel</string>
-</array>
+	<array>
+		<string>sms</string>
+		<string>tel</string>
+	</array>
+	<key>LSMinimumSystemVersion</key>
+	<string>12.0</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Explain why your app uses music</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>This app needs Location access when in background</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>This app needs access to location when in the background.</string>
+	<key>NSLocationTemporaryUsageDescriptionDictionary</key>
+	<string>UIBackgroundModes</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This app needs access to location when open.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>NSPhotoLibraryUsageDescription</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Explain why your app uses photo library</string>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
+
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+    <true/>
+    <key>UISupportsDocumentBrowser</key>
+    <true/>
+
+
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-<string>This app needs access to location when open.</string>
-<key>NSLocationAlwaysUsageDescription</key>
-<string>This app needs access to location when in the background.</string>
-<key>NSAppTransportSecurity</key>
-<dict>
-  <key>NSAllowsArbitraryLoads</key>
-  <true/>
-</dict>
+	<key>UIStatusBarStyle</key>
+	<string></string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
@@ -55,62 +133,67 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>UISupportsDocumentBrowser</key>
+	<true/>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+
+
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+
+
+
+
+
 	<key>NSPhotoLibraryUsageDescription</key>
 	<key>NSCameraUsageDescription</key>
 	<key>NSMicrophoneUsageDescription</key>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<key>NSLocationTemporaryUsageDescriptionDictionary</key>
-	<key>UIBackgroundModes</key>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	
-<string>获取相册权限</string>
-<key>NSPhotoLibraryUsageDescription</key>
-<string>获取相册权限</string>
-<array>
-   <string>fetch</string>
-   <string>remote-notification</string>
-</array>
-
-<key>NSLocalNetworkUsageDescription</key>
-<string>Used to search for chromecast devices</string>
-<key>NSBonjourServices</key>
-<array>
-  <string>_googlecast._tcp</string>
-</array>
-<key>NSAppleMusicUsageDescription</key>
-<string>Explain why your app uses music</string>
-<key>UISupportsDocumentBrowser</key>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>获取相册权限</string>
+    <key>UIBackgroundModes</key>
+    <array>
+        <string>fetch</string>
+        <string>remote-notification</string>
+    </array>
+    <key>NSAppleMusicUsageDescription</key>
+    <string>Explain why your app uses music</string>
+    <key>UISupportsDocumentBrowser</key>
 <true/>
 <key>NSPhotoLibraryUsageDescription</key>
 <string>Explain why your app uses photo library</string>
 
 
-<key>CFBundleURLTypes</key>
-<array>
-  <dict>
-    <key>CFBundleTypeRole</key>
-    <string>Editor</string>
-    <key>CFBundleURLName</key>
-	<!-- You can find it on /ios/project.pbxproj - 'PRODUCT_BUNDLE_IDENTIFIER' -->
-    <string>com.example.macanacki</string>
-    <key>CFBundleURLSchemes</key>
-    <array>
-      <!-- Your app title -->
-      <string>example</string>
-    </array>
-  </dict>
-</array>
 
-	
-<dict>
-  <key>YourPurposeKey</key>
-  <string>The example App requires temporary access to the device&apos;s precise location.</string>
-</dict>
+	<key>NSPhotoLibraryUsageDescription</key>
+    <key>NSCameraUsageDescription</key>
+
+    <key>NSMicrophoneUsageDescription</key>
+    <key>NSPhotoLibraryUsageDescription</key>
+
+    <key>NSLocationTemporaryUsageDescriptionDictionary</key>
+    <key>UIBackgroundModes</key>
+
+
+
+
+
+    <key>NSAppleMusicUsageDescription</key>
+    <string>Explain why your app uses music</string>
+    <key>UISupportsDocumentBrowser</key>
+    <true/>
+
+
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Explain why your app uses photo library</string>
+
+   <key>YourPurposeKey</key>
+   <string>The example App requires temporary access to the device&apos;s precise location.</string>
+
 </dict>
 </plist>

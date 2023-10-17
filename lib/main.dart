@@ -69,7 +69,7 @@ class MyApp extends StatelessWidget {
     // Translate function
     configs.cropFeatureEnabled = true;
     configs.stickerFeatureEnabled = false;
-    configs.cameraPickerModeEnabled = true;
+    configs.cameraPickerModeEnabled = Platform.isIOS ? false : true;
     configs.imagePreProcessingEnabled = true;
     configs.albumPickerModeEnabled = true;
     configs.filterFeatureEnabled = true;
