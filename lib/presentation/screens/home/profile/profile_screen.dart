@@ -11,6 +11,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:macanacki/config/pay_ext.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
 import 'package:macanacki/presentation/operations_ext.dart';
 import 'package:macanacki/presentation/screens/home/profile/profileextras/profile_info.dart';
@@ -25,9 +26,11 @@ import 'package:macanacki/services/middleware/notification_ware..dart';
 import 'package:macanacki/services/middleware/user_profile_ware.dart';
 import 'package:macanacki/services/temps/temps_id.dart';
 import 'package:provider/provider.dart';
+import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:scroll_edge_listener/scroll_edge_listener.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import '../../../../config/pay_wall.dart';
 import '../../../../model/gender_model.dart';
 import '../../../../services/controllers/plan_controller.dart';
 import '../../../../services/middleware/feed_post_ware.dart';
@@ -93,7 +96,42 @@ class _ProfileScreenState extends State<ProfileScreen>
     UserProfileWare user = context.watch<UserProfileWare>();
 
     return SafeArea(
+
       child: Scaffold(
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: () async {
+        //
+        //     List<Package> diamondPackages = await PayExt.fetchPackagesFromOfferings(identifier: 'diamond');
+        //     await showModalBottomSheet(
+        //       useRootNavigator: true,
+        //       isDismissible: true,
+        //       isScrollControlled: true,
+        //       backgroundColor: Colors.brown,
+        //       shape: const RoundedRectangleBorder(
+        //         borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
+        //       ),
+        //       context: context,
+        //       builder: (BuildContext context) {
+        //         return StatefulBuilder(
+        //             builder: (BuildContext context, StateSetter setModalState) {
+        //               return FractionallySizedBox(
+        //                 heightFactor: 0.9,
+        //                 child: Paywall(
+        //                   title: "Diamond Packages",
+        //                   description: "Unlock the full diamond experience",
+        //                   packages: diamondPackages,
+        //                   onError: (String e){},
+        //                   onSucess: (){
+        //
+        //                   },
+        //
+        //                 ),
+        //               );
+        //             });
+        //       },
+        //     );
+        //   },
+        // ),
         key: key,
         backgroundColor: HexColor("#F5F2F9"),
         drawer: DrawerSide(

@@ -314,6 +314,53 @@ class PaymentController {
     return authUrl;
   }
 
+
+  static void verifyOnServerExt(
+      context, bool? isFirst, bool isPayOnly) async {
+    try {
+      if (isFirst != null) {
+        if (isFirst == true) {
+          if (isPayOnly == false) {
+            VerifyController.business(context);
+          }
+
+          //  PageRouting.popToPage(context);
+          PageRouting.pushToPage(
+              context, const SubSuccessfullBusinessSignUp());
+        } else {
+          if (isPayOnly == false) {
+            VerifyController.userVerify(context);
+          }
+
+          PageRouting.pushToPage(context, const SubSuccessfull());
+        }
+      } else {
+        //  Get.off(2);
+        Get.back();
+        Get.back();
+        Get.dialog(
+          confirmationDialog(
+              title: "Promotion Successful",
+              message: "You just promoted a post",
+              confirmText: "Okay",
+              cancelText: "Go back",
+              icon: Icons.donut_small_outlined,
+              iconColor: [HexColor(primaryColor), Colors.green],
+              onPressedCancel: () {
+                Get.back();
+              },
+              onPressed: () {
+                Get.back();
+              }),
+        );
+        emitter("tidy");
+      }
+    } catch (e) {
+      // print(e);
+      return;
+    }
+  }
+
   static void verifyOnServer(
       String reference, context, bool? isFirst, bool isPayOnly) async {
     try {
@@ -427,6 +474,38 @@ class PaymentController {
         } catch (e) {}
         return;
       }
+    } catch (e) {
+      // print(e);
+      return;
+    }
+  }
+
+
+  static void verifyOnServerDiamondExt(
+      context,
+      ) async {
+    try {
+        GiftWare.instance.getGiftFromApi();
+        GiftWare.instance.getWalletFromApi();
+        Get.back();
+        Get.dialog(diamondDialog(
+            title: "You just Got some Diamonds ",
+            message: "Diamonds has been added to your wallet",
+            confirmText: "Okay",
+            cancelText: "Go back",
+            onPressedCancel: () {
+              Get.back();
+            },
+            onPressed: () {
+              Get.back();
+            }));
+
+        // log("paid");
+
+        //do something with the response. show success}
+        //show error prompt}
+        return;
+
     } catch (e) {
       // print(e);
       return;

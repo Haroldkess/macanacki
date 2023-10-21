@@ -6,6 +6,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:macanacki/config/pay_ext.dart';
 import 'package:macanacki/model/reg_email_model.dart';
 import 'package:macanacki/presentation/allNavigation.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
@@ -112,6 +113,7 @@ class LoginController {
       //   emitter("removing all previous screens");
       //   PageRouting.removeAllToPage(context, const TabScreen());
       // }
+      PayExt.loginUser();
 
       await callFeedPost(context);
       emitter("removing all previous screens");

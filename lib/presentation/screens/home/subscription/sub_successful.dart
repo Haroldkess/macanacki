@@ -132,8 +132,8 @@ class _SubSuccessfullState extends State<SubSuccessfull> {
                 onTap: () {
                   PageRouting.popToPage(context);
                   PageRouting.popToPage(context);
-                  PageRouting.popToPage(context);
-                  PageRouting.popToPage(context);
+                  //PageRouting.popToPage(context);
+                  // PageRouting.popToPage(context);
                   // PageRouting.pushToPage(context, const VerifiedInfo());
                 }),
             Container(

@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:macanacki/config/store_ext.dart';
+import 'package:macanacki/config/pay_ext.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
 import 'package:macanacki/presentation/screens/onboarding/splash_screen.dart';
 import 'package:macanacki/services/controllers/IAUpdate.dart';
@@ -26,7 +26,7 @@ import 'presentation/uiproviders/screen/tab_provider.dart';
 void main() async {
 
   // Initialize inApp Store
-  StoreExt.initializeStore();
+  PayExt.initializeStore();
 
   dotenv.load(fileName: "secret.env");
   Platform.isAndroid ? IAUpdate().checkForUpdate() : null;
@@ -45,7 +45,7 @@ void main() async {
   Get.put(PostSecurity());
 
   // Configure inApp SDK
-  await StoreExt.configureSDK();
+  await PayExt.configureSDK();
 
   runApp(Phoenix(child: const MyApp()));
 }
