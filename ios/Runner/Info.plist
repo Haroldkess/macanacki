@@ -25,13 +25,19 @@
 
 
         <key>NSCameraUsageDescription</key>
-        <string>Chatty requires access to the camera so you can take photos to show profile.</string>
+        <string>Macanacki would like to access your photo gallery for your profile photo upload.</string>
+        <key>NSPhotoLibraryUsageDescription</key>
+        <string>Macanacki requires access to the photos library so you can upload photos of profile.</string>
+        <key>NSPhotoLibraryAddUsageDescription</key>
+        <string>Macanacki would like to save photos to your photo gallery</string>
+
+
+
+
         <key>NSMicrophoneUsageDescription</key>
-        <string>Chatty requires access to the Microphone so you can take call.</string>
+        <string>Macanacki requires access to the Microphone so you can take call.</string>
         <key>NSLocationWhenInUseUsageDescription</key>
         <string>The app needs the location, Get the location of your city and match the corresponding profile</string>
-        <key>NSPhotoLibraryUsageDescription</key>
-        <string>Chatty requires access to the photos library so you can upload photos of profile.</string>
         <key>UIApplicationSupportsIndirectInputEvents</key>
         <true/>
 
@@ -98,8 +104,6 @@
 	<string>This app needs access to location when open.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>NSPhotoLibraryUsageDescription</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Explain why your app uses photo library</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>
@@ -148,14 +152,8 @@
 
 
 
-	<key>NSPhotoLibraryUsageDescription</key>
-	<key>NSCameraUsageDescription</key>
 	<key>NSMicrophoneUsageDescription</key>
-	<key>NSPhotoLibraryUsageDescription</key>
 	<key>NSLocationTemporaryUsageDescriptionDictionary</key>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-    <key>NSPhotoLibraryUsageDescription</key>
-    <string>获取相册权限</string>
     <key>UIBackgroundModes</key>
     <array>
         <string>fetch</string>
@@ -165,35 +163,6 @@
     <string>Explain why your app uses music</string>
     <key>UISupportsDocumentBrowser</key>
 <true/>
-<key>NSPhotoLibraryUsageDescription</key>
-<string>Explain why your app uses photo library</string>
-
-
-
-	<key>NSPhotoLibraryUsageDescription</key>
-    <key>NSCameraUsageDescription</key>
-
-    <key>NSMicrophoneUsageDescription</key>
-    <key>NSPhotoLibraryUsageDescription</key>
-
-    <key>NSLocationTemporaryUsageDescriptionDictionary</key>
-    <key>UIBackgroundModes</key>
-
-
-
-
-
-    <key>NSAppleMusicUsageDescription</key>
-    <string>Explain why your app uses music</string>
-    <key>UISupportsDocumentBrowser</key>
-    <true/>
-
-
-    <key>NSPhotoLibraryUsageDescription</key>
-    <string>Explain why your app uses photo library</string>
-
-   <key>YourPurposeKey</key>
-   <string>The example App requires temporary access to the device&apos;s precise location.</string>
 
 </dict>
 </plist>
