@@ -3,6 +3,7 @@ import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:macanacki/config/pay_ext.dart';
 import 'package:macanacki/main.dart';
 import 'package:macanacki/presentation/allNavigation.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
@@ -93,6 +94,7 @@ class _DrawerSideState extends State<DrawerSide> {
                         onPressed: () async {
                           progressIndicator(context,
                               message: "Logging you out...");
+                          PayExt.logoutUser();
                           await Future.delayed(const Duration(seconds: 3));
                           await pref.remove(isLoggedInKey);
                           await pref.remove(tokenKey);

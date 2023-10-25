@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:macanacki/config/pay_ext.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
 import 'package:macanacki/presentation/screens/onboarding/splash_screen.dart';
 import 'package:macanacki/services/controllers/IAUpdate.dart';
@@ -20,14 +21,18 @@ import 'package:upgrader/upgrader.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:advance_image_picker/advance_image_picker.dart';
 import 'package:intl/intl.dart';
-
 import 'presentation/uiproviders/screen/tab_provider.dart';
 
 void main() async {
+
+  // Initialize inApp Store
+  PayExt.initializeStore();
+
   dotenv.load(fileName: "secret.env");
   //Platform.isAndroid ? IAUpdate().checkForUpdate() : null;
   // await Database.initDatabase();
   WidgetsFlutterBinding.ensureInitialized();
+  //await PurchaseExt.init();
   await Firebase.initializeApp();
   FirebaseFirestore.instance.settings;
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -41,8 +46,14 @@ void main() async {
   Get.put(scrolNotify());
   Get.put(scrolNotifyPublic());
 
+  // Configure inApp SDK
+  await PayExt.configureSDK();
+
   runApp(Phoenix(child: const MyApp()));
 }
+
+
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -71,7 +82,7 @@ class MyApp extends StatelessWidget {
     // Translate function
     configs.cropFeatureEnabled = true;
     configs.stickerFeatureEnabled = false;
-    configs.cameraPickerModeEnabled = true;
+    configs.cameraPickerModeEnabled = Platform.isIOS ? false : true;
     configs.imagePreProcessingEnabled = true;
     configs.albumPickerModeEnabled = true;
     configs.filterFeatureEnabled = true;
@@ -142,4 +153,7 @@ class MyApp extends StatelessWidget {
           ),
         ));
   }
+
+
+
 }

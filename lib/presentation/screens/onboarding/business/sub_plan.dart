@@ -17,8 +17,11 @@ import 'package:macanacki/services/controllers/payment_controller.dart';
 import 'package:macanacki/services/middleware/plan_ware.dart';
 import 'package:macanacki/services/middleware/user_profile_ware.dart';
 import 'package:provider/provider.dart';
+import 'package:purchases_flutter/models/package_wrapper.dart';
 import 'package:restart_app/restart_app.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../../../config/pay_ext.dart';
+import '../../../../config/pay_wall.dart';
 import '../../../../model/plan_model.dart';
 import '../../../../services/temps/temps_id.dart';
 import '../../../allNavigation.dart';
@@ -253,6 +256,7 @@ class _SubscriptionPlansBusinessState extends State<SubscriptionPlansBusiness> {
                                     setState(() {
                                       myPlan = plans.plans[0];
                                     });
+                                    //mmmmmmmmmmmmm
                                     payModal(
                                         context,
                                         myPlan!,
@@ -362,96 +366,40 @@ class _SubscriptionPlansBusinessState extends State<SubscriptionPlansBusiness> {
 
 payModal(BuildContext context, PlanData plan, bool? isBusiness, bool isPayOnly,
     [String? id]) async {
-  var width = MediaQuery.of(context).size.width;
-  return showModalBottomSheet(
-      context: context,
-      isScrollControlled: false,
-      shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
-      builder: (context) {
-        PlanWare stream = context.watch<PlanWare>();
-        // PlanWare action = Provider.of<PlanWare>(context,listen: false);
-        return Container(
-          height: 120,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            // mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    AppText(
-                      text: "Payment Method",
-                      color: HexColor(darkColor),
-                      size: 17,
-                      fontWeight: FontWeight.w700,
-                      align: TextAlign.center,
-                    ),
-                  ],
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  OutlinedButton(
-                      style: OutlinedButton.styleFrom(
-                          backgroundColor: Colors.transparent,
-                          fixedSize: Size(width * 0.49, 50),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(0),
-                          ),
-                          side: BorderSide(
-                              color: HexColor("#C0C0C0"),
-                              width: 1.0,
-                              style: BorderStyle.solid)),
-                      onPressed: () async {
-                        // plugin.initialize(
-                        //     publicKey:
-                        //         "pk_test_66374a59ec66f6c94391ed9b6a405cbf94432d5f");
-                        //   print(plan.amount);
-                        // PageRouting.pushToPage(
-                        //     context, const SubSuccessfullBusinessSignUp());
-                        // PlanWare plan =
-                        //     Provider.of<PlanWare>(context, listen: false);
-                        if (plan == null) return;
-                        // if (plan.amount == 0) {
-                        //   showToast2(
-                        //       context, "Kindly select a subscription plan");
-                        //   return;
-                        // } else {
-                        int amount = plan.amountInNaira!.toInt() * 100;
-                       await PaymentController.chargeCard(
-                            context, amount, isBusiness, isPayOnly, id);
-                     
 
-                        //   plan.addAmount(0);
-                        // }
-                      },
-                      child: SvgPicture.asset("assets/icon/P.svg")),
-                  OutlinedButton(
-                      style: OutlinedButton.styleFrom(
-                          backgroundColor: Colors.transparent,
-                          fixedSize: Size(width * 0.49, 50),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(0),
-                          ),
-                          side: BorderSide(
-                              color: HexColor("#C0C0C0"),
-                              width: 1.0,
-                              style: BorderStyle.solid)),
-                      onPressed: () {
-                        showToast2(context, "Coming soon");
-                      },
-                      child: Platform.isAndroid
-                          ? SvgPicture.asset("assets/icon/G.svg")
-                          : SvgPicture.asset("assets/icon/A.svg")),
-                ],
-              )
-            ],
-          ),
-        );
-      });
+  List<Package> verificationPackages = await PayExt.fetchPackagesFromOfferings(identifier: 'verification');
+  if(!context.mounted) return;
+  await showModalBottomSheet(
+    useRootNavigator: true,
+    isDismissible: true,
+    isScrollControlled: true,
+    backgroundColor: Colors.brown,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
+    ),
+    context: context,
+    builder: (BuildContext context) {
+      return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setModalState) {
+            return FractionallySizedBox(
+              heightFactor: 0.9,
+              child: Paywall(
+                title: "Verification Packages",
+                description: "Unlock the full verification experience",
+                packages: verificationPackages,
+                onError: (String e){
+
+                  showToast2(context, "Payment not verified try again", isError: true);
+                  Navigator.pop(context);
+
+                },
+                onSucess: (){
+                  PaymentController.verifyOnServerExt(context, isBusiness, isPayOnly);
+                },
+
+              ),
+            );
+          });
+    },
+  );
 }
