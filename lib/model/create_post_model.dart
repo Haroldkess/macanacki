@@ -26,6 +26,37 @@ class CreatePostModel {
       };
 }
 
+
+class CreateAudioPostModel {
+  String? description;
+  int? published;
+  List<File>? media;
+  int? btnId;
+  String? url;
+  File? cover;
+
+
+  CreateAudioPostModel({
+    this.description,
+    this.published,
+    this.media,
+    this.btnId,
+    this.url,
+    this.cover
+  });
+
+  Future<Map<String, dynamic>> toJson() async => {
+        "description": description,
+        "published": published,
+        "media": media,
+        // "media": await MultipartFile.fromPath('media', media!.path,
+        //     filename: basename(media!.path)),
+        "btn_id": btnId,
+        "btn_link": url,
+      };
+}
+
+
 class ShareCommentsModel {
   String? body;
 

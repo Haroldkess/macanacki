@@ -38,6 +38,7 @@ class SaveMediaController {
   static Future<void> saveNetworkVideo(BuildContext context, String url) async {
     // showToast2(context, "Download started. Scroll to check out more content",
     //    isError: false);
+    print(url);
     MediaDownloadProgress.instance.addProgress(1, 100);
 
     Get.showSnackbar(successSnackBar("Downloading", "Video"));

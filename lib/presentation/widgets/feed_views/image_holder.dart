@@ -1,16 +1,12 @@
-import 'package:animate_do/animate_do.dart';
+
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import '../../../../model/feed_post_model.dart';
-import '../../../../services/middleware/video/video_ware.dart';
 import '../../allNavigation.dart';
-import 'like_section.dart';
 import 'new_action_design.dart';
 
 class EnlargeImageHolder extends StatefulWidget {
@@ -103,60 +99,30 @@ class _EnlargeImageHolderState extends State<EnlargeImageHolder> {
                   )),
             ),
           ),
-          // Align(
-          //   alignment: Alignment.centerRight,
-          //   child: LikeSection(
-          //     page: widget.page,
-          //     data: widget.data,
-          //   ),
-          // ),
+         
           Align(
             alignment: Alignment.bottomLeft,
             child: VideoUser(
               page: widget.page,
               data: widget.data,
+              isHome: true,
               media: [],
             ),
           ),
-          // Align(
-          //   alignment: Alignment.bottomCenter,
-          //   child: Column(
-          //     mainAxisAlignment: MainAxisAlignment.end,
-          //     children: [
-          //       Row(
-          //         mainAxisAlignment: MainAxisAlignment.center,
-          //         children: [
-          //           ...widget.images.map((e) => Padding(
-          //                 padding: const EdgeInsets.symmetric(horizontal: 8),
-          //                 child: CircleAvatar(
-          //                   backgroundColor: HexColor("#6A6A6A"),
-          //                   radius: 3,
-          //                   //   width: 25,
-          //                   //   height: 3,
-          //                 ),
-          //               ))
-          //         ],
-          //       ),
-          //       const SizedBox(
-          //         height: 115,
-          //       ),
-          //     ],
-          //   ),
-          // )
+    
+        
         ],
       ),
     );
   }
 }
 
-
-
 class ImageHolder extends StatefulWidget {
   List<String> images;
-  ImageHolder(
-      {super.key,
-      required this.images,
-   });
+  ImageHolder({
+    super.key,
+    required this.images,
+  });
 
   @override
   State<ImageHolder> createState() => _ImageHolderState();
@@ -233,33 +199,9 @@ class _ImageHolderState extends State<ImageHolder> {
                   )),
             ),
           ),
-   
+
+
         
-          // Align(
-          //   alignment: Alignment.bottomCenter,
-          //   child: Column(
-          //     mainAxisAlignment: MainAxisAlignment.end,
-          //     children: [
-          //       Row(
-          //         mainAxisAlignment: MainAxisAlignment.center,
-          //         children: [
-          //           ...widget.images.map((e) => Padding(
-          //                 padding: const EdgeInsets.symmetric(horizontal: 8),
-          //                 child: CircleAvatar(
-          //                   backgroundColor: HexColor("#6A6A6A"),
-          //                   radius: 3,
-          //                   //   width: 25,
-          //                   //   height: 3,
-          //                 ),
-          //               ))
-          //         ],
-          //       ),
-          //       const SizedBox(
-          //         height: 115,
-          //       ),
-          //     ],
-          //   ),
-          // )
         ],
       ),
     );

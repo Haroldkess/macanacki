@@ -121,6 +121,10 @@ class InitProvider {
       ChangeNotifierProvider(
         create: (context) => VideoTrimmerWare(),
       ),
+
+            ChangeNotifierProvider(
+        create: (context) => FeedPostWareAudio(),
+      ),
     ];
 
     return provided;

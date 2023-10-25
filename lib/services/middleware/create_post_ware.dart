@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:macanacki/model/comments_model.dart';
 import 'package:macanacki/model/create_post_model.dart';
 import 'package:macanacki/services/backoffice/create_post_office.dart';
@@ -13,12 +14,15 @@ import '../../presentation/widgets/debug_emitter.dart';
 
 class CreatePostWare extends ChangeNotifier {
   bool _loadStatus = false;
+   bool loadStatusAudio = false;
   bool _loadStatus2 = false;
   bool loadEditPost = false;
   CommentData comments = CommentData();
   List<File>? file;
   File? idUser;
   File? idBusiness;
+  File? audioFile;
+  File? audioCoverFile;
   String _message = 'Something went wrong';
   String _commentMessage = 'Something went wrong';
   bool get loadStatus => _loadStatus;
@@ -38,6 +42,13 @@ class CreatePostWare extends ChangeNotifier {
     _loadStatus = isLoad;
     notifyListeners();
   }
+
+
+  void isLoadingAudio(bool isLoad) {
+    loadStatusAudio = isLoad;
+    notifyListeners();
+  }
+
 
   void isLoadingEdit(bool isLoad) {
     loadEditPost = isLoad;
@@ -69,6 +80,22 @@ class CreatePostWare extends ChangeNotifier {
     File selectedFile,
   ) {
     idBusiness = selectedFile;
+
+    notifyListeners();
+  }
+
+  void addAudio(
+    File val,
+  ) {
+    audioFile = val;
+
+    notifyListeners();
+  }
+
+  void addAudioCoverFile(
+    XFile selectedFile,
+  ) {
+    audioCoverFile = File(selectedFile.path);
 
     notifyListeners();
   }
@@ -105,7 +132,6 @@ class CreatePostWare extends ChangeNotifier {
         //  log("post created!!");
 
         //  var res = http.Response.fromStream(response);
-
       } else {
         final res = await http.Response.fromStream(response);
         var jsonData = jsonDecode(res.body);
@@ -125,6 +151,52 @@ class CreatePostWare extends ChangeNotifier {
     return isSuccessful;
   }
 
+
+  Future<bool> createAudioPostFromApi(
+    CreateAudioPostModel data,
+  ) async {
+    late bool isSuccessful;
+    //  log(data.media!.path);
+    //  log(data.description.toString());
+    // log(data.published.toString());
+
+    try {
+      http.StreamedResponse? response = await createAudioPost(data);
+
+      if (response == null) {
+        isSuccessful = false;
+      } else if (response.statusCode == 201) {
+        final res = await http.Response.fromStream(response);
+        var jsonData = jsonDecode(res.body);
+
+        //    log(jsonData["message"]);
+        _message = jsonData["message"];
+        isSuccessful = true;
+        log(jsonData.toString());
+        log(jsonData["message"]);
+        //  log("post created!!");
+
+        //  var res = http.Response.fromStream(response);
+      } else {
+        final res = await http.Response.fromStream(response);
+        var jsonData = jsonDecode(res.body);
+        //   log(jsonData["message"]);
+        _message = jsonData["message"];
+        log(jsonData.toString());
+        log(jsonData["message"]);
+        isSuccessful = false;
+      }
+    } catch (e) {
+      isSuccessful = false;
+      emitter(e.toString());
+    }
+
+    notifyListeners();
+
+    return isSuccessful;
+  }
+
+
   Future<bool> shareCommentFromApi(ShareCommentsModel body, int id) async {
     late bool isSuccessful;
     try {
@@ -140,9 +212,9 @@ class CreatePostWare extends ChangeNotifier {
         _commentMessage = jsonData["message"].toString();
         emitter("share comment request success");
         isSuccessful = true;
-      } else if (response.statusCode == 500){
-            _commentMessage = "Cannot comment on this post at the moment";
-  isSuccessful = false;
+      } else if (response.statusCode == 500) {
+        _commentMessage = "Cannot comment on this post at the moment";
+        isSuccessful = false;
       } else {
         var jsonData = jsonDecode(response.body);
         _commentMessage = jsonData["message"].toString();

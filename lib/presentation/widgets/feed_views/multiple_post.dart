@@ -168,6 +168,7 @@ class _MultipleViewState extends State<MultipleView> {
             page: 'feed',
             postId: widget.data.id!,
             data: widget.data,
+            vod: "",
           )
         : Stack(
             alignment: Alignment.center,

@@ -119,6 +119,7 @@ class FeedPost {
     this.creator,
     this.media,
     this.mux,
+    this.vod,
     this.thumbnails,
     this.comments,
     this.noOfLikes,
@@ -140,6 +141,7 @@ class FeedPost {
   List<String>? media;
   List<String>? media2;
   List<String>? mux;
+  List<dynamic>? vod;
   List<dynamic>? thumbnails;
   List<Comment>? comments;
   int? noOfLikes;
@@ -160,6 +162,7 @@ class FeedPost {
     List<String>? media,
     List<String>? media2,
     List<String>? mux,
+    List<dynamic>? vod,
     List<dynamic>? thumbnails,
     List<Comment>? comments,
     int? noOfLikes,
@@ -179,6 +182,7 @@ class FeedPost {
           media: media ?? this.media,
           media2: media2 ?? this.media2,
           mux: mux ?? this.mux,
+          vod: vod ?? this.vod,
           thumbnails: thumbnails ?? this.thumbnails,
           comments: comments ?? this.comments,
           noOfLikes: noOfLikes ?? this.noOfLikes,
@@ -208,6 +212,9 @@ class FeedPost {
         mux: json["mux"] == null
             ? []
             : List<String>.from(json["mux"]!.map((x) => x)),
+        vod: json["vod"] == null
+            ? []
+            : List<dynamic>.from(json["vod"]!.map((x) => x)),
         thumbnails: json["thumbnails"] == null
             ? []
             : List<dynamic>.from(json["thumbnails"]!.map((x) => x)),
@@ -233,6 +240,7 @@ class FeedPost {
         "media2":
             media2 == null ? [] : List<dynamic>.from(media2!.map((x) => x)),
         "mux": mux == null ? [] : List<dynamic>.from(mux!.map((x) => x)),
+        "vod": vod == null ? [] : List<dynamic>.from(vod!.map((x) => x)),
         "thumbnails": thumbnails == null
             ? []
             : List<dynamic>.from(thumbnails!.map((x) => x)),

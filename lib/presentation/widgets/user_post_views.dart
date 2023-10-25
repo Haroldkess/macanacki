@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
+import 'package:apivideo_player/apivideo_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
@@ -46,6 +47,7 @@ class UserTikTokView extends StatefulWidget {
   final List<dynamic> thumbails;
   final FeedPost data;
   final List<dynamic> allPost;
+  final List<dynamic> vod;
   int? index1;
   int? index2;
   String page;
@@ -60,6 +62,7 @@ class UserTikTokView extends StatefulWidget {
       required this.media,
       required this.data,
       required this.page,
+      required this.vod,
       required this.thumbails,
       required this.allPost,
       this.index1,
@@ -78,7 +81,7 @@ class UserTikTokView extends StatefulWidget {
 
 class _UserTikTokViewState extends State<UserTikTokView>
     with TickerProviderStateMixin {
-  VideoPlayerController? _controller;
+  ApiVideoPlayerController? _controller;
   FeedPost? thisData;
   static const _networkCachingMs = 2000;
   // final _key = GlobalKey<VlcPlayerWithControlsState>();
@@ -118,14 +121,14 @@ class _UserTikTokViewState extends State<UserTikTokView>
         // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         //   VideoWare.instance.getVideoPostFromApi(widget.allPost);
         // });
-        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-          VideoWareHome.instance.disposeAllVideoV2(widget.data.id!,
-              "$muxStreamBaseUrl/${widget.media.first}.$videoExtension");
-          // VideoWareHome.instance.initSomeVideo(
-          //     "$muxStreamBaseUrl/${widget.media.first}.$videoExtension",
-          //     widget.data.id!,
-          //     0);
-        });
+        // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        //   VideoWareHome.instance.disposeAllVideoV2(widget.data.id!,
+        //       "$muxStreamBaseUrl/${widget.media.first}.$videoExtension");
+        // VideoWareHome.instance.initSomeVideo(
+        //     "$muxStreamBaseUrl/${widget.media.first}.$videoExtension",
+        //     widget.data.id!,
+        //     0);
+        // });
       } else {
         Future.delayed(const Duration(seconds: 2))
             .whenComplete(() => ViewController.handleView(widget.data.id!));
@@ -158,14 +161,14 @@ class _UserTikTokViewState extends State<UserTikTokView>
       debugPrint("This is the url ${widget.data.media!.first}");
       if (widget.media == null || widget.media.isEmpty) return;
       if (!widget.media.first.contains("https")) {
-        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-          VideoWare.instance.disposeVideo(widget.data.id!,
-              "$muxStreamBaseUrl/${widget.media.first}.$videoExtension");
-        });
-        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-          VideoWare.instance.disposeAllVideoV2(widget.data.id!,
-              "$muxStreamBaseUrl/${widget.media.first}.$videoExtension");
-        });
+        // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        //   VideoWare.instance.disposeVideo(widget.data.id!,
+        //       "$muxStreamBaseUrl/${widget.media.first}.$videoExtension");
+        // });
+        // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        //   VideoWare.instance.disposeAllVideoV2(widget.data.id!,
+        //       "$muxStreamBaseUrl/${widget.media.first}.$videoExtension");
+        // });
       }
     }
   }
@@ -245,6 +248,7 @@ class _UserTikTokViewState extends State<UserTikTokView>
                                 isInView: widget.isInView,
                                 postId: widget.data.id!,
                                 data: widget.data,
+                                vod: widget.vod.first,
                                 //   vlcController: _vlcController,
                               )
                             : UserMultiplePost(

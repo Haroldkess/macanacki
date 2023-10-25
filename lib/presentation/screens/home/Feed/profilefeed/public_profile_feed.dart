@@ -100,12 +100,13 @@ class _PublicUserProfileFeedState extends State<PublicUserProfileFeed> {
                     creator: post.creator,
                     media: post.media,
                     mux: post.mux,
+                    vod: post.vod,
                     comments: talks,
                     noOfLikes: post.noOfLikes,
                     btnLink: post.btnLink,
                     button: post.button,
                     viewCount: post.viewCount,
-                      thumbnails: post.thumbnails,
+                    thumbnails: post.thumbnails,
                     user: user,
                     promoted: post.promoted);
 
@@ -116,6 +117,7 @@ class _PublicUserProfileFeedState extends State<PublicUserProfileFeed> {
                   urls: post.media!,
                   isHome: false,
                   isInView: false,
+                  vod: post.vod!,
                   pageData: post,
                   thumbails: post.thumbnails!,
                   index1: index,

@@ -21,19 +21,28 @@ class UserProfileWare extends ChangeNotifier {
   ////////////@@@AutoScroll [State]
   PagingController<int, PublicUserPost> pagingController =
       PagingController(firstPageKey: 0);
+  PagingController<int, PublicUserPost> pagingController2 =
+      PagingController(firstPageKey: 1);
   bool _isLastPage = false;
+  bool _isLastPageAudio = false;
   int _pageNumber = 1;
+  int _pageNumberAudio = 1;
   bool _loading = false;
+  bool _loadingAudio = false;
   int _numberOfPostsPerRequest = 10;
+
   int _nextPageTrigger = 3;
   ScrollController scrollController = ScrollController();
   List<PublicUserPost> _allPublicUserPostData = [];
+  List<PublicUserPost> _allPublicUserPostDataAudio = [];
 
   //////////////////////////////////
 
   ////////////////////@@@AutoScroll [Getters]
   bool get loading => _loading;
+  bool get loadingAudio => _loadingAudio;
   List<PublicUserPost> get pubPost => _allPublicUserPostData;
+  List<PublicUserPost> get pubPostAudio => _allPublicUserPostDataAudio;
 
   ////////////////////////////////////////////
 
@@ -44,18 +53,34 @@ class UserProfileWare extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateIsLastPage(bool value) {
-    _isLastPage = value;
+  void updateLoadingAudio(bool value) {
+    _loadingAudio = value;
+    notifyListeners();
+  }
+
+  void updateIsLastPage(bool value, bool audio) {
+    if (audio) {
+      _isLastPageAudio = value;
+    } else {
+      _isLastPage = value;
+    }
+
     notifyListeners();
   }
 
   void initializePagingController() {
     pagingController = PagingController(firstPageKey: 1);
+    pagingController2 = PagingController(firstPageKey: 1);
     disposeAutoScroll();
   }
 
-  void updatePageNumber(int value) {
-    _pageNumber = value;
+  void updatePageNumber(int value, bool audio) {
+    if (audio) {
+      _pageNumberAudio = value;
+    } else {
+      _pageNumber = value;
+    }
+
     notifyListeners();
   }
 
@@ -74,13 +99,22 @@ class UserProfileWare extends ChangeNotifier {
     notifyListeners();
   }
 
+  void updateAllPublicUserPostDataAudio(List<PublicUserPost> value) {
+    _allPublicUserPostDataAudio.addAll(value);
+    notifyListeners();
+  }
+
   void disposeAutoScroll() {
     _isLastPage = false;
     _pageNumber = 1;
+    _pageNumberAudio = 1;
     _loading = false;
+    _isLastPageAudio = false;
     _numberOfPostsPerRequest = 10;
     _nextPageTrigger = 3;
+
     _allPublicUserPostData.clear();
+    _allPublicUserPostDataAudio.clear();
     notifyListeners();
   }
 
@@ -325,7 +359,7 @@ class UserProfileWare extends ChangeNotifier {
       updateLoading(true);
       // final username = publicUserProfileModel.username ?? '';
       http.Response? response = await getUserPublicPost(
-              username, _pageNumber, _numberOfPostsPerRequest)
+              username, _pageNumber, _numberOfPostsPerRequest, "videos_images")
           .whenComplete(() => emitter("user posts data gotten successfully"));
       if (response == null) {
         isSuccessful = false;
@@ -339,8 +373,8 @@ class UserProfileWare extends ChangeNotifier {
         }
 
         updateAllPublicUserPostData(newItems);
-        updatePageNumber(_pageNumber + 1);
-        updateIsLastPage(_allPublicUserPostData.length >= recordCount);
+        updatePageNumber(_pageNumber + 1, false);
+        updateIsLastPage(_allPublicUserPostData.length >= recordCount, false);
 
         if (_isLastPage == true) {
           pagingController.appendLastPage(newItems);
@@ -360,6 +394,57 @@ class UserProfileWare extends ChangeNotifier {
       isSuccessful = false;
     } finally {
       updateLoading(false);
+    }
+
+    notifyListeners();
+
+    return isSuccessful;
+  }
+
+  Future<bool> getUserPublicPostAudioFromApi({required String username}) async {
+    late bool isSuccessful;
+    if (loadingAudio == true || _isLastPageAudio == true) return false;
+
+    try {
+      updateLoadingAudio(true);
+      // final username = publicUserProfileModel.username ?? '';
+      http.Response? response = await getUserPublicPost(
+              username, _pageNumberAudio, _numberOfPostsPerRequest, "audios")
+          .whenComplete(() => emitter("user posts data gotten successfully"));
+      if (response == null) {
+        isSuccessful = false;
+        //   log("get user posts data request failed");
+      } else if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+        int recordCount = jsonData['record_count'];
+        List<PublicUserPost> newItems = [];
+        for (final x in jsonData['data']) {
+          newItems.add(PublicUserPost.fromJson(x));
+        }
+
+        updateAllPublicUserPostDataAudio(newItems);
+        updatePageNumber(_pageNumberAudio + 1, true);
+        updateIsLastPage(
+            _allPublicUserPostDataAudio.length >= recordCount, true);
+
+        if (_isLastPageAudio == true) {
+          pagingController2.appendLastPage(newItems);
+        } else {
+          pagingController2.appendPage(newItems, _pageNumberAudio);
+        }
+        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+          VideoWare.instance.getAudioPostFromApi(_allPublicUserPostDataAudio);
+        });
+
+        isSuccessful = true;
+      } else {
+        // log("get user posts data  request failed");
+        isSuccessful = false;
+      }
+    } catch (e) {
+      isSuccessful = false;
+    } finally {
+      updateLoadingAudio(false);
     }
 
     notifyListeners();

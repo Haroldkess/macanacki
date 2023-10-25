@@ -8,6 +8,7 @@ import 'package:macanacki/services/middleware/gift_ware.dart';
 import '../../../../../services/controllers/payment_controller.dart';
 import '../../../../constants/colors.dart';
 import '../../../../constants/params.dart';
+import '../../../../widgets/dialogue.dart';
 import '../../../../widgets/loader.dart';
 // import 'package:macanacki/services/middleware/plan_ware.dart';
 // import 'package:macanacki/services/middleware/user_profile_ware.dart';
@@ -35,6 +36,17 @@ giveDiamondsModal(BuildContext cont, String name,
                 children: [
                   SizedBox(
                     height: 10,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      IconButton(
+                          onPressed: () => Navigator.pop(context),
+                          icon: Icon(
+                            Icons.clear,
+                            color: Colors.red,
+                          ))
+                    ],
                   ),
                   Container(
                     height: 150,
@@ -126,8 +138,7 @@ giveDiamondsModal(BuildContext cont, String name,
                   //     ],
                   //   ),
                   // ),
-               
-               
+
                   SizedBox(
                     height: 30,
                   ),
@@ -191,12 +202,27 @@ giveDiamondsModal(BuildContext cont, String name,
                                                 ),
                                                 GestureDetector(
                                                     onTap: () {
-                                                      GiftWare.instance
-                                                          .doTransferOfDiamondsFromApi(
-                                                              name,
-                                                              e.diamonds!,
-                                                              naration,
-                                                              cont);
+                                                      Get.dialog(diamondDialog(
+                                                          title:
+                                                              "Sending Gift to $name ",
+                                                          message:
+                                                              "You are about to send diamonds to a creator proceed ?",
+                                                          confirmText: "Yes",
+                                                          cancelText: "Go back",
+                                                          onPressedCancel: () {
+                                                            Get.back();
+                                                          },
+                                                          onPressed: () {
+                                                            GiftWare.instance
+                                                                .doTransferOfDiamondsFromApi(
+                                                                    name,
+                                                                    e.diamonds!,
+                                                                    naration,
+                                                                    cont);
+                                                            Get.back();
+                                                          }));
+                                                  
+                                                  
                                                     },
                                                     child: Stack(
                                                       children: [

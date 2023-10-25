@@ -1,10 +1,8 @@
 import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
 import 'package:hexcolor/hexcolor.dart';
 import 'package:macanacki/presentation/allNavigation.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
@@ -180,6 +178,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                   ),
                 ),
               ),
+             
               Expanded(
                 child: Stack(
                   alignment: Alignment.center,
@@ -317,4 +316,6 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
       await CreatePostController.createPostController(context, caption.text);
     }
   }
+
+
 }

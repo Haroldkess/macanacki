@@ -121,6 +121,8 @@ class DpAvatar extends StatelessWidget {
                   errorWidget: (context, url, error) => SizedBox()),
             ),
           ),
+       
+       
         ),
       ),
     );

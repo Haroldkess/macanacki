@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:lottie/lottie.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
 import 'package:macanacki/presentation/widgets/debug_emitter.dart';
 import 'package:macanacki/presentation/widgets/loader.dart';
@@ -107,11 +108,23 @@ class _PublicGridViewItemsState extends State<PublicGridViewItems> {
           alignment: Alignment.center,
           children: [
             widget.data.media!.first.contains(".mp4")
-                ? Icon(
-                    Icons.play_arrow,
-                    color: Colors.grey.withOpacity(0.9),
+                ? Align(
+                    alignment: Alignment.center,
+                    child: Lottie.asset("assets/icon/mov.json",
+                        height: 70, width: 70),
                   )
-                : const SizedBox.shrink(),
+
+                // Icon(
+                //     Icons.play_arrow,
+                //     color: Colors.grey.withOpacity(0.9),
+                //   )
+                : widget.data.media!.first.contains(".mp3")
+                    ? Align(
+                        alignment: Alignment.center,
+                        child: Lottie.asset("assets/icon/mov.json",
+                            height: 70, width: 70),
+                      )
+                    : const SizedBox.shrink(),
             Positioned(
                 child: Align(
               alignment: Alignment.bottomLeft,

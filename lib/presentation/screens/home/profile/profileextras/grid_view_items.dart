@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:lottie/lottie.dart';
 import 'package:macanacki/model/profile_feed_post.dart';
 import 'package:macanacki/presentation/allNavigation.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
@@ -24,7 +25,12 @@ import '../../Feed/profilefeed/user_profile_feed.dart';
 class GridViewItems extends StatefulWidget {
   final FeedPost data;
   final int index;
-  const GridViewItems({super.key, required this.data, required this.index});
+  final bool isAudio;
+  const GridViewItems(
+      {super.key,
+      required this.data,
+      required this.index,
+      required this.isAudio});
 
   @override
   State<GridViewItems> createState() => _GridViewItemsState();
@@ -84,6 +90,7 @@ class _GridViewItemsState extends State<GridViewItems> {
             context,
             UserProfileFeed(
               index: widget.index,
+              isAudio: widget.isAudio,
             ));
       },
       child: Container(
@@ -98,10 +105,16 @@ class _GridViewItemsState extends State<GridViewItems> {
           alignment: Alignment.center,
           children: [
             widget.data.media!.contains(".mp4")
-                ? Icon(
-                    Icons.play_arrow,
-                    color: Colors.grey.withOpacity(0.9),
+                ? Align(
+                    alignment: Alignment.center,
+                    child: Lottie.asset("assets/icon/mov.json",
+                        height: 70, width: 70),
                   )
+
+                // Icon(
+                //     Icons.play_arrow,
+                //     color: Colors.grey.withOpacity(0.9),
+                //   )
                 : const SizedBox.shrink(),
             Positioned(
                 child: Align(
@@ -125,7 +138,12 @@ class _GridViewItemsState extends State<GridViewItems> {
 class MyGridViewItems extends StatefulWidget {
   final ProfileFeedDatum data;
   final int index;
-  const MyGridViewItems({super.key, required this.data, required this.index});
+  final bool isAudio;
+  const MyGridViewItems(
+      {super.key,
+      required this.data,
+      required this.index,
+      required this.isAudio});
 
   @override
   State<MyGridViewItems> createState() => _MyGridViewItemsState();
@@ -190,6 +208,7 @@ class _MyGridViewItemsState extends State<MyGridViewItems> {
             context,
             UserProfileFeed(
               index: widget.index,
+              isAudio: widget.isAudio,
             ));
       },
       child: Container(
@@ -197,7 +216,8 @@ class _MyGridViewItemsState extends State<MyGridViewItems> {
             borderRadius: BorderRadius.circular(0),
             image: DecorationImage(
                 fit: BoxFit.cover,
-                image: widget.data.media!.first.contains(".mp4")
+                image: widget.data.media!.first.contains(".mp4") ||
+                        widget.data.media!.first.contains(".mp3")
                     ? CachedNetworkImageProvider(
                         widget.data.thumbnails!.first ?? "")
                     : CachedNetworkImageProvider(widget.data.media!.first)
@@ -206,11 +226,18 @@ class _MyGridViewItemsState extends State<MyGridViewItems> {
           alignment: Alignment.center,
           children: [
             widget.data.media!.first.contains(".mp4")
-                ? Icon(
-                    Icons.play_arrow,
-                    color: Colors.grey.withOpacity(0.9),
+                ? Align(
+                    alignment: Alignment.center,
+                    child: Lottie.asset("assets/icon/mov.json",
+                        height: 70, width: 70),
                   )
-                : const SizedBox.shrink(),
+                : widget.data.media!.first.contains(".mp3")
+                    ? Align(
+                        alignment: Alignment.center,
+                        child: Lottie.asset("assets/icon/mov.json",
+                            height: 70, width: 70),
+                      )
+                    : const SizedBox.shrink(),
             Positioned(
                 child: Align(
               alignment: Alignment.bottomLeft,

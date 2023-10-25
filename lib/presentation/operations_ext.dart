@@ -1,13 +1,9 @@
 import 'dart:io';
 import 'package:advance_image_picker/models/image_object.dart';
 import 'package:advance_image_picker/widgets/picker/image_picker.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:macanacki/presentation/screens/home/profile/createpost/create_post_screen.dart';
-import 'package:macanacki/presentation/widgets/debug_emitter.dart';
-import 'package:macanacki/presentation/widgets/snack_msg.dart';
 import 'package:macanacki/presentation/widgets/video_trimmer.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import '../services/middleware/create_post_ware.dart';
@@ -22,8 +18,7 @@ class OperationsExt {
       //Initialize both [CreatePost] && [UserProfile] State
       CreatePostWare picked =
           Provider.of<CreatePostWare>(context, listen: false);
-      UserProfileWare user =
-          Provider.of<UserProfileWare>(context, listen: false);
+
 
       final List<ImageObject>? objects = await Navigator.of(context)
           .push(PageRouteBuilder(pageBuilder: (context, animation, __) {
@@ -63,10 +58,12 @@ class OperationsExt {
         // ignore: use_build_context_synchronously
         Navigator.of(context).push(
           MaterialPageRoute(builder: (context) {
-            return VideoTrimmer(file: File(result.path!));
+            return VideoTrimmer(file: File(result.path));
           }),
         );
       }
     }
   }
+
+
 }

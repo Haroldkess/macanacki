@@ -51,6 +51,7 @@ class ProfileFeedDatum {
     this.creator,
     this.media,
     this.mux,
+    this.vod,
     this.thumbnails,
     this.comments,
     this.noOfLikes,
@@ -69,6 +70,7 @@ class ProfileFeedDatum {
   String? creator;
   List<String>? media;
   List<String>? mux;
+  List<dynamic>? vod;
   List<dynamic>? thumbnails;
   List<ProfileComment>? comments;
   int? noOfLikes;
@@ -96,6 +98,9 @@ class ProfileFeedDatum {
         mux: json["mux"] == null
             ? []
             : List<String>.from(json["mux"]!.map((x) => x)),
+        vod: json["vod"] == null
+            ? []
+            : List<dynamic>.from(json["vod"]!.map((x) => x)),
         thumbnails: json["thumbnails"] == null
             ? []
             : List<dynamic>.from(json["thumbnails"]!.map((x) => x)),
@@ -120,6 +125,7 @@ class ProfileFeedDatum {
         "creator": creator,
         "media": media == null ? [] : List<dynamic>.from(media!.map((x) => x)),
         "mux": mux == null ? [] : List<dynamic>.from(mux!.map((x) => x)),
+        "vod": vod == null ? [] : List<dynamic>.from(vod!.map((x) => x)),
         "thumbnails": thumbnails == null
             ? []
             : List<dynamic>.from(thumbnails!.map((x) => x)),

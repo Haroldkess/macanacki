@@ -9,6 +9,7 @@ import 'package:macanacki/services/api_url.dart';
 import '../../presentation/widgets/debug_emitter.dart';
 
 Future<http.Response?> loginUser(SendLoginModel data) async {
+  log("login function");
   http.Response? response;
   try {
     response = await http
@@ -19,7 +20,7 @@ Future<http.Response?> loginUser(SendLoginModel data) async {
             body: jsonEncode(data.toJson()))
         .timeout(const Duration(seconds: 30));
 
-    emitter(response.body.toString());
+    log(response.body.toString());
   } catch (e) {
     response = null;
   }

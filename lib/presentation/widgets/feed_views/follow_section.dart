@@ -123,10 +123,7 @@ class _FollowSectionState extends State<FollowSection> {
                               cornerRadius: 2.0,
                               child: AspectRatio(
                                 aspectRatio: HexagonType.POINTY.ratio,
-                                // child: Image.asset(
-                                //   'assets/tram.jpg',
-                                //   fit: BoxFit.fitWidth,
-                                // ),
+                         
                               ),
                             ),
                             HexagonAvatar(
@@ -164,26 +161,7 @@ class _FollowSectionState extends State<FollowSection> {
                   const SizedBox(
                     width: 5.5,
                   ),
-              
-                  // myUsername == widget.data.user!.username!
-                  //     ? const SizedBox.shrink()
-                  //     : Expanded(
-                  //         child: Row(
-                  //           children: [
-                  //             followButton(() async {
-                  //               followAction(
-                  //                 context,
-                  //               );
-                  //             },
-                  //                 stream.followIds
-                  //                         .contains(widget.data.user!.id!)
-                  //                     ? "Following"
-                  //                     : "Follow"),
-                  //           ],
-                  //         ),
-                  //       ),
-               
-               
+
                 
                 ],
               ),

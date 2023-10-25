@@ -1,3 +1,4 @@
+import 'package:apivideo_player/apivideo_player.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -16,9 +17,12 @@ import 'dart:convert';
 
 class VideoModel {
   int? id;
-  Rx<VideoPlayerController>? controller;
-  ChewieController? chewie;
-  VideoModel({this.id, this.controller, this.chewie});
+  Rx<ApiVideoPlayerController>? controller;
+  // ChewieController? chewie;
+  VideoModel({
+    this.id,
+    this.controller,
+  });
 }
 
 class VideoWare extends GetxController {
@@ -42,6 +46,7 @@ class VideoWare extends GetxController {
   Rx<FeedData> feedData = FeedData().obs;
 
   RxList<FeedPost> feedPosts = <FeedPost>[].obs;
+    RxList<FeedPost> feedPostsAudio = <FeedPost>[].obs;
 
   RxList<VideoModel> videoController = <VideoModel>[].obs;
 
@@ -78,6 +83,11 @@ class VideoWare extends GetxController {
   Future<void> addVideoToList(FeedPost data) async {
     feedPosts.removeWhere((element) => element.id == data.id);
     feedPosts.insert(0, data);
+  }
+
+    Future<void> addAudioToList(FeedPost data) async {
+    feedPostsAudio.removeWhere((element) => element.id == data.id);
+    feedPostsAudio.insert(0, data);
   }
 
   Future getVideoPostFromApi(List<dynamic> data) async {
@@ -130,6 +140,7 @@ class VideoWare extends GetxController {
               creator: x.creator,
               media: x.media,
               mux: x.mux,
+              vod: x.vod,
               comments: talks,
               noOfLikes: x.noOfLikes,
               btnLink: x.btnLink,
@@ -147,10 +158,83 @@ class VideoWare extends GetxController {
       final lister =
           videoController.where((item) => item.id == element.id).toList();
       if (lister.isEmpty) {
-        addVideo("$muxStreamBaseUrl/${element.mux!.first}.$videoExtension",
-            element.id!);
+        addVideo(element.vod!.first, element.id!);
       }
     }
+  }
+
+
+  Future getAudioPostFromApi(List<dynamic> data) async {
+    log("getting video posts");
+    feedPostsAudio.clear();
+    feedPostsAudio.value = [];
+    List<FeedPost> newList = [];
+
+    await Future.wait([
+      Future.forEach(data, (x) {
+        if (x.media.first.contains(".mp3")) {
+          List<Comment> talks = [];
+
+          final User user = User(
+              id: x.user!.id,
+              email: x.user!.email,
+              username: x.user!.username,
+              faceVerification: x.user!.faceVerification,
+              dob: x.user!.dob,
+              emailVerified: x.user!.emailVerified,
+              registrationComplete: x.user!.registrationComplete,
+              emailVerifiedAt: x.user!.emailVerifiedAt,
+              createdAt: x.user!.createdAt,
+              updatedAt: x.user!.updatedAt,
+              gender: x.user!.gender,
+              profilephoto: x.user!.profilephoto,
+              noOfFollowers: x.user!.noOfFollowers,
+              noOfFollowing: x.user!.noOfFollowing,
+              verified: x.user!.verified!);
+          x.comments!.forEach((element) {
+            Comment comment = Comment(
+                id: element.id,
+                body: element.body,
+                createdAt: element.createdAt,
+                updatedAt: element.updatedAt,
+                username: element.username,
+                profilePhoto: element.profilePhoto,
+                noOfLikes: element.noOfLikes,
+                postId: element.postId);
+
+            talks.add(comment);
+          });
+
+          final FeedPost posting = FeedPost(
+              id: x.id,
+              description: x.description,
+              published: x.published,
+              createdAt: x.createdAt,
+              updatedAt: x.updatedAt,
+              creator: x.creator,
+              media: x.media,
+              mux: x.mux,
+              vod: x.vod,
+              comments: talks,
+              noOfLikes: x.noOfLikes,
+              btnLink: x.btnLink,
+              button: x.button,
+              viewCount: x.viewCount,
+              thumbnails: x.thumbnails,
+              user: user,
+              promoted: x.promoted);
+          feedPostsAudio.add(posting);
+        }
+      })
+    ]);
+
+    // for (var element in feedPostsAudio) {
+    //   final lister =
+    //       videoController.where((item) => item.id == element.id).toList();
+    //   if (lister.isEmpty) {
+    //     addVideo(element.vod!.first, element.id!);
+    //   }
+    // }
   }
 
   Future initController(int id) async {
@@ -159,63 +243,24 @@ class VideoWare extends GetxController {
 
     if (lister.isNotEmpty) {
       lister.first.controller!.value.initialize().whenComplete(() {
-        lister.first.chewie = ChewieController(
-            videoPlayerController: videoController
-                .where((item) => item.id == id)
-                .first
-                .controller!
-                .value,
-            autoPlay: true,
-            looping: true,
-            allowMuting: false,
-            isLive: true,
-            draggableProgressBar: false,
-            hideControlsTimer: Duration(seconds: 3),
-            allowFullScreen: false,
-
-            //  allowFullScreen: false,
-
-            //  progressIndicatorDelay: null,
-
-            showControls: true,
-            materialProgressColors: ChewieProgressColors(
-                backgroundColor: Colors.transparent,
-                handleColor: Colors.transparent,
-                bufferedColor: Colors.transparent,
-                playedColor: Colors.transparent),
-            cupertinoProgressColors: ChewieProgressColors(
-                backgroundColor: Colors.transparent,
-                handleColor: Colors.transparent,
-                bufferedColor: Colors.transparent,
-                playedColor: Colors.transparent),
-            // materialProgressColors: ChewieProgressColors(
-            //     bufferedColor: HexColor(primaryColor).withOpacity(.3),
-            //     playedColor: HexColor(primaryColor).withOpacity(.6)),
-            // cupertinoProgressColors: ChewieProgressColors(
-            //     bufferedColor: HexColor(primaryColor).withOpacity(.3),
-            //     playedColor: HexColor(primaryColor).withOpacity(.6)),
-            //  maxScale: 1.5,
-            showOptions: false);
-        lister.first.chewie!.addListener(() {
-          if (lister.first.chewie!.videoPlayerController.value.isInitialized) {
-            lister.first.chewie!.pause();
-
-            update();
-          }
-        });
+        lister.first.controller!.value
+            .addListener(ApiVideoPlayerControllerEventsListener(
+          onReady: () {},
+          onEnd: () {},
+        ));
         loadVideo(false);
       });
-
-      final VideoPlayerController newControl = lister.first.controller!.value;
-
-      lister.first.controller!.value = newControl;
     }
     update();
   }
 
   void initVideo(String link, int postId) async {
-    Rx<VideoPlayerController> vid =
-        VideoPlayerController.networkUrl(Uri.parse(link)).obs;
+    final videoOptions =
+        VideoOptions(videoId: link, type: VideoType.vod, token: null);
+
+    Rx<ApiVideoPlayerController> vid = ApiVideoPlayerController(
+            videoOptions: videoOptions, autoplay: false, onEnd: () {})
+        .obs;
     videoController.add(VideoModel(id: postId, controller: vid));
     await Future.wait([initController(postId)])
         .then((value) => {emitter("initialized")});
@@ -223,14 +268,19 @@ class VideoWare extends GetxController {
   }
 
   void addVideo(String link, int postId) async {
-    Rx<VideoPlayerController> vid =
-        VideoPlayerController.networkUrl(Uri.parse(link)).obs;
+    final videoOptions =
+        VideoOptions(videoId: link, type: VideoType.vod, token: null);
+
+    Rx<ApiVideoPlayerController> vid = ApiVideoPlayerController(
+            videoOptions: videoOptions, autoplay: false, onEnd: () {})
+        .obs;
     videoController.add(VideoModel(id: postId, controller: vid));
     update();
   }
 
   void initSomeVideo(String link, int postId, int index) async {
     emitter("initializing");
+
     final lister = videoController.where((p0) => p0.id == postId).toList();
 
     if (lister.length > 1) {
@@ -238,9 +288,6 @@ class VideoWare extends GetxController {
     }
 
     if (lister.isNotEmpty) {
-      if (lister.first.controller!.value.value.isInitialized) {
-        return;
-      }
       await Future.wait([initController(lister.first.id!)])
           .then((value) => {emitter("initialized")});
       //  lister.first.controller!.play();
@@ -260,48 +307,19 @@ class VideoWare extends GetxController {
         return;
       } else {
         if (lister.first.controller != null) {
-          if (lister.first.controller!.value.value.isInitialized) {
+          if (await lister.first.controller!.value.isPlaying) {
             try {
-              lister.first.controller!.value.addListener(() {
-                if (videoController
-                        .where((item) => item.id == id)
-                        .first
-                        .controller!
-                        .value
-                        .value
-                        .position
-                        .inSeconds >=
-                    (videoController
-                            .where((item) => item.id == id)
-                            .first
-                            .controller!
-                            .value
-                            .value
-                            .duration
-                            .inSeconds -
-                        1)) {
-                  // emitter(videoController
-                  //     .where((item) => item.id == id)
-                  //     .first
-                  //     .controller!
-                  //     .value
-                  //     .duration
-                  //     .toString());
-                  // emitter(videoController
-                  //     .where((item) => item.id == id)
-                  //     .first
-                  //     .controller!
-                  //     .value
-                  //     .position
-                  //     .toString());
-                  // view.value = true;
+              lister.first.controller!.value
+                  .addListener(ApiVideoPlayerControllerEventsListener(
+                onReady: () {},
+                onEnd: () {
                   if (view2.value == 0) {
                     ViewController.handleView(id);
                     view2.value = 1;
                   }
                   view2.value = 1;
-                }
-              });
+                },
+              ));
             } catch (e) {
               emitter(e.toString());
             }
@@ -309,61 +327,14 @@ class VideoWare extends GetxController {
         }
       }
     }
-    // videoController
-    //     .where((item) => item.id == id)
-    //     .first
-    //     .controller!
-    //     .value
-    //     .addListener(() {
-    //   if (videoController
-    //           .where((item) => item.id == id)
-    //           .first
-    //           .controller!
-    //           .value
-    //           .value
-    //           .position
-    //           .inSeconds >=
-    //       (videoController
-    //               .where((item) => item.id == id)
-    //               .first
-    //               .controller!
-    //               .value
-    //               .value
-    //               .duration
-    //               .inSeconds -
-    //           1)) {
-    //     // emitter(videoController
-    //     //     .where((item) => item.id == id)
-    //     //     .first
-    //     //     .controller!
-    //     //     .value
-    //     //     .duration
-    //     //     .toString());
-    //     // emitter(videoController
-    //     //     .where((item) => item.id == id)
-    //     //     .first
-    //     //     .controller!
-    //     //     .value
-    //     //     .position
-    //     //     .toString());
-    //     // view.value = true;
-    //     if (view2.value == 0) {
-    //       ViewController.handleView(id);
-    //       view2.value = 1;
-    //     }
-    //     view2.value = 1;
-    //   }
-    // });
   }
 
-  void playAnyVideo() {
+  Future<void> playAnyVideo() async {
     try {
       for (var element in videoController) {
         if (element.controller != null) {
-          if (element.controller!.value.value.isInitialized) {
-            if (!element.controller!.value.value.isPlaying) {
-              element.controller!.value.play();
-            }
+          if (!await element.controller!.value.isPlaying) {
+            element.controller!.value.play();
           }
         }
       }
@@ -376,14 +347,10 @@ class VideoWare extends GetxController {
     try {
       for (var element in videoController) {
         if (element.controller != null) {
-          if (element.controller!.value.value.isInitialized) {
-            if (element.controller!.value.value.isPlaying) {
-              element.controller!.value.pause();
-            } else {
-              emitter("controller is not playing ");
-            }
+          if (await element.controller!.value.isPlaying) {
+            element.controller!.value.pause();
           } else {
-            emitter("controller is not init");
+            emitter("controller is not playing ");
           }
         } else {
           emitter("controller is null");
@@ -409,19 +376,13 @@ class VideoWare extends GetxController {
   }
 
   Future disposeVideo(int id, String link) async {
-    loadVideo(false);
-
     // if (videoController.value.value.isInitialized) {
     //   chewieController.value.videoPlayerController.dispose();
+    loadVideo(false);
     final lister = videoController.where((item) => item.id == id).toList();
 
     if (lister.isNotEmpty) {
-      lister.first.controller!.value.removeListener(() {});
       lister.first.controller!.value.dispose();
-      if (lister.first.chewie != null) {
-        lister.first.chewie!.removeListener(() {});
-        lister.first.chewie!.dispose();
-      }
       videoController.removeWhere((item) => item.id == id);
       addVideo(link, id);
       emitter("disposed");
@@ -440,16 +401,10 @@ class VideoWare extends GetxController {
         if (element.id == id) {
         } else {
           if (element.controller != null) {
-            if (element.controller!.value.value.isInitialized) {
-              element.controller!.value.removeListener(() {});
-              element.controller!.value.dispose();
-              if (lister.first.chewie != null) {
-                lister.first.chewie!.removeListener(() {});
-                lister.first.chewie!.dispose();
-              }
-              videoController.removeWhere((item) => item.id == element.id);
-              addVideo(link, element.id!);
-            }
+            element.controller!.value.dispose();
+
+            videoController.removeWhere((item) => item.id == element.id);
+            addVideo(link, element.id!);
           }
         }
       }
@@ -463,7 +418,7 @@ class VideoWare extends GetxController {
     //  }
   }
 
-  void disposeAllVideoV2(int id, String link) async {
+  Future disposeAllVideoV2(int id, String link) async {
     // if (videoController.value.value.isInitialized) {
     //   chewieController.value.videoPlayerController.dispose();
     final lister = videoController.where((item) => item.id == id).toList();
@@ -471,12 +426,9 @@ class VideoWare extends GetxController {
     if (lister.isNotEmpty) {
       for (var element in videoController) {
         if (element.controller != null) {
-          if (element.controller!.value.value.isInitialized) {
-            element.controller!.value.removeListener(() {});
-            element.controller!.value.dispose();
-            videoController.removeWhere((item) => item.id == element.id);
-            addVideo(link, element.id!);
-          }
+          element.controller!.value.dispose();
+          videoController.removeWhere((item) => item.id == element.id);
+          addVideo(link, element.id!);
         }
       }
       // lister.first.controller!.value.removeListener(() {});
@@ -517,13 +469,15 @@ class VideoWareHome extends GetxController {
   Rx<FeedData> feedData = FeedData().obs;
 
   RxList<FeedPost> feedPosts = <FeedPost>[].obs;
+  Rx<FeedData> feedAudioData = FeedData().obs;
+  RxList<FeedPost> feedPostsAudio = <FeedPost>[].obs;
 
   RxList<VideoModel> videoController = <VideoModel>[].obs;
 
-  Rx<ChewieController> chewieController = ChewieController(
-          videoPlayerController:
-              VideoPlayerController.networkUrl(Uri.parse('')))
-      .obs;
+  // Rx<ChewieController> chewieController = ChewieController(
+  //         videoPlayerController:
+  //             VideoPlayerController.networkUrl(Uri.parse('')))
+  //     .obs;
 
   @override
   void onInit() {
@@ -553,6 +507,11 @@ class VideoWareHome extends GetxController {
   Future<void> addVideoToList(FeedPost data) async {
     feedPosts.removeWhere((element) => element.id == data.id);
     feedPosts.insert(0, data);
+  }
+
+   Future<void> addAudioToList(FeedPost data) async {
+    feedPostsAudio.removeWhere((element) => element.id == data.id);
+    feedPostsAudio.insert(0, data);
   }
 
   Future getVideoPostFromApi(int pageNum, [bool? load]) async {
@@ -585,24 +544,28 @@ class VideoWareHome extends GetxController {
         if (pageNum == 1) {
           feedPosts.value = feedData.value.data!;
           for (var element in feedPosts) {
-            var lister =
-                videoController.where((p0) => p0.id == element.id).toList();
-            if (lister.isEmpty) {
-              addVideo(
-                  "$muxStreamBaseUrl/${element.mux!.first}.$videoExtension",
-                  element.id!);
+            if (element != null) {
+              var lister =
+                  videoController.where((p0) => p0.id == element.id).toList();
+              if (lister.isEmpty) {
+                if (element.vod!.first != null) {
+                  addVideo(element.mux!.first, element.id!);
+                }
+              }
             }
           }
         } else {
           _moreFeedPosts = incomingData.data!;
           feedPosts.addAll(_moreFeedPosts);
           for (var element in _moreFeedPosts) {
-            var lister =
-                videoController.where((p0) => p0.id == element.id).toList();
-            if (lister.isEmpty) {
-              addVideo(
-                  "$muxStreamBaseUrl/${element.mux!.first}.$videoExtension",
-                  element.id!);
+            if (element != null) {
+              var lister =
+                  videoController.where((p0) => p0.id == element.id).toList();
+              if (lister.isEmpty) {
+                if (element.vod!.first != null) {
+                  addVideo("${element.vod!.first}", element.id!);
+                }
+              }
             }
           }
           // if (_moreFeedPosts.length > 5) {
@@ -622,6 +585,61 @@ class VideoWareHome extends GetxController {
         //   await downloadThumbs(_feedPosts);
 
         //  log("get feed posts data  request success");
+      } else {
+        // log("get feed posts data  request failed");
+      }
+    } catch (e) {
+      if (load == true) {
+        paginating.value = false;
+      }
+      // log("get feed posts data  request failed");
+      log(e.toString());
+    }
+    if (load == true) {
+      paginating.value = false;
+    }
+
+    //notifyListeners();
+  }
+
+  Future getAudioPostFromApi(int pageNum, [bool? load]) async {
+    log("getting audio posts");
+
+    emitter(pageNum.toString());
+
+    if (load == true) {
+      paginating.value = true;
+    }
+
+    List<FeedPost> _moreFeedPosts = [];
+
+    try {
+      http.Response? response = await getAudioPost(pageNum)
+          .whenComplete(() => emitter("audio post  data gotten successfully"));
+      if (response == null) {
+        //   log("get feed posts data request failed");
+        if (load == true) {
+          paginating.value = false;
+        }
+      } else if (response.statusCode == 200) {
+        var jsonData = jsonDecode(response.body);
+
+        var incomingData = FeedData.fromJson(jsonData["data"]);
+        feedAudioData.value = incomingData;
+
+        if (pageNum == 1) {
+          feedPostsAudio.value = feedAudioData.value.data!;
+        } else {
+          _moreFeedPosts = incomingData.data!;
+          feedPostsAudio.addAll(_moreFeedPosts);
+
+          if (load == true) {
+            paginating.value = false;
+          }
+        }
+        if (_moreFeedPosts.isNotEmpty) {
+          _moreFeedPosts.clear();
+        }
       } else {
         // log("get feed posts data  request failed");
       }
@@ -675,70 +693,35 @@ class VideoWareHome extends GetxController {
     //notifyListeners();
   }
 
-  Future initController(int id) async {
+  Future initController(
+    int id,
+  ) async {
     loadVideo(true);
     final lister = videoController.where((item) => item.id == id).toList();
 
     if (lister.isNotEmpty) {
       lister.first.controller!.value.initialize().whenComplete(() {
-        lister.first.chewie = ChewieController(
-            videoPlayerController: videoController
-                .where((item) => item.id == id)
-                .first
-                .controller!
-                .value,
-            autoPlay: true,
-            looping: true,
-            allowMuting: false,
-            isLive: true,
-            draggableProgressBar: false,
-            hideControlsTimer: Duration(seconds: 3),
-            allowFullScreen: false,
-
-            //  allowFullScreen: false,
-
-            //  progressIndicatorDelay: null,
-
-            showControls: true,
-            materialProgressColors: ChewieProgressColors(
-                backgroundColor: Colors.transparent,
-                handleColor: Colors.transparent,
-                bufferedColor: Colors.transparent,
-                playedColor: Colors.transparent),
-            cupertinoProgressColors: ChewieProgressColors(
-                backgroundColor: Colors.transparent,
-                handleColor: Colors.transparent,
-                bufferedColor: Colors.transparent,
-                playedColor: Colors.transparent),
-            // materialProgressColors: ChewieProgressColors(
-            //     bufferedColor: HexColor(primaryColor).withOpacity(.3),
-            //     playedColor: HexColor(primaryColor).withOpacity(.6)),
-            // cupertinoProgressColors: ChewieProgressColors(
-            //     bufferedColor: HexColor(primaryColor).withOpacity(.3),
-            //     playedColor: HexColor(primaryColor).withOpacity(.6)),
-            //  maxScale: 1.5,
-            showOptions: false);
-        lister.first.chewie!.addListener(() {
-          if (lister.first.chewie!.videoPlayerController.value.isInitialized) {
-            lister.first.chewie!.pause();
-
+        lister.first.controller!.value
+            .addListener(ApiVideoPlayerControllerEventsListener(
+          onReady: () {
+            lister.first.controller!.value.play();
             update();
-          }
-        });
-
+          },
+          onEnd: () {},
+        ));
         loadVideo(false);
       });
-
-      final VideoPlayerController newControl = lister.first.controller!.value;
-
-      lister.first.controller!.value = newControl;
     }
     update();
   }
 
   void initVideo(String link, int postId) async {
-    Rx<VideoPlayerController> vid =
-        VideoPlayerController.networkUrl(Uri.parse(link)).obs;
+    final videoOptions =
+        VideoOptions(videoId: link, type: VideoType.vod, token: null);
+
+    Rx<ApiVideoPlayerController> vid = ApiVideoPlayerController(
+            videoOptions: videoOptions, autoplay: false, onEnd: () {})
+        .obs;
     videoController.add(VideoModel(id: postId, controller: vid));
     await Future.wait([initController(postId)])
         .then((value) => {emitter("initialized")});
@@ -746,8 +729,12 @@ class VideoWareHome extends GetxController {
   }
 
   void addVideo(String link, int postId) async {
-    Rx<VideoPlayerController> vid =
-        VideoPlayerController.networkUrl(Uri.parse(link)).obs;
+    final videoOptions =
+        VideoOptions(videoId: link, type: VideoType.vod, token: null);
+
+    Rx<ApiVideoPlayerController> vid = ApiVideoPlayerController(
+            videoOptions: videoOptions, autoplay: false, onEnd: () {})
+        .obs;
     videoController.add(VideoModel(id: postId, controller: vid));
     update();
   }
@@ -762,9 +749,6 @@ class VideoWareHome extends GetxController {
     }
 
     if (lister.isNotEmpty) {
-      if (lister.first.controller!.value.value.isInitialized) {
-        return;
-      }
       await Future.wait([initController(lister.first.id!)])
           .then((value) => {emitter("initialized")});
       //  lister.first.controller!.play();
@@ -784,48 +768,19 @@ class VideoWareHome extends GetxController {
         return;
       } else {
         if (lister.first.controller != null) {
-          if (lister.first.controller!.value.value.isInitialized) {
+          if (await lister.first.controller!.value.isPlaying) {
             try {
-              lister.first.controller!.value.addListener(() {
-                if (videoController
-                        .where((item) => item.id == id)
-                        .first
-                        .controller!
-                        .value
-                        .value
-                        .position
-                        .inSeconds >=
-                    (videoController
-                            .where((item) => item.id == id)
-                            .first
-                            .controller!
-                            .value
-                            .value
-                            .duration
-                            .inSeconds -
-                        1)) {
-                  // emitter(videoController
-                  //     .where((item) => item.id == id)
-                  //     .first
-                  //     .controller!
-                  //     .value
-                  //     .duration
-                  //     .toString());
-                  // emitter(videoController
-                  //     .where((item) => item.id == id)
-                  //     .first
-                  //     .controller!
-                  //     .value
-                  //     .position
-                  //     .toString());
-                  // view.value = true;
+              lister.first.controller!.value
+                  .addListener(ApiVideoPlayerControllerEventsListener(
+                onReady: () {},
+                onEnd: () {
                   if (view2.value == 0) {
                     ViewController.handleView(id);
                     view2.value = 1;
                   }
                   view2.value = 1;
-                }
-              });
+                },
+              ));
             } catch (e) {
               emitter(e.toString());
             }
@@ -833,61 +788,14 @@ class VideoWareHome extends GetxController {
         }
       }
     }
-    // videoController
-    //     .where((item) => item.id == id)
-    //     .first
-    //     .controller!
-    //     .value
-    //     .addListener(() {
-    //   if (videoController
-    //           .where((item) => item.id == id)
-    //           .first
-    //           .controller!
-    //           .value
-    //           .value
-    //           .position
-    //           .inSeconds >=
-    //       (videoController
-    //               .where((item) => item.id == id)
-    //               .first
-    //               .controller!
-    //               .value
-    //               .value
-    //               .duration
-    //               .inSeconds -
-    //           1)) {
-    //     // emitter(videoController
-    //     //     .where((item) => item.id == id)
-    //     //     .first
-    //     //     .controller!
-    //     //     .value
-    //     //     .duration
-    //     //     .toString());
-    //     // emitter(videoController
-    //     //     .where((item) => item.id == id)
-    //     //     .first
-    //     //     .controller!
-    //     //     .value
-    //     //     .position
-    //     //     .toString());
-    //     // view.value = true;
-    //     if (view2.value == 0) {
-    //       ViewController.handleView(id);
-    //       view2.value = 1;
-    //     }
-    //     view2.value = 1;
-    //   }
-    // });
   }
 
-  void playAnyVideo() {
+  Future<void> playAnyVideo() async {
     try {
       for (var element in videoController) {
         if (element.controller != null) {
-          if (element.controller!.value.value.isInitialized) {
-            if (!element.controller!.value.value.isPlaying) {
-              element.controller!.value.play();
-            }
+          if (!await element.controller!.value.isCreated) {
+            element.controller!.value.play();
           }
         }
       }
@@ -900,14 +808,10 @@ class VideoWareHome extends GetxController {
     try {
       for (var element in videoController) {
         if (element.controller != null) {
-          if (element.controller!.value.value.isInitialized) {
-            if (element.controller!.value.value.isPlaying) {
-              element.controller!.value.pause();
-            } else {
-              emitter("controller is not playing ");
-            }
+          if (await element.controller!.value.isPlaying) {
+            element.controller!.value.pause();
           } else {
-            emitter("controller is not init");
+            emitter("controller is not playing ");
           }
         } else {
           emitter("controller is null");
@@ -939,12 +843,7 @@ class VideoWareHome extends GetxController {
     final lister = videoController.where((item) => item.id == id).toList();
 
     if (lister.isNotEmpty) {
-      lister.first.controller!.value.removeListener(() {});
       lister.first.controller!.value.dispose();
-      if (lister.first.chewie != null) {
-        lister.first.chewie!.removeListener(() {});
-        lister.first.chewie!.dispose();
-      }
       videoController.removeWhere((item) => item.id == id);
       addVideo(link, id);
       emitter("disposed");
@@ -963,16 +862,10 @@ class VideoWareHome extends GetxController {
         if (element.id == id) {
         } else {
           if (element.controller != null) {
-            if (element.controller!.value.value.isInitialized) {
-              element.controller!.value.removeListener(() {});
-              element.controller!.value.dispose();
-              if (lister.first.chewie != null) {
-                lister.first.chewie!.removeListener(() {});
-                lister.first.chewie!.dispose();
-              }
-              videoController.removeWhere((item) => item.id == element.id);
-              addVideo(link, element.id!);
-            }
+            element.controller!.value.dispose();
+
+            videoController.removeWhere((item) => item.id == element.id);
+            addVideo(link, element.id!);
           }
         }
       }
@@ -994,12 +887,9 @@ class VideoWareHome extends GetxController {
     if (lister.isNotEmpty) {
       for (var element in videoController) {
         if (element.controller != null) {
-          if (element.controller!.value.value.isInitialized) {
-            element.controller!.value.removeListener(() {});
-            element.controller!.value.dispose();
-            videoController.removeWhere((item) => item.id == element.id);
-            addVideo(link, element.id!);
-          }
+          element.controller!.value.dispose();
+          videoController.removeWhere((item) => item.id == element.id);
+          addVideo(link, element.id!);
         }
       }
       // lister.first.controller!.value.removeListener(() {});

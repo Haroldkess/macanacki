@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:animate_do/animate_do.dart';
+import 'package:apivideo_player/apivideo_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
@@ -24,9 +27,11 @@ import '../../../widgets/ads_display.dart';
 import '../../../widgets/debug_emitter.dart';
 import '../../../widgets/feed_views/like_section.dart';
 import '../../../widgets/feed_views/new_action_design.dart';
+import '../test_api_video.dart';
 
 class FeedVideoHolder extends StatefulWidget {
   String file;
+  String vod;
 //  VideoPlayerController? controller;
   bool isHome;
   bool shouldPlay;
@@ -39,6 +44,7 @@ class FeedVideoHolder extends StatefulWidget {
   FeedVideoHolder(
       {super.key,
       required this.file,
+      required this.vod,
       //  required this.controller,
       required this.isHome,
       required this.shouldPlay,
@@ -93,15 +99,7 @@ class _FeedVideoHolderState extends State<FeedVideoHolder>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       VideoWareHome.instance.getVideoPostFromApi(1);
     });
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      // VideoWareHome.instance.initSomeVideo(
-      //     "$muxStreamBaseUrl/${widget.data.mux!.first}.$videoExtension",
-      //     widget.postId,
-      //     0);
 
-      VideoWareHome.instance.disposeAllVideoV2(widget.data.id!,
-          "$muxStreamBaseUrl/${widget.data.mux!.first}.$videoExtension");
-    });
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       PostSecurity.instance.toggleSecure(true);
     });
@@ -120,8 +118,7 @@ class _FeedVideoHolderState extends State<FeedVideoHolder>
   @override
   Widget build(BuildContext context) {
     ActionWare action = Provider.of<ActionWare>(context, listen: false);
-    // PreloadPageController controller =
-    //     PreloadPageController(initialPage: 0, keepPage: true);
+
     return Scaffold(
       backgroundColor: Colors.black,
       resizeToAvoidBottomInset: false,
@@ -139,62 +136,40 @@ class _FeedVideoHolderState extends State<FeedVideoHolder>
           scrollDirection: Axis.vertical,
           itemBuilder: ((context, index) {
             FeedPost post = allVideos[index];
-            // FeedPost? post2 =
-            //     index < (allVideos.length - 1) ? allVideos[index + 1] : null;
 
             return GestureDetector(
-              onTap: () {
-                if (index != 0) {
-                  VideoWareHome.instance.loadVideo(true);
-
-                  WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                    VideoWareHome.instance.initSomeVideo(
-                        "$muxStreamBaseUrl/${post.mux!.first}.$videoExtension",
-                        post.id!,
-                        index);
-                  });
-                }
-              },
               onDoubleTap: () async {
-                var lister = VideoWareHome.instance.videoController
-                    .where((p0) => p0.id == post.id!)
-                    .toList();
-
-                if (lister.isNotEmpty) {
-                  if (lister.first.controller!.value.value.isPlaying) {
-                    if (mounted) {
-                      if (controller.value == 1) {
-                        controller.reset();
-                        controller.forward();
-                      } else {
-                        controller.forward();
-                      }
-
-                      if (action.likeIds.contains(post.id!)) {
-                        setState(() {
-                          flag = true;
-                        });
-                        await Future.delayed(const Duration(seconds: 2));
-
-                        setState(() {
-                          flag = false;
-                        });
-
-                        return;
-                      }
-                      setState(() {
-                        flag = true;
-                      });
-
-                      await likeAction(context, true, post.id!);
-
-                      await Future.delayed(const Duration(seconds: 2));
-
-                      setState(() {
-                        flag = false;
-                      });
-                    }
+                if (mounted) {
+                  if (controller.value == 1) {
+                    controller.reset();
+                    controller.forward();
+                  } else {
+                    controller.forward();
                   }
+
+                  if (action.likeIds.contains(post.id!)) {
+                    setState(() {
+                      flag = true;
+                    });
+                    await Future.delayed(const Duration(seconds: 2));
+
+                    setState(() {
+                      flag = false;
+                    });
+
+                    return;
+                  }
+                  setState(() {
+                    flag = true;
+                  });
+
+                  await likeAction(context, true, post.id!);
+
+                  await Future.delayed(const Duration(seconds: 2));
+
+                  setState(() {
+                    flag = false;
+                  });
                 }
               },
               child: Stack(
@@ -205,9 +180,6 @@ class _FeedVideoHolderState extends State<FeedVideoHolder>
                       page: widget.page,
                       postId: post.id!,
                       index: index,
-                      // video: vid.videoController
-                      //     .where((p0) => p0.id == post.id)
-                      //     .first,
                       data: post,
                       isHome: false),
                   post.promoted == "yes"
@@ -261,184 +233,6 @@ class _FeedVideoHolderState extends State<FeedVideoHolder>
                 ],
               ),
             );
-
-            // GetBuilder<VideoWareHome>(
-            //     init: VideoWareHome.instance.videoController
-            //             .where((p0) => p0.id == post.id)
-            //             .toList()
-            //             .isEmpty
-            //         ? VideoWareHome(
-            //             "$muxStreamBaseUrl/${post.mux!.first}.$videoExtension",
-            //             post.id!,
-            //             true,
-            //             index)
-            //         : VideoWareHome.instance.videoController
-            //                     .where((p0) => p0.id == post.id)
-            //                     .first
-            //                     .controller ==
-            //                 null
-            //             ? VideoWareHome(
-            //                 "$muxStreamBaseUrl/${post.mux!.first}.$videoExtension",
-            //                 post.id!,
-            //                 true,
-            //                 index)
-            //             : null,
-            //     initState: (initState) => VideoWareHome.instance.videoController
-            //             .where((p0) => p0.id == post.id)
-            //             .toList()
-            //             .isEmpty
-            //         ? WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-            //             VideoWareHome.instance.initSomeVideo(
-            //                 "$muxStreamBaseUrl/${post.mux!.first}.$videoExtension",
-            //                 post.id!,
-            //                 index);
-            //           })
-            //         : VideoWareHome.instance.videoController
-            //                     .where((p0) => p0.id == post.id)
-            //                     .first
-            //                     .controller ==
-            //                 null
-            //             ? WidgetsBinding.instance
-            //                 .addPostFrameCallback((timeStamp) {
-            //                 VideoWareHome.instance.initSomeVideo(
-            //                     "$muxStreamBaseUrl/${post.mux!.first}.$videoExtension",
-            //                     post.id!,
-            //                     index);
-            //               })
-            //             : VideoWareHome.instance.videoController
-            //                     .where((p0) => p0.id == post.id)
-            //                     .first
-            //                     .controller!
-            //                     .value
-            //                     .value
-            //                     .isInitialized
-            //                 ? null
-            //                 : WidgetsBinding.instance
-            //                     .addPostFrameCallback((timeStamp) {
-            //                     VideoWareHome.instance.initSomeVideo(
-            //                         "$muxStreamBaseUrl/${post.mux!.first}.$videoExtension",
-            //                         post.id!,
-            //                         index);
-            //                   }),
-            //     builder: (vid) {
-            //       return vid.videoController
-            //               .where((p0) => p0.id == post.id)
-            //               .toList()
-            //               .isEmpty
-            //           ? Center(child: Loader(color: HexColor(primaryColor)))
-            //           : GestureDetector(
-            //               onDoubleTap: () async {
-            //                 var lister = VideoWareHome.instance.videoController
-            //                     .where((p0) => p0.id == post.id!)
-            //                     .toList();
-
-            //                 if (lister.isNotEmpty) {
-            //                   if (lister
-            //                       .first.controller!.value.value.isPlaying) {
-            //                     if (mounted) {
-            //                       if (controller.value == 1) {
-            //                         controller.reset();
-            //                         controller.forward();
-            //                       } else {
-            //                         controller.forward();
-            //                       }
-
-            //                       if (action.likeIds.contains(post.id!)) {
-            //                         setState(() {
-            //                           flag = true;
-            //                         });
-            //                         await Future.delayed(
-            //                             const Duration(seconds: 2));
-
-            //                         setState(() {
-            //                           flag = false;
-            //                         });
-
-            //                         return;
-            //                       }
-            //                       setState(() {
-            //                         flag = true;
-            //                       });
-
-            //                       await likeAction(context, true, post.id!);
-
-            //                       await Future.delayed(
-            //                           const Duration(seconds: 2));
-
-            //                       setState(() {
-            //                         flag = false;
-            //                       });
-            //                     }
-            //                   }
-            //                 }
-            //               },
-            //               child: Stack(
-            //                 children: [
-            //                   VideoView(
-            //                    //   data2: post2,
-            //                       thumbLink: post.thumbnails!.first,
-            //                       page: widget.page,
-            //                       postId: post.id!,
-            //                       index: index,
-            //                       video: vid.videoController
-            //                           .where((p0) => p0.id == post.id)
-            //                           .first,
-            //                       data: post,
-            //                       isHome: false),
-            //                   post.promoted == "yes"
-            //                       ? Positioned(
-            //                           bottom: 140,
-            //                           left: 0,
-            //                           child: Align(
-            //                               alignment: Alignment.bottomLeft,
-            //                               child: Column(
-            //                                 crossAxisAlignment:
-            //                                     CrossAxisAlignment.start,
-            //                                 children: [
-            //                                   // AdsDisplay(
-            //                                   //   sponsored: false,
-            //                                   //   color: HexColor('#00B074'),
-            //                                   //   title: '\$10.000.00',
-            //                                   // ),
-            //                                   // SizedBox(
-            //                                   //   height: 10,
-            //                                   // ),
-            //                                   AdsDisplay(
-            //                                     sponsored: true,
-            //                                     //  color: HexColor('#00B074'),
-            //                                     color: Colors.grey.shade400,
-            //                                     title: 'Sponsored Ad',
-            //                                   ),
-            //                                 ],
-            //                               )),
-            //                         )
-            //                       : SizedBox.shrink(),
-            //                   flag
-            //                       ? Center(
-            //                           child: Align(
-            //                             alignment: Alignment.center,
-            //                             child: AnimatedContainer(
-            //                               duration: const Duration(seconds: 3),
-            //                               curve: Curves.bounceInOut,
-            //                               onEnd: () {
-            //                                 setState(() {
-            //                                   flag = false;
-            //                                 });
-            //                               },
-            //                               child: Icon(
-            //                                 Icons.favorite,
-            //                                 size: Get.width * 0.4,
-            //                                 color: animation.value,
-            //                               ),
-            //                             ),
-            //                           ),
-            //                         )
-            //                       : const SizedBox.shrink(),
-            //                 ],
-            //               ),
-            //             );
-
-            //     });
           }),
           onPageChanged: (index) {
             if (index != 0) {
@@ -479,9 +273,6 @@ class _FeedVideoHolderState extends State<FeedVideoHolder>
 
   Future paginateFeed() async {
     emitter("Pageinating");
-    //FeedPostWare provide = Provider.of<FeedPostWare>(context, listen: false);
-
-    ///  provide.indexChange(index);
 
     // int checkNum = provide.feedPosts.length - 3; // lenght of posts
     int pageNum = VideoWareHome
@@ -534,69 +325,33 @@ class VideoView extends StatefulWidget {
 }
 
 class _VideoViewState extends State<VideoView> {
+  ApiVideoPlayerController? _controller;
+  String apiToken = "";
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       VideoWareHome.instance.viewToggle(0);
     });
-    if (mounted) {
-      if (widget.index == 0) {
-        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-          VideoWareHome.instance.loadVideo(true);
-          VideoWareHome.instance.initSomeVideo(
-              "$muxStreamBaseUrl/${widget.data.mux!.first}.$videoExtension",
-              widget.data.id!,
-              widget.index);
+    buildVideoOptions();
+  }
 
-          if (mounted) {
-            setState(() {});
-          }
-        });
-      } else {
-        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-          VideoWareHome.instance.loadVideo(false);
-          if (mounted) {
-            setState(() {});
-          }
-        });
-      }
-    }
+  void buildVideoOptions() {
+    final token = apiToken.isEmpty ? null : apiToken;
 
-    // if (widget.data2 != null) {
-    //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-    //     if (VideoWareHome.instance.videoController
-    //             .where((item) => item.id == widget.data2!.id)
-    //             .first
-    //             .chewie !=
-    //         null) {
-    //       VideoWareHome.instance.videoController
-    //           .where((item) => item.id == widget.data2!.id)
-    //           .first
-    //           .chewie!
-    //           .pause();
-    //       VideoWareHome.instance.videoController
-    //           .where((item) => item.id == widget.data2!.id)
-    //           .first
-    //           .controller!
-    //           .value
-    //           .pause();
-    //     }
-    //   });
-    // }
+    final videoOptions = VideoOptions(
+        videoId: widget.data.vod!.first!, type: VideoType.vod, token: token);
 
-    final find = VideoWareHome.instance.videoController
-        .where((item) => item.id == widget.postId)
-        .toList();
-    if (find.isNotEmpty) {
-      if (find.first.controller!.value.value.isInitialized) {}
+    if (_controller == null) {
+      _controller = ApiVideoPlayerController(
+          videoOptions: videoOptions,
+          autoplay: false,
+          onEnd: () {},
+          onReady: () {
+            log("READY!!!");
+          });
     } else {
-      // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      //   VideoWareHome.instance.initSomeVideo(
-      //       "$muxStreamBaseUrl/${widget.data.mux!.first}.$videoExtension",
-      //       widget.data.id!,
-      //       widget.index);
-      // });
+      _controller?.setVideoOptions(videoOptions);
     }
   }
 
@@ -604,48 +359,10 @@ class _VideoViewState extends State<VideoView> {
 
   @override
   void dispose() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (VideoWareHome.instance.videoController
-              .where((item) => item.id == widget.postId)
-              .first
-              .chewie !=
-          null) {
-        VideoWareHome.instance.videoController
-            .where((item) => item.id == widget.postId)
-            .first
-            .chewie!
-            .pause();
-        VideoWareHome.instance.videoController
-            .where((item) => item.id == widget.postId)
-            .first
-            .controller!
-            .value
-            .pause();
-      }
-    });
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      VideoWareHome.instance.loadVideo(false);
-    });
-
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      //  if (widget.index == 0) return;
-      VideoWareHome.instance.disposeVideo(widget.data.id!,
-          "$muxStreamBaseUrl/${widget.data.mux!.first}.$videoExtension");
-      // VideoWareHome.instance.disposeAllVideoV2(widget.data.id!,
-      //     "$muxStreamBaseUrl/${widget.data.mux!.first}.$videoExtension");
-
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        //  if (widget.index == 0) return;
-        //  if (widget.data2 != null) {
-        // VideoWareHome.instance.disposeAllVideo(widget.data2!.id!,
-        //     "$muxStreamBaseUrl/${widget.data2!.mux!.first}.$videoExtension");
-        //}
-      });
-    });
-
     super.dispose();
   }
 
+  Rx<VideoPlayerController>? vid;
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -664,183 +381,13 @@ class _VideoViewState extends State<VideoView> {
         ),
         Center(
           child: Stack(
-            alignment: Alignment.center,
             children: [
-              ObxValue<Rx<VideoPlayerController>>((val) {
-                if (val.value.value.isInitialized) {
-                  if (widget.isHome) {
-                    if (mounted) {
-                      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                        if (PersistentNavController.instance.hide.value ==
-                            false) {
-                          val.value.play();
-                        } else {
-                          if (widget.index == 0) {
-                            emitter("yes lets play the video");
-                            val.value.play();
-                          } else {
-                            //  val.value.pause();
-                          }
-                        }
-                      });
-                    }
-                  } else {
-                    // val.value.pause();
-                  }
-
-                  if (mounted) {
-                    if (widget.index == 0) {
-                      emitter("yes lets play the video");
-                      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                        val.value.play();
-                      });
-                    } else {
-                      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                        //val.value.pause();
-                      });
-                    }
-                  }
-
-                  // emitter("yes index is ${widget.index}");
-                  if (mounted) {
-                    //  emitter("initialized 0000");
-                    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                      if (val.value.value.isInitialized) {
-                        VideoWareHome.instance.addListeners(widget.postId);
-                      }
-                    });
-                  }
-                } else {
-                  WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                    if (mounted) {
-                      setState(() {});
-                    }
-                    Future.delayed(Duration(milliseconds: 500), () {
-                      if (mounted) {
-                        setState(() {});
-                      }
-                    });
-                    Future.delayed(Duration(seconds: 1), () {
-                      if (mounted) {
-                        setState(() {});
-                      }
-                    });
-                    Future.delayed(Duration(seconds: 2), () {
-                      if (mounted) {
-                        setState(() {});
-                      }
-                    });
-                  });
-                }
-
-                return val.value.value.isInitialized == false
-                    ? Stack(
-                        children: [
-                          Container(
-                            width: Get.width,
-                            height: Get.height,
-                            decoration: BoxDecoration(
-                                color: Colors.black,
-                                image: DecorationImage(
-                                  image: CachedNetworkImageProvider(
-                                      widget.thumbLink.toString()),
-                                  fit: BoxFit.cover,
-                                )),
-                          ),
-                          Align(
-                            alignment: Alignment.center,
-                            child: ObxValue((load) {
-                              // WidgetsBinding.instance
-                              //     .addPostFrameCallback((timeStamp) {
-                              //   Future.delayed(Duration(milliseconds: 500), () {
-                              //     if (mounted) {
-                              //       setState(() {});
-                              //     }
-                              //   });
-                              // });
-                              return load.value
-                                  ? CircleAvatar(
-                                      backgroundColor:
-                                          Colors.white.withOpacity(.7),
-                                      radius: 30,
-                                      child: Center(
-                                        child: Loader(
-                                            color: HexColor(primaryColor)),
-                                      ),
-                                    )
-                                  : Visibility(
-                                      visible: load.value ? false : true,
-                                      child: CircleAvatar(
-                                        backgroundColor:
-                                            Colors.white.withOpacity(.7),
-                                        radius: 30,
-                                        child: const Icon(
-                                          Icons.play_arrow_outlined,
-                                          size: 25,
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                    );
-                            }, VideoWareHome.instance.isLoadVideo),
-                          ),
-                        ],
-                      )
-                    : Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          AspectRatio(
-                            aspectRatio: val.value.value.aspectRatio,
-                            // Use the VideoPlayer widget to display the video.
-                            child:
-
-
-                                ObxValue((cheiwe) {
-                              return cheiwe
-                                          .where(
-                                              (p0) => p0.id == widget.data.id)
-                                          .first
-                                          .chewie ==
-                                      null
-                                  ? Container(
-                                      width: Get.width,
-                                      height: Get.height,
-                                      decoration: BoxDecoration(
-                                          color: Colors.black,
-                                          image: DecorationImage(
-                                            image: CachedNetworkImageProvider(
-                                                widget.thumbLink.toString()),
-                                            fit: BoxFit.cover,
-                                          )),
-                                    )
-                                  : Chewie(
-                                      controller: cheiwe
-                                          .where(
-                                              (p0) => p0.id == widget.data.id)
-                                          .first
-                                          .chewie!);
-                            }, VideoWareHome.instance.videoController),
-                          ),
-
-                          Align(
-                            alignment: Alignment.bottomCenter,
-                            child: VideoProgressIndicator(
-                              val.value,
-                              allowScrubbing: true,
-                              colors: VideoProgressColors(
-                                  playedColor: HexColor(backgroundColor)
-                                      .withOpacity(.9)),
-                            ),
-                          ),
-
-                    
-                     
-                        ],
-                      );
-              },
-                  VideoWareHome.instance.videoController
-                      .where((p0) => p0.id == widget.postId)
-                      .first
-                      .controller!),
+              VodView(
+                data: widget.data,
+                index: widget.index,
+                vod: widget.data.vod!.first!,
+                controller: _controller,
+              )
             ],
           ),
         ),
@@ -879,6 +426,9 @@ class _VideoViewState extends State<VideoView> {
                   page: widget.page,
                   data: widget.data,
                   media: [],
+                  isHome: true,
+                  controller: _controller,
+                  isVideo: true,
                 ),
               ),
       ],

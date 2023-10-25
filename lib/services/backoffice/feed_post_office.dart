@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:macanacki/services/api_url.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../model/create_post_model.dart';
 import '../temps/temps_id.dart';
 
@@ -48,6 +47,46 @@ Future<http.Response?> getVideoPost(int pageNum) async {
   return response;
 }
 
+Future<http.Response?> getAudioPost(int pageNum) async {
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  String? token = pref.getString(tokenKey);
+  http.Response? response;
+  try {
+    response = await http.get(
+      Uri.parse('$baseUrl/public/api/v2/post/audio/list?page=$pageNum'),
+      headers: {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $token",
+      },
+    );
+    log(response.statusCode.toString());
+    log(response.body.toString());
+  } catch (e) {
+    response = null;
+  }
+  return response;
+}
+
+Future<http.Response?> getFriendsPost(int pageNum) async {
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  String? token = pref.getString(tokenKey);
+  http.Response? response;
+  try {
+    response = await http.get(
+      Uri.parse('$baseUrl/public/api/v2/post/followings/list?page=$pageNum'),
+      headers: {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $token",
+      },
+    );
+    // log(response.statusCode.toString());
+    //  log(response.body.toString());
+  } catch (e) {
+    response = null;
+  }
+  return response;
+}
+
 Future<http.Response?> getVideo(int id) async {
   SharedPreferences pref = await SharedPreferences.getInstance();
   String? token = pref.getString(tokenKey);
@@ -69,25 +108,27 @@ Future<http.Response?> getVideo(int id) async {
 }
 
 Future<http.Response?> getUserFeedPost(
-    int pageNumber, int numberOfPostPerRequest) async {
+    int pageNumber, int numberOfPostPerRequest, String filter) async {
   SharedPreferences pref = await SharedPreferences.getInstance();
   String? token = pref.getString(tokenKey);
-  String? userName = pref!.getString(userNameKey);
+  String? userName = pref.getString(userNameKey);
   http.Response? response;
 
   print(
-      "$baseUrl/public/api/v2/user/public/user/posts/$userName/?page=$pageNumber");
+      "$baseUrl/public/api/v2/user/public/user/posts/$userName?type=$filter&page=$pageNumber");
   try {
     response = await http.get(
       Uri.parse(
-          '$baseUrl/public/api/v2/user/public/user/posts/$userName/?page=$pageNumber'),
+          '$baseUrl/public/api/v2/user/public/user/posts/$userName?type=$filter&page=$pageNumber'),
       headers: {
         HttpHeaders.contentTypeHeader: "application/json",
         HttpHeaders.authorizationHeader: "Bearer $token",
       },
     );
-
-    //log(response.body.toString());
+    log("for $filter");
+    // if (filter == "audios") {
+    log(response.body.toString());
+    // }
   } catch (e) {
     response = null;
   }

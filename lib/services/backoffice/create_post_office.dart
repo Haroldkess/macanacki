@@ -7,7 +7,7 @@ import 'package:macanacki/services/api_url.dart';
 import 'package:macanacki/services/temps/temps_id.dart';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:http_parser/http_parser.dart';
 import '../../presentation/widgets/debug_emitter.dart';
 
 double getFileSize(File file) {
@@ -61,6 +61,70 @@ Future<http.StreamedResponse?> createPost(
   request.fields["btn_id"] = data.btnId!.toString();
   request.fields["btn_link"] = data.url!.toString();
   request.files.addAll(filePhoto.toList());
+
+  try {
+    response = await request.send();
+  } catch (e) {
+    //   log("hello");
+    //   log(e.toString());
+    response = null;
+  }
+
+  return response;
+}
+
+Future<http.StreamedResponse?> createAudioPost(
+  CreateAudioPostModel data,
+) async {
+  print("Inside CreateAudioPost Office");
+  http.StreamedResponse? response;
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  String? token = pref.getString(tokenKey);
+  emitter(data.media!.first.path);
+  // final filePhotoName = basename(data.media!.path);
+  var request = http.MultipartRequest(
+      "POST", Uri.parse("$baseUrl/public/api/v2/post/create"));
+  Map<String, String> headers = {
+    'Accept': 'application/json',
+    'authorization': 'Bearer $token',
+  };
+
+  print(data.media!.first.path);
+  // await Future.forEach(data.media!, (element) async {
+  //   var f = await http.MultipartFile.fromPath('media', element.path,
+  //       filename: basename(element.path));
+  //   filePhoto.add(f);
+  // });
+  // var filePhoto = http.MultipartFile.fromBytes('media[0]',
+  //     await File.fromUri(Uri(path: data.media!.first.path)).readAsBytes(),
+  //     contentType: MediaType(
+  //       'audio',
+  //       'mp3',
+  //     ));
+
+  var filePhoto =
+      await http.MultipartFile.fromPath('media[0]', data.media!.first.path,
+          filename: "${basename(data.media!.first.path)}.mp3",
+          contentType: MediaType(
+            'audio',
+            '.mp3',
+          ));
+  var fileCover = await http.MultipartFile.fromPath(
+    'cover',
+    data.cover!.path,
+    filename: basename(data.cover!.path),
+  );
+
+  // var filePhoto = await http.MultipartFile.fromPath('media', data.media!.path,
+  //     filename: filePhotoName);
+
+  request.headers.addAll(headers);
+  request.fields["description"] = data.description!;
+  request.fields["published"] = data.published!.toString();
+  request.fields["btn_id"] = data.btnId!.toString();
+  request.fields["btn_link"] = data.url!.toString();
+  request.files.add(filePhoto);
+  request.files.add(fileCover);
 
   try {
     response = await request.send();

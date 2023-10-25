@@ -18,8 +18,8 @@ import 'package:macanacki/presentation/widgets/snack_msg.dart';
 import 'package:macanacki/services/controllers/verify_controller.dart';
 import 'package:macanacki/services/middleware/gift_ware.dart';
 import 'package:macanacki/services/middleware/user_profile_ware.dart';
-import 'package:pay_with_paystack/pay_with_paystack.dart';
-import 'package:paystack_standard/paystack_standard.dart';
+// import 'package:pay_with_paystack/pay_with_paystack.dart';
+// import 'package:paystack_standard/paystack_standard.dart';
 import 'package:provider/provider.dart';
 import '../../presentation/screens/onboarding/business/success.dart';
 import '../../presentation/widgets/debug_emitter.dart';
@@ -76,13 +76,13 @@ class PaymentController {
     // ignore: use_build_context_synchronously
     String access = await createAccessCode(ref, context, amount.toString(), id);
     if (access.isNotEmpty) {
-      PaystackStandard(context).checkout(checkoutUrl: access).then((response) {
-        if (response.success) {
-          verifyOnServer(ref, context, isFirst, isPayOnly);
-        } else {}
+//       PaystackStandard(context).checkout(checkoutUrl: access).then((response) {
+//         if (response.success) {
+//           verifyOnServer(ref, context, isFirst, isPayOnly);
+//         } else {}
 
-// here check for success - verify transaction status with your backend server
-      }).whenComplete(() => verifyOnServer(ref, context, isFirst, isPayOnly));
+// // here check for success - verify transaction status with your backend server
+//       }).whenComplete(() => verifyOnServer(ref, context, isFirst, isPayOnly));
     }
 
     // Map data = {
@@ -231,19 +231,22 @@ class PaymentController {
       amount.toString(),
     );
     if (access.isNotEmpty) {
-      PaystackStandard(context).checkout(checkoutUrl: access).then((response) {
-        if (response.success) {
-          verifyOnServerDiamond(
-            ref,
-            context,
-          );
-        } else {}
+//       PaystackStandard(context).checkout(checkoutUrl: access).then((response) {
+//         if (response.success) {
+//           verifyOnServerDiamond(
+//             ref,
+//             context,
+//           );
+//         } else {}
 
-// here check for success - verify transaction status with your backend server
-      }).whenComplete(() => verifyOnServerDiamond(
-            ref,
-            context,
-          ));
+// // here check for success - verify transaction status with your backend server
+//       }).whenComplete(() => verifyOnServerDiamond(
+//             ref,
+//             context,
+//           ));
+    
+    
+    
     }
 
     return true;

@@ -14,7 +14,8 @@ import '../../../../widgets/user_post_views.dart';
 
 class UserProfileFeed extends StatefulWidget {
   final int index;
-  const UserProfileFeed({super.key, required this.index});
+  bool isAudio;
+  UserProfileFeed({super.key, required this.index, required this.isAudio});
 
   @override
   State<UserProfileFeed> createState() => _UserProfileFeedState();
@@ -51,12 +52,16 @@ class _UserProfileFeedState extends State<UserProfileFeed> {
           child: Stack(
             children: [
               PreloadPageView.builder(
-                itemCount: stream.profileFeedPosts.length,
+                itemCount: widget.isAudio
+                    ? stream.profileFeedPostsAudio.length
+                    : stream.profileFeedPosts.length,
                 preloadPagesCount: 0,
                 controller: controller,
                 scrollDirection: Axis.vertical,
                 itemBuilder: ((context, index) {
-                  final ProfileFeedDatum post = stream.profileFeedPosts[index];
+                  final ProfileFeedDatum post = widget.isAudio
+                      ? stream.profileFeedPostsAudio[index]
+                      : stream.profileFeedPosts[index];
                   List<Comment> talks = [];
                   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
                     post.comments!.forEach((element) {
@@ -107,6 +112,7 @@ class _UserProfileFeedState extends State<UserProfileFeed> {
                       thumbnails: post.thumbnails,
                       viewCount: post.viewCount,
                       mux: post.mux,
+                      vod: post.vod,
                       promoted: post.promoted);
 
                   return UserTikTokView(
@@ -117,6 +123,7 @@ class _UserProfileFeedState extends State<UserProfileFeed> {
                     isHome: false,
                     isInView: false,
                     pageData: post,
+                    vod: post.vod!,
                     thumbails: post.thumbnails!,
                     index1: index,
                     thisPost: post,
@@ -124,7 +131,6 @@ class _UserProfileFeedState extends State<UserProfileFeed> {
                   );
                 }),
                 onPageChanged: (index) {
-
                   // provide.changeIndex(index);
                 },
               ),

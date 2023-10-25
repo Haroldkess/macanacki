@@ -1,7 +1,7 @@
-import 'dart:developer';
-import 'dart:io';
+
+import 'package:apivideo_player/apivideo_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:chewie/chewie.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
@@ -13,29 +13,19 @@ import 'package:macanacki/presentation/screens/home/diamond/diamond_modal/give_m
 import 'package:macanacki/presentation/screens/home/profile/promote_post/promote_screen.dart';
 import 'package:macanacki/presentation/widgets/ads_display.dart';
 import 'package:macanacki/presentation/widgets/debug_emitter.dart';
-import 'package:macanacki/presentation/widgets/feed_views/follow_section.dart';
-import 'package:macanacki/presentation/widgets/feed_views/like_section.dart';
 import 'package:macanacki/presentation/widgets/feed_views/multiple_post.dart';
 import 'package:macanacki/presentation/widgets/feed_views/single_posts.dart';
 import 'package:macanacki/presentation/widgets/text.dart';
 import 'package:macanacki/services/controllers/action_controller.dart';
 import 'package:macanacki/services/controllers/view_controller.dart';
 import 'package:macanacki/services/middleware/action_ware.dart';
-import 'package:macanacki/services/middleware/gift_ware.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
 import '../../model/feed_post_model.dart';
-import '../../services/controllers/feed_post_controller.dart';
-import '../../services/controllers/save_media_controller.dart';
 import '../../services/controllers/url_launch_controller.dart';
-import '../../services/middleware/feed_post_ware.dart';
-import '../../services/middleware/video/video_ware.dart';
-import '../../services/temps/temps_id.dart';
-import '../constants/string.dart';
 import '../screens/home/diamond/diamond_modal/download_modal.dart';
 import '../uiproviders/screen/comment_provider.dart';
-import '../uiproviders/screen/tab_provider.dart';
 import 'feed_views/new_action_design.dart';
 import 'option_modal.dart';
 
@@ -43,11 +33,13 @@ class TikTokView extends StatefulWidget {
   final List<String> media;
   final List<String> urls;
   final FeedPost data;
+  final List<dynamic> vod;
   final List<dynamic>? nextImage;
   final List<dynamic> thumbails;
   int? index1;
   int? index2;
   String page;
+  bool isFriends;
   List<FeedPost>? feedPosts;
   final bool isHome;
   VideoPlayerController? controller;
@@ -59,6 +51,8 @@ class TikTokView extends StatefulWidget {
       required this.page,
       required this.nextImage,
       required this.thumbails,
+      required this.vod,
+      required this.isFriends,
       this.index1,
       this.index2,
       this.controller,
@@ -72,7 +66,7 @@ class TikTokView extends StatefulWidget {
 }
 
 class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
-  VideoPlayerController? _controller;
+  // VideoPlayerController? _controller;
   FeedPost? thisData;
 
   List<String> savedVid = [];
@@ -83,16 +77,11 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
   late SharedPreferences pref;
   //String myUsername = "";
   int? bufferDelay;
-
+  ApiVideoPlayerController? _controller;
+  String apiToken = "";
   @override
   void initState() {
     super.initState();
-    //   initPref();
-//  muxClient.initializeDio();
-
-    // SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-    //   Operations.commentOperation(context, false, widget.data.comments!);
-    // });
 
     controller = AnimationController(
       duration: const Duration(milliseconds: 500), //controll animation duration
@@ -108,23 +97,9 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
 
     if (widget.media.length < 2) {
       debugPrint("This is the url ${widget.data.media!.first}");
-      if (widget.media == null || widget.media.isEmpty) return;
+      if (widget.media.isEmpty) return;
       if (!widget.media.first.contains("https")) {
-        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-          // VideoWareHome.instance.initSomeVideo(
-          //     "$muxStreamBaseUrl/${widget.media.first}.$videoExtension",
-          //     widget.data.id!,
-          //     0);
-   
-
-          VideoWareHome.instance.disposeAllVideoV2(widget.data.id!,
-              "$muxStreamBaseUrl/${widget.media.first}.$videoExtension");
-        });
-        // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        //   VideoWareHome.instance.initVideo(
-        //       "$muxStreamBaseUrl/${widget.media.first}.$videoExtension",
-        //       widget.data.id!);
-        // });
+      
       } else {
         Future.delayed(const Duration(seconds: 2))
             .whenComplete(() => ViewController.handleView(widget.data.id!));
@@ -157,22 +132,10 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
     super.dispose();
     controller.dispose();
 
-    if (widget.media.length < 2) {
-      debugPrint("This is the url ${widget.data.media!.first}");
-      if (widget.media == null || widget.media.isEmpty) return;
-      if (!widget.media.first.contains("https")) {
-        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-          VideoWareHome.instance.disposeVideo(widget.data.id!,
-              "$muxStreamBaseUrl/${widget.media.first}.$videoExtension");
-        });
-        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-          VideoWareHome.instance.disposeAllVideoV2(widget.data.id!,
-              "$muxStreamBaseUrl/${widget.media.first}.$videoExtension");
-        });
-      }
-    }
+   
   }
 
+ 
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -227,7 +190,7 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
                   ),
           ),
           Column(
-            children: widget.thumbails == null
+            children: widget.thumbails.first == null
                 ? []
                 : List.generate(
                     widget.thumbails == null ? 0 : widget.thumbails.length,
@@ -245,27 +208,25 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
             width: width,
             height: height,
             child: Flex(
-              //  mainAxisSize: MainAxisSize.max,
-              //   mainAxisSize: MainAxisSize.min,
+  
               direction: Axis.vertical,
-              // clipBehavior: Clip.hardEdge,
+            
               children: <Widget>[
                 Expanded(
                     child: LayoutBuilder(
                         builder: (_, constraints) => widget.media.length < 2
                             ? SinglePost(
                                 media: widget.media.first,
-                                // controller: thisData == null
-                                //     ? null
-                                //     : thisData!.controller!,
+                             
                                 shouldPlay: true,
                                 constraints: constraints,
                                 isHome: widget.isHome,
                                 thumbLink: widget.thumbails.first ?? "",
-                                //  page: widget.page,
+                           
                                 isInView: widget.isInView!,
                                 postId: widget.data.id!,
                                 data: widget.data,
+                                vod: widget.vod.first,
                               )
                             : MultiplePost(
                                 media: widget.media,
@@ -278,23 +239,25 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
               ],
             ),
           ),
-          // Align(
-          //     alignment: Alignment.bottomRight,
-          //     child: LikeSection(
-          //       data: widget.data,
-          //       page: widget.page,
-          //       media: widget.media,
-          //       urls: widget.urls,
-          //     )),
+     
           Align(
             alignment: Alignment.topCenter,
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 50),
+              padding: EdgeInsets.only(
+                  right: 10, left: widget.isFriends ? 0 : 10, top: 50),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Row(
                     children: [
+                      widget.isFriends
+                          ? IconButton(
+                              onPressed: () => PageRouting.popToPage(context),
+                              icon: const Icon(
+                                Icons.arrow_back_ios,
+                                color: Colors.white,
+                              ))
+                          : SizedBox.shrink(),
                       GestureDetector(
                           onTap: () => giveDiamondsModal(
                               context, widget.data.user!.username!),
@@ -303,11 +266,11 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
                             width: 20,
                             child: SvgPicture.asset(
                               "assets/icon/diamond.svg",
-                              //  color: HexColor(diamondColor),
+                           
                             ),
                           )),
                       SizedBox(
-                        width: 10,
+                        width: widget.isFriends ? 20 : 15,
                       ),
                       GestureDetector(
                           onTap: () async {
@@ -315,34 +278,7 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
                               context,
                               widget.data.id!,
                             );
-                            // GiftWare.instance.giftForDownloadFromApi(
-                            //     widget.data.id!, context);
-                            // if (widget.media.length > 1) {
-                            //   await Future.forEach(widget.media,
-                            //       (element) async {
-                            //     if (element.isNotEmpty) {
-                            //       try {
-                            //         if (element.contains('.mp4')) {
-                            //           await SaveMediaController
-                            //               .saveNetworkVideo(context, element);
-                            //         } else {
-                            //           await SaveMediaController
-                            //               .saveNetworkImage(context, element);
-                            //         }
-                            //       } catch (e) {
-                            //         debugPrint(e.toString());
-                            //       }
-                            //     }
-                            //   });
-                            // } else {
-                            //   if (widget.media.first.contains('.mp4')) {
-                            //     await SaveMediaController.saveNetworkVideo(
-                            //         context, widget.media.first);
-                            //   } else {
-                            //     await SaveMediaController.saveNetworkImage(
-                            //         context, widget.media.first);
-                            //   }
-                            // }
+                 
                           },
                           child: Container(
                             height: 25,
@@ -380,12 +316,7 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
                   controller: _controller,
                   isHome: true,
                 )
-                // : FollowSection(
-                //     data: widget.data,
-                //     page: widget.page,
-                //     media: widget.media,
-                //     controller: _controller,
-                //   ),
+           
                 ),
           ),
           widget.data.promoted == "yes"
@@ -397,14 +328,7 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // AdsDisplay(
-                          //   sponsored: false,
-                          //   color: HexColor('#00B074'),
-                          //   title: '\$10.000.00',
-                          // ),
-                          // SizedBox(
-                          //   height: 10,
-                          // ),
+              
                           AdsDisplay(
                             sponsored: true,
                             //  color: HexColor('#00B074'),
@@ -453,11 +377,7 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
                           flag = false;
                         });
                       },
-                      child: // Lottie.asset('assets/icon/like2.json',
-                          //     // height: MediaQuery.of(context).size.width * 0.5,
-                          //     // width: MediaQuery.of(context).size.width * 0.5,
-                          //     repeat: false,
-                          //     fit: BoxFit.fill),
+                      child: 
                           Icon(
                         Icons.favorite,
                         size: MediaQuery.of(context).size.width * 0.4,
@@ -524,12 +444,7 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
                                       fontWeight: FontWeight.w500,
                                       size: 12,
                                     ),
-                                    // SvgPicture.asset(
-                                    //   "assets/icon/Send.svg",
-                                    //   color: Colors.white,
-                                    //   height: 15,
-                                    //   width: 12,
-                                    // )
+                            
                                   ],
                                 ),
                               ),

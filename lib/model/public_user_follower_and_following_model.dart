@@ -25,23 +25,23 @@ class PublicUserFollowerAndFollowingModel {
   dynamic instagram;
   dynamic linkedin;
   dynamic telegram;
-  dynamic? fullName;
-  dynamic? nationality;
-  dynamic? idType;
-  dynamic? idNumber;
-  dynamic? idFrontCapture;
-  dynamic? idBackCapture;
-  dynamic? selfie;
+  dynamic fullName;
+  dynamic nationality;
+  dynamic idType;
+  dynamic idNumber;
+  dynamic idFrontCapture;
+  dynamic idBackCapture;
+  dynamic selfie;
   int? verified;
-  dynamic? aboutMe;
-  dynamic? phone;
+  dynamic aboutMe;
+  dynamic phone;
   int? admin;
   int? isSuperAdmin;
   int? status;
   String? country;
   String? state;
   String? city;
-  dynamic? subscriptionExpires;
+  dynamic subscriptionExpires;
   String? device;
   int? celeb;
   int? walletBalance;
@@ -50,9 +50,9 @@ class PublicUserFollowerAndFollowingModel {
   int? noOfFollowers;
   int? noOfFollowing;
   String? activePlan;
-  dynamic? idFront;
-  dynamic? idBack;
-  dynamic? verification;
+  dynamic idFront;
+  dynamic idBack;
+  dynamic verification;
   String? category;
 
   PublicUserFollowerAndFollowingModel(

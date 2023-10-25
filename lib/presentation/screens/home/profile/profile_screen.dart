@@ -1,10 +1,14 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:io';
+
+import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:dio/dio.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide NestedScrollView;
+import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -44,6 +48,8 @@ import '../../onboarding/business/business_verification.dart';
 import '../../onboarding/business/sub_plan.dart';
 import '../diamond/balance/diamond_balance_screen.dart';
 
+import 'package:extended_nested_scroll_view/extended_nested_scroll_view.dart';
+
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({
     super.key,
@@ -54,99 +60,223 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen>
-    with AutomaticKeepAliveClientMixin {
+    with SingleTickerProviderStateMixin {
   final GlobalKey<ScaffoldState> key = GlobalKey();
+  TabController? _tabController;
+
   bool showMore = false;
   int seeMoreVal = 100;
   // String myUsername = "";
   TapGestureRecognizer tapGestureRecognizer = TapGestureRecognizer();
-  final ScrollController _controller = ScrollController();
+  final ScrollController _controller = ScrollController(keepScrollOffset: true);
 
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
 
-  void _onRefresh() async {
-    // monitor network fetch
-    //  await Future.delayed(Duration(milliseconds: 1000));
+  Future<void> _onRefresh() async {
     await _getUserPost(true);
-    // if failed,use refreshFailed()
-    _refreshController.refreshCompleted();
   }
 
-  void _onLoading() async {
-    await Future.delayed(Duration(milliseconds: 1000));
-    if (mounted) setState(() {});
-    _refreshController.loadComplete();
+  int _activeIndex = 0;
 
-    // monitor network fetch
+  final List<String> _tabs = ["others", "audio"];
 
-    // if failed,use loadFailed(),if no data return,use LoadNodata()
-    // items.add((items.length+1).toString());
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(vsync: this, length: _tabs.length);
+    _getUserPost(false);
+
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) async {
+      FeedPostWare stream = Provider.of<FeedPostWare>(context, listen: false);
+
+      FeedPostWare streamAudio =
+          Provider.of<FeedPostWare>(context, listen: false);
+
+      stream.initializePagingController();
+
+      _controller.addListener(() {
+        if (_controller.position.atEdge) {
+          bool isTop = _controller.position.pixels == 0;
+          if (isTop) {
+            //  print("PARENT IS AT THE TOP");
+            WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+              if (mounted) {
+                scrolNotify.instance.changeTabOne(true);
+                scrolNotify.instance.changeTabTwo(true);
+              }
+            });
+          } else {
+            // print("PARENT IS AT THE BOTTOM");
+            WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+              if (mounted) {
+                scrolNotify.instance.changeTabOne(false);
+                scrolNotify.instance.changeTabTwo(false);
+                // setState(() {
+
+                //   physc = false;
+                // });
+              }
+            });
+          }
+        } else if (_controller.position.pixels >
+            (_controller.position.maxScrollExtent - 25)) {
+          print("WE HERE SOME PIXELS BEFORE END");
+          WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+            if (mounted) {
+              scrolNotify.instance.changeTabOne(false);
+              scrolNotify.instance.changeTabTwo(false);
+              // setState(() {
+
+              //   physc = false;
+              // });
+            }
+          });
+        }
+      });
+
+      if (stream.tabIndex == 0) {
+        stream.getUserPostFromApi();
+      } else {
+        stream.getUserPostAudioFromApi();
+      }
+
+      // streamAudio.getUserPostAudioFromApi();
+    });
+
+    Operations.controlSystemColor();
   }
+
+  @override
+  void dispose() {
+    _tabController!.dispose();
+
+    super.dispose();
+  }
+
+  static const _indicatorSize = 150.0;
+
+  /// Whether to render check mark instead of spinner
+  bool _renderCompleteState = false;
+
+  ScrollDirection prevScrollDirection = ScrollDirection.idle;
 
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     FeedPostWare stream = context.watch<FeedPostWare>();
+    FeedPostWareAudio audio = context.watch<FeedPostWareAudio>();
     NotificationWare notify = context.watch<NotificationWare>();
 
     UserProfileWare user = context.watch<UserProfileWare>();
 
     return SafeArea(
-      child: Scaffold(
-        key: key,
-        backgroundColor: HexColor("#F5F2F9"),
-        drawer: DrawerSide(
-          scafKey: key,
-        ),
-        body: SmartRefresher(
-          // onRefresh: () async {
-          //   _getUserPost(true);
-          // },
-          // backgroundColor: HexColor(primaryColor),
-          // color: Colors.white,
-          enablePullDown: true,
-          enablePullUp: false,
+        child: Scaffold(
+      key: key,
+      backgroundColor: HexColor("#F5F2F9"),
+      drawer: DrawerSide(
+        scafKey: key,
+      ),
+      body: CustomRefreshIndicator(
+        onStateChanged: (change) {
+          /// set [_renderCompleteState] to true when controller.state become completed
+          if (change.didChange(to: IndicatorState.complete)) {
+            setState(() {
+              _renderCompleteState = true;
+            });
 
-          header: WaterDropHeader(
-            waterDropColor: HexColor(primaryColor),
-            refresh: CircleAvatar(
-              radius: 5,
-              backgroundColor: Colors.transparent,
-              child: CircularProgressIndicator(
-                valueColor:
-                    AlwaysStoppedAnimation<Color?>(HexColor(primaryColor)),
+            /// set [_renderCompleteState] to false when controller.state become idle
+          } else if (change.didChange(to: IndicatorState.idle)) {
+            setState(() {
+              _renderCompleteState = false;
+            });
+          }
+        },
+        builder: (
+          BuildContext context,
+          Widget child,
+          IndicatorController controller,
+        ) {
+          return Stack(
+            children: <Widget>[
+              AnimatedBuilder(
+                animation: controller,
+                builder: (BuildContext context, Widget? _) {
+                  if (controller.scrollingDirection ==
+                          ScrollDirection.reverse &&
+                      prevScrollDirection == ScrollDirection.forward) {
+                    // controller.stopDrag();
+                  }
+
+                  prevScrollDirection = controller.scrollingDirection;
+
+                  final containerHeight = controller.value * _indicatorSize;
+
+                  return Container(
+                    alignment: Alignment.center,
+                    height: containerHeight,
+                    child: OverflowBox(
+                      maxHeight: 40,
+                      minHeight: 40,
+                      maxWidth: 40,
+                      minWidth: 40,
+                      alignment: Alignment.center,
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 150),
+                        alignment: Alignment.center,
+                        child: _renderCompleteState
+                            ? const Icon(
+                                Icons.check,
+                                color: Colors.white,
+                              )
+                            : SizedBox(
+                                height: 30,
+                                width: 30,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  valueColor: const AlwaysStoppedAnimation(
+                                      Colors.white),
+                                  value: controller.isDragging ||
+                                          controller.isArmed
+                                      ? controller.value.clamp(0.0, 1.0)
+                                      : null,
+                                ),
+                              ),
+                        decoration: BoxDecoration(
+                          color: _renderCompleteState
+                              ? Colors.greenAccent
+                              : HexColor(primaryColor),
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    ),
+                  );
+                },
               ),
-            ),
-          ),
-          footer: CustomFooter(
-            builder: (BuildContext context, LoadStatus? mode) {
-              Widget body;
-              if (mode == LoadStatus.idle) {
-                body = Text("pull up load");
-              } else if (mode == LoadStatus.loading) {
-                body = CupertinoActivityIndicator(
-                  color: HexColor(primaryColor),
-                );
-              } else if (mode == LoadStatus.failed) {
-                body = const Text("Load Failed!Click retry!");
-              } else if (mode == LoadStatus.canLoading) {
-                body = Text("release to load more");
-              } else {
-                body = Text("No more Data");
-              }
-              return Container(
-                height: 55.0,
-                child: Center(child: body),
-              );
-            },
-          ),
-          controller: _refreshController,
-          onRefresh: _onRefresh,
-          onLoading: _onLoading,
-          child: CustomScrollView(
-            controller: _controller,
-            slivers: [
+              AnimatedBuilder(
+                builder: (context, _) {
+                  return Transform.translate(
+                    offset: Offset(0.0, controller.value * _indicatorSize),
+                    child: child,
+                  );
+                },
+                animation: controller,
+              ),
+            ],
+          );
+        },
+        notificationPredicate: (notification) {
+          // with NestedScrollView local(depth == 2) OverscrollNotification are not sent
+          return notification.depth == 0;
+        },
+        onRefresh: () async {
+          await _onRefresh();
+        },
+        child: ExtendedNestedScrollView(
+          controller: _controller,
+
+          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+            return <Widget>[
               SliverAppBar(
                 automaticallyImplyLeading: false,
 
@@ -207,10 +337,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                 ),
                 // floating: true,
                 pinned: true,
+
                 backgroundColor: HexColor("#F5F2F9"),
                 expandedHeight: 370,
-                // foregroundColor: Colors.amber,
+                foregroundColor: Colors.amber,
                 flexibleSpace: const FlexibleSpaceBar(
+                  collapseMode: CollapseMode.pin,
                   background: ProfileInfo(
                     isMine: true,
                   ),
@@ -330,17 +462,83 @@ class _ProfileScreenState extends State<ProfileScreen>
               const SliverToBoxAdapter(
                 child: SizedBox(height: 20),
               ),
-              SliverToBoxAdapter(
-                child: ProfilePostGrid(ware: stream),
+            ];
+          },
+          restorationId: 'Tab${_tabController!.index}',
+          // innerScrollPositionKeyBuilder: () {
+          //   return Key('Tab${_tabController.index}');
+          // },
+
+          pinnedHeaderSliverHeightBuilder: () {
+            final double statusBarHeight = MediaQuery.of(context).padding.top;
+            var pinnedHeaderHeight =
+                //statusBar height
+                statusBarHeight +
+                    //pinned SliverAppBar height in header
+                    kToolbarHeight;
+            return pinnedHeaderHeight;
+          },
+          onlyOneScrollInBody: true,
+          body: Column(
+            children: [
+              TabBar(
+                controller: _tabController,
+                labelColor: Colors.grey,
+                unselectedLabelColor: Colors.grey,
+                indicatorColor: Colors.grey,
+                indicatorWeight: 2,
+                indicatorSize: TabBarIndicatorSize.tab,
+                indicatorPadding: EdgeInsets.symmetric(horizontal: 16),
+                labelPadding: EdgeInsets.only(bottom: 10),
+                onTap: (index) {
+                  FeedPostWare ind =
+                      Provider.of<FeedPostWare>(context, listen: false);
+                  ind.changeTabIndex(index);
+                },
+                tabs: _tabs
+                    .map((String tab) => tab == "others"
+                        ? Container(
+                            height: 20,
+                            width: 20,
+                            child: SvgPicture.asset(
+                              "assets/icon/vid.svg",
+                              color: Colors.grey,
+                            ))
+                        : Container(
+                            height: 20,
+                            width: 20,
+                            child: SvgPicture.asset("assets/icon/aud.svg",
+                                color: Colors.grey)))
+                    .toList(),
               ),
-              const SliverToBoxAdapter(
-                child: SizedBox(height: 20),
+              SizedBox(
+                height: 10,
+              ),
+              Expanded(
+                child: TabBarView(
+                  controller: _tabController,
+                  children: _tabs.asMap().entries.map((entry) {
+                    return entry.value == "others"
+                        ? ProfilePostGrid(
+                            ware: stream,
+                            parentController: _controller,
+                            tabKey: Key('Tab${entry.key}'),
+                            tabName: entry.value,
+                          )
+                        : ProfilePostAudioGrid(
+                            ware: stream,
+                            parentController: _controller,
+                            tabKey: Key('Tab${entry.key}'),
+                            tabName: entry.value,
+                          );
+                  }).toList(),
+                ),
               ),
             ],
           ),
         ),
       ),
-    );
+    ));
   }
 
   Widget myIcon(String svgPath, String hexString, double height, double width,
@@ -367,53 +565,11 @@ class _ProfileScreenState extends State<ProfileScreen>
     );
   }
 
-  @override
-  void initState() {
-    super.initState();
-
-    _getUserPost(false);
-
-    SchedulerBinding.instance.addPostFrameCallback((timeStamp) async {
-      FeedPostWare stream = Provider.of<FeedPostWare>(context, listen: false);
-
-      //Re-initializing pagingController
-      stream.initializePagingController();
-
-      _controller.addListener(() {
-        if (_controller.position.atEdge) {
-          bool isTop = _controller.position.pixels == 0;
-          if (isTop) {
-            print('At the top');
-          } else {
-            print('At the bottom');
-            //
-            EasyDebounce.debounce(
-                'my-debouncer',
-                const Duration(milliseconds: 500),
-                () async => await stream.getUserPostFromApi());
-            // print(pageKey);
-            // print("Inside page key");
-          }
-        }
-      });
-
-      stream.getUserPostFromApi();
-    });
-
-    Operations.controlSystemColor();
-  }
-
-  @override
-  void dispose() {
-    // WidgetsBinding.instance
-    //     .addPostFrameCallback((_) => s.disposeAutoScroll());
-
-    super.dispose();
-  }
-
   _getUserPost(bool isRefreshed) async {
     // Initializing Post State
     FeedPostWare stream = Provider.of<FeedPostWare>(context, listen: false);
+    FeedPostWare streamAudio =
+        Provider.of<FeedPostWare>(context, listen: false);
 
     // Initializing ShaaredPrefernec and
     SharedPreferences pref = await SharedPreferences.getInstance();
@@ -421,15 +577,22 @@ class _ProfileScreenState extends State<ProfileScreen>
 
     if (isRefreshed == false) {
       if (stream.profileFeedPosts.isNotEmpty) {
-        return;
+      } else {
+        await FeedPostController.getUserPostController(context);
       }
-
-      await FeedPostController.getUserPostController(context);
+      if (stream.profileFeedPostsAudio.isNotEmpty) {
+      } else {
+        await FeedPostController.getUserPostAudioController(context);
+      }
     } else {
       stream.disposeAutoScroll();
+      // streamAudio.disposeAutoScroll();
       stream.pagingController.refresh();
+      stream.pagingController2.refresh();
+      //streamAudio.pagingController.refresh();
       await UserProfileController.retrievProfileController(context, false);
       await FeedPostController.getUserPostController(context);
+      await FeedPostController.getUserPostAudioController(context);
     }
   }
 

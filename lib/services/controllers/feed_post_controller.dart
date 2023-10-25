@@ -123,6 +123,32 @@ class FeedPostController {
     ware.isLoading2(false);
   }
 
+  static Future<void> getUserPostAudioController(BuildContext context,
+      {bool isScroll = false}) async {
+    FeedPostWare ware = Provider.of<FeedPostWare>(context, listen: false);
+    ware.disposeValue2();
+
+    if (isScroll == false) ware.isLoading2(true);
+    if (ware.loadingAudio == true) return;
+    // ignore: use_build_context_synchronously
+    bool isDone = await ware.getUserPostAudioFromApi().whenComplete(
+        () => emitter("everything from audio and provider is done"));
+    // ignore: use_build_context_synchronously
+    //  UserProfileController.retrievProfileController(context, false);
+
+    if (isDone) {
+      ware.isLoading2(false);
+    } else {
+      ware.isLoading2(false);
+
+      // ignore: use_build_context_synchronously
+      // showToast2(context, "Can't get your posts", isError: true);
+
+      // ignore: use_build_context_synchronously
+    }
+    ware.isLoading2(false);
+  }
+
   static Future<void> downloadVideos(
       List<FeedPost> data, BuildContext context) async {
     emitter("-------------------------------------------------");
@@ -275,7 +301,6 @@ class FeedPostController {
     return;
   }
 
-
   static Future<void> downloadThumbsPublic(
       List<PublicUserPost> data, BuildContext context, height) async {
     // emitter("-------------------------------------------------");
@@ -327,7 +352,6 @@ class FeedPostController {
     return;
   }
 
-
   static Future<void> getSingleThumb(List<String> url, context, height) async {
     FeedPostWare ware = Provider.of<FeedPostWare>(context, listen: false);
 
@@ -337,12 +361,12 @@ class FeedPostController {
         return el.media!.contains(element);
       }).toList();
       if (check.isNotEmpty) {
-           emitter("======== Already exists  ========");
+        emitter("======== Already exists  ========");
       } else {
         String? thumbs = await genThumbnail(element, height);
         String newThumb = thumbs! + element;
         storeThumb.add(newThumb);
-         emitter("======== CACHED  ========");
+        emitter("======== CACHED  ========");
       }
     });
 

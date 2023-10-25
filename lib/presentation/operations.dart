@@ -1,11 +1,8 @@
 import 'dart:developer';
 import 'dart:io';
-import 'package:advance_image_picker/models/image_object.dart';
-import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart' hide FormData, MultipartFile;
 import 'package:hexcolor/hexcolor.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -227,7 +224,6 @@ class Operations {
     }
   }
 
- 
   static Future<File> saveImage(Uint8List imageByte) async {
     //获取临时目录
     var tempDir = await getTemporaryDirectory();
@@ -246,10 +242,9 @@ class Operations {
     // });
   }
 
-
   static Future pickForPost(BuildContext context) async {
     CreatePostWare picked = Provider.of<CreatePostWare>(context, listen: false);
-    UserProfileWare user = Provider.of<UserProfileWare>(context, listen: false);
+
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
           type: FileType.image,
@@ -258,7 +253,7 @@ class Operations {
           allowMultiple: true);
 
       if (result != null) {
-        PlatformFile filex = result.files.first;
+        //   PlatformFile filex = result.files.first;
 
         List<File> file = result.paths.map((path) => File(path!)).toList();
 
@@ -381,8 +376,8 @@ class Operations {
     late String realTime;
 
     String value = timeago.format(time).toString();
-    String timeOfDay =
-        TimeOfDay(hour: time.hour, minute: time.minute).period.name;
+    // String timeOfDay =
+    //     TimeOfDay(hour: time.hour, minute: time.minute).period.name;
 
     if (value == "a moment ago") {
       realTime = "just now";
@@ -405,7 +400,7 @@ class Operations {
 
       realTime = val.last;
     }
-  //  emitter("Time is" + value);
+    //  emitter("Time is" + value);
 
     return realTime;
   }
@@ -454,8 +449,8 @@ class Operations {
     CreatePostWare picked = Provider.of<CreatePostWare>(context, listen: false);
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
-          type: FileType.custom,
-          allowedExtensions: ['jpg', 'pdf'],
+          type: FileType.media,
+          //allowedExtensions: ['jpg', 'pdf'],
           allowMultiple: false);
 
       if (result != null) {
@@ -475,6 +470,91 @@ class Operations {
         }
       } else {
         // User canceled the picker
+      }
+    } catch (e) {
+      emitter(e.toString());
+    }
+  }
+
+  static Future pickAudio(BuildContext context) async {
+    CreatePostWare picked = Provider.of<CreatePostWare>(context, listen: false);
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+          type: FileType.custom,
+          allowedExtensions: ['mp3'],
+          allowMultiple: false,
+          withData: true,
+          withReadStream: true);
+
+      if (result != null) {
+        List<File> file = result.paths.map((path) => File(path!)).toList();
+        if (file.length > 1) {
+          // ignore: use_build_context_synchronously
+          showToast2(context, "You can only select maximum of 1 audio file",
+              isError: true);
+          return;
+        }
+        picked.addAudio(file.first);
+      } else {
+        // User canceled the picker
+      }
+    } catch (e) {
+      emitter(e.toString());
+    }
+  }
+
+  static Future pickCoverOfAudio(BuildContext context) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    final ImagePicker picker = ImagePicker();
+    late XFile? imageFile;
+    CreatePostWare picked = Provider.of<CreatePostWare>(context, listen: false);
+    try {
+      if (await Permission.storage.request().isGranted) {
+        // Call FilePicker.platform.pickFiles in here
+
+        final XFile? file = await picker.pickImage(
+            source: ImageSource.gallery,
+            preferredCameraDevice: CameraDevice.rear,
+            requestFullMetadata: true);
+
+        if (file != null) {
+          imageFile = file;
+          emitter("FilePath: ${file.path}");
+
+          //Lets crop image
+          CroppedFile? croppedFile = await ImageCropper().cropImage(
+            sourcePath: imageFile.path,
+            cropStyle: CropStyle.rectangle,
+            aspectRatioPresets: [
+              CropAspectRatioPreset.square,
+              // CropAspectRatioPreset.ratio3x2,
+              // CropAspectRatioPreset.original,
+              // CropAspectRatioPreset.ratio4x3,
+              // CropAspectRatioPreset.ratio16x9
+            ],
+            uiSettings: [
+              AndroidUiSettings(
+                  toolbarTitle: 'Crop Image',
+                  toolbarColor: HexColor(darkColor),
+                  toolbarWidgetColor: Colors.white,
+                  initAspectRatio: CropAspectRatioPreset.square,
+                  lockAspectRatio: true),
+              IOSUiSettings(
+                title: '',
+              ),
+            ],
+          );
+
+          if (croppedFile == null) return;
+          XFile croppedFileX = XFile(croppedFile.path);
+
+          pref.setString(temPhotoKey, croppedFileX.path);
+          emitter("FilePath after cropping: ${croppedFileX.path}");
+
+          picked.addAudioCoverFile(croppedFileX);
+          // pref.setString(temPhotoKey, imageFile.path);
+          // facial.isLoading(true);
+        }
       }
     } catch (e) {
       emitter(e.toString());
@@ -657,8 +737,8 @@ class Operations {
   }
 
   static String convertToCurrency(String e) {
-  String newStr = e.replaceAllMapped(
-      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => "${m[0]},");
-  return newStr;
-}
+    String newStr = e.replaceAllMapped(
+        RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => "${m[0]},");
+    return newStr;
+  }
 }

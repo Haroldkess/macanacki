@@ -48,6 +48,21 @@ class CreatePostController {
     return data;
   }
 
+  static Future<CreateAudioPostModel> regDataAudio(
+      BuildContext context, String caption) async {
+    CreatePostWare pic = Provider.of<CreatePostWare>(context, listen: false);
+    ButtonWare button = Provider.of<ButtonWare>(context, listen: false);
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    final CreateAudioPostModel data = CreateAudioPostModel(
+        description: caption,
+        published: 1,
+        media: [pic.audioFile!],
+        btnId: button.index,
+        url: button.url,
+        cover: pic.audioCoverFile);
+    return data;
+  }
+
   static Future<void> createPostController(
     BuildContext context,
     String caption,
@@ -90,6 +105,50 @@ class CreatePostController {
       //print("something went wrong");
     }
     ware.isLoading(false);
+  }
+
+  static Future<void> createAudioPostController(
+    BuildContext context,
+    String caption,
+  ) async {
+    CreatePostWare ware = Provider.of<CreatePostWare>(context, listen: false);
+    ButtonWare button = Provider.of<ButtonWare>(context, listen: false);
+    Temp temp = Provider.of<Temp>(context, listen: false);
+    FeedPostWare stream = Provider.of<FeedPostWare>(context, listen: false);
+
+    CreateAudioPostModel data = await regDataAudio(context, caption);
+    ware.isLoadingAudio(true);
+
+    bool isDone = await ware
+        .createAudioPostFromApi(data)
+        .whenComplete(() => emitter("api function done"));
+
+    // ignore: use_build_context_synchronously
+    stream.disposeAutoScroll();
+    stream.pagingController.refresh();
+    //  await UserProfileController.retrievProfileController(context, false);
+    // ignore: use_build_context_synchronously
+    await FeedPostController.getUserPostController(context);
+    //  await FeedPostController.getUserPostController(context);
+
+    if (isDone) {
+      button.addIndex(0);
+      button.addUrl("");
+      log("omo!!!");
+      ware.isLoadingAudio(false);
+      // ignore: use_build_context_synchronously
+      showToast2(context, ware.message, isError: false);
+      await Future.delayed(const Duration(seconds: 2));
+      // ignore: use_build_context_synchronously
+      Get.close(2);
+      // PageRouting.popToPage(context);
+    } else {
+      ware.isLoadingAudio(false);
+      // ignore: use_build_context_synchronously
+      showToast2(context, ware.message, isError: true);
+      //print("something went wrong");
+    }
+    ware.isLoadingAudio(false);
   }
 
   static Future<ShareCommentsModel> regComment(String comments) async {

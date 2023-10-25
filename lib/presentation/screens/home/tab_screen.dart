@@ -19,6 +19,7 @@ import 'package:macanacki/presentation/screens/home/convo/conversation_screen.da
 import 'package:macanacki/presentation/screens/home/profile/profile_screen.dart';
 import 'package:macanacki/presentation/screens/home/search/global_search_screen.dart';
 import 'package:macanacki/presentation/screens/home/swipes/swipe_card_screen.dart';
+import 'package:macanacki/presentation/screens/home/test_api_video.dart';
 import 'package:macanacki/presentation/uiproviders/screen/tab_provider.dart';
 import 'package:macanacki/presentation/widgets/drawer.dart';
 import 'package:macanacki/presentation/widgets/text.dart';
@@ -39,6 +40,7 @@ import '../../../model/feed_post_model.dart';
 import '../../../services/controllers/action_controller.dart';
 import '../../../services/middleware/chat_ware.dart';
 import '../../../services/middleware/feed_post_ware.dart';
+import '../../../services/middleware/friends/friends_ware.dart';
 import '../../../services/middleware/post_security.dart';
 import '../../../services/middleware/swipe_ware.dart';
 import '../../../services/middleware/user_profile_ware.dart';
@@ -46,6 +48,7 @@ import '../../uiproviders/screen/find_people_provider.dart';
 import '../../widgets/app_bar.dart';
 import '../../widgets/debug_emitter.dart';
 import '../../widgets/screen_loader.dart';
+import 'friends/friends_screen.dart';
 
 class TabScreen extends StatefulWidget {
   const TabScreen({super.key});
@@ -66,7 +69,10 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
   int trackTaps = 0;
   final List<Widget> _children = [
     const FeedHome(),
-    const GlobalSearch(),
+    //  const ApiVideoDemo(),
+
+    const FriendsScreen(),
+    //  const GlobalSearch(),
     const SwipeCardScreen(),
     const ConversationScreen(),
     const ProfileScreen(),
@@ -381,6 +387,29 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
 
         // }
       ),
+      // PersistentBottomNavBarItem(
+      //   icon: SvgPicture.asset(
+      //     'assets/icon/home.svg',
+      //     height: 18,
+      //     width: 18,
+      //     color: HexColor(primaryColor),
+      //   ),
+      //   title: ("Demo"),
+
+      //   activeColorPrimary: HexColor(primaryColor),
+      //   inactiveColorPrimary: HexColor("#C0C0C0"),
+      //   activeColorSecondary: HexColor(primaryColor),
+      //   inactiveIcon: SvgPicture.asset(
+      //     'assets/icon/home.svg',
+      //     height: 18,
+      //     width: 18,
+      //     color: HexColor("#C0C0C0"),
+      //   ),
+
+      //   // onPressed: (context){
+
+      //   // }
+      // ),
       PersistentBottomNavBarItem(
         icon: SvgPicture.asset(
           'assets/icon/search.svg',
@@ -714,8 +743,10 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
     //UpdateApp.basicStatusCheck(context);
     super.initState();
     Get.put(GiftWare());
+    Get.put(FriendWare());
     WidgetsBinding.instance.addPostFrameCallback((_) {
       VideoWareHome.instance.getVideoPostFromApi(1);
+        VideoWareHome.instance.getAudioPostFromApi(1);
     });
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {

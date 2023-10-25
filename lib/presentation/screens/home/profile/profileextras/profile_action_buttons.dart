@@ -13,6 +13,7 @@ import 'package:macanacki/services/middleware/user_profile_ware.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../widgets/text.dart';
+import '../createpost/audio/create_audio_screen.dart';
 
 class ProfileActionButton extends StatelessWidget {
   final String icon;
@@ -214,6 +215,29 @@ class AllProfileActions extends StatelessWidget {
                 SizedBox(width: 10),
                 AppText(
                   text: "Post Videos",
+                  fontWeight: FontWeight.w400,
+                  size: 18,
+                  color: HexColor("#797979"),
+                ),
+              ],
+            ),
+          ),
+          CupertinoActionSheetAction(
+            onPressed: () {
+              //Navigator.pop(context);
+
+              PageRouting.pushToPage(context, const AudioScreen());
+              // Operations.pickAudio(context);
+            },
+            child: Row(
+              children: [
+                Icon(
+                  Icons.audiotrack_outlined,
+                  color: HexColor(primaryColor),
+                ),
+                SizedBox(width: 10),
+                AppText(
+                  text: "Post Audio",
                   fontWeight: FontWeight.w400,
                   size: 18,
                   color: HexColor("#797979"),

@@ -64,7 +64,7 @@ Future<http.Response?> getAllConversation(int page) async {
         HttpHeaders.authorizationHeader: "Bearer $token",
       },
     );
-    log(response.body.toString());
+ //   log(response.body.toString());
   } catch (e) {
     response = null;
   }

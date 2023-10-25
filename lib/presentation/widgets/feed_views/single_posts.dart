@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:apivideo_player/apivideo_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -10,6 +11,7 @@ import 'package:macanacki/presentation/widgets/feed_views/image_holder.dart';
 import 'package:macanacki/services/middleware/video/video_ware.dart';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
+import 'package:simple_animations/animation_builder/play_animation_builder.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../../model/feed_post_model.dart';
@@ -20,8 +22,10 @@ import '../../allNavigation.dart';
 import '../../constants/colors.dart';
 import '../../constants/string.dart';
 import '../../screens/home/Feed/better_video_holder.dart';
+import '../../screens/home/Feed/feed_audio_holder.dart';
 import '../../screens/home/Feed/feed_video_cache.dart';
 import '../../screens/home/Feed/feed_video_holder.dart';
+import '../../screens/home/Feed/user_feed_audio_holder.dart';
 import '../loader.dart';
 
 // List<String> data = stream.thumbs.where((val) {
@@ -45,6 +49,7 @@ class SinglePost extends StatelessWidget {
   bool isInView;
   final postId;
   final FeedPost data;
+  final String? vod;
   SinglePost(
       {super.key,
       required this.media,
@@ -55,6 +60,7 @@ class SinglePost extends StatelessWidget {
       required this.thumbLink,
       required this.isInView,
       required this.postId,
+      required this.vod,
       required this.data});
 
   @override
@@ -62,6 +68,16 @@ class SinglePost extends StatelessWidget {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     FeedPostWare stream = context.watch<FeedPostWare>();
+    const textStyle = TextStyle(color: Colors.white);
+    final buttonStyle = TextButton.styleFrom(
+        iconColor: Colors.white,
+        foregroundColor: Colors.white,
+        side: BorderSide.none,
+        textStyle: textStyle);
+
+    final controlsBarStyle = ControlsBarStyle(
+      mainControlButtonStyle: buttonStyle,
+    );
     // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
     //   if (!media.contains("https")) {
     //     PostSecurity.instance.toggleSecure(false);
@@ -69,7 +85,7 @@ class SinglePost extends StatelessWidget {
     //     PostSecurity.instance.toggleSecure(true);
     //   }
     // });
-    return !media.contains("https")
+    return !media.contains("https") || media.contains(".mp3")
         ? Stack(
             alignment: Alignment.center,
             children: [
@@ -80,63 +96,60 @@ class SinglePost extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () async {
-                  // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                  //   VideoWareHome.instance.loadVideo(true);
-                  WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                    VideoWareHome.instance.viewToggle(0);
-                    // VideoWareHome.instance.loadVideo(true);
-                  });
-                  //    });
-                  // WidgetsBinding.instance
-                  //     .addPostFrameCallback((timeStamp) async {
-                  VideoWareHome.instance.addVideoToList(data).whenComplete(() {
-                    // VideoWareHome.instance.initSomeVideo(
-                    //     "$muxStreamBaseUrl/$media.$videoExtension",
-                    //     data.id!,
-                    //     0);
-                    PageRouting.pushToPage(
-                      context,
-                      FeedVideoHolder(
-                        file: "$muxStreamBaseUrl/$media.$videoExtension",
-                        // controller: controller!,
-                        shouldPlay: true,
-                        isHome: isHome,
-                        thumbLink: thumbLink ?? "",
-                        page: "feed",
-                        isInView: isInView,
-                        postId: postId,
-                        data: data,
-                      ),
-                    );
-                  });
+                  if (media.contains(".mp3")) {
+                    VideoWareHome.instance
+                        .addAudioToList(data)
+                        .whenComplete(() {
+                      // VideoWareHome.instance.initSomeVideo(
+                      //     "$muxStreamBaseUrl/$media.$videoExtension",
+                      //     data.id!,
+                      //     0);
+                      PageRouting.pushToPage(
+                        context,
+                        FeedAudioHolder(
+                          file: "$muxStreamBaseUrl/$media.$videoExtension",
+                          // controller: controller!,
+                          shouldPlay: true,
+                          isHome: isHome,
+                          vod: vod ?? "",
+                          thumbLink: thumbLink ?? "",
+                          page: "feed",
+                          isInView: isInView,
+                          postId: postId,
+                          data: data,
+                        ),
+                      );
+                    });
+                  } else {
+                    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                      VideoWareHome.instance.viewToggle(0);
+                      // VideoWareHome.instance.loadVideo(true);
+                    });
 
-                  // });
-                  // if (data.promoted == "yes") {
-                  //   await VideoWareHome.instance
-                  //       .disposeVideo(data.id!,
-                  //           "$muxStreamBaseUrl/$media.$videoExtension")
-                  //       .whenComplete(() async {
-                  //     await VideoWareHome.instance
-                  //         .addVideoToList(data)
-                  //         .whenComplete(() => PageRouting.pushToPage(
-                  //               context,
-                  //               FeedVideoHolder(
-                  //                 file:
-                  //                     "$muxStreamBaseUrl/$media.$videoExtension",
-                  //                 // controller: controller!,
-                  //                 shouldPlay: true,
-                  //                 isHome: isHome,
-                  //                 thumbLink: thumbLink ?? "",
-                  //                 page: "feed",
-                  //                 isInView: isInView,
-                  //                 postId: postId,
-                  //                 data: data,
-                  //               ),
-                  //             ));
-                  //   });
-                  // } else {
-
-                  //  }
+                    VideoWareHome.instance
+                        .addVideoToList(data)
+                        .whenComplete(() {
+                      // VideoWareHome.instance.initSomeVideo(
+                      //     "$muxStreamBaseUrl/$media.$videoExtension",
+                      //     data.id!,
+                      //     0);
+                      PageRouting.pushToPage(
+                        context,
+                        FeedVideoHolder(
+                          file: "$muxStreamBaseUrl/$media.$videoExtension",
+                          // controller: controller!,
+                          shouldPlay: true,
+                          isHome: isHome,
+                          vod: vod!,
+                          thumbLink: thumbLink ?? "",
+                          page: "feed",
+                          isInView: isInView,
+                          postId: postId,
+                          data: data,
+                        ),
+                      );
+                    });
+                  }
                 },
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 10),
@@ -163,15 +176,32 @@ class SinglePost extends StatelessWidget {
                                         fit: BoxFit.cover,
                                       )),
                                 )),
-                      CircleAvatar(
-                        backgroundColor: Colors.white.withOpacity(.7),
-                        radius: 30,
-                        child: const Icon(
-                          Icons.play_arrow_outlined,
-                          size: 25,
-                          color: Colors.black,
-                        ),
-                      )
+                      PlayAnimationBuilder<double>(
+                          tween: Tween(begin: 10.0, end: 50.0), // set tween
+                          duration: const Duration(
+                              milliseconds: 1000), // set duration
+                          builder: (context, value, _) {
+                            return Container(
+                              height: value,
+                              width: value,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(13),
+                                  border: Border.all(
+                                      width: 4.0, color: Colors.white)),
+                              child: Center(
+                                child: IconButton(
+                                  onPressed: null,
+                                  icon: Icon(
+                                    Icons.play_arrow,
+                                    color: Colors.white,
+                                    // size: 35,
+                                  ),
+                                  style:
+                                      controlsBarStyle.mainControlButtonStyle,
+                                ),
+                              ),
+                            );
+                          })
                     ],
                   ),
                 ),
@@ -224,8 +254,7 @@ class SinglePost extends StatelessWidget {
                     child: CachedNetworkImage(
                         imageUrl: media,
                         fit: BoxFit.fitWidth,
-                        imageBuilder: (context, imageProvider) =>
-                            Container(
+                        imageBuilder: (context, imageProvider) => Container(
                               width: width,
                               height: height,
                               decoration: BoxDecoration(
@@ -253,8 +282,7 @@ class SinglePost extends StatelessWidget {
                                     )),
                                   ),
                               progressIndicatorBuilder:
-                                  (context, url, downloadProgress) =>
-                                      Center(
+                                  (context, url, downloadProgress) => Center(
                                           child: Loader(
                                         color: HexColor(primaryColor),
                                       )),
@@ -292,9 +320,11 @@ class UserSinglePost extends StatelessWidget {
   bool? isInView;
   int postId;
   final FeedPost data;
+  String? vod;
   UserSinglePost({
     super.key,
     required this.media,
+    required this.vod,
     // required this.controller,
     required this.shouldPlay,
     required this.constraints,
@@ -323,7 +353,18 @@ class UserSinglePost extends StatelessWidget {
     //     }
     //   }
     // });
-    return !media.contains("https")
+
+    const textStyle = TextStyle(color: Colors.white);
+    final buttonStyle = TextButton.styleFrom(
+        iconColor: Colors.white,
+        foregroundColor: Colors.white,
+        side: BorderSide.none,
+        textStyle: textStyle);
+
+    final controlsBarStyle = ControlsBarStyle(
+      mainControlButtonStyle: buttonStyle,
+    );
+    return !media.contains("https") || media.contains(".mp3")
         ? Stack(
             alignment: Alignment.center,
             children: [
@@ -347,37 +388,65 @@ class UserSinglePost extends StatelessWidget {
                     // }
                     return GestureDetector(
                       onTap: () async {
-                        WidgetsBinding.instance
-                            .addPostFrameCallback((timeStamp) {
-                          VideoWare.instance.viewToggle(0);
-                        });
-                        WidgetsBinding.instance
-                            .addPostFrameCallback((timeStamp) {
-                          VideoWare.instance.loadVideo(true);
-                        });
+                        if (media.contains(".mp3")) {
+                          VideoWare.instance
+                              .addAudioToList(data)
+                              .whenComplete(() {
+                            // VideoWareHome.instance.initSomeVideo(
+                            //     "$muxStreamBaseUrl/$media.$videoExtension",
+                            //     data.id!,
+                            //     0);
+                            PageRouting.pushToPage(
+                              context,
+                              FeedAudioHolderUser(
+                                file:
+                                    "$muxStreamBaseUrl/$media.$videoExtension",
+                                // controller: controller!,
+                                shouldPlay: true,
+                                isHome: isHome,
+                                vod: vod ?? "",
+                                thumbLink: thumbLink ?? "",
+                                page: "feed",
+                                isInView: isInView,
+                                postId: postId,
+                                data: data,
+                              ),
+                            );
+                          });
+                        } else {
+                          WidgetsBinding.instance
+                              .addPostFrameCallback((timeStamp) {
+                            VideoWare.instance.viewToggle(0);
+                          });
+                          WidgetsBinding.instance
+                              .addPostFrameCallback((timeStamp) {
+                            VideoWare.instance.loadVideo(true);
+                          });
 
-                        VideoWare.instance
-                            .addVideoToList(data)
-                            .whenComplete(() {
-                          // VideoWareHome.instance.initSomeVideo(
-                          //     "$muxStreamBaseUrl/$media.$videoExtension",
-                          //     data.id!,
-                          //     0);
-                          PageRouting.pushToPage(
-                            context,
-                            FeedVideoHolderPrivate(
-                              file: "$muxStreamBaseUrl/$media.$videoExtension",
-                              // controller: controller!,
-                              shouldPlay: true,
-                              isHome: isHome,
-                              thumbLink: thumbLink ?? "",
-                              page: "public",
-                              isInView: isInView,
-                              postId: postId,
-                              data: data,
-                            ),
-                          );
-                        });
+                          VideoWare.instance
+                              .addVideoToList(data)
+                              .whenComplete(() {
+                            // VideoWareHome.instance.initSomeVideo(
+                            //     "$muxStreamBaseUrl/$media.$videoExtension",
+                            //     data.id!,
+                            //     0);
+                            PageRouting.pushToPage(
+                              context,
+                              FeedVideoHolderPrivate(
+                                file:
+                                    "$muxStreamBaseUrl/$media.$videoExtension",
+                                // controller: controller!,
+                                shouldPlay: true,
+                                isHome: isHome,
+                                thumbLink: thumbLink ?? "",
+                                page: "public",
+                                isInView: isInView,
+                                postId: postId,
+                                data: data,
+                              ),
+                            );
+                          });
+                        }
                       },
                       child: Padding(
                         padding: const EdgeInsets.only(top: 0),
@@ -404,15 +473,55 @@ class UserSinglePost extends StatelessWidget {
                                               fit: BoxFit.cover,
                                             )),
                                       )),
-                            CircleAvatar(
-                              backgroundColor: Colors.white.withOpacity(.7),
-                              radius: 30,
-                              child: const Icon(
-                                Icons.play_arrow_outlined,
-                                size: 25,
-                                color: Colors.black,
-                              ),
-                            )
+
+                            PlayAnimationBuilder<double>(
+                                tween:
+                                    Tween(begin: 10.0, end: 50.0), // set tween
+                                duration: const Duration(
+                                    milliseconds: 1000), // set duration
+                                builder: (context, value, _) {
+                                  return Container(
+                                    height: value,
+                                    width: value,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(13),
+                                        border: Border.all(
+                                            width: 4.0, color: Colors.white)),
+                                    child: Center(
+                                      child: IconButton(
+                                        onPressed: null,
+                                        icon: Icon(
+                                          Icons.play_arrow,
+                                          color: Colors.white,
+                                          // size: 35,
+                                        ),
+                                        style: controlsBarStyle
+                                            .mainControlButtonStyle,
+                                      ),
+                                    ),
+                                  );
+                                })
+
+                            // Container(
+                            //   height: 50,
+                            //   width: 50,
+                            //   decoration: BoxDecoration(
+                            //       borderRadius: BorderRadius.circular(13),
+                            //       border: Border.all(
+                            //           width: 4.0, color: Colors.white)),
+                            //   child: Center(
+                            //     child: IconButton(
+                            //       onPressed: null,
+                            //       icon: Icon(
+                            //         Icons.play_arrow,
+                            //         color: Colors.white,
+                            //         // size: 35,
+                            //       ),
+                            //       style:
+                            //           controlsBarStyle.mainControlButtonStyle,
+                            //     ),
+                            //   ),
+                            // ),
                           ],
                         ),
                       ),

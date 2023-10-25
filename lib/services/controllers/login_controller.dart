@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:developer';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -30,13 +31,15 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../model/gender_model.dart';
+import '../../presentation/constants/params.dart';
 import '../../presentation/screens/onboarding/business/sub_plan.dart';
 import '../../presentation/widgets/debug_emitter.dart';
 import '../middleware/user_profile_ware.dart';
 
 class LoginController {
-  static Future<void> loginUserController(BuildContext context, String email,
-      String password, bool isSplash,[bool? isLogin]) async {
+  static Future<void> loginUserController(
+      BuildContext context, String email, String password, bool isSplash,
+      [bool? isLogin]) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     if (!pref.containsKey(readAllKey)) {
       pref.setBool(readAllKey, false);
@@ -121,12 +124,10 @@ class LoginController {
       ware.isLoading(false);
       showToast2(context, ware.message, isError: true);
       if (isSplash) {
-        if(isLogin == true){
-
-        }else{
-  PageRouting.pushToPage(context, const LoginScreen());
+        if (isLogin == true) {
+        } else {
+          PageRouting.pushToPage(context, const LoginScreen());
         }
-      
       }
     }
     ware.isLoading(false);
@@ -136,8 +137,9 @@ class LoginController {
     await FeedPostController.getFeedPostController(context, 1, false);
     //  await UserProfileController.retrievProfileController(context, true);
     ChatController.retreiveUnread(context);
-    ChatController.retrievChatController(context, false,false);
+    ChatController.retrievChatController(context, false, false);
     FeedPostController.getUserPostController(context);
+      FeedPostController.getUserPostAudioController(context);
     //  ActionController.retrievAllUserFollowingController(context);
     // ActionController.retrievAllUserLikedCommentsController(context);
   }
@@ -170,11 +172,53 @@ class LoginController {
           if (message.notification!.title != null &&
               message.notification!.body != null) {
             showSimpleNotification(
-              AppText(
-                  text: message.notification!.body!,
-                  color: HexColor(primaryColor),
-                  fontWeight: FontWeight.bold,
-                  size: 12),
+              Row(
+                children: [
+                  Container(
+                    height: 40,
+                    width: 40,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                            fit: BoxFit.contain,
+                            image: CachedNetworkImageProvider(url))),
+                  ),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      backgroundBlendMode: BlendMode.colorDodge,
+                      gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.black.withOpacity(.0),
+                            Colors.black.withOpacity(.1),
+                            Colors.black.withOpacity(.4),
+                            Colors.black.withOpacity(.5),
+                            Colors.black.withOpacity(.6),
+                          ],
+                          stops: [
+                            0.0,
+                            0.1,
+                            0.3,
+                            0.8,
+                            0.9
+                          ]),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 5),
+                      child: AppText(
+                          text: message.notification!.body!,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          size: 14),
+                    ),
+                  ),
+                ],
+              ),
               contentPadding:
                   const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
               // ignore: deprecated_member_use
@@ -183,7 +227,7 @@ class LoginController {
                 text: "",
                 color: HexColor(primaryColor),
               ),
-              elevation: 10,
+              elevation: 0,
               background: Colors.white,
               duration: const Duration(seconds: 5),
             );

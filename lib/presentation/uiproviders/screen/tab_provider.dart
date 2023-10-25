@@ -185,3 +185,40 @@ class PersistentNavController extends GetxController {
     hide.toggle();
   }
 }
+
+
+class scrolNotify extends GetxController {
+
+    static scrolNotify get instance {
+    return Get.find<scrolNotify>();
+  }
+
+  RxBool tabOne = true.obs;
+  RxBool tabTwo = true.obs;
+
+  void changeTabOne(bool val) {
+    tabOne.value = val;
+  }
+
+  void changeTabTwo(bool val) {
+    tabOne.value = val;
+  }
+}
+
+class scrolNotifyPublic extends GetxController {
+
+    static scrolNotify get instance {
+    return Get.find<scrolNotify>();
+  }
+
+  RxBool tabOne = true.obs;
+  RxBool tabTwo = true.obs;
+
+  void changeTabOne(bool val) {
+    tabOne.value = val;
+  }
+
+  void changeTabTwo(bool val) {
+    tabOne.value = val;
+  }
+}

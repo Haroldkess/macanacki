@@ -9,7 +9,6 @@ import 'package:macanacki/presentation/screens/userprofile/extras/follow_search.
 import 'package:macanacki/presentation/widgets/text.dart';
 import 'package:macanacki/services/temps/temps_id.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../../../services/controllers/mode_controller.dart';
 import '../../../operations.dart';
 
@@ -46,7 +45,7 @@ class _GlobalSearchState extends State<GlobalSearch> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     const SizedBox(
-                      height: 20,
+                      height: 10,
                     ),
                     GlobalSearchBar(
                       x: controller,
@@ -56,20 +55,20 @@ class _GlobalSearchState extends State<GlobalSearch> {
               ),
             ),
           ),
-          title: Padding(
-            padding: const EdgeInsets.only(top: 20),
-            child: AppText(
-              text: "Global Search",
-              color: Colors.black,
-              size: 20,
-              fontWeight: FontWeight.w800,
-            ),
-          ),
-          centerTitle: true,
+          // title: Padding(
+          //   padding: const EdgeInsets.only(top: 20),
+          //   child: AppText(
+          //     text: "Global Search",
+          //     color: Colors.black,
+          //     size: 20,
+          //     fontWeight: FontWeight.w800,
+          //   ),
+          // ),
+          // centerTitle: true,
           // leading: const BackButton(color: Colors.black),
           elevation: 0,
           backgroundColor: HexColor(backgroundColor),
-          toolbarHeight: 110,
+          toolbarHeight: 60,
         ),
         body: GestureDetector(
             behavior: HitTestBehavior.opaque,
@@ -85,15 +84,17 @@ class _GlobalSearchState extends State<GlobalSearch> {
             )),
       ),
     );
+  
+  
   }
 
   @override
   void initState() {
     super.initState();
     initPref();
-    SchedulerBinding.instance.addPostFrameCallback((_) async {
-      await ModeController.handleMode("online");
-    });
+    // SchedulerBinding.instance.addPostFrameCallback((_) async {
+    //   await ModeController.handleMode("online");
+    // });
     // Operations.controlSystemColor();
   }
 

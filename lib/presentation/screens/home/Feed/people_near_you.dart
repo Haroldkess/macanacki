@@ -95,7 +95,9 @@ class _PeopleHomeState extends State<PeopleHome> {
 
                 return TikTokView(
                   media: post.mux!,
+                  vod: post.vod!,
                   data: post,
+                  isFriends: false,
                   nextImage: [
                     post2 == null ? null : post2.media!.first,
                     post3 == null ? null : post3.media!.first,

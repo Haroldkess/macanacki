@@ -36,6 +36,17 @@ downloadDiamondsModal(BuildContext cont, int id) async {
                   SizedBox(
                     height: 10,
                   ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      IconButton(
+                          onPressed: () => Navigator.pop(context),
+                          icon: Icon(
+                            Icons.clear,
+                            color: Colors.red,
+                          ))
+                    ],
+                  ),
                   Container(
                     height: 150,
                     child: Column(

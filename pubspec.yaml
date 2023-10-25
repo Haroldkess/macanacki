@@ -102,12 +102,19 @@ dependencies:
   scroll_edge_listener: ^0.1.1
   fast_immutable_collections: ^9.1.5
   easy_debounce: ^2.0.3
-  chewie: ^1.7.1
+  chewie:
   preload_page_view: ^0.2.0
   photo_view: ^0.14.0
   smooth_video_progress: ^0.0.4
   persistent_bottom_nav_bar: ^5.0.2
   flutter_windowmanager: ^0.2.0
+  apivideo_player: ^1.2.0
+  flutter_vlc_player: ^7.4.0
+  just_audio: ^0.9.35
+  simple_animations: ^5.0.2
+  custom_refresh_indicator: ^2.2.1
+  extended_nested_scroll_view: ^6.1.2
+  
 
 
 
@@ -124,8 +131,6 @@ dev_dependencies:
 
 
   flutter_lints: ^2.0.0
-  build_runner:
-  freezed:
   json_serializable:
   hive_generator:
 

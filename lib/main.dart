@@ -25,7 +25,7 @@ import 'presentation/uiproviders/screen/tab_provider.dart';
 
 void main() async {
   dotenv.load(fileName: "secret.env");
-  Platform.isAndroid ? IAUpdate().checkForUpdate() : null;
+  //Platform.isAndroid ? IAUpdate().checkForUpdate() : null;
   // await Database.initDatabase();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -38,6 +38,8 @@ void main() async {
   Get.put(MediaDownloadProgress());
   Get.put(PersistentNavController());
   Get.put(PostSecurity());
+  Get.put(scrolNotify());
+  Get.put(scrolNotifyPublic());
 
   runApp(Phoenix(child: const MyApp()));
 }
@@ -125,7 +127,7 @@ class MyApp extends StatelessWidget {
             theme: ThemeData(
                 primaryColor: HexColor(primaryColor),
                 brightness: Brightness.light,
-                iconTheme: IconThemeData(color: Colors.black),
+                iconTheme: IconThemeData(color: Colors.transparent),
                 iconButtonTheme: IconButtonThemeData(
                     style: ButtonStyle(
                         iconColor: MaterialStateProperty.all(Colors.black))),

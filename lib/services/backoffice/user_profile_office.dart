@@ -52,7 +52,7 @@ Future<http.Response?> getUserPublicProfile(String username) async {
 
 //###################
 Future<http.Response?> getUserPublicPost(
-    String username, int pageNumber, int numberOfPostPerRequest) async {
+    String username, int pageNumber, int numberOfPostPerRequest, String filter) async {
   http.Response? response;
   SharedPreferences pref = await SharedPreferences.getInstance();
 
@@ -63,7 +63,7 @@ Future<http.Response?> getUserPublicPost(
         '$baseUrl/public/api/v2/user/public/user/posts/$username?page=$pageNumber');
     response = await http.get(
       Uri.parse(
-          '$baseUrl/public/api/v2/user/public/user/posts/$username?page=$pageNumber'),
+          '$baseUrl/public/api/v2/user/public/user/posts/$username?type=$filter&page=$pageNumber'),
       headers: {
         HttpHeaders.contentTypeHeader: "application/json",
         HttpHeaders.authorizationHeader: "Bearer $token",
