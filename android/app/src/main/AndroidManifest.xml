@@ -6,6 +6,8 @@
 <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="com.android.vending.BILLING" />
 
+    
+
 <!-- <uses-permission
        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
        tools:ignore="ScopedStorage" />
@@ -38,11 +40,11 @@
         android:usesCleartextTraffic="true">
               <meta-data
         android:name="com.google.firebase.messaging.default_notification_icon"
-android:resource="@drawable/maca" />
+android:resource="@mipmap/maca" />
 
-<meta-data
-    android:name="com.google.firebase.messaging.default_notification_color"
-    android:resource="@color/colorPrimary" />
+
+
+
 
        <activity
            android:name="com.yalantis.ucrop.UCropActivity"
@@ -50,7 +52,7 @@ android:resource="@drawable/maca" />
            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
         <activity
-            android:name=".MainActivity"
+            android:name="com.ryanheise.audioservice.AudioServiceActivity"
             android:exported="true"
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"
@@ -58,6 +60,8 @@ android:resource="@drawable/maca" />
             android:hardwareAccelerated="true"
             android:resizeableActivity="true"
             android:windowSoftInputMode="adjustResize">
+
+            
 
    
             
@@ -84,6 +88,23 @@ android:resource="@drawable/maca" />
         </activity>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
+
+                <service
+            android:name="com.ryanheise.audioservice.AudioService"
+            android:foregroundServiceType="mediaPlayback"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.media.browse.MediaBrowserService" />
+            </intent-filter>
+        </service>
+
+        <receiver
+            android:name="com.ryanheise.audioservice.MediaButtonReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+            </intent-filter>
+        </receiver> 
 
 
         <meta-data

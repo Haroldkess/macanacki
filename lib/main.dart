@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:just_audio_background/just_audio_background.dart';
 import 'package:macanacki/config/pay_ext.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
 import 'package:macanacki/presentation/screens/onboarding/splash_screen.dart';
@@ -24,12 +25,18 @@ import 'package:intl/intl.dart';
 import 'presentation/uiproviders/screen/tab_provider.dart';
 
 void main() async {
+  await JustAudioBackground.init(
+    androidNotificationChannelId:'com.ryanheise.bg_demo.channel.audio',
+    androidNotificationChannelName: 'Audio playback',
+    androidNotificationOngoing: true,
+    
+  );
 
   // Initialize inApp Store
   PayExt.initializeStore();
 
   dotenv.load(fileName: "secret.env");
-  //Platform.isAndroid ? IAUpdate().checkForUpdate() : null;
+  Platform.isAndroid ? IAUpdate().checkForUpdate() : null;
   // await Database.initDatabase();
   WidgetsFlutterBinding.ensureInitialized();
   //await PurchaseExt.init();
@@ -51,9 +58,6 @@ void main() async {
 
   runApp(Phoenix(child: const MyApp()));
 }
-
-
-
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -153,7 +157,4 @@ class MyApp extends StatelessWidget {
           ),
         ));
   }
-
-
-
 }

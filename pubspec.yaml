@@ -116,6 +116,7 @@ dependencies:
   extended_nested_scroll_view: ^6.1.2
   
   purchases_flutter: ^6.0.0
+  just_audio_background: ^0.0.1-beta.10
 
 
 

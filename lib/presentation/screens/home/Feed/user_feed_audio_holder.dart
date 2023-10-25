@@ -1,5 +1,5 @@
 import 'dart:developer';
-
+import 'package:just_audio_background/just_audio_background.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:apivideo_player/apivideo_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -435,7 +435,16 @@ class _AudioViewState extends State<AudioView> {
     try {
       // AAC example: https://dl.espressif.com/dl/audio/ff-16b-2c-44100hz.aac
       await _player.setAudioSource(LockCachingAudioSource(
-          Uri.parse(widget.data.media!.first.toString())));
+        Uri.parse(widget.data.media!.first.toString()),
+        tag: MediaItem(
+          // Specify a unique ID for each media item:
+          id: widget.data.id.toString(),
+          // Metadata to display in the notification:
+          album: widget.data.description ?? "",
+          title: widget.data.user!.username ?? "",
+          artUri: Uri.parse(widget.data.thumbnails!.first! ?? ""),
+        ),
+      ));
 
       _player.play();
       setState(() {});
