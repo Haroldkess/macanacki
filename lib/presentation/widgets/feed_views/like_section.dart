@@ -27,12 +27,21 @@ import '../text.dart';
 class LikeSection extends StatefulWidget {
   final FeedPost data;
   String page;
+  bool? isAudio;
+  String? userName;
+  bool? isHome;
+  bool showComment;
+
   // final List<String> media;
   // final List<String> urls;
   LikeSection({
     super.key,
     required this.data,
     required this.page,
+    required this.isHome,
+    this.isAudio,
+    this.userName,
+    required this.showComment,
     // required this.media,
     // required this.urls
   });
@@ -93,7 +102,8 @@ class _LikeSectionState extends State<LikeSection> {
                 // Operations.commentOperation(
                 //     context, false, widget.data.comments!);
 
-                commentModal(context, widget.data.id!, widget.page);
+                commentModal(context, widget.data.id!, widget.page,
+                    widget.showComment, widget.userName);
               },
               child: Padding(
                 padding: const EdgeInsets.only(right: 3.0),
@@ -122,6 +132,9 @@ class _LikeSectionState extends State<LikeSection> {
                               try {
                                 if (element.contains('.mp4')) {
                                   await SaveMediaController.saveNetworkVideo(
+                                      context, element);
+                                } else if (element.contains('.mp3')) {
+                                  await SaveMediaController.saveNetworkAudio(
                                       context, element);
                                 } else {
                                   await SaveMediaController.saveNetworkImage(
@@ -203,9 +216,7 @@ class _LikeSectionState extends State<LikeSection> {
                         }
                       } else {
                         downloadDiamondsModal(
-                          context,
-                          widget.data.id!,
-                        );
+                            context, widget.data.id!, widget.isAudio);
                       }
 
                       //  GiftWare.instance.giftForDownloadFromApi(

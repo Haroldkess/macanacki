@@ -15,7 +15,12 @@ import '../../../../widgets/user_post_views.dart';
 class UserProfileFeed extends StatefulWidget {
   final int index;
   bool isAudio;
-  UserProfileFeed({super.key, required this.index, required this.isAudio});
+  int isHome;
+  UserProfileFeed(
+      {super.key,
+      required this.index,
+      required this.isAudio,
+      required this.isHome});
 
   @override
   State<UserProfileFeed> createState() => _UserProfileFeedState();
@@ -128,6 +133,7 @@ class _UserProfileFeedState extends State<UserProfileFeed> {
                     index1: index,
                     thisPost: post,
                     allPost: stream.profileFeedPosts,
+                    showComment: widget.isHome == 0 ? false : true,
                   );
                 }),
                 onPageChanged: (index) {

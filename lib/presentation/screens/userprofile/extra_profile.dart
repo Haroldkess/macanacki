@@ -21,6 +21,7 @@ import '../../../services/controllers/chat_controller.dart';
 import '../../../services/controllers/feed_post_controller.dart';
 import '../../../services/controllers/user_profile_controller.dart';
 import '../../../services/middleware/chat_ware.dart';
+import '../../../services/middleware/extra_profile_ware.dart';
 import '../../../services/middleware/feed_post_ware.dart';
 import '../../../services/middleware/gift_ware.dart';
 import '../../../services/middleware/user_profile_ware.dart';
@@ -30,20 +31,21 @@ import '../../constants/colors.dart';
 import '../../widgets/app_bar.dart';
 import '../home/diamond/diamond_modal/buy_modal.dart';
 import '../home/diamond/diamond_modal/give_modal.dart';
+import '../home/profile/profileextras/extra_profile_view.dart';
 import '../home/profile/profileextras/profile_info.dart';
 import '../home/profile/profileextras/profile_post_grid.dart';
 import '../notification/notification_screen.dart';
 import 'extras/public_profile_info.dart';
 
-class UsersProfile extends StatefulWidget {
+class ExtraProfile extends StatefulWidget {
   final String username;
-  const UsersProfile({super.key, required this.username});
+  const ExtraProfile({super.key, required this.username});
 
   @override
-  State<UsersProfile> createState() => _UsersProfileState();
+  State<ExtraProfile> createState() => _ExtraProfileState();
 }
 
-class _UsersProfileState extends State<UsersProfile>
+class _ExtraProfileState extends State<ExtraProfile>
     with SingleTickerProviderStateMixin {
   bool showMore = false;
   int seeMoreVal = 100;
@@ -51,7 +53,7 @@ class _UsersProfileState extends State<UsersProfile>
   // String myUsername = "";
   TapGestureRecognizer tapGestureRecognizer = TapGestureRecognizer();
   final ScrollController _controller = ScrollController();
-  late UserProfileWare stream;
+  late ExtraProfileWare stream;
 
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
@@ -64,8 +66,8 @@ class _UsersProfileState extends State<UsersProfile>
     _tabController = TabController(vsync: this, length: _tabs.length);
 
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) async {
-      UserProfileWare stream =
-          Provider.of<UserProfileWare>(context, listen: false);
+      ExtraProfileWare stream =
+          Provider.of<ExtraProfileWare>(context, listen: false);
       stream.disposeAutoScroll();
       stream.initializePagingController();
       getData(true);
@@ -76,16 +78,16 @@ class _UsersProfileState extends State<UsersProfile>
             //  print("PARENT IS AT THE TOP");
             WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
               if (mounted) {
-                scrolNotifyPublic.instance.changeTabOne(true);
-                scrolNotifyPublic.instance.changeTabTwo(true);
+                scrolNotifyPublicExtra.instance.changeTabOne(true);
+                scrolNotifyPublicExtra.instance.changeTabTwo(true);
               }
             });
           } else {
             // print("PARENT IS AT THE BOTTOM");
             WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
               if (mounted) {
-                scrolNotifyPublic.instance.changeTabOne(false);
-                scrolNotifyPublic.instance.changeTabTwo(false);
+                scrolNotifyPublicExtra.instance.changeTabOne(false);
+                scrolNotifyPublicExtra.instance.changeTabTwo(false);
                 // setState(() {
 
                 //   physc = false;
@@ -98,8 +100,8 @@ class _UsersProfileState extends State<UsersProfile>
           print("WE HERE SOME PIXELS BEFORE END");
           WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
             if (mounted) {
-              scrolNotifyPublic.instance.changeTabOne(false);
-              scrolNotifyPublic.instance.changeTabTwo(false);
+              scrolNotifyPublicExtra.instance.changeTabOne(false);
+              scrolNotifyPublicExtra.instance.changeTabTwo(false);
               // setState(() {
 
               //   physc = false;
@@ -141,18 +143,10 @@ class _UsersProfileState extends State<UsersProfile>
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
         systemNavigationBarIconBrightness: Brightness.dark,
         systemNavigationBarColor: HexColor(backgroundColor)));
-
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      try {
-        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-          VideoWareHome.instance.pauseAnyVideo();
-        });
-      } catch (e) {}
-    });
   }
 
   Future<void> _onRefresh() async {
-    stream = Provider.of<UserProfileWare>(context, listen: false);
+    stream = Provider.of<ExtraProfileWare>(context, listen: false);
     await getData(true);
     stream.disposeAutoScroll();
     stream.pagingController.refresh();
@@ -173,7 +167,7 @@ class _UsersProfileState extends State<UsersProfile>
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
-    stream = context.watch<UserProfileWare>();
+    stream = context.watch<ExtraProfileWare>();
     NotificationWare notify = context.watch<NotificationWare>();
 
     return SafeArea(
@@ -338,7 +332,7 @@ class _UsersProfileState extends State<UsersProfile>
                   flexibleSpace: FlexibleSpaceBar(
                     background: stream.loadStatus2
                         ? const PublicLoader()
-                        : PublicProfileInfo(
+                        : PublicProfileInfoExtra(
                             isMine: false,
                           ),
                   ),
@@ -524,21 +518,21 @@ class _UsersProfileState extends State<UsersProfile>
                     controller: _tabController,
                     children: _tabs.asMap().entries.map((entry) {
                       return entry.value == "others"
-                          ? PublicProfilePostGrid(
+                          ? ExtraPublicProfilePostGrid(
                               ware: stream,
                               parentController: _controller,
                               tabKey: Key('Tab${entry.key}'),
                               tabName: entry.value,
                               username: widget.username,
-                              isHome: 1,
+                              isHome: 0,
                             )
-                          : PublicProfilePostAudioGrid(
+                          : ExtraPublicProfilePostAudioGrid(
                               ware: stream,
                               parentController: _controller,
                               tabKey: Key('Tab${entry.key}'),
                               tabName: entry.value,
                               username: widget.username,
-                              isHome: 1,
+                              isHome: 0,
                             );
                     }).toList(),
                   ),
@@ -593,8 +587,8 @@ class _UsersProfileState extends State<UsersProfile>
   Future<void> getData(bool isRef) async {
     if (isRef) {
       SchedulerBinding.instance.addPostFrameCallback((_) async {
-        UserProfileWare user = Provider.of(context, listen: false);
-        await UserProfileController.retrievPublicProfileController(
+        ExtraProfileWare user = Provider.of(context, listen: false);
+        await UserProfileController.retrievPublicProfileExtraController(
             context, widget.username);
 
         //Re-initializing pagingController
@@ -609,13 +603,13 @@ class _UsersProfileState extends State<UsersProfile>
         if (user.publicUserProfileModel.username == null) {
           user.getUserPublicPostFromApi(username: widget.username);
           user.getUserPublicPostAudioFromApi(username: widget.username);
-          await UserProfileController.retrievPublicProfileController(
+          await UserProfileController.retrievPublicProfileExtraController(
               context, widget.username);
           user.getUserPublicPostFromApi(username: widget.username);
           user.getUserPublicPostAudioFromApi(username: widget.username);
         } else {
           if (user.publicUserProfileModel.username == widget.username) {
-            await UserProfileController.retrievPublicProfileController(
+            await UserProfileController.retrievPublicProfileExtraController(
                 context, widget.username);
             user.getUserPublicPostFromApi(username: widget.username);
             user.getUserPublicPostAudioFromApi(username: widget.username);
@@ -624,7 +618,7 @@ class _UsersProfileState extends State<UsersProfile>
           } else {
             user.getUserPublicPostFromApi(username: widget.username);
             user.getUserPublicPostAudioFromApi(username: widget.username);
-            await UserProfileController.retrievPublicProfileController(
+            await UserProfileController.retrievPublicProfileExtraController(
                 context, widget.username);
           }
         }

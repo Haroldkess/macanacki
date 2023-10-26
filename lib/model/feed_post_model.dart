@@ -4,6 +4,7 @@
 
 import 'dart:convert';
 
+import 'package:apivideo_player/apivideo_player.dart';
 import 'package:video_player/video_player.dart';
 
 FeedPostModel feedPostModelFromJson(String str) =>
@@ -148,7 +149,7 @@ class FeedPost {
   int? viewCount;
   String? button;
   User? user;
-  VideoPlayerController? controller;
+  ApiVideoPlayerController? controller;
   String? promoted;
 
   FeedPost copyWith({
@@ -169,7 +170,7 @@ class FeedPost {
     int? viewCount,
     String? button,
     User? user,
-    VideoPlayerController? controller,
+    ApiVideoPlayerController? controller,
   }) =>
       FeedPost(
           id: id ?? this.id,

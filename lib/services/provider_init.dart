@@ -29,6 +29,7 @@ import 'package:provider/single_child_widget.dart';
 
 import '../presentation/uiproviders/buttons/button_state.dart';
 import '../presentation/uiproviders/screen/gender_provider.dart';
+import 'middleware/extra_profile_ware.dart';
 import 'middleware/login_ware.dart';
 
 class InitProvider {
@@ -121,9 +122,11 @@ class InitProvider {
       ChangeNotifierProvider(
         create: (context) => VideoTrimmerWare(),
       ),
-
-            ChangeNotifierProvider(
+      ChangeNotifierProvider(
         create: (context) => FeedPostWareAudio(),
+      ),
+      ChangeNotifierProvider(
+        create: (context) => ExtraProfileWare(),
       ),
     ];
 

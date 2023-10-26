@@ -4,13 +4,16 @@ import 'dart:ui' as ui;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:external_path/external_path.dart';
 import 'package:get/get.dart';
+import 'package:path/path.dart' as pat;
 // import 'package:gallery_saver/gallery_saver.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:macanacki/presentation/allNavigation.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
 import 'package:macanacki/presentation/widgets/debug_emitter.dart';
 import 'package:macanacki/presentation/widgets/text.dart';
+import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:saver_gallery/saver_gallery.dart';
 import 'package:flutter/rendering.dart';
@@ -57,7 +60,7 @@ class SaveMediaController {
     final result = await SaverGallery.saveFile(
         file: savePath,
         androidExistNotSave: true,
-        name: '123.mp4',
+        name: 'macanacki${basename(savePath)}.mp4',
         androidRelativePath: "Movies");
 
     emitter(" the download link $url");
@@ -156,6 +159,88 @@ class SaveMediaController {
         //  showToast2(context, "Could not download Image", isError: true);
       } catch (e) {
         showToastLater('Could not download Image');
+        // await Fluttertoast.showToast(
+        //     msg: 'Could not download Image',
+        //     textColor: HexColor(backgroundColor),
+        //     gravity: ToastGravity.TOP,
+        //     backgroundColor: HexColor(primaryColor));
+      }
+      // ignore: use_build_context_synchronously
+      // PageRouting.popToPage(context);
+    }
+  }
+
+  static Future<void> saveNetworkAudio(BuildContext context, String url) async {
+    Map<String, dynamic> result = {
+      'isSuccess': false,
+      'filePath': null,
+      'error': null,
+      'id': null
+    };
+    final dir = await ExternalPath.getExternalStoragePublicDirectory(
+        ExternalPath.DIRECTORY_DOWNLOADS);
+
+    // showToast2(context, "Download started. Scroll to check out more content",
+    //     isError: false);
+    MediaDownloadProgress.instance.addProgress(1, 100);
+
+    Get.showSnackbar(successSnackBar("Downloading", "audio"));
+    String path = url;
+    var response = await Dio().get(path,
+        options: Options(
+          responseType: ResponseType.bytes,
+        ), onReceiveProgress: (received, total) {
+      MediaDownloadProgress.instance.addProgress(received, total);
+    });
+    String musicPath =
+        "${path.split(".").first.isEmpty ? "macanacki" : path.split(":").first}.mp3";
+    await requestPermission();
+    debugPrint(musicPath);
+
+    final fullPath = pat.join(dir.toString(), musicPath);
+
+    // final result = await SaverGallery.saveFile(
+    //     file: musicPath,
+    //     androidExistNotSave: true,
+    //     name: 'macanacki${basename(musicPath)}.mp3',
+    //     androidRelativePath: "Music");
+    // final save = await SaverGallery.
+    // bool isDone = await GallerySaver.saveImage(path).then((success) {
+    //   return success!;
+    // });
+
+    if (response.statusCode == 200) {
+      result['isSuccess'] = response.statusCode == 200;
+      result['filePath'] = fullPath;
+
+      File file = File(fullPath);
+      var raf = file.openSync(mode: FileMode.write);
+      raf.writeFromSync(response.data);
+
+      await raf.close();
+      // ignore: use_build_context_synchronously
+
+      try {
+        // showToast2(context, "Image downloaded successfully", isError: false);
+        showToastLater("Audio downloaded successfully");
+      } catch (e) {
+        showToastLater('Audio downloaded successfully');
+        // await Fluttertoast.showToast(
+        //     msg: 'Image downloaded successfully',
+        //     textColor: HexColor(backgroundColor),
+        //     gravity: ToastGravity.TOP,
+        //     backgroundColor: HexColor(primaryColor));
+      }
+      // ignore: use_build_context_synchronously
+      // PageRouting.popToPage(context);
+    } else {
+      // ignore: use_build_context_synchronously
+
+      try {
+        showToastLater("Could not download Audio");
+        //  showToast2(context, "Could not download Image", isError: true);
+      } catch (e) {
+        showToastLater('Could not download Audio');
         // await Fluttertoast.showToast(
         //     msg: 'Could not download Image',
         //     textColor: HexColor(backgroundColor),

@@ -65,8 +65,31 @@ class _VodViewState extends State<VodView> {
   String apiToken = "";
   @override
   void initState() {
+    // widget.controller!.addListener(ApiVideoPlayerControllerEventsListener(
+    //   // onReady: () {
+    //   //   if (widget.index == 0) {
+    //   //     widget.controller.play();
+    //   //     widget.controller.setIsLooping(true);
+    //   //   } else {
+    //   //     widget.controller.play();
+    //   //     widget.controller.setIsLooping(true);
+    //   //   }
+    //   //   setState(() {
+    //   //     isReady = true;
+    //   //     tapped = false;
+    //   //     delayUser = false;
+    //   //     _duration = 'Get duration';
+    //   //   });
+    //   // },
+    //   onEnd: () async {
+    //     log("video ended");
+    //     ViewController.handleView(widget.data!.id!);
+    //     setState(() {});
+    //   },
+    // ));
+
     //  if (widget.index == 0) {
-    widget.controller!.initialize();
+    // widget.controller!.initialize();
     //}
     // buildVideoOptions();
     super.initState();
@@ -131,58 +154,57 @@ class _PlayerWidgetState extends State<PlayerWidget> {
 
   @override
   void initState() {
+    // setState(() {
+    //   tapped = true;
+    // });
+    // widget.controller.addListener(ApiVideoPlayerControllerEventsListener(
+    //   // onReady: () {
+    //   //   if (widget.index == 0) {
+    //   //     widget.controller.play();
+    //   //     widget.controller.setIsLooping(true);
+    //   //   } else {
+    //   //     widget.controller.play();
+    //   //     widget.controller.setIsLooping(true);
+    //   //   }
+    //   //   setState(() {
+    //   //     isReady = true;
+    //   //     tapped = false;
+    //   //     delayUser = false;
+    //   //     _duration = 'Get duration';
+    //   //   });
+    //   // },
+    //   onEnd: () async {
+    //     log("video ended");
+    //     ViewController.handleView(widget.data!.id!);
+    //     setState(() {});
+    //   },
+    // ));
     super.initState();
-    if (widget.index! == 0) {
-      setState(() {
-        tapped = true;
-      });
-      widget.controller.addListener(ApiVideoPlayerControllerEventsListener(
-        onReady: () {
-          if (widget.index == 0) {
-            widget.controller.play();
-            widget.controller.setIsLooping(true);
-          } else {
-            widget.controller.pause();
-            widget.controller.setIsLooping(true);
-          }
-          setState(() {
-            isReady = true;
-            tapped = false;
-            delayUser = false;
-            _duration = 'Get duration';
-          });
-        },
-        onEnd: () {
-          log("video ended");
-          ViewController.handleView(widget.data!.id!);
-          setState(() {});
-        },
-      ));
-    } else {
-      // widget.controller.initialize();
-    }
   }
 
   @override
   void dispose() {
-    widget.controller.dispose();
+    if (widget.controller != null) {
+      widget.controller.dispose();
+    }
+    // widget.controller.dispose();
 
     super.dispose();
   }
 
   void addListener() {
     widget.controller.addListener(ApiVideoPlayerControllerEventsListener(
-      onReady: () {
-        widget.controller.play();
-        widget.controller.setIsLooping(true);
+      // onReady: () {
+      //   // widget.controller.play();
+      //   // widget.controller.setIsLooping(true);
 
-        setState(() {
-          isReady = true;
-          tapped = false;
-          delayUser = false;
-          _duration = 'Get duration';
-        });
-      },
+      //   // setState(() {
+      //   //   isReady = true;
+      //   //   tapped = false;
+      //   //   delayUser = false;
+      //   //   _duration = 'Get duration';
+      //   // });
+      // },
       onPlay: () {
         // setState(() {
         //   isReady = true;
@@ -196,6 +218,79 @@ class _PlayerWidgetState extends State<PlayerWidget> {
       },
     ));
   }
+
+  // onTap: () async {
+  //                   setState(() {
+  //                     isReady = false;
+  //                     tapped = true;
+  //                     delayUser = true;
+  //                     _duration = 'Get duration';
+  //                   });
+  //                   if (await widget.controller.isCreated) {
+  //                     print("here");
+  //                     widget.controller.play();
+  //                     widget.controller.setIsLooping(true);
+
+  //                     if (await widget.controller.isPlaying) {
+  //                       setState(() {
+  //                         isReady = true;
+  //                         tapped = false;
+  //                         delayUser = false;
+  //                         _duration = 'Get duration';
+  //                       });
+  //                     }
+
+  //                     addListener();
+
+  //                     setState(() {
+  //                       _duration = 'Get duration';
+  //                     });
+  //                     // widget.controller.play();
+
+  //                     setState(() {});
+  //                   } else if (widget.index != 0) {
+  //                     // widget.controller.dispose();
+  //                     setState(() {
+  //                       tapped = true;
+  //                       delayUser = true;
+  //                       isReady = false;
+  //                     });
+  //                     await widget.controller.initialize();
+  //                     setState(() {
+  //                       widget.controller.addListener(
+  //                           ApiVideoPlayerControllerEventsListener(
+  //                         onReady: () {
+  //                           if (widget.index == 0) {
+  //                             widget.controller.play();
+  //                             widget.controller.setIsLooping(true);
+  //                           } else {
+  //                             widget.controller.play();
+  //                             widget.controller.setIsLooping(true);
+  //                           }
+  //                           setState(() {
+  //                             isReady = true;
+  //                             tapped = false;
+  //                             delayUser = false;
+  //                             _duration = 'Get duration';
+  //                           });
+  //                         },
+  //                         onPlay: () {
+  //                           // setState(() {
+  //                           //   isReady = true;
+  //                           //   _duration = 'Get duration';
+  //                           // });
+  //                         },
+  //                         onEnd: () {
+  //                           setState(() {});
+  //                         },
+  //                       ));
+  //                       _duration = 'Get duration';
+  //                     });
+  //                     // widget.controller.play();
+
+  //                     setState(() {});
+  //                   }
+  //                 },
 
   @override
   Widget build(BuildContext context) {
@@ -277,108 +372,102 @@ class _PlayerWidgetState extends State<PlayerWidget> {
               ),
               Align(
                 alignment: Alignment.center,
-                child: GestureDetector(
-                    onTap: () async {
+                child: PlayAnimationBuilder<double>(
+                    tween: Tween(begin: 10.0, end: 50.0), // set tween
+                    duration: const Duration(milliseconds: 1500),
+                    onCompleted: () async {
                       setState(() {
-                        isReady = false;
                         tapped = true;
-                        delayUser = true;
-                        _duration = 'Get duration';
                       });
                       if (await widget.controller.isCreated) {
-                        print("here");
                         widget.controller.play();
-                        widget.controller.setIsLooping(true);
-
-                        if (await widget.controller.isPlaying) {
-                          setState(() {
-                            isReady = true;
-                            tapped = false;
-                            delayUser = false;
-                            _duration = 'Get duration';
-                          });
-                        }
-
-                        addListener();
-
-                        setState(() {
-                          _duration = 'Get duration';
-                        });
-                        // widget.controller.play();
-
-                        setState(() {});
-                      } else if (widget.index != 0) {
-                        // widget.controller.dispose();
-                        setState(() {
-                          tapped = true;
-                          delayUser = true;
-                          isReady = false;
-                        });
-                        await widget.controller.initialize();
-                        setState(() {
-                          widget.controller.addListener(
-                              ApiVideoPlayerControllerEventsListener(
-                            onReady: () {
-                              if (widget.index == 0) {
-                                widget.controller.play();
-                                widget.controller.setIsLooping(true);
-                              } else {
-                                widget.controller.play();
-                                widget.controller.setIsLooping(true);
-                              }
-                              setState(() {
-                                isReady = true;
-                                tapped = false;
-                                delayUser = false;
-                                _duration = 'Get duration';
-                              });
-                            },
-                            onPlay: () {
-                              // setState(() {
-                              //   isReady = true;
-                              //   _duration = 'Get duration';
-                              // });
-                            },
-                            onEnd: () {
-                              setState(() {});
-                            },
-                          ));
-                          _duration = 'Get duration';
-                        });
-                        // widget.controller.play();
-
-                        setState(() {});
                       }
-                    },
-                    child: PlayAnimationBuilder<double>(
-                        tween: Tween(begin: 10.0, end: 50.0), // set tween
-                        duration:
-                            const Duration(milliseconds: 1500), // set duration
-                        builder: (context, value, _) {
-                          return Container(
-                            height: value,
-                            width: value,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(13),
-                                border: Border.all(
-                                    width: 4.0, color: Colors.white)),
-                            child: Center(
-                              child: IconButton(
-                                onPressed: null,
-                                icon: tapped
-                                    ? Loader(
-                                        color: Colors.white,
-                                      )
-                                    : Icon(
-                                        Icons.play_arrow,
-                                        color: Colors.white,
-                                        // size: 35,
-                                      ),
-                                style: controlsBarStyle.mainControlButtonStyle,
-                              ),
-                            ),
-                          );
-                        })),
+                      //  if (widget.index! == 0) {
+
+                      setState(() {
+                        isReady = true;
+                        tapped = false;
+                        delayUser = false;
+                        _duration = 'Get duration';
+                      });
+                      // widget.controller
+                      //     .addListener(ApiVideoPlayerControllerEventsListener(
+                      //   onReady: () {
+                      //     if (widget.index == 0) {
+                      //       widget.controller.play();
+                      //       widget.controller.setIsLooping(true);
+                      //     } else {
+                      //       widget.controller.play();
+                      //       widget.controller.setIsLooping(true);
+                      //     }
+                      //     setState(() {
+                      //       isReady = true;
+                      //       tapped = false;
+                      //       delayUser = false;
+                      //       _duration = 'Get duration';
+                      //     });
+                      //   },
+                      //   onEnd: () async {
+                      //     log("video ended");
+                      //     ViewController.handleView(widget.data!.id!);
+                      //     setState(() {});
+                      //   },
+                      // ));
+
+                      // } else {
+                      //   setState(() {
+                      //     tapped = true;
+                      //   });
+                      //   widget.controller
+                      //       .addListener(ApiVideoPlayerControllerEventsListener(
+                      //     onReady: () {
+                      //       if (widget.index == 0) {
+                      //         widget.controller.play();
+                      //         widget.controller.setIsLooping(true);
+                      //       } else {
+                      //         widget.controller.play();
+                      //         widget.controller.setIsLooping(true);
+                      //       }
+                      //       setState(() {
+                      //         isReady = true;
+                      //         tapped = false;
+                      //         delayUser = false;
+                      //         _duration = 'Get duration';
+                      //       });
+                      //     },
+                      //     onEnd: () {
+                      //       log("video ended");
+                      //       ViewController.handleView(widget.data!.id!);
+                      //       setState(() {});
+                      //     },
+                      //   ));
+                      // }
+                    }, // set duration
+                    builder: (context, value, _) {
+                      return Container(
+                        height: value,
+                        width: value,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(13),
+                            border:
+                                Border.all(width: 4.0, color: Colors.white)),
+                        child: Center(
+                          child: IconButton(
+                            onPressed: null,
+                            icon: tapped
+                                ? Loader(
+                                    color: Colors.white,
+                                  )
+                                : Icon(
+                                    Icons.play_arrow,
+                                    color: Colors.white,
+                                    // size: 35,
+                                  ),
+                            style: controlsBarStyle.mainControlButtonStyle,
+                          ),
+                        ),
+                      );
+                    }),
               )
             ],
           )

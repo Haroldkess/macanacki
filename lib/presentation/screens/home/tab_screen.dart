@@ -746,7 +746,7 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
     Get.put(FriendWare());
     WidgetsBinding.instance.addPostFrameCallback((_) {
       VideoWareHome.instance.getVideoPostFromApi(1);
-        VideoWareHome.instance.getAudioPostFromApi(1);
+      VideoWareHome.instance.getAudioPostFromApi(1);
     });
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {

@@ -25,11 +25,13 @@ class PublicGridViewItems extends StatefulWidget {
   final PublicUserPost data;
   final int index;
   final List<PublicUserPost> posts;
-  const PublicGridViewItems(
+  int isHome;
+  PublicGridViewItems(
       {super.key,
       required this.data,
       required this.index,
-      required this.posts});
+      required this.posts,
+      required this.isHome});
 
   @override
   State<PublicGridViewItems> createState() => _PublicGridViewItemsState();
@@ -87,11 +89,13 @@ class _PublicGridViewItemsState extends State<PublicGridViewItems> {
     return InkWell(
       splashColor: HexColor(primaryColor),
       onTap: () async {
+        //   print(widget.posts.length);
         PageRouting.pushToPage(
             context,
             PublicUserProfileFeed(
               index: widget.index,
               data: widget.posts,
+              isHome: widget.isHome,
             ));
       },
       child: Container(
@@ -99,7 +103,9 @@ class _PublicGridViewItemsState extends State<PublicGridViewItems> {
             //  borderRadius: BorderRadius.circular(12),
             image: DecorationImage(
                 fit: BoxFit.cover,
-                image: widget.data.media!.first.contains(".mp4")
+                image: widget.data.media!.first.contains(".mp4") ||
+                        widget.data.media!.first.contains(".mp3") ||
+                        !widget.data.media!.first.contains("http")
                     ? CachedNetworkImageProvider(
                         widget.data.thumbnails!.first ?? "")
                     : CachedNetworkImageProvider(widget.data.media!.first)
@@ -121,8 +127,12 @@ class _PublicGridViewItemsState extends State<PublicGridViewItems> {
                 : widget.data.media!.first.contains(".mp3")
                     ? Align(
                         alignment: Alignment.center,
-                        child: Lottie.asset("assets/icon/mov.json",
-                            height: 70, width: 70),
+                        child: SvgPicture.asset(
+                          "assets/icon/aud.svg",
+                          height: 25,
+                          width: 25,
+                          color: Colors.white,
+                        ),
                       )
                     : const SizedBox.shrink(),
             Positioned(

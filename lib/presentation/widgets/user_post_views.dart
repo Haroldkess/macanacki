@@ -57,6 +57,7 @@ class UserTikTokView extends StatefulWidget {
   bool? isInView;
   dynamic pageData;
   final ProfileFeedDatum? thisPost;
+  bool showComment;
   UserTikTokView(
       {super.key,
       required this.media,
@@ -65,6 +66,7 @@ class UserTikTokView extends StatefulWidget {
       required this.vod,
       required this.thumbails,
       required this.allPost,
+      required this.showComment,
       this.index1,
       this.index2,
       this.controller,
@@ -249,6 +251,7 @@ class _UserTikTokViewState extends State<UserTikTokView>
                                 postId: widget.data.id!,
                                 data: widget.data,
                                 vod: widget.vod.first,
+                                showComment: widget.showComment,
                                 //   vlcController: _vlcController,
                               )
                             : UserMultiplePost(
@@ -259,6 +262,7 @@ class _UserTikTokViewState extends State<UserTikTokView>
                                 thumbLinks: widget.urls,
                                 page: widget.page,
                                 isInView: widget.isInView,
+                                showComment: widget.showComment,
                               )))
               ],
             ),
@@ -352,6 +356,10 @@ class _UserTikTokViewState extends State<UserTikTokView>
                                 if (widget.media.first.contains('.mp4')) {
                                   await SaveMediaController.saveNetworkVideo(
                                       context, widget.media.first);
+                                } else if (widget.media.first
+                                    .contains('.mp3')) {
+                                  await SaveMediaController.saveNetworkAudio(
+                                      context, widget.media.first);
                                 } else {
                                   await SaveMediaController.saveNetworkImage(
                                       context, widget.media.first);
@@ -359,9 +367,11 @@ class _UserTikTokViewState extends State<UserTikTokView>
                               }
                             } else {
                               downloadDiamondsModal(
-                                context,
-                                widget.data.id!,
-                              );
+                                  context,
+                                  widget.data.id!,
+                                  widget.data.media!.first.contains(".mp3")
+                                      ? true
+                                      : false);
                             }
                           },
                           child: Container(
@@ -401,6 +411,7 @@ class _UserTikTokViewState extends State<UserTikTokView>
                   media: widget.urls,
                   controller: _controller,
                   isHome: false,
+                  showComment: widget.showComment,
                 )
 
                 // : FollowSection(
@@ -527,8 +538,13 @@ class _UserTikTokViewState extends State<UserTikTokView>
                                       Uri.parse(widget.data.btnLink!));
                                 }
                               } else {
-                                await UrlLaunchController.launchInWebViewOrVC(
-                                    Uri.parse(widget.data.btnLink!));
+                                if (widget.data.button == "Spotify") {
+                                  await UrlLaunchController.launchWebViewOrVC(
+                                      Uri.parse(widget.data.btnLink!));
+                                } else {
+                                  await UrlLaunchController.launchInWebViewOrVC(
+                                      Uri.parse(widget.data.btnLink!));
+                                }
                               }
                             },
                             child: Container(

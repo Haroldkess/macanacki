@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:macanacki/presentation/widgets/text.dart';
+import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 import 'package:http/http.dart' as http;
 import '../../../presentation/constants/colors.dart';
@@ -46,7 +47,7 @@ class VideoWare extends GetxController {
   Rx<FeedData> feedData = FeedData().obs;
 
   RxList<FeedPost> feedPosts = <FeedPost>[].obs;
-    RxList<FeedPost> feedPostsAudio = <FeedPost>[].obs;
+  RxList<FeedPost> feedPostsAudio = <FeedPost>[].obs;
 
   RxList<VideoModel> videoController = <VideoModel>[].obs;
 
@@ -85,7 +86,7 @@ class VideoWare extends GetxController {
     feedPosts.insert(0, data);
   }
 
-    Future<void> addAudioToList(FeedPost data) async {
+  Future<void> addAudioToList(FeedPost data) async {
     feedPostsAudio.removeWhere((element) => element.id == data.id);
     feedPostsAudio.insert(0, data);
   }
@@ -162,7 +163,6 @@ class VideoWare extends GetxController {
       }
     }
   }
-
 
   Future getAudioPostFromApi(List<dynamic> data) async {
     log("getting video posts");
@@ -473,6 +473,7 @@ class VideoWareHome extends GetxController {
   RxList<FeedPost> feedPostsAudio = <FeedPost>[].obs;
 
   RxList<VideoModel> videoController = <VideoModel>[].obs;
+  Rx<ApiVideoPlayerController>? controller;
 
   // Rx<ChewieController> chewieController = ChewieController(
   //         videoPlayerController:
@@ -486,6 +487,34 @@ class VideoWareHome extends GetxController {
       initSomeVideo(url, postId, index);
     }
     super.onInit();
+  }
+
+  Future<void> buildVideoOptions(vod) async {
+    // final token = apiToken.isEmpty ? null : apiToken;
+
+    final videoOptions =
+        VideoOptions(videoId: vod, type: VideoType.vod, token: "");
+
+    if (controller == null) {
+      controller!.value = ApiVideoPlayerController(
+          videoOptions: videoOptions,
+          autoplay: true,
+          onEnd: () {},
+          onReady: () {
+            log("READY!!!");
+          });
+    } else {
+      controller?.value.setVideoOptions(videoOptions);
+    }
+
+    await controller!.value.initialize();
+  }
+
+  Future<void> disVodController() async {
+    await controller!.value.dispose();
+
+    controller = null;
+    update();
   }
 
   void changeFirst(bool val) {
@@ -509,7 +538,7 @@ class VideoWareHome extends GetxController {
     feedPosts.insert(0, data);
   }
 
-   Future<void> addAudioToList(FeedPost data) async {
+  Future<void> addAudioToList(FeedPost data) async {
     feedPostsAudio.removeWhere((element) => element.id == data.id);
     feedPostsAudio.insert(0, data);
   }
@@ -900,5 +929,70 @@ class VideoWareHome extends GetxController {
     }
 
     //  }
+  }
+}
+
+class VodWare extends GetxController {
+  final dynamic url;
+
+  VodWare(
+    this.url,
+  );
+  static VodWare get instance {
+    return Get.find<VodWare>();
+  }
+
+  Rx<ApiVideoPlayerController>? controller = ApiVideoPlayerController(
+          videoOptions: VideoOptions(videoId: "", type: VideoType.vod))
+      .obs;
+
+  // Rx<ChewieController> chewieController = ChewieController(
+  //         videoPlayerController:
+  //             VideoPlayerController.networkUrl(Uri.parse('')))
+  //     .obs;
+
+  @override
+  void onInit() {
+    // TODO: implement onInit
+    buildVideoOptions(url);
+    super.onInit();
+  }
+
+  @override
+  void onClose() {
+    disVodController();
+    // TODO: implement onClose
+    super.onClose();
+  }
+
+  Future<void> buildVideoOptions(vod) async {
+    // final token = apiToken.isEmpty ? null : apiToken;
+
+    if (vod == null) {
+    } else {
+      final videoOptions =
+          VideoOptions(videoId: vod, type: VideoType.vod, token: "");
+
+      //  if (controller == null) {
+      controller!.value = ApiVideoPlayerController(
+          videoOptions: videoOptions,
+          autoplay: true,
+          onEnd: () {},
+          onReady: () {
+            log("READY!!!");
+          });
+      // } else {
+      //   controller?.value.setVideoOptions(videoOptions);
+      // }
+
+      await controller!.value.initialize();
+    }
+  }
+
+  Future<void> disVodController() async {
+    await controller!.value.dispose();
+
+    controller = null;
+    update();
   }
 }

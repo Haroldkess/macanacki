@@ -95,6 +95,57 @@ class PublicLoader extends StatelessWidget {
   }
 }
 
+class PublicProfileInfoExtra extends StatefulWidget {
+  final bool isMine;
+  const PublicProfileInfoExtra({super.key, required this.isMine});
+
+  @override
+  State<PublicProfileInfoExtra> createState() => _PublicProfileInfoExtraState();
+}
+
+class _PublicProfileInfoExtraState extends State<PublicProfileInfoExtra> {
+  @override
+  Widget build(BuildContext context) {
+    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
+
+    return Container(
+      //  height: height / 2,
+      width: width,
+      alignment: Alignment.topCenter,
+      decoration: BoxDecoration(
+          color: HexColor(backgroundColor),
+          shape: BoxShape.rectangle,
+          borderRadius: const BorderRadius.only(
+              bottomLeft: Radius.elliptical(250, 200),
+              bottomRight: Radius.elliptical(250, 200))),
+      child: const Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          SizedBox(
+            height: 50,
+          ),
+          PublicProfileImageAndNameExtra(),
+          PublicProfileFollowersStatisticsExtra(),
+          Padding(
+            padding: EdgeInsets.only(bottom: 20.0),
+            child: UserProfileActionsExtra(),
+          )
+        ],
+      ),
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //   ChatController.retrievChatController(context, false);
+    // });
+  }
+}
+
 class LoaderImageAndName extends StatelessWidget {
   const LoaderImageAndName({super.key});
 

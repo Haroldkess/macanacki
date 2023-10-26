@@ -4,11 +4,13 @@ import 'package:animate_do/animate_do.dart';
 import 'package:apivideo_player/apivideo_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chewie/chewie.dart';
+import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:just_audio_background/just_audio_background.dart';
 import 'package:macanacki/presentation/uiproviders/screen/tab_provider.dart';
 import 'package:macanacki/presentation/widgets/loader.dart';
 import 'package:preload_page_view/preload_page_view.dart';
@@ -18,8 +20,10 @@ import 'package:video_player/video_player.dart';
 
 import '../../../../model/feed_post_model.dart';
 import '../../../../services/controllers/action_controller.dart';
+import '../../../../services/controllers/url_launch_controller.dart';
 import '../../../../services/middleware/action_ware.dart';
 import '../../../../services/middleware/post_security.dart';
+import '../../../../services/middleware/user_profile_ware.dart';
 import '../../../../services/middleware/video/video_ware.dart';
 import '../../../allNavigation.dart';
 import '../../../constants/colors.dart';
@@ -29,6 +33,7 @@ import '../../../widgets/debug_emitter.dart';
 import '../../../widgets/feed_views/like_section.dart';
 import '../../../widgets/feed_views/new_action_design.dart';
 import '../../../widgets/text.dart';
+import '../../userprofile/user_profile_screen.dart';
 import '../test_api_video.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:just_audio/just_audio.dart';
@@ -168,7 +173,7 @@ class _FeedAudioHolderState extends State<FeedAudioHolder>
                   //   }
                   // });
 
-                  final List newList = [post, ...nextRandomVideo];
+                  final List newList = [post, ...nextRandomVideo].distinct();
                   return Container(
                     height: Get.height,
                     child: PageView.builder(
@@ -228,7 +233,7 @@ class _FeedAudioHolderState extends State<FeedAudioHolder>
                                   data: post,
                                   allVideos: allVideos,
                                   pageController: pageController2,
-                                  isHome: false,
+                                  isHome: widget.isHome,
                                   next: () {
                                     //   pageController2.\
                                     if (index < newList.length) {
@@ -418,7 +423,9 @@ class _AudioViewState extends State<AudioView> {
     // SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     //   statusBarColor: Colors.black,
     // ));
-    _init();
+    Future.delayed(Duration(seconds: 2), () {
+      _init();
+    });
   }
 
   Future<void> _init() async {
@@ -433,9 +440,34 @@ class _AudioViewState extends State<AudioView> {
     });
     // Try to load audio from a source and catch any errors.
     try {
+      // ConcatenatingAudioSource(children: [
+      //   ClippingAudioSource(
+      //     start: const Duration(seconds: 60),
+      //     end: const Duration(seconds: 90),
+      //     child: AudioSource.uri(Uri.parse(
+      //         "https://s3.amazonaws.com/scifri-episodes/scifri20181123-episode.mp3")),
+      //     tag: MediaItem(
+      //       id: '${_nextMediaId++}',
+      //       album: "Science Friday",
+      //       title: "A Salute To Head-Scratching Science (30 seconds)",
+      //       artUri: Uri.parse(
+      //           "https://media.wnyc.org/i/1400/1400/l/80/1/ScienceFriday_WNYCStudios_1400.jpg"),
+      //     ),
+      //   ),
+      // ]);
+
       // AAC example: https://dl.espressif.com/dl/audio/ff-16b-2c-44100hz.aac
       await _player.setAudioSource(LockCachingAudioSource(
-          Uri.parse(widget.data.media!.first.toString())));
+        Uri.parse(widget.data.media!.first.toString()),
+        tag: MediaItem(
+          // Specify a unique ID for each media item:
+          id: widget.data.id.toString(),
+          // Metadata to display in the notification:
+          album: widget.data.description ?? "",
+          title: widget.data.user!.username ?? "",
+          artUri: Uri.parse(widget.data.thumbnails!.first! ?? ""),
+        ),
+      ));
 
       _player.play();
       setState(() {});
@@ -450,6 +482,7 @@ class _AudioViewState extends State<AudioView> {
     // Release decoders and buffers back to the operating system making them
     // available for other apps to use.
     _player.dispose();
+    // _player.dispose();
     super.dispose();
   }
 
@@ -464,6 +497,7 @@ class _AudioViewState extends State<AudioView> {
               position, bufferedPosition, duration ?? Duration.zero));
   @override
   Widget build(BuildContext context) {
+    UserProfileWare user = Provider.of<UserProfileWare>(context, listen: false);
     return Stack(
       children: [
         Container(
@@ -519,14 +553,48 @@ class _AudioViewState extends State<AudioView> {
                         fontWeight: FontWeight.w800,
                         size: 16,
                       ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      AppText(
-                        text: widget.data.user!.username ?? "",
-                        color: Colors.grey,
-                        fontWeight: FontWeight.w800,
-                        size: 13,
+                      // SizedBox(
+                      //   height: 10,
+                      // ),
+                      TextButton(
+                        onPressed: () async {
+                          if (widget.isHome == false) {
+                            return;
+                          }
+                          _player.pause();
+                          if (widget.data.user!.username! ==
+                              user.userProfileModel.username) {
+                            // action.pageController!.animateToPage(
+                            //   4,
+                            //   duration: const Duration(milliseconds: 1),
+                            //   curve: Curves.easeIn,
+                            // );
+                          } else {
+                            if (widget.isHome == false) {
+                              return;
+                            }
+                            // try {
+                            //   WidgetsBinding.instance
+                            //       .addPostFrameCallback((timeStamp) {
+                            //     VideoWareHome.instance.pauseAnyVideo();
+                            //   });
+                            // } catch (e) {}
+                            PageRouting.pushToPage(
+                                context,
+                                UsersProfile(
+                                  username: widget.data.user!.username!,
+                                ));
+                          }
+                        },
+                        style: TextButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                        ),
+                        child: AppText(
+                          text: widget.data.user!.username ?? "",
+                          color: Colors.grey,
+                          fontWeight: FontWeight.w800,
+                          size: 13,
+                        ),
                       ),
                       SizedBox(
                         height: 30,
@@ -572,32 +640,104 @@ class _AudioViewState extends State<AudioView> {
             ),
           ),
         ),
-        widget.isHome
-            ? SizedBox.shrink()
-            : FadeInRight(
-                duration: Duration(seconds: 1),
-                animate: true,
+        FadeInRight(
+          duration: Duration(seconds: 1),
+          animate: true,
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: LikeSection(
+              page: widget.page,
+              data: widget.data,
+              isAudio: true,
+              isHome: widget.isHome,
+              userName: widget.data.user!.username,
+              showComment: true,
+            ),
+          ),
+        ),
+        Align(
+          alignment: Alignment.bottomLeft,
+          child: VideoUser(
+            page: widget.page,
+            data: widget.data,
+            isAudio: true,
+            player: _player,
+            media: [],
+            isHome: true,
+          ),
+        ),
+        widget.data.btnLink != null && widget.data.button != null
+            ? Positioned(
+                bottom: .1,
                 child: Align(
-                  alignment: Alignment.centerRight,
-                  child: LikeSection(
-                    page: widget.page,
-                    data: widget.data,
+                  alignment: Alignment.bottomCenter,
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: Get.width,
+                        child: InkWell(
+                          onTap: () async {
+                            if (widget.data.button == "Call Now") {
+                              await UrlLaunchController.makePhoneCall(
+                                  widget.data.btnLink!);
+                            }
+                            if (widget.data.button == "Whatsapp") {
+                              //   print(widget.data.btnLink!);
+
+                              if (widget.data.btnLink!
+                                  .contains("https://wa.me/https://")) {
+                                var start = widget.data.btnLink!
+                                    .split("https://wa.me/https://");
+
+                                String newVal =
+                                    "https://${start.last}".toString();
+                                emitter(newVal);
+                                await UrlLaunchController.launchWebViewOrVC(
+                                    Uri.parse(newVal));
+                              } else {
+                                await UrlLaunchController.launchWebViewOrVC(
+                                    Uri.parse(widget.data.btnLink!));
+                              }
+                            } else {
+                              //  print(widget.data.btnLink);
+                              if (widget.data.button == "Spotify") {
+                                await UrlLaunchController.launchWebViewOrVC(
+                                    Uri.parse(widget.data.btnLink!));
+                              } else {
+                                await UrlLaunchController.launchInWebViewOrVC(
+                                    Uri.parse(widget.data.btnLink!));
+                              }
+                            }
+                          },
+                          child: Container(
+                            height: 35,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.zero,
+                                color: HexColor("#FFFFFF")),
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  AppText(
+                                    text: widget.data.button ?? "",
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w500,
+                                    size: 12,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-        widget.isHome
-            ? SizedBox.shrink()
-            : Align(
-                alignment: Alignment.bottomLeft,
-                child: VideoUser(
-                  page: widget.page,
-                  data: widget.data,
-                  isAudio: true,
-                  player: _player,
-                  media: [],
-                  isHome: true,
-                ),
-              ),
+              )
+            : const SizedBox.shrink(),
       ],
     );
   }
@@ -685,7 +825,10 @@ class ControlButtons extends StatelessWidget {
                 decoration: BoxDecoration(
                     color: HexColor(primaryColor), shape: BoxShape.circle),
                 child: IconButton(
-                  icon: const Icon(Icons.replay),
+                  icon: const Icon(
+                    Icons.replay,
+                    color: Colors.white,
+                  ),
                   iconSize: 30.0,
                   onPressed: () => player.seek(Duration.zero),
                 ),

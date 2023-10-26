@@ -13,6 +13,7 @@ import '../../presentation/screens/onboarding/splash_screen.dart';
 import '../../presentation/widgets/debug_emitter.dart';
 import '../../presentation/widgets/screen_loader.dart';
 import '../middleware/action_ware.dart';
+import '../middleware/extra_profile_ware.dart';
 import '../temps/temps_id.dart';
 
 class UserProfileController {
@@ -73,6 +74,28 @@ class UserProfileController {
     ware.isLoading2(false);
   }
 
+  static Future<void> retrievPublicProfileExtraController(
+      BuildContext context, String username) async {
+    ExtraProfileWare ware =
+        Provider.of<ExtraProfileWare>(context, listen: false);
+    ware.resetPublicUser();
+
+    ware.isLoading2(true);
+
+    bool isDone = await ware.getPublicUserProfileFromApi(username).whenComplete(
+        () => emitter("everything from api and provider is done"));
+
+    if (isDone) {
+      ware.isLoading2(false);
+    } else {
+      ware.isLoading2(false);
+
+      // ignore: use_build_context_synchronously
+      showToast2(context, "An error occured", isError: true);
+    }
+    ware.isLoading2(false);
+  }
+
   static Future deleteUserProfile(context) async {
     UserProfileWare ware = Provider.of<UserProfileWare>(context, listen: false);
     SharedPreferences pref = await SharedPreferences.getInstance();
@@ -109,8 +132,8 @@ class UserProfileController {
       } else {
         try {
           Phoenix.rebirth(context);
-          
-               Restart.restartApp();
+
+          Restart.restartApp();
         } catch (e) {
           PageRouting.removeAllToPage(context, const Splash());
           Restart.restartApp();

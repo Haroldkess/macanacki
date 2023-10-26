@@ -26,11 +26,13 @@ class GridViewItems extends StatefulWidget {
   final FeedPost data;
   final int index;
   final bool isAudio;
+  final int isHome;
   const GridViewItems(
       {super.key,
       required this.data,
       required this.index,
-      required this.isAudio});
+      required this.isAudio,
+      required this.isHome});
 
   @override
   State<GridViewItems> createState() => _GridViewItemsState();
@@ -91,6 +93,7 @@ class _GridViewItemsState extends State<GridViewItems> {
             UserProfileFeed(
               index: widget.index,
               isAudio: widget.isAudio,
+              isHome: widget.isHome,
             ));
       },
       child: Container(
@@ -139,11 +142,13 @@ class MyGridViewItems extends StatefulWidget {
   final ProfileFeedDatum data;
   final int index;
   final bool isAudio;
+  final int isHome;
   const MyGridViewItems(
       {super.key,
       required this.data,
       required this.index,
-      required this.isAudio});
+      required this.isAudio,
+      required this.isHome});
 
   @override
   State<MyGridViewItems> createState() => _MyGridViewItemsState();
@@ -209,6 +214,7 @@ class _MyGridViewItemsState extends State<MyGridViewItems> {
             UserProfileFeed(
               index: widget.index,
               isAudio: widget.isAudio,
+              isHome: widget.isHome,
             ));
       },
       child: Container(
@@ -217,7 +223,8 @@ class _MyGridViewItemsState extends State<MyGridViewItems> {
             image: DecorationImage(
                 fit: BoxFit.cover,
                 image: widget.data.media!.first.contains(".mp4") ||
-                        widget.data.media!.first.contains(".mp3")
+                        widget.data.media!.first.contains(".mp3") ||
+                        !widget.data.media!.first.contains("http")
                     ? CachedNetworkImageProvider(
                         widget.data.thumbnails!.first ?? "")
                     : CachedNetworkImageProvider(widget.data.media!.first)
@@ -234,8 +241,12 @@ class _MyGridViewItemsState extends State<MyGridViewItems> {
                 : widget.data.media!.first.contains(".mp3")
                     ? Align(
                         alignment: Alignment.center,
-                        child: Lottie.asset("assets/icon/mov.json",
-                            height: 70, width: 70),
+                        child: SvgPicture.asset(
+                          "assets/icon/aud.svg",
+                          height: 25,
+                          width: 25,
+                          color: Colors.white,
+                        ),
                       )
                     : const SizedBox.shrink(),
             Positioned(

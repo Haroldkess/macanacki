@@ -100,11 +100,13 @@ class ProfilePostGrid extends StatefulWidget {
       required this.ware,
       required this.parentController,
       this.tabKey,
-      this.tabName});
+      this.tabName,
+      required this.isHome});
   final FeedPostWare ware;
   final ScrollController parentController;
   final Key? tabKey;
   final String? tabName;
+  final int isHome;
 
   @override
   State<ProfilePostGrid> createState() => _ProfilePostGridState();
@@ -231,6 +233,7 @@ class _ProfilePostGridState extends State<ProfilePostGrid>
                   data: post,
                   index: index,
                   isAudio: false,
+                  isHome: widget.isHome,
                 );
               },
               newPageProgressIndicatorBuilder: (context) {
@@ -297,11 +300,13 @@ class ProfilePostAudioGrid extends StatefulWidget {
       required this.ware,
       required this.parentController,
       this.tabKey,
-      this.tabName});
+      this.tabName,
+      required this.isHome});
   final FeedPostWare ware;
   final ScrollController parentController;
   final Key? tabKey;
   final String? tabName;
+  final int isHome;
 
   @override
   State<ProfilePostAudioGrid> createState() => _ProfilePostAudioGridState();
@@ -424,6 +429,7 @@ class _ProfilePostAudioGridState extends State<ProfilePostAudioGrid>
                   data: post,
                   index: index,
                   isAudio: true,
+                  isHome: widget.isHome,
                 );
               },
               newPageProgressIndicatorBuilder: (context) {
@@ -486,17 +492,20 @@ class _ProfilePostAudioGridState extends State<ProfilePostAudioGrid>
 }
 
 class PublicProfilePostGrid extends StatefulWidget {
-  const PublicProfilePostGrid(
+  PublicProfilePostGrid(
       {super.key,
       required this.ware,
       required this.parentController,
       this.tabKey,
-      this.tabName, required this.username});
+      this.tabName,
+      required this.username,
+      required this.isHome});
   final UserProfileWare ware;
   final ScrollController parentController;
   final Key? tabKey;
   final String? tabName;
   final String? username;
+  int isHome;
 
   @override
   State<PublicProfilePostGrid> createState() => _PublicProfilePostGridState();
@@ -563,7 +572,7 @@ class _PublicProfilePostGridState extends State<PublicProfilePostGrid>
   Widget build(BuildContext context) {
     UserProfileWare stream = context.watch<UserProfileWare>();
     return Builder(builder: (BuildContext context) {
-        return NotificationListener<ScrollNotification>(
+      return NotificationListener<ScrollNotification>(
         onNotification: (scrollNotification) {
           final metrics = scrollNotification.metrics;
           if (metrics.atEdge) {
@@ -594,87 +603,87 @@ class _PublicProfilePostGridState extends State<PublicProfilePostGrid>
           }
           return true;
         },
-          child: ObxValue((physc) {
-              return PagedGridView<int, PublicUserPost>(
-                shrinkWrap: true,
-                pagingController: stream.pagingController,
-                  physics: physc.value == true
+        child: ObxValue((physc) {
+          return PagedGridView<int, PublicUserPost>(
+            shrinkWrap: true,
+            pagingController: stream.pagingController,
+            physics: physc.value == true
                 ? NeverScrollableScrollPhysics()
                 : ScrollPhysics(),
-                scrollController: _scrollController,
-                //physics: const NeverScrollableScrollPhysics(),
-                primary: false,
-                padding: const EdgeInsets.only(top: 0),
-                
-                // itemCount: stream.publicUserProfileModel.posts == null
-                //     ? 0
-                //     : stream.publicUserProfileModel.posts!.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    childAspectRatio: 200 / 300,
-                    crossAxisSpacing: 1,
-                    mainAxisSpacing: 1),
-                builderDelegate: PagedChildBuilderDelegate<PublicUserPost>(
-                  itemBuilder: (context, item, index) {
-                    PublicUserPost post = item;
-                    return PublicGridViewItems(
-                      data: post,
-                      index: index,
-                      posts: widget.ware.pubPost,
-                    );
-                  },
-                  newPageProgressIndicatorBuilder: (context) {
-                    return Center(child: Loader(color: HexColor(primaryColor)));
-                  },
-                  firstPageProgressIndicatorBuilder: (context) {
-                    return const ProfilePostGridLoader();
-                  },
-                  noItemsFoundIndicatorBuilder: (_) => const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox()
-                      // SvgPicture.asset(
-                      //   "assets/icon/gallery.svg",
-                      //   height: 60,
-                      //   width: 60,
-                      // ),
-                      // SizedBox(
-                      //   height: 10,
-                      // ),
-                      // AppText(text: "The list is currently empty")
-                    ],
-                  ),
-                ),
-              );
-            }, scrolNotifyPublic.instance.tabOne
-          ),
-        );
-      }
-    );
+            scrollController: _scrollController,
+            //physics: const NeverScrollableScrollPhysics(),
+            primary: false,
+            padding: const EdgeInsets.only(top: 0),
+
+            // itemCount: stream.publicUserProfileModel.posts == null
+            //     ? 0
+            //     : stream.publicUserProfileModel.posts!.length,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                childAspectRatio: 200 / 300,
+                crossAxisSpacing: 1,
+                mainAxisSpacing: 1),
+            builderDelegate: PagedChildBuilderDelegate<PublicUserPost>(
+              itemBuilder: (context, item, index) {
+                PublicUserPost post = item;
+                return PublicGridViewItems(
+                  data: post,
+                  index: index,
+                  posts: widget.ware.pubPost,
+                  isHome: widget.isHome,
+                );
+              },
+              newPageProgressIndicatorBuilder: (context) {
+                return Center(child: Loader(color: HexColor(primaryColor)));
+              },
+              firstPageProgressIndicatorBuilder: (context) {
+                return const ProfilePostGridLoader();
+              },
+              noItemsFoundIndicatorBuilder: (_) => const Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox()
+                  // SvgPicture.asset(
+                  //   "assets/icon/gallery.svg",
+                  //   height: 60,
+                  //   width: 60,
+                  // ),
+                  // SizedBox(
+                  //   height: 10,
+                  // ),
+                  // AppText(text: "The list is currently empty")
+                ],
+              ),
+            ),
+          );
+        }, scrolNotifyPublic.instance.tabOne),
+      );
+    });
   }
 
   @override
   bool get wantKeepAlive => true;
 }
 
-
-
 class PublicProfilePostAudioGrid extends StatefulWidget {
-  const PublicProfilePostAudioGrid(
+  PublicProfilePostAudioGrid(
       {super.key,
       required this.ware,
       required this.parentController,
       this.tabKey,
-      this.tabName, required this.username});
+      this.tabName,
+      required this.username,
+      required this.isHome});
   final UserProfileWare ware;
   final ScrollController parentController;
   final Key? tabKey;
   final String? tabName;
   final String? username;
-
+  int isHome;
   @override
-  State<PublicProfilePostAudioGrid> createState() => _PublicProfilePostAudioGridState();
+  State<PublicProfilePostAudioGrid> createState() =>
+      _PublicProfilePostAudioGridState();
 }
 
 //////////////NEEEEEEEEEE TTTTTTT
@@ -738,7 +747,7 @@ class _PublicProfilePostAudioGridState extends State<PublicProfilePostAudioGrid>
   Widget build(BuildContext context) {
     UserProfileWare stream = context.watch<UserProfileWare>();
     return Builder(builder: (BuildContext context) {
-        return NotificationListener<ScrollNotification>(
+      return NotificationListener<ScrollNotification>(
         onNotification: (scrollNotification) {
           final metrics = scrollNotification.metrics;
           if (metrics.atEdge) {
@@ -769,68 +778,65 @@ class _PublicProfilePostAudioGridState extends State<PublicProfilePostAudioGrid>
           }
           return true;
         },
-          child: ObxValue((physc) {
-              return PagedGridView<int, PublicUserPost>(
-                shrinkWrap: true,
-                pagingController: stream.pagingController2,
-                  physics: physc.value == true
+        child: ObxValue((physc) {
+          return PagedGridView<int, PublicUserPost>(
+            shrinkWrap: true,
+            pagingController: stream.pagingController2,
+            physics: physc.value == true
                 ? NeverScrollableScrollPhysics()
                 : ScrollPhysics(),
-                scrollController: _scrollController,
-                //physics: const NeverScrollableScrollPhysics(),
-                primary: false,
-                padding: const EdgeInsets.only(top: 0),
-                
-                // itemCount: stream.publicUserProfileModel.posts == null
-                //     ? 0
-                //     : stream.publicUserProfileModel.posts!.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    childAspectRatio: 200 / 300,
-                    crossAxisSpacing: 1,
-                    mainAxisSpacing: 1),
-                builderDelegate: PagedChildBuilderDelegate<PublicUserPost>(
-                  itemBuilder: (context, item, index) {
-                    PublicUserPost post = item;
-                    return PublicGridViewItems(
-                      data: post,
-                      index: index,
-                      posts: widget.ware.pubPostAudio,
-                    );
-                  },
-                  newPageProgressIndicatorBuilder: (context) {
-                    return Center(child: Loader(color: HexColor(primaryColor)));
-                  },
-                  firstPageProgressIndicatorBuilder: (context) {
-                    return const ProfilePostGridLoader();
-                  },
-                  noItemsFoundIndicatorBuilder: (_) => const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox()
-                      // SvgPicture.asset(
-                      //   "assets/icon/gallery.svg",
-                      //   height: 60,
-                      //   width: 60,
-                      // ),
-                      // SizedBox(
-                      //   height: 10,
-                      // ),
-                      // AppText(text: "The list is currently empty")
-                    ],
-                  ),
-                ),
-              );
-            }, scrolNotifyPublic.instance.tabTwo
-          ),
-        );
-      }
-    );
+            scrollController: _scrollController,
+            //physics: const NeverScrollableScrollPhysics(),
+            primary: false,
+            padding: const EdgeInsets.only(top: 0),
+
+            // itemCount: stream.publicUserProfileModel.posts == null
+            //     ? 0
+            //     : stream.publicUserProfileModel.posts!.length,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                childAspectRatio: 200 / 300,
+                crossAxisSpacing: 1,
+                mainAxisSpacing: 1),
+            builderDelegate: PagedChildBuilderDelegate<PublicUserPost>(
+              itemBuilder: (context, item, index) {
+                PublicUserPost post = item;
+                return PublicGridViewItems(
+                  data: post,
+                  index: index,
+                  posts: widget.ware.pubPostAudio,
+                  isHome: widget.isHome,
+                );
+              },
+              newPageProgressIndicatorBuilder: (context) {
+                return Center(child: Loader(color: HexColor(primaryColor)));
+              },
+              firstPageProgressIndicatorBuilder: (context) {
+                return const ProfilePostGridLoader();
+              },
+              noItemsFoundIndicatorBuilder: (_) => const Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox()
+                  // SvgPicture.asset(
+                  //   "assets/icon/gallery.svg",
+                  //   height: 60,
+                  //   width: 60,
+                  // ),
+                  // SizedBox(
+                  //   height: 10,
+                  // ),
+                  // AppText(text: "The list is currently empty")
+                ],
+              ),
+            ),
+          );
+        }, scrolNotifyPublic.instance.tabTwo),
+      );
+    });
   }
 
   @override
   bool get wantKeepAlive => true;
 }
-
-

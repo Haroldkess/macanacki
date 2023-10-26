@@ -85,7 +85,9 @@ class SinglePost extends StatelessWidget {
     //     PostSecurity.instance.toggleSecure(true);
     //   }
     // });
-    return !media.contains("https") || media.contains(".mp3")
+    return media.contains(".mp4") ||
+            media.contains(".mp3") ||
+            !media.contains("https")
         ? Stack(
             alignment: Alignment.center,
             children: [
@@ -159,23 +161,17 @@ class SinglePost extends StatelessWidget {
                       Container(
                           height: 350,
                           width: double.infinity,
-                          child: thumbLink == null
-                              ? Container(
-                                  height: 350,
-                                  width: double.infinity,
-                                  color: Colors.black,
-                                )
-                              : Container(
-                                  height: 350,
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                      color: Colors.black,
-                                      image: DecorationImage(
-                                        image: CachedNetworkImageProvider(
-                                            thumbLink!),
-                                        fit: BoxFit.cover,
-                                      )),
+                          child: Container(
+                            height: 350,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                                color: Colors.black,
+                                image: DecorationImage(
+                                  image: CachedNetworkImageProvider(
+                                      data.thumbnails!.first ?? ""),
+                                  fit: BoxFit.cover,
                                 )),
+                          )),
                       PlayAnimationBuilder<double>(
                           tween: Tween(begin: 10.0, end: 50.0), // set tween
                           duration: const Duration(
@@ -321,20 +317,21 @@ class UserSinglePost extends StatelessWidget {
   int postId;
   final FeedPost data;
   String? vod;
-  UserSinglePost({
-    super.key,
-    required this.media,
-    required this.vod,
-    // required this.controller,
-    required this.shouldPlay,
-    required this.constraints,
-    required this.isHome,
-    required this.thumbLink,
-    required this.page,
-    required this.isInView,
-    required this.postId,
-    required this.data,
-  });
+  bool showComment;
+  UserSinglePost(
+      {super.key,
+      required this.media,
+      required this.vod,
+      // required this.controller,
+      required this.shouldPlay,
+      required this.constraints,
+      required this.isHome,
+      required this.thumbLink,
+      required this.page,
+      required this.isInView,
+      required this.postId,
+      required this.data,
+      required this.showComment});
 
   @override
   Widget build(BuildContext context) {
@@ -364,7 +361,9 @@ class UserSinglePost extends StatelessWidget {
     final controlsBarStyle = ControlsBarStyle(
       mainControlButtonStyle: buttonStyle,
     );
-    return !media.contains("https") || media.contains(".mp3")
+    return media.contains(".mp4") ||
+            media.contains(".mp3") ||
+            !media.contains("https")
         ? Stack(
             alignment: Alignment.center,
             children: [
@@ -410,6 +409,7 @@ class UserSinglePost extends StatelessWidget {
                                 isInView: isInView,
                                 postId: postId,
                                 data: data,
+                                showComment: showComment,
                               ),
                             );
                           });
@@ -443,6 +443,7 @@ class UserSinglePost extends StatelessWidget {
                                 isInView: isInView,
                                 postId: postId,
                                 data: data,
+                                showComment: showComment,
                               ),
                             );
                           });

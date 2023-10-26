@@ -5,6 +5,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/parser.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexagon/hexagon.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -23,13 +24,16 @@ import 'package:macanacki/services/middleware/create_post_ware.dart';
 import 'package:numeral/numeral.dart';
 import 'package:provider/provider.dart';
 
+import '../../services/middleware/extra_profile_ware.dart';
 import '../../services/middleware/user_profile_ware.dart';
 import '../allNavigation.dart';
+import '../screens/userprofile/extra_profile.dart';
 import '../screens/userprofile/user_profile_screen.dart';
 import '../uiproviders/screen/tab_provider.dart';
 import 'hexagon_avatar.dart';
 
-commentModal(BuildContext context, int id, String page) async {
+commentModal(BuildContext context, int id, String page, bool isHome,
+    [dynamic com]) async {
   var height = MediaQuery.of(context).size.height;
   var width = MediaQuery.of(context).size.width;
   var size = MediaQuery.of(context).size;
@@ -111,6 +115,8 @@ commentModal(BuildContext context, int id, String page) async {
                                                         element.postId == id)
                                                     .toList()[index],
                                                 id: id,
+                                                com: com,
+                                                isHome: isHome,
                                               );
                                             })),
                                     // Column(
@@ -352,7 +358,14 @@ class _CommentFormState extends State<CommentForm> {
 class CommentTile extends StatelessWidget {
   dynamic e;
   int id;
-  CommentTile({super.key, required this.e, required this.id});
+  dynamic com;
+  bool isHome;
+  CommentTile(
+      {super.key,
+      required this.e,
+      required this.id,
+      this.com,
+      required this.isHome});
 
   @override
   Widget build(BuildContext context) {
@@ -373,6 +386,8 @@ class CommentTile extends StatelessWidget {
                 children: [
                   InkWell(
                     onTap: () async {
+                      StoreComment comment =
+                          Provider.of<StoreComment>(context, listen: false);
                       UserProfileWare user =
                           Provider.of<UserProfileWare>(context, listen: false);
                       TabProvider action =
@@ -401,15 +416,26 @@ class CommentTile extends StatelessWidget {
                           }
                         }
                       }
-
+                      Get.put(ProfilesController());
                       // widget.controller!.pause();
 
                       if (e.username! != user.userProfileModel.username) {
-                        PageRouting.pushToPage(
-                            context,
-                            UsersProfile(
-                              username: e.username!,
-                            ));
+                        if (isHome == false) {
+                          PageRouting.popToPage(context);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      UsersProfile(username: e.username!)));
+                        } else {
+                          PageRouting.popToPage(context);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      ExtraProfile(username: e.username!)));
+                        }
+
                         // action.changeIndex(4);
                         // action.pageController!.animateToPage(
                         //   4,

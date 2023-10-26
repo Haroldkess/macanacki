@@ -19,8 +19,12 @@ import '../../../../widgets/user_post_views.dart';
 class PublicUserProfileFeed extends StatefulWidget {
   final int index;
   final List<PublicUserPost> data;
+  final int isHome;
   const PublicUserProfileFeed(
-      {super.key, required this.index, required this.data});
+      {super.key,
+      required this.index,
+      required this.data,
+      required this.isHome});
 
   @override
   State<PublicUserProfileFeed> createState() => _PublicUserProfileFeedState();
@@ -57,7 +61,7 @@ class _PublicUserProfileFeedState extends State<PublicUserProfileFeed> {
               controller: controller,
               scrollDirection: Axis.vertical,
               itemBuilder: ((context, index) {
-                final PublicUserPost post = widget.data[index];
+                PublicUserPost post = widget.data[index];
 
                 List<Comment> talks = [];
 
@@ -122,6 +126,7 @@ class _PublicUserProfileFeedState extends State<PublicUserProfileFeed> {
                   thumbails: post.thumbnails!,
                   index1: index,
                   allPost: widget.data,
+                  showComment: widget.isHome == 0 ? false : true,
                   // userId: stream.publicUserProfileModel.id!,
                 );
               }),

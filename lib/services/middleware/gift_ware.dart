@@ -447,6 +447,9 @@ class GiftWare extends GetxController {
                   if (element.contains('.mp4')) {
                     await SaveMediaController.saveNetworkVideo(
                         context, element);
+                  } else if (element.contains('.mp3')) {
+                    await SaveMediaController.saveNetworkAudio(
+                        context, element);
                   } else {
                     await SaveMediaController.saveNetworkImage(
                         context, element);
@@ -459,6 +462,9 @@ class GiftWare extends GetxController {
           } else {
             if (data.data!.media!.first.contains('.mp4')) {
               await SaveMediaController.saveNetworkVideo(
+                  context, data.data!.media!.first);
+            } else if (data.data!.media!.first.contains('.mp3')) {
+              await SaveMediaController.saveNetworkAudio(
                   context, data.data!.media!.first);
             } else {
               await SaveMediaController.saveNetworkImage(

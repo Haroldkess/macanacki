@@ -39,12 +39,14 @@ class NewDesignTest extends StatefulWidget {
   final List<String> media;
   ApiVideoPlayerController? controller;
   bool isHome;
+  bool showComment;
   NewDesignTest(
       {super.key,
       required this.isHome,
       required this.data,
       required this.page,
       required this.media,
+      required this.showComment,
       this.controller});
 
   @override
@@ -400,7 +402,12 @@ class _NewDesignTestState extends State<NewDesignTest> {
                               //     context, false, widget.data.comments!);
 
                               commentModal(
-                                  context, widget.data.id!, widget.page);
+                                context,
+                                widget.data.id!,
+                                widget.page,
+                                widget.showComment,
+                                widget.data.comments!,
+                              );
                             },
                             child: Padding(
                               padding: const EdgeInsets.only(right: 3.0),
@@ -775,320 +782,361 @@ class _VideoUserState extends State<VideoUser> {
       child: Stack(
         alignment: Alignment.bottomCenter,
         children: [
-          Container(
-            height: widget.isAudio == true
-                ? 60
-                : showMore
-                    ? height / 1.4
-                    : widget.data.user!.gender == "Business"
-                        ? 124
-                        : 124,
-            width: width,
-            decoration: BoxDecoration(
-              //color: Colors.amber
-              //  backgroundBlendMode: BlendMode.colorDodge,
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Colors.black.withOpacity(.0),
-                    Colors.black.withOpacity(.1),
-                    Colors.black.withOpacity(.3),
-                    Colors.black.withOpacity(.4),
-                    Colors.black.withOpacity(.6),
-                  ],
-                  stops: [
-                    0.0,
-                    0.1,
-                    0.3,
-                    0.8,
-                    0.9
-                  ]),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: FadeInRight(
-                duration: Duration(seconds: 1),
-                animate: true,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Container(
-                          //  color: Colors.amber,
-                          //475
-                          constraints: BoxConstraints(maxWidth: width * 0.75),
-                          child: Row(
+          widget.isAudio == true
+              ? SizedBox.shrink()
+              : Container(
+                  height: widget.isAudio == true
+                      ? 60
+                      : showMore
+                          ? height / 1.4
+                          : widget.data.user!.gender == "Business"
+                              ? 124
+                              : 124,
+                  width: width,
+                  decoration: BoxDecoration(
+                    //color: Colors.amber
+                    //  backgroundBlendMode: BlendMode.colorDodge,
+                    gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.black.withOpacity(.0),
+                          Colors.black.withOpacity(.1),
+                          Colors.black.withOpacity(.3),
+                          Colors.black.withOpacity(.4),
+                          Colors.black.withOpacity(.6),
+                        ],
+                        stops: [
+                          0.0,
+                          0.1,
+                          0.3,
+                          0.8,
+                          0.9
+                        ]),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: FadeInRight(
+                      duration: Duration(seconds: 1),
+                      animate: true,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              GestureDetector(
-                                onTap: () async {
-                                  TabProvider action = Provider.of<TabProvider>(
-                                      context,
-                                      listen: false);
-
-                                  if (widget.isAudio == true) {
-                                    if (widget.player != null) {
-                                      widget.player!.pause();
-                                    }
-                                  }
-
-                                  if (widget.isVideo == true) {
-                                    widget.controller!.pause();
-                                  }
-
-                                  if (widget.data.user!.username! ==
-                                      user.userProfileModel.username) {
-                                    // action.pageController!.animateToPage(
-                                    //   4,
-                                    //   duration: const Duration(milliseconds: 1),
-                                    //   curve: Curves.easeIn,
-                                    // );
-                                  } else {
-                                    if (widget.isHome == false) {
-                                      return;
-                                    }
-                                    // try {
-                                    //   WidgetsBinding.instance
-                                    //       .addPostFrameCallback((timeStamp) {
-                                    //     VideoWareHome.instance.pauseAnyVideo();
-                                    //   });
-                                    // } catch (e) {}
-                                    PageRouting.pushToPage(
-                                        context,
-                                        UsersProfile(
-                                          username: widget.data.user!.username!,
-                                        ));
-                                  }
-                                },
+                              Container(
+                                //  color: Colors.amber,
+                                //475
+                                constraints:
+                                    BoxConstraints(maxWidth: width * 0.75),
                                 child: Row(
                                   children: [
-                                    Stack(
-                                      alignment: Alignment.center,
-                                      children: [
-                                        // HexagonWidget.pointy(
-                                        //   width: w - 3,
-                                        //   elevation: 2.0,
-                                        //   color: Colors.white,
-                                        //   cornerRadius: 2.0,
-                                        //   child: AspectRatio(
-                                        //     aspectRatio: HexagonType.POINTY.ratio,
-                                        //     // child: Image.asset(
-                                        //     //   'assets/tram.jpg',
-                                        //     //   fit: BoxFit.fitWidth,
-                                        //     // ),
-                                        //   ),
-                                        // ),
-                                        // HexagonAvatar(
-                                        //   url: widget.data.user!.profilephoto!,
-                                        //   w: w,
-                                        // ),
-                                        DpAvatar(
-                                          url: widget.data.user!.profilephoto!,
-                                          w: w,
-                                        )
-                                      ],
+                                    GestureDetector(
+                                      onTap: () async {
+                                        TabProvider action =
+                                            Provider.of<TabProvider>(context,
+                                                listen: false);
+
+                                        if (widget.isAudio == true) {
+                                          if (widget.player != null) {
+                                            widget.player!.pause();
+                                          }
+                                        }
+
+                                        if (widget.isVideo == true) {
+                                          widget.controller!.pause();
+                                        }
+
+                                        if (widget.data.user!.username! ==
+                                            user.userProfileModel.username) {
+                                          // action.pageController!.animateToPage(
+                                          //   4,
+                                          //   duration: const Duration(milliseconds: 1),
+                                          //   curve: Curves.easeIn,
+                                          // );
+                                        } else {
+                                          if (widget.isHome == false) {
+                                            return;
+                                          }
+                                          // try {
+                                          //   WidgetsBinding.instance
+                                          //       .addPostFrameCallback((timeStamp) {
+                                          //     VideoWareHome.instance.pauseAnyVideo();
+                                          //   });
+                                          // } catch (e) {}
+                                          PageRouting.pushToPage(
+                                              context,
+                                              UsersProfile(
+                                                username:
+                                                    widget.data.user!.username!,
+                                              ));
+                                        }
+                                      },
+                                      child: Row(
+                                        children: [
+                                          Stack(
+                                            alignment: Alignment.center,
+                                            children: [
+                                              // HexagonWidget.pointy(
+                                              //   width: w - 3,
+                                              //   elevation: 2.0,
+                                              //   color: Colors.white,
+                                              //   cornerRadius: 2.0,
+                                              //   child: AspectRatio(
+                                              //     aspectRatio: HexagonType.POINTY.ratio,
+                                              //     // child: Image.asset(
+                                              //     //   'assets/tram.jpg',
+                                              //     //   fit: BoxFit.fitWidth,
+                                              //     // ),
+                                              //   ),
+                                              // ),
+                                              // HexagonAvatar(
+                                              //   url: widget.data.user!.profilephoto!,
+                                              //   w: w,
+                                              // ),
+                                              DpAvatar(
+                                                url: widget
+                                                    .data.user!.profilephoto!,
+                                                w: w,
+                                              )
+                                            ],
+                                          ),
+                                          const SizedBox(
+                                            width: 5.5,
+                                          ),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Container(
+                                                    constraints:
+                                                        const BoxConstraints(
+                                                      maxWidth: 139,
+                                                    ),
+                                                    //   color: Colors.amber,
+                                                    child: AppText(
+                                                      text: widget
+                                                          .data.user!.username!,
+                                                      size: 16,
+                                                      fontWeight:
+                                                          FontWeight.w700,
+                                                      maxLines: 1,
+                                                      overflow: widget
+                                                                  .data
+                                                                  .user!
+                                                                  .username!
+                                                                  .length >
+                                                              20
+                                                          ? TextOverflow
+                                                              .ellipsis
+                                                          : TextOverflow
+                                                              .ellipsis,
+                                                      color: HexColor(
+                                                          backgroundColor),
+                                                    ),
+                                                  ),
+                                                  widget.data.user!.verified ==
+                                                              1 &&
+                                                          widget.data.user!
+                                                                  .activePlan !=
+                                                              sub
+                                                      ? SvgPicture.asset(
+                                                          "assets/icon/badge.svg",
+                                                          height: 13,
+                                                          width: 13)
+                                                      : const SizedBox.shrink(),
+                                                  // SizedBox(
+                                                  //   width: 7,
+                                                  // ),
+                                                  // user.userProfileModel.username ==
+                                                  //         widget.data.user!.username!
+                                                  //     ? const SizedBox.shrink()
+                                                  //     : Row(
+                                                  //         children: [
+                                                  //           followButton(() async {
+                                                  //             followAction(
+                                                  //               context,
+                                                  //             );
+                                                  //           },
+                                                  //               stream.followIds.contains(
+                                                  //                       widget.data.user!
+                                                  //                           .id!)
+                                                  //                   ? "Following"
+                                                  //                   : "Follow"),
+                                                  //         ],
+                                                  //       ),
+                                                ],
+                                              ),
+                                              SizedBox(
+                                                height: 3,
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Container(
+                                                    constraints:
+                                                        const BoxConstraints(
+                                                      maxWidth: 139,
+                                                    ),
+                                                    //   color: Colors.amber,
+                                                    child: AppText(
+                                                      text:
+                                                          Operations.feedTimes(
+                                                              widget.data
+                                                                  .createdAt!),
+                                                      size: 12,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      maxLines: 1,
+                                                      color: HexColor(
+                                                              backgroundColor)
+                                                          .withOpacity(.6),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                     const SizedBox(
                                       width: 5.5,
                                     ),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Container(
-                                              constraints: const BoxConstraints(
-                                                maxWidth: 139,
-                                              ),
-                                              //   color: Colors.amber,
-                                              child: AppText(
-                                                text:
-                                                    widget.data.user!.username!,
-                                                size: 16,
-                                                fontWeight: FontWeight.w700,
-                                                maxLines: 1,
-                                                overflow: widget.data.user!
-                                                            .username!.length >
-                                                        20
-                                                    ? TextOverflow.ellipsis
-                                                    : TextOverflow.ellipsis,
-                                                color:
-                                                    HexColor(backgroundColor),
-                                              ),
-                                            ),
-                                            widget.data.user!.verified == 1 &&
-                                                    widget.data.user!
-                                                            .activePlan !=
-                                                        sub
-                                                ? SvgPicture.asset(
-                                                    "assets/icon/badge.svg",
-                                                    height: 13,
-                                                    width: 13)
-                                                : const SizedBox.shrink(),
-                                            // SizedBox(
-                                            //   width: 7,
-                                            // ),
-                                            // user.userProfileModel.username ==
-                                            //         widget.data.user!.username!
-                                            //     ? const SizedBox.shrink()
-                                            //     : Row(
-                                            //         children: [
-                                            //           followButton(() async {
-                                            //             followAction(
-                                            //               context,
-                                            //             );
-                                            //           },
-                                            //               stream.followIds.contains(
-                                            //                       widget.data.user!
-                                            //                           .id!)
-                                            //                   ? "Following"
-                                            //                   : "Follow"),
-                                            //         ],
-                                            //       ),
-                                          ],
-                                        ),
-                                        SizedBox(
-                                          height: 3,
-                                        ),
-                                        Row(
-                                          children: [
-                                            Container(
-                                              constraints: const BoxConstraints(
-                                                maxWidth: 139,
-                                              ),
-                                              //   color: Colors.amber,
-                                              child: AppText(
-                                                text: Operations.feedTimes(
-                                                    widget.data.createdAt!),
-                                                size: 12,
-                                                fontWeight: FontWeight.w400,
-                                                maxLines: 1,
-                                                color: HexColor(backgroundColor)
-                                                    .withOpacity(.6),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
                                   ],
                                 ),
                               ),
-                              const SizedBox(
-                                width: 5.5,
-                              ),
                             ],
                           ),
-                        ),
-                      ],
-                    ),
-                    widget.isAudio == true
-                        ? SizedBox.shrink()
-                        : Padding(
-                            padding: const EdgeInsets.only(left: 36, top: 10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  //   width: width * 0.5,
-                                  constraints:
-                                      BoxConstraints(maxWidth: width * 0.85),
-                                  child: SingleChildScrollView(
-                                    child: RichText(
-                                        textAlign: TextAlign.start,
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: showMore ? 50 : 2,
-                                        text: TextSpan(
-                                            text: widget.data.description!
-                                                            .length >=
-                                                        seeMoreVal &&
-                                                    showMore == false
-                                                ? widget.data.description!
-                                                    .substring(
-                                                        0, seeMoreVal - 3)
-                                                : widget.data.description!,
-                                            style: GoogleFonts.leagueSpartan(
-                                                textStyle: TextStyle(
-                                              fontWeight: FontWeight.w600,
-                                              color: HexColor(backgroundColor)
-                                                  .withOpacity(0.9),
-                                              decorationStyle:
-                                                  TextDecorationStyle.solid,
-                                              fontSize: 12,
-                                              fontFamily: '',
-                                            )),
-                                            recognizer: tapGestureRecognizer
-                                              ..onTap = () async {
-                                                //    print("object");
-                                                if (showMore) {
-                                                  setState(() {
-                                                    showMore = false;
-                                                  });
-                                                } else {
-                                                  setState(() {
-                                                    showMore = true;
-                                                  });
-                                                }
-                                              },
-                                            children: [
-                                              widget.data.description!.length <
-                                                      seeMoreVal
-                                                  ? const TextSpan(text: "")
-                                                  : TextSpan(
-                                                      text: showMore
-                                                          ? " less"
-                                                          : "...see more",
-                                                      style: TextStyle(
-                                                        fontSize: 14,
-                                                        color: HexColor(
-                                                            backgroundColor),
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                      ),
-                                                      recognizer:
-                                                          tapGestureRecognizer
-                                                            ..onTap = () async {
-                                                              //    print("object");
-                                                              if (showMore) {
-                                                                setState(() {
-                                                                  showMore =
-                                                                      false;
-                                                                });
-                                                              } else {
-                                                                setState(() {
-                                                                  showMore =
-                                                                      true;
-                                                                });
-                                                              }
-                                                            },
-                                                    )
-                                            ])),
+                          widget.isAudio == true
+                              ? SizedBox.shrink()
+                              : Padding(
+                                  padding:
+                                      const EdgeInsets.only(left: 36, top: 10),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        //   width: width * 0.5,
+                                        constraints: BoxConstraints(
+                                            maxWidth: width * 0.85),
+                                        child: SingleChildScrollView(
+                                          child: RichText(
+                                              textAlign: TextAlign.start,
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: showMore ? 50 : 2,
+                                              text: TextSpan(
+                                                  text: widget.data.description!
+                                                                  .length >=
+                                                              seeMoreVal &&
+                                                          showMore == false
+                                                      ? widget.data.description!
+                                                          .substring(
+                                                              0, seeMoreVal - 3)
+                                                      : widget
+                                                          .data.description!,
+                                                  style:
+                                                      GoogleFonts.leagueSpartan(
+                                                          textStyle: TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    color: HexColor(
+                                                            backgroundColor)
+                                                        .withOpacity(0.9),
+                                                    decorationStyle:
+                                                        TextDecorationStyle
+                                                            .solid,
+                                                    fontSize: 12,
+                                                    fontFamily: '',
+                                                  )),
+                                                  recognizer:
+                                                      tapGestureRecognizer
+                                                        ..onTap = () async {
+                                                          //    print("object");
+                                                          if (showMore) {
+                                                            setState(() {
+                                                              showMore = false;
+                                                            });
+                                                          } else {
+                                                            setState(() {
+                                                              showMore = true;
+                                                            });
+                                                          }
+                                                        },
+                                                  children: [
+                                                    widget.data.description!
+                                                                .length <
+                                                            seeMoreVal
+                                                        ? const TextSpan(
+                                                            text: "")
+                                                        : TextSpan(
+                                                            text: showMore
+                                                                ? " less"
+                                                                : "...see more",
+                                                            style: TextStyle(
+                                                              fontSize: 14,
+                                                              color: HexColor(
+                                                                  backgroundColor),
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                            ),
+                                                            recognizer:
+                                                                tapGestureRecognizer
+                                                                  ..onTap =
+                                                                      () async {
+                                                                    //    print("object");
+                                                                    if (showMore) {
+                                                                      setState(
+                                                                          () {
+                                                                        showMore =
+                                                                            false;
+                                                                      });
+                                                                    } else {
+                                                                      setState(
+                                                                          () {
+                                                                        showMore =
+                                                                            true;
+                                                                      });
+                                                                    }
+                                                                  },
+                                                          )
+                                                  ])),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ],
-                            ),
+                          SizedBox(
+                            height: widget.data.user!.gender == "Business"
+                                ? 10
+                                : 10,
                           ),
-                    SizedBox(
-                      height: widget.data.user!.gender == "Business" ? 10 : 10,
+                          SizedBox(
+                            height: widget.data.btnLink != null &&
+                                    widget.data.button != null
+                                ? 40
+                                : 10,
+                          ),
+                        ],
+                      ),
                     ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
-          ),
           widget.isAudio == true || widget.isVideo == true
               ? Align(
                   alignment: Alignment.bottomRight,
                   child: Padding(
-                    padding: const EdgeInsets.only(right: 10, bottom: 30),
+                    padding: EdgeInsets.only(
+                        right: 10,
+                        bottom: widget.data.btnLink != null &&
+                                widget.data.button != null
+                            ? 50
+                            : 30),
                     child: Stack(
                       alignment: Alignment.bottomRight,
                       children: [

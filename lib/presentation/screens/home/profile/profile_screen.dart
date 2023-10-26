@@ -527,12 +527,14 @@ class _ProfileScreenState extends State<ProfileScreen>
                             parentController: _controller,
                             tabKey: Key('Tab${entry.key}'),
                             tabName: entry.value,
+                            isHome: 1,
                           )
                         : ProfilePostAudioGrid(
                             ware: stream,
                             parentController: _controller,
                             tabKey: Key('Tab${entry.key}'),
                             tabName: entry.value,
+                            isHome: 1,
                           );
                   }).toList(),
                 ),

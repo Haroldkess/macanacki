@@ -107,7 +107,7 @@ class _PromoteScreenState extends State<PromoteScreen> {
                           //Optional. Shows phone code before the country name.
                           showPhoneCode: false,
                           onSelect: (Country country) {
-                            print('Select country: ${country.name}');
+                            // print('Select country: ${country.name}');
                             setState(() {
                               choosenCountry = country.name;
                             });
@@ -126,7 +126,8 @@ class _PromoteScreenState extends State<PromoteScreen> {
                               prefixIcon: const Icon(Icons.search),
                               border: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                  color: const Color(0xFF8C98A8).withOpacity(0.2),
+                                  color:
+                                      const Color(0xFF8C98A8).withOpacity(0.2),
                                 ),
                               ),
                             ),
@@ -177,11 +178,20 @@ class _PromoteScreenState extends State<PromoteScreen> {
                                       height: 70,
                                       decoration: BoxDecoration(
                                           color: Colors.black,
-                                          borderRadius: BorderRadius.circular(8),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
                                           image: DecorationImage(
                                             image: CachedNetworkImageProvider(
                                               post!.media!.first
-                                                  .replaceAll('\\', '/'),
+                                                          .contains(".mp4") ||
+                                                      post!.media!.first
+                                                          .contains(".mp3") ||
+                                                      !post!.media!.first
+                                                          .contains("http")
+                                                  ? post!.thumbnails!.first
+                                                      .replaceAll('\\', '/')
+                                                  : post!.media!.first
+                                                      .replaceAll('\\', '/'),
                                             ),
                                             fit: BoxFit.fill,
                                           )),
@@ -195,8 +205,9 @@ class _PromoteScreenState extends State<PromoteScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     AppText(
-                                      text:
-                                          post == null ? '' : post!.description!,
+                                      text: post == null
+                                          ? ''
+                                          : post!.description!,
                                       fontWeight: FontWeight.w500,
                                       size: 13,
                                       color: HexColor("#797979"),
@@ -208,8 +219,10 @@ class _PromoteScreenState extends State<PromoteScreen> {
                       ProfileActionButton(
                         icon: "assets/icon/post.svg",
                         onClick: () async {
-                          var data =
-                              await selectPost(context, feed.profileFeedPosts);
+                          var data = await selectPost(context, [
+                            ...feed.profileFeedPosts,
+                            ...feed.profileFeedPostsAudio
+                          ]);
                           if (data != null) {
                             setState(() {
                               post = data;
@@ -255,7 +268,8 @@ class _PromoteScreenState extends State<PromoteScreen> {
                                   textStyle: TextStyle(
                                       fontWeight: FontWeight.w400,
                                       color: HexColor(darkColor),
-                                      decorationStyle: TextDecorationStyle.solid,
+                                      decorationStyle:
+                                          TextDecorationStyle.solid,
                                       fontSize: 12)),
                               children: [
                                 TextSpan(
@@ -270,7 +284,8 @@ class _PromoteScreenState extends State<PromoteScreen> {
                                   recognizer: tapGestureRecognizer
                                     ..onTap = () async {
                                       await UrlLaunchController
-                                          .launchInWebViewOrVC(Uri.parse(terms));
+                                          .launchInWebViewOrVC(
+                                              Uri.parse(terms));
                                     },
                                 ),
                                 TextSpan(
@@ -295,7 +310,8 @@ class _PromoteScreenState extends State<PromoteScreen> {
                                   recognizer: tapGestureRecognizer
                                     ..onTap = () async {
                                       await UrlLaunchController
-                                          .launchInWebViewOrVC(Uri.parse(terms));
+                                          .launchInWebViewOrVC(
+                                              Uri.parse(terms));
                                     },
                                 )
                               ]),

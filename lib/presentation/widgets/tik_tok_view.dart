@@ -1,4 +1,3 @@
-
 import 'package:apivideo_player/apivideo_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
@@ -99,7 +98,6 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
       debugPrint("This is the url ${widget.data.media!.first}");
       if (widget.media.isEmpty) return;
       if (!widget.media.first.contains("https")) {
-      
       } else {
         Future.delayed(const Duration(seconds: 2))
             .whenComplete(() => ViewController.handleView(widget.data.id!));
@@ -131,16 +129,14 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
   void dispose() {
     super.dispose();
     controller.dispose();
-
-   
   }
 
- 
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     ActionWare action = Provider.of<ActionWare>(context, listen: false);
+    // print(widget.data.media!.first);
     return GestureDetector(
       onDoubleTap: () async {
         if (controller.value == 1) {
@@ -203,26 +199,21 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
                     ),
                   ),
           ),
-
           Container(
             width: width,
             height: height,
             child: Flex(
-  
               direction: Axis.vertical,
-            
               children: <Widget>[
                 Expanded(
                     child: LayoutBuilder(
                         builder: (_, constraints) => widget.media.length < 2
                             ? SinglePost(
                                 media: widget.media.first,
-                             
                                 shouldPlay: true,
                                 constraints: constraints,
                                 isHome: widget.isHome,
                                 thumbLink: widget.thumbails.first ?? "",
-                           
                                 isInView: widget.isInView!,
                                 postId: widget.data.id!,
                                 data: widget.data,
@@ -239,7 +230,6 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
               ],
             ),
           ),
-     
           Align(
             alignment: Alignment.topCenter,
             child: Padding(
@@ -266,7 +256,6 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
                             width: 20,
                             child: SvgPicture.asset(
                               "assets/icon/diamond.svg",
-                           
                             ),
                           )),
                       SizedBox(
@@ -275,10 +264,11 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
                       GestureDetector(
                           onTap: () async {
                             downloadDiamondsModal(
-                              context,
-                              widget.data.id!,
-                            );
-                 
+                                context,
+                                widget.data.id!,
+                                widget.data.media!.first.contains(".mp3")
+                                    ? true
+                                    : false);
                           },
                           child: Container(
                             height: 25,
@@ -315,9 +305,8 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
                   media: widget.media,
                   controller: _controller,
                   isHome: true,
-                )
-           
-                ),
+                  showComment: true,
+                )),
           ),
           widget.data.promoted == "yes"
               ? Positioned(
@@ -328,7 +317,6 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-              
                           AdsDisplay(
                             sponsored: true,
                             //  color: HexColor('#00B074'),
@@ -339,7 +327,6 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
                       )),
                 )
               : SizedBox.shrink(),
-
           widget.page == "user"
               ? Positioned(
                   bottom: 120,
@@ -364,7 +351,6 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
                       )),
                 )
               : SizedBox.shrink(),
-
           flag
               ? Center(
                   child: Align(
@@ -377,8 +363,7 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
                           flag = false;
                         });
                       },
-                      child: 
-                          Icon(
+                      child: Icon(
                         Icons.favorite,
                         size: MediaQuery.of(context).size.width * 0.4,
                         color: animation.value,
@@ -387,7 +372,6 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
                   ),
                 )
               : const SizedBox.shrink(),
-
           widget.data.btnLink != null && widget.data.button != null
               ? Positioned(
                   bottom: .1,
@@ -422,8 +406,13 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
                                 }
                               } else {
                                 //  print(widget.data.btnLink);
-                                await UrlLaunchController.launchInWebViewOrVC(
-                                    Uri.parse(widget.data.btnLink!));
+                                if (widget.data.button == "Spotify") {
+                                  await UrlLaunchController.launchWebViewOrVC(
+                                      Uri.parse(widget.data.btnLink!));
+                                } else {
+                                  await UrlLaunchController.launchInWebViewOrVC(
+                                      Uri.parse(widget.data.btnLink!));
+                                }
                               }
                             },
                             child: Container(
@@ -444,7 +433,6 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
                                       fontWeight: FontWeight.w500,
                                       size: 12,
                                     ),
-                            
                                   ],
                                 ),
                               ),

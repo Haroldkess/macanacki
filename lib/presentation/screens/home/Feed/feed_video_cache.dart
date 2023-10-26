@@ -20,6 +20,8 @@ import 'package:video_player/video_player.dart';
 
 import '../../../../model/feed_post_model.dart';
 import '../../../../services/controllers/action_controller.dart';
+import '../../../../services/controllers/url_launch_controller.dart';
+import '../../../../services/controllers/view_controller.dart';
 import '../../../../services/middleware/action_ware.dart';
 import '../../../allNavigation.dart';
 import '../../../constants/colors.dart';
@@ -29,6 +31,7 @@ import '../../../widgets/ads_display.dart';
 import '../../../widgets/debug_emitter.dart';
 import '../../../widgets/feed_views/like_section.dart';
 import '../../../widgets/loader.dart';
+import '../../../widgets/text.dart';
 
 class FeedVideoHolderPrivate extends StatefulWidget {
   String file;
@@ -40,6 +43,7 @@ class FeedVideoHolderPrivate extends StatefulWidget {
   bool? isInView;
   int postId;
   final FeedPost data;
+  bool showComment;
 
   FeedVideoHolderPrivate(
       {super.key,
@@ -51,7 +55,8 @@ class FeedVideoHolderPrivate extends StatefulWidget {
       required this.page,
       required this.isInView,
       required this.postId,
-      required this.data});
+      required this.data,
+      required this.showComment});
 
   @override
   State<FeedVideoHolderPrivate> createState() => _FeedVideoHolderPrivateState();
@@ -181,12 +186,14 @@ class _FeedVideoHolderPrivateState extends State<FeedVideoHolderPrivate>
               child: Stack(
                 children: [
                   VideoView2(
-                      thumbLink: post.thumbnails!.first ?? "",
-                      page: widget.page,
-                      postId: post.id!,
-                      index: index,
-                      data: post,
-                      isHome: false),
+                    thumbLink: post.thumbnails!.first ?? "",
+                    page: widget.page,
+                    postId: post.id!,
+                    index: index,
+                    data: post,
+                    isHome: widget.isHome,
+                    showComment: widget.showComment,
+                  ),
                   widget.data.promoted == "yes"
                       ? Positioned(
                           bottom: 140,
@@ -307,6 +314,7 @@ class VideoView2 extends StatefulWidget {
   bool isHome;
   int postId;
   final FeedPost data;
+  bool showComment;
 
   VideoView2(
       {super.key,
@@ -315,6 +323,7 @@ class VideoView2 extends StatefulWidget {
       required this.page,
       required this.postId,
       required this.isHome,
+      required this.showComment,
       required this.data});
 
   @override
@@ -331,18 +340,60 @@ class _VideoView2State extends State<VideoView2> {
     buildVideoOptions();
   }
 
-  void buildVideoOptions() {
+  // void buildVideoOptions() {
+  //   final token = apiToken.isEmpty ? null : apiToken;
+
+  //   final videoOptions = VideoOptions(
+  //       videoId: widget.data.vod!.first!, type: VideoType.vod, token: token);
+
+  //   if (_controller == null) {
+  //     _controller = ApiVideoPlayerController(
+  //         videoOptions: videoOptions, autoplay: true, onEnd: () {});
+  //   } else {
+  //     _controller?.setVideoOptions(videoOptions);
+  //   }
+  // }
+
+  Future<void> buildVideoOptions() async {
     final token = apiToken.isEmpty ? null : apiToken;
 
     final videoOptions = VideoOptions(
         videoId: widget.data.vod!.first!, type: VideoType.vod, token: token);
 
-    if (_controller == null) {
-      _controller = ApiVideoPlayerController(
-          videoOptions: videoOptions, autoplay: false, onEnd: () {});
-    } else {
-      _controller?.setVideoOptions(videoOptions);
-    }
+    _controller = ApiVideoPlayerController(
+        videoOptions: videoOptions,
+        autoplay: false,
+        onEnd: () {
+          ViewController.handleView(widget.data.id!);
+        },
+        onReady: () {
+          log("READY!!!");
+        });
+
+    await _controller!.initialize();
+
+    _controller!.addListener(ApiVideoPlayerControllerEventsListener(
+      // onReady: () {
+      //   if (widget.index == 0) {
+      //     widget.controller.play();
+      //     widget.controller.setIsLooping(true);
+      //   } else {
+      //     widget.controller.play();
+      //     widget.controller.setIsLooping(true);
+      //   }
+      //   setState(() {
+      //     isReady = true;
+      //     tapped = false;
+      //     delayUser = false;
+      //     _duration = 'Get duration';
+      //   });
+      // },
+      onEnd: () {
+        log("video ended");
+        ViewController.handleView(widget.data.id!);
+        //setState(() {});
+      },
+    ));
   }
 
   Future<void> innit() async {}
@@ -397,174 +448,6 @@ class _VideoView2State extends State<VideoView2> {
                 vod: widget.data.vod!.first!,
                 controller: _controller,
               )
-              // ObxValue<Rx<VideoPlayerController>>((val) {
-              //   if (val.value.value.isInitialized) {
-              //     if (widget.isHome) {
-              //       if (mounted) {
-              //         WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-              //           if (PersistentNavController.instance.hide.value ==
-              //               false) {
-              //             val.value.play();
-              //           } else {
-              //             if (widget.index == 0) {
-              //               emitter("yes lets play the video");
-              //               val.value.play();
-              //             } else {
-              //               //   val.value.pause();
-              //             }
-              //           }
-              //         });
-              //       }
-              //     } else {
-              //       // val.value.pause();
-              //     }
-
-              //     if (mounted) {
-              //       if (widget.index == 0) {
-              //         emitter("yes lets play the video");
-              //         WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-              //           val.value.play();
-              //         });
-              //       } else {
-              //         WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-              //           //val.value.pause();
-              //         });
-              //       }
-              //     }
-
-              //     // emitter("yes index is ${widget.index}");
-              //     if (mounted) {
-              //       //  emitter("initialized 0000");
-              //       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-              //         if (val.value.value.isInitialized) {
-              //           VideoWare.instance.addListeners(widget.postId);
-              //         }
-              //       });
-              //     }
-              //   } else {
-              //     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-              //       if (mounted) {
-              //         setState(() {});
-              //       }
-              //       Future.delayed(Duration(milliseconds: 500), () {
-              //         if (mounted) {
-              //           setState(() {});
-              //         }
-              //       });
-              //       Future.delayed(Duration(seconds: 1), () {
-              //         if (mounted) {
-              //           setState(() {});
-              //         }
-              //       });
-              //       Future.delayed(Duration(seconds: 2), () {
-              //         if (mounted) {
-              //           setState(() {});
-              //         }
-              //       });
-              //     });
-              //   }
-
-              //   return val.value.value.isInitialized == false
-              //       ? Stack(
-              //           children: [
-              //             Container(
-              //               width: Get.width,
-              //               height: Get.height,
-              //               decoration: BoxDecoration(
-              //                   color: Colors.black,
-              //                   image: DecorationImage(
-              //                     image: CachedNetworkImageProvider(
-              //                         widget.thumbLink.toString()),
-              //                     fit: BoxFit.cover,
-              //                   )),
-              //             ),
-              //             Align(
-              //               alignment: Alignment.center,
-              //               child: ObxValue((load) {
-              //                 return load.value
-              //                     ? CircleAvatar(
-              //                         backgroundColor:
-              //                             Colors.white.withOpacity(.7),
-              //                         radius: 30,
-              //                         child: Center(
-              //                           child: Loader(
-              //                               color: HexColor(primaryColor)),
-              //                         ),
-              //                       )
-              //                     : Visibility(
-              //                         visible: load.value ? false : true,
-              //                         child: CircleAvatar(
-              //                           backgroundColor:
-              //                               Colors.white.withOpacity(.7),
-              //                           radius: 30,
-              //                           child: const Icon(
-              //                             Icons.play_arrow_outlined,
-              //                             size: 25,
-              //                             color: Colors.black,
-              //                           ),
-              //                         ),
-              //                       );
-              //               }, VideoWare.instance.isLoadVideo),
-              //             ),
-              //           ],
-              //         )
-              //       : Stack(
-              //           alignment: Alignment.center,
-              //           children: [
-              //             AspectRatio(
-              //               aspectRatio: val.value.value.aspectRatio,
-              //               // Use the VideoPlayer widget to display the video.
-              //               child: ObxValue((cheiwe) {
-              //                 return cheiwe
-              //                             .where(
-              //                                 (p0) => p0.id == widget.data.id)
-              //                             .first
-              //                             .chewie ==
-              //                         null
-              //                     ? Stack(
-              //                         children: [
-              //                           Container(
-              //                             width: Get.width,
-              //                             height: Get.height,
-              //                             decoration: BoxDecoration(
-              //                                 color: Colors.black,
-              //                                 image: DecorationImage(
-              //                                   image:
-              //                                       CachedNetworkImageProvider(
-              //                                           widget.thumbLink
-              //                                               .toString()),
-              //                                   fit: BoxFit.cover,
-              //                                 )),
-              //                           ),
-              //                         ],
-              //                       )
-              //                     : Chewie(
-              //                         controller: cheiwe
-              //                             .where(
-              //                                 (p0) => p0.id == widget.data.id)
-              //                             .first
-              //                             .chewie!);
-              //               }, VideoWare.instance.videoController),
-              //             ),
-
-              //             Align(
-              //               alignment: Alignment.bottomCenter,
-              //               child: VideoProgressIndicator(
-              //                 val.value,
-              //                 allowScrubbing: true,
-              //                 colors: VideoProgressColors(
-              //                     playedColor: HexColor(backgroundColor)
-              //                         .withOpacity(.9)),
-              //               ),
-              //             ),
-
-              //           ],
-              //         );
-              // },
-              //     VideoWare.instance.videoController
-              //         .where((p0) => p0.id == widget.data.id)
-              //         .first
-              //         .controller!),
             ],
           ),
         ),
@@ -592,6 +475,9 @@ class _VideoView2State extends State<VideoView2> {
                   child: LikeSection(
                     page: widget.page,
                     data: widget.data,
+                    userName: widget.data.user!.username,
+                    isHome: widget.isHome,
+                    showComment: widget.showComment,
                   ),
                 ),
               ),
@@ -608,6 +494,73 @@ class _VideoView2State extends State<VideoView2> {
                   isVideo: true,
                 ),
               ),
+        widget.data.btnLink != null && widget.data.button != null
+            ? Positioned(
+                bottom: .1,
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: Get.width,
+                        child: InkWell(
+                          onTap: () async {
+                            if (widget.data.button == "Call Now") {
+                              await UrlLaunchController.makePhoneCall(
+                                  widget.data.btnLink!);
+                            }
+                            if (widget.data.button == "Whatsapp") {
+                              //   print(widget.data.btnLink!);
+
+                              if (widget.data.btnLink!
+                                  .contains("https://wa.me/https://")) {
+                                var start = widget.data.btnLink!
+                                    .split("https://wa.me/https://");
+
+                                String newVal =
+                                    "https://${start.last}".toString();
+                                emitter(newVal);
+                                await UrlLaunchController.launchWebViewOrVC(
+                                    Uri.parse(newVal));
+                              } else {
+                                await UrlLaunchController.launchWebViewOrVC(
+                                    Uri.parse(widget.data.btnLink!));
+                              }
+                            } else {
+                              //  print(widget.data.btnLink);
+                              await UrlLaunchController.launchInWebViewOrVC(
+                                  Uri.parse(widget.data.btnLink!));
+                            }
+                          },
+                          child: Container(
+                            height: 35,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.zero,
+                                color: HexColor("#FFFFFF")),
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  AppText(
+                                    text: widget.data.button ?? "",
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w500,
+                                    size: 12,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            : const SizedBox.shrink(),
       ],
     );
   }

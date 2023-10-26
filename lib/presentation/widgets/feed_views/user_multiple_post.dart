@@ -27,16 +27,19 @@ class UserMultiplePost extends StatelessWidget {
   final List<String>? thumbLinks;
   final String page;
   bool? isInView;
+  bool showComment;
 
-  UserMultiplePost(
-      {super.key,
-      this.media,
-      this.constraints,
-      required this.data,
-      required this.isHome,
-      required this.thumbLinks,
-      required this.page,
-      required this.isInView});
+  UserMultiplePost({
+    super.key,
+    this.media,
+    this.constraints,
+    required this.data,
+    required this.isHome,
+    required this.thumbLinks,
+    required this.page,
+    required this.isInView,
+    required this.showComment,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -81,6 +84,7 @@ class UserMultiplePost extends StatelessWidget {
               page: page,
               images: media!,
               isInView: isInView,
+              showComment: showComment,
             );
           },
         ),
@@ -127,18 +131,21 @@ class UserMultipleView extends StatefulWidget {
   final String page;
   bool? isInView;
   final List<String> images;
+  bool showComment;
 
-  UserMultipleView(
-      {super.key,
-      this.media,
-      this.constraints,
-      required this.data,
-      required this.index,
-      required this.isHome,
-      required this.thumbLink,
-      required this.page,
-      required this.isInView,
-      required this.images});
+  UserMultipleView({
+    super.key,
+    this.media,
+    this.constraints,
+    required this.data,
+    required this.index,
+    required this.isHome,
+    required this.thumbLink,
+    required this.page,
+    required this.isInView,
+    required this.images,
+    required this.showComment,
+  });
 
   @override
   State<UserMultipleView> createState() => _UserMultipleViewState();
@@ -236,6 +243,7 @@ class _UserMultipleViewState extends State<UserMultipleView> {
             isInView: widget.isInView,
             postId: 0,
             data: widget.data,
+            showComment: widget.showComment,
           )
         : Stack(
             alignment: Alignment.center,

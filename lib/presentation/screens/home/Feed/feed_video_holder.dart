@@ -17,6 +17,8 @@ import 'package:video_player/video_player.dart';
 
 import '../../../../model/feed_post_model.dart';
 import '../../../../services/controllers/action_controller.dart';
+import '../../../../services/controllers/url_launch_controller.dart';
+import '../../../../services/controllers/view_controller.dart';
 import '../../../../services/middleware/action_ware.dart';
 import '../../../../services/middleware/post_security.dart';
 import '../../../../services/middleware/video/video_ware.dart';
@@ -27,7 +29,14 @@ import '../../../widgets/ads_display.dart';
 import '../../../widgets/debug_emitter.dart';
 import '../../../widgets/feed_views/like_section.dart';
 import '../../../widgets/feed_views/new_action_design.dart';
+import '../../../widgets/text.dart';
 import '../test_api_video.dart';
+
+class VodClass {
+  int? id;
+  ApiVideoPlayerController? controller;
+  VodClass({this.id, this.controller});
+}
 
 class FeedVideoHolder extends StatefulWidget {
   String file;
@@ -98,6 +107,7 @@ class _FeedVideoHolderState extends State<FeedVideoHolder>
   void dispose() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       VideoWareHome.instance.getVideoPostFromApi(1);
+      //  removeAllVideoOption();
     });
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -111,9 +121,54 @@ class _FeedVideoHolderState extends State<FeedVideoHolder>
     });
   }
 
+  String apiToken = "";
+
   bool flag = false;
   PageController pageController =
       PageController(initialPage: 0, keepPage: false);
+  bool loadVod = true;
+  List<VodClass> vodVid = [];
+
+  Future<void> removeAllVideoOption() async {
+    await Future.forEach(vodVid, (element) => element.controller!.dispose())
+        .whenComplete(() {
+      if (mounted) {
+        setState(() {
+          vodVid.clear();
+          vodVid = [];
+        });
+      }
+    });
+  }
+
+  Future<void> buildVideoOptions(vod, id, index) async {
+    if (vod == null || id == null) {
+    } else {
+      final token = apiToken.isEmpty ? null : apiToken;
+
+      List<VodClass> lister =
+          vodVid.where((element) => element.id == id).toList();
+      if (lister.isEmpty) {
+        final videoOptions =
+            VideoOptions(videoId: vod!, type: VideoType.vod, token: token);
+        ApiVideoPlayerController controller = ApiVideoPlayerController(
+            videoOptions: videoOptions,
+            autoplay: false,
+            onEnd: () {},
+            onReady: () {
+              log("READY!!! From List");
+            });
+
+        await controller.initialize();
+        if (mounted) {
+          setState(() {
+            vodVid.add(VodClass(
+                id: int.tryParse(id.toString()), controller: controller));
+          });
+        }
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -127,128 +182,178 @@ class _FeedVideoHolderState extends State<FeedVideoHolder>
         if (allVideos.isNotEmpty) {
           for (var i in allVideos) {
             allThumbs.add(i.thumbnails!.first);
+            // if (i.vod!.first != null || i.vod != null) {
+            //   buildVideoOptions(i.vod!.first, i.id);
+            // }
           }
         }
-        return PageView.builder(
-          itemCount: allVideos.length,
-          controller: pageController,
-          //  preloadPagesCount: 0,
-          scrollDirection: Axis.vertical,
-          itemBuilder: ((context, index) {
-            FeedPost post = allVideos[index];
+        return Stack(children: [
+          Column(
+            children: allThumbs == null
+                ? []
+                : List.generate(
+                    allThumbs == null ? 0 : allThumbs.length,
+                    (index) => Container(
+                      height: 1,
+                      child:
+                          CachedNetworkImage(imageUrl: allThumbs[index] ?? ""),
+                    ),
+                  ),
+          ),
+          PageView.builder(
+            itemCount: allVideos.length,
+            controller: pageController,
+            //  preloadPagesCount: 0,
+            scrollDirection: Axis.vertical,
+            itemBuilder: ((context, index) {
+              FeedPost post = allVideos[index];
+              // FeedPost? post2 =
+              //     index + 1 < allVideos.length ? allVideos[index + 1] : null;
+              // FeedPost? post3 =
+              //     index + 2 < allVideos.length ? allVideos[index + 2] : null;
 
-            return GestureDetector(
-              onDoubleTap: () async {
-                if (mounted) {
-                  if (controller.value == 1) {
-                    controller.reset();
-                    controller.forward();
-                  } else {
-                    controller.forward();
-                  }
+              // if (loadVod) {
+              //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {});
+              // }
 
-                  if (action.likeIds.contains(post.id!)) {
+              return GestureDetector(
+                onDoubleTap: () async {
+                  if (mounted) {
+                    if (controller.value == 1) {
+                      controller.reset();
+                      controller.forward();
+                    } else {
+                      controller.forward();
+                    }
+
+                    if (action.likeIds.contains(post.id!)) {
+                      setState(() {
+                        flag = true;
+                      });
+                      await Future.delayed(const Duration(seconds: 2));
+
+                      setState(() {
+                        flag = false;
+                      });
+
+                      return;
+                    }
                     setState(() {
                       flag = true;
                     });
+
+                    await likeAction(context, true, post.id!);
+
                     await Future.delayed(const Duration(seconds: 2));
 
                     setState(() {
                       flag = false;
                     });
-
-                    return;
                   }
-                  setState(() {
-                    flag = true;
-                  });
-
-                  await likeAction(context, true, post.id!);
-
-                  await Future.delayed(const Duration(seconds: 2));
-
-                  setState(() {
-                    flag = false;
-                  });
-                }
-              },
-              child: Stack(
-                children: [
-                  VideoView(
+                },
+                child: Stack(
+                  children: [
+                    VideoView(
                       allThumb: allThumbs,
                       thumbLink: post.thumbnails!.first,
                       page: widget.page,
                       postId: post.id!,
                       index: index,
+                      vodList: vodVid,
                       data: post,
-                      isHome: false),
-                  post.promoted == "yes"
-                      ? Positioned(
-                          bottom: 140,
-                          left: 0,
-                          child: Align(
-                              alignment: Alignment.bottomLeft,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  // AdsDisplay(
-                                  //   sponsored: false,
-                                  //   color: HexColor('#00B074'),
-                                  //   title: '\$10.000.00',
-                                  // ),
-                                  // SizedBox(
-                                  //   height: 10,
-                                  // ),
-                                  AdsDisplay(
-                                    sponsored: true,
-                                    //  color: HexColor('#00B074'),
-                                    color: Colors.grey.shade400,
-                                    title: 'Sponsored Ad',
-                                  ),
-                                ],
-                              )),
-                        )
-                      : SizedBox.shrink(),
-                  flag
-                      ? Center(
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: AnimatedContainer(
-                              duration: const Duration(seconds: 3),
-                              curve: Curves.bounceInOut,
-                              onEnd: () {
-                                setState(() {
-                                  flag = false;
-                                });
-                              },
-                              child: Icon(
-                                Icons.favorite,
-                                size: Get.width * 0.4,
-                                color: animation.value,
+                      inComingController: null,
+                      isHome: widget.isHome,
+                    ),
+                    post.promoted == "yes"
+                        ? Positioned(
+                            bottom: 140,
+                            left: 0,
+                            child: Align(
+                                alignment: Alignment.bottomLeft,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    // AdsDisplay(
+                                    //   sponsored: false,
+                                    //   color: HexColor('#00B074'),
+                                    //   title: '\$10.000.00',
+                                    // ),
+                                    // SizedBox(
+                                    //   height: 10,
+                                    // ),
+                                    AdsDisplay(
+                                      sponsored: true,
+                                      //  color: HexColor('#00B074'),
+                                      color: Colors.grey.shade400,
+                                      title: 'Sponsored Ad',
+                                    ),
+                                  ],
+                                )),
+                          )
+                        : SizedBox.shrink(),
+                    flag
+                        ? Center(
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: AnimatedContainer(
+                                duration: const Duration(seconds: 3),
+                                curve: Curves.bounceInOut,
+                                onEnd: () {
+                                  setState(() {
+                                    flag = false;
+                                  });
+                                },
+                                child: Icon(
+                                  Icons.favorite,
+                                  size: Get.width * 0.4,
+                                  color: animation.value,
+                                ),
                               ),
                             ),
-                          ),
-                        )
-                      : const SizedBox.shrink(),
-                ],
-              ),
-            );
-          }),
-          onPageChanged: (index) {
-            if (index != 0) {
-              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                VideoWare.instance.loadVideo(false);
-              });
-            }
-            if (mounted) {
-              if (index > VideoWareHome.instance.feedPosts.length - 4) {
-                SchedulerBinding.instance.addPostFrameCallback((_) {
-                  paginateFeed();
+                          )
+                        : const SizedBox.shrink(),
+                  ],
+                ),
+              );
+            }),
+            onPageChanged: (index) {
+              // if (index > (allVideos.length - 1) || index < 1) {
+              // } else {
+              //   if (index % 3 == 0) {
+              //     removeAllVideoOption();
+              //   } else {
+              //     List<dynamic> sendToVod = [
+              //       allVideos[index - 1].vod!.first +
+              //           "|${allVideos[index - 1].id}",
+              //       allVideos[index].vod!.first + "|${allVideos[index - 1].id}",
+              //       allVideos[index + 1].vod!.first +
+              //           "|${allVideos[index - 1].id}"
+              //     ];
+
+              //     for (var i in sendToVod) {
+              //       if (i != null) {
+              //         buildVideoOptions(i.toString().split("|").first,
+              //             i.toString().split("|").last, index);
+              //       }
+              //     }
+              //   }
+              // }
+
+              if (index != 0) {
+                WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                  VideoWare.instance.loadVideo(false);
                 });
               }
-            }
-          },
-        );
+              if (mounted) {
+                if (index > VideoWareHome.instance.feedPosts.length - 4) {
+                  SchedulerBinding.instance.addPostFrameCallback((_) {
+                    paginateFeed();
+                  });
+                }
+              }
+            },
+          ),
+        ]);
       }, VideoWareHome.instance.feedPosts),
     );
   }
@@ -307,7 +412,9 @@ class VideoView extends StatefulWidget {
   int postId;
   final FeedPost data;
   final List? allThumb;
+  List<VodClass> vodList;
   // VideoModel? video;
+  ApiVideoPlayerController? inComingController;
 
   VideoView(
       {super.key,
@@ -317,6 +424,8 @@ class VideoView extends StatefulWidget {
       required this.index,
       required this.page,
       required this.postId,
+      required this.vodList,
+      required this.inComingController,
       required this.isHome,
       required this.data});
 
@@ -329,30 +438,67 @@ class _VideoViewState extends State<VideoView> {
   String apiToken = "";
   @override
   void initState() {
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //   if (mounted) {
+    //     for (var i in widget.vodList) {
+    //       if (i.controller != null) {
+    //         if (i.id != widget.data.id) {
+    //           i.controller!.pause();
+    //         }
+    //       }
+    //     }
+    //   }
+    // });
+    if (widget.inComingController == null) {
+      buildVideoOptions();
+    }
+
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       VideoWareHome.instance.viewToggle(0);
     });
-    buildVideoOptions();
   }
 
-  void buildVideoOptions() {
+  Future<void> buildVideoOptions() async {
     final token = apiToken.isEmpty ? null : apiToken;
 
     final videoOptions = VideoOptions(
         videoId: widget.data.vod!.first!, type: VideoType.vod, token: token);
 
-    if (_controller == null) {
-      _controller = ApiVideoPlayerController(
-          videoOptions: videoOptions,
-          autoplay: false,
-          onEnd: () {},
-          onReady: () {
-            log("READY!!!");
-          });
-    } else {
-      _controller?.setVideoOptions(videoOptions);
-    }
+    _controller = ApiVideoPlayerController(
+        videoOptions: videoOptions,
+        autoplay: false,
+        onEnd: () {
+          ViewController.handleView(widget.data.id!);
+        },
+        onReady: () {
+          log("READY!!!");
+        });
+
+    await _controller!.initialize();
+
+    _controller!.addListener(ApiVideoPlayerControllerEventsListener(
+      // onReady: () {
+      //   if (widget.index == 0) {
+      //     widget.controller.play();
+      //     widget.controller.setIsLooping(true);
+      //   } else {
+      //     widget.controller.play();
+      //     widget.controller.setIsLooping(true);
+      //   }
+      //   setState(() {
+      //     isReady = true;
+      //     tapped = false;
+      //     delayUser = false;
+      //     _duration = 'Get duration';
+      //   });
+      // },
+      onEnd: () {
+        log("video ended");
+        ViewController.handleView(widget.data.id!);
+        //setState(() {});
+      },
+    ));
   }
 
   Future<void> innit() async {}
@@ -360,6 +506,9 @@ class _VideoViewState extends State<VideoView> {
   @override
   void dispose() {
     super.dispose();
+    if (_controller != null) {
+      _controller!.dispose();
+    }
   }
 
   Rx<VideoPlayerController>? vid;
@@ -367,18 +516,6 @@ class _VideoViewState extends State<VideoView> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Column(
-          children: widget.allThumb == null
-              ? []
-              : List.generate(
-                  widget.allThumb == null ? 0 : widget.allThumb!.length,
-                  (index) => Container(
-                    height: 1,
-                    child: CachedNetworkImage(
-                        imageUrl: widget.allThumb![index] ?? ""),
-                  ),
-                ),
-        ),
         Center(
           child: Stack(
             children: [
@@ -386,51 +523,115 @@ class _VideoViewState extends State<VideoView> {
                 data: widget.data,
                 index: widget.index,
                 vod: widget.data.vod!.first!,
-                controller: _controller,
+                controller: widget.inComingController ?? _controller,
               )
             ],
           ),
         ),
-        widget.isHome
-            ? SizedBox.shrink()
-            : Padding(
-                padding: const EdgeInsets.only(top: 30, left: 5),
+        Padding(
+          padding: const EdgeInsets.only(top: 30, left: 5),
+          child: Align(
+            alignment: Alignment.topLeft,
+            child: IconButton(
+                onPressed: () => PageRouting.popToPage(context),
+                icon: const Icon(
+                  Icons.arrow_back_ios,
+                  color: Colors.white,
+                )),
+          ),
+        ),
+        FadeInRight(
+          duration: Duration(seconds: 1),
+          animate: true,
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: LikeSection(
+              page: widget.page,
+              data: widget.data,
+              userName: widget.data.user!.username,
+              isHome: widget.isHome,
+              showComment: true,
+            ),
+          ),
+        ),
+        Align(
+          alignment: Alignment.bottomLeft,
+          child: VideoUser(
+            page: widget.page,
+            data: widget.data,
+            media: [],
+            isHome: true,
+            controller: _controller,
+            isVideo: true,
+          ),
+        ),
+        widget.data.btnLink != null && widget.data.button != null
+            ? Positioned(
+                bottom: .1,
                 child: Align(
-                  alignment: Alignment.topLeft,
-                  child: IconButton(
-                      onPressed: () => PageRouting.popToPage(context),
-                      icon: const Icon(
-                        Icons.arrow_back_ios,
-                        color: Colors.white,
-                      )),
-                ),
-              ),
-        widget.isHome
-            ? SizedBox.shrink()
-            : FadeInRight(
-                duration: Duration(seconds: 1),
-                animate: true,
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: LikeSection(
-                    page: widget.page,
-                    data: widget.data,
+                  alignment: Alignment.bottomCenter,
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: Get.width,
+                        child: InkWell(
+                          onTap: () async {
+                            if (widget.data.button == "Call Now") {
+                              await UrlLaunchController.makePhoneCall(
+                                  widget.data.btnLink!);
+                            }
+                            if (widget.data.button == "Whatsapp") {
+                              //   print(widget.data.btnLink!);
+
+                              if (widget.data.btnLink!
+                                  .contains("https://wa.me/https://")) {
+                                var start = widget.data.btnLink!
+                                    .split("https://wa.me/https://");
+
+                                String newVal =
+                                    "https://${start.last}".toString();
+                                emitter(newVal);
+                                await UrlLaunchController.launchWebViewOrVC(
+                                    Uri.parse(newVal));
+                              } else {
+                                await UrlLaunchController.launchWebViewOrVC(
+                                    Uri.parse(widget.data.btnLink!));
+                              }
+                            } else {
+                              //  print(widget.data.btnLink);
+                              await UrlLaunchController.launchInWebViewOrVC(
+                                  Uri.parse(widget.data.btnLink!));
+                            }
+                          },
+                          child: Container(
+                            height: 35,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.zero,
+                                color: HexColor("#FFFFFF")),
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  AppText(
+                                    text: widget.data.button ?? "",
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w500,
+                                    size: 12,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-        widget.isHome
-            ? SizedBox.shrink()
-            : Align(
-                alignment: Alignment.bottomLeft,
-                child: VideoUser(
-                  page: widget.page,
-                  data: widget.data,
-                  media: [],
-                  isHome: true,
-                  controller: _controller,
-                  isVideo: true,
-                ),
-              ),
+              )
+            : const SizedBox.shrink(),
       ],
     );
   }

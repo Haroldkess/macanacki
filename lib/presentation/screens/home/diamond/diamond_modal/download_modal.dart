@@ -14,7 +14,7 @@ import '../../../../widgets/loader.dart';
 // import 'package:macanacki/services/middleware/user_profile_ware.dart';
 // import 'package:provider/provider.dart';
 
-downloadDiamondsModal(BuildContext cont, int id) async {
+downloadDiamondsModal(BuildContext cont, int id,[bool? isAudio]) async {
   bool pay = true;
   TextEditingController amount = TextEditingController();
   return showModalBottomSheet(
@@ -62,7 +62,7 @@ downloadDiamondsModal(BuildContext cont, int id) async {
                           height: 10,
                         ),
                         AppText(
-                          text: "Give Diamond to download",
+                          text: "Give Diamond to download ${isAudio == true? "Audio file" : ""}",
                           size: 17,
                           fontWeight: FontWeight.w400,
                         ),

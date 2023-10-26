@@ -283,7 +283,7 @@ class _FriendsViewItemsState extends State<FriendsViewItems> {
     return InkWell(
       splashColor: HexColor(primaryColor),
       onTap: () async {
-        print(widget.data.vod!.first ?? "");
+        //   print(widget.data.vod!.first ?? "");
         //   Operations.controlSystemColor();
         //   TabProvider action = Provider.of<TabProvider>(context, listen: false);
         //   action.isHomeChange(true);
@@ -368,8 +368,12 @@ class _FriendsViewItemsState extends State<FriendsViewItems> {
                           : widget.data.media!.first.contains(".mp3")
                               ? Align(
                                   alignment: Alignment.center,
-                                  child: Lottie.asset("assets/icon/mov.json",
-                                      height: 70, width: 70),
+                                  child: SvgPicture.asset(
+                                    "assets/icon/aud.svg",
+                                    height: 25,
+                                    width: 25,
+                                    color: Colors.white,
+                                  ),
                                 )
                               : const SizedBox.shrink(),
                       Positioned(

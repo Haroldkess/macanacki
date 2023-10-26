@@ -27,7 +27,18 @@ Future selectPost(BuildContext context, List<ProfileFeedDatum> post) async {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const SizedBox(
-                      height: 30,
+                      height: 50,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        IconButton(
+                            onPressed: () => PageRouting.popToPage(context),
+                            icon: Icon(
+                              Icons.clear,
+                              color: Colors.red,
+                            ))
+                      ],
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 10),
@@ -53,6 +64,7 @@ Future selectPost(BuildContext context, List<ProfileFeedDatum> post) async {
                                     const EdgeInsets.symmetric(vertical: 7),
                                 child: InkWell(
                                   onTap: () async {
+                                    print(e.description);
                                     Navigator.pop(context, e);
                                   },
                                   child: SizedBox(
@@ -89,10 +101,12 @@ Future selectPost(BuildContext context, List<ProfileFeedDatum> post) async {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               AppText(
-                                                text: e.description ?? "",
+                                                text: e.description ??
+                                                    "NO DESCRIPTION",
                                                 fontWeight: FontWeight.w500,
                                                 size: 14,
                                                 maxLines: 2,
+                                                color: Colors.black,
                                                 overflow: TextOverflow.ellipsis,
                                               ),
                                             ],
