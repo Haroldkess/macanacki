@@ -30,6 +30,7 @@ class UserProfileWare extends ChangeNotifier {
   bool _loading = false;
   bool _loadingAudio = false;
   int _numberOfPostsPerRequest = 10;
+  bool navigate = true;
 
   int _nextPageTrigger = 3;
   ScrollController scrollController = ScrollController();
@@ -50,6 +51,11 @@ class UserProfileWare extends ChangeNotifier {
 
   void updateLoading(bool value) {
     _loading = value;
+    notifyListeners();
+  }
+
+  void shouldNav(bool value) {
+    navigate = value;
     notifyListeners();
   }
 

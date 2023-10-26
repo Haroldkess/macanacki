@@ -228,53 +228,12 @@ class _FriendsViewItemsState extends State<FriendsViewItems> {
   @override
   void initState() {
     super.initState();
-    // if (widget.data.media!.first.contains(".mp4")) {
-    //   controllers = VlcPlayerController.network(
-    //     "$muxStreamBaseUrl/${widget.data.mux!.first}.$videoExtension",
-    //     hwAcc: HwAcc.full,
-    //     autoPlay: false,
-    //     autoInitialize: true,
-    //     onInit: () {
-    //       controllers!.setVolume(-1);
-    //       controllers!.setAudioTrack(-1);
-    //     },
-    //     options: VlcPlayerOptions(
-    //       advanced: VlcAdvancedOptions([
-    //         VlcAdvancedOptions.networkCaching(2000),
-    //       ]),
-    //       rtp: VlcRtpOptions([
-    //         VlcRtpOptions.rtpOverRtsp(true),
-    //       ]),
-    //     ),
-    //   )..addListener(() {
-    //       controllers!.setVolume(0);
-    //       controllers!.setLooping(false);
-    //     });
-
-    //   controllers!.addOnInitListener(() {
-    //     controllers!.setVolume(-1);
-    //     controllers!.setAudioTrack(-1);
-    //   });
-    // }
   }
 
   @override
   Future<void> dispose() async {
     super.dispose();
-    // await controllers!.stopRendererScanning();
-    // await controllers!.dispose();
   }
-
-// getgif (){
-//   return CachedVideoPreview(
-//   path: widget.data.media!,
-//   type: SourceType.remote,
-//   httpHeaders: const <String, String>{},
-//   remoteImageBuilder: (BuildContext context, url) =>
-//       Image.network(url),
-// )
-
-//}
 
   @override
   Widget build(BuildContext context) {

@@ -342,10 +342,18 @@ class _UserTikTokViewState extends State<UserTikTokView>
                                     try {
                                       if (element.contains('.mp4')) {
                                         await SaveMediaController
-                                            .saveNetworkVideo(context, element);
+                                            .saveNetworkVideo(
+                                                context,
+                                                element,
+                                                widget.data.description ??
+                                                    "macanacki");
                                       } else {
                                         await SaveMediaController
-                                            .saveNetworkImage(context, element);
+                                            .saveNetworkImage(
+                                                context,
+                                                element,
+                                                widget.data.description ??
+                                                    "macanacki");
                                       }
                                     } catch (e) {
                                       debugPrint(e.toString());
@@ -354,15 +362,22 @@ class _UserTikTokViewState extends State<UserTikTokView>
                                 });
                               } else {
                                 if (widget.media.first.contains('.mp4')) {
+                                  emitter(widget.media.first);
                                   await SaveMediaController.saveNetworkVideo(
-                                      context, widget.media.first);
+                                      context,
+                                      widget.media.first,
+                                      widget.data.description ?? "macanacki");
                                 } else if (widget.media.first
                                     .contains('.mp3')) {
                                   await SaveMediaController.saveNetworkAudio(
-                                      context, widget.media.first);
+                                      context,
+                                      widget.media.first,
+                                      widget.data.description ?? "macanacki");
                                 } else {
                                   await SaveMediaController.saveNetworkImage(
-                                      context, widget.media.first);
+                                      context,
+                                      widget.media.first,
+                                      widget.data.description ?? "macanacki");
                                 }
                               }
                             } else {

@@ -25,9 +25,10 @@ class FriendsPageView extends StatefulWidget {
 
 class _FriendsPageViewState extends State<FriendsPageView> {
   PageController? controller;
-  Future paginateFeed(BuildContext context) async {
+
+  Future paginateFeed(context) async {
     emitter("Pageinating");
-    FriendWare  provide = FriendWare.instance;
+    FriendWare provide = FriendWare.instance;
 
     ///  provide.indexChange(index);
 
@@ -46,15 +47,15 @@ class _FriendsPageViewState extends State<FriendsPageView> {
       if (provide.loadPost.value) {
         return;
       }
-      await provide.getFriendsPostFromApi( pageNum + 1, true)
+      await provide
+          .getFriendsPostFromApi(pageNum + 1, true)
           .whenComplete(() => emitter("paginated"));
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
-    var stream = FriendWare.instance.friendPost;
+    // var stream = FriendWare.instance.friendPost;
     FeedPostWare provide = Provider.of<FeedPostWare>(context, listen: false);
 //    controller = PageController(initialPage: stream.index, keepPage: true);
     PreloadPageController controller =
@@ -63,50 +64,52 @@ class _FriendsPageViewState extends State<FriendsPageView> {
     return SizedBox(
       height: Get.height,
       width: Get.width,
-      child: PreloadPageView.builder(
-        itemCount: stream.length,
-        controller: controller,
-        preloadPagesCount: 0,
-        scrollDirection: Axis.vertical,
-        itemBuilder: ((context, index) {
-          FeedPost post = stream[index];
-          FeedPost? post2 =
-              index + 1 < stream.length ? stream[index + 1] : null;
-          FeedPost? post3 =
-              index + 2 < stream.length ? stream[index + 2] : null;
-          FeedPost? post4 =
-              index + 3 < stream.length ? stream[index + 3] : null;
+      child: ObxValue((stream) {
+        return PreloadPageView.builder(
+          itemCount: stream.length,
+          controller: controller,
+          preloadPagesCount: 0,
+          scrollDirection: Axis.vertical,
+          itemBuilder: ((context, index) {
+            FeedPost post = stream[index];
+            FeedPost? post2 =
+                index + 1 < stream.length ? stream[index + 1] : null;
+            FeedPost? post3 =
+                index + 2 < stream.length ? stream[index + 2] : null;
+            FeedPost? post4 =
+                index + 3 < stream.length ? stream[index + 3] : null;
 
-          return TikTokView(
-            media: post.mux!,
-            vod: post.vod!,
-            data: post,
-            isFriends: true,
-            nextImage: [
-              post2 == null ? null : post2.media!.first,
-              post3 == null ? null : post3.media!.first,
-              post4 == null ? null : post4.media!.first
-            ],
-            page: "feed",
-            feedPosts: stream,
-            index1: index,
-            index2: index + 1,
-            urls: post.media!,
-            isHome: true,
-            isInView: true,
-            thumbails: post.thumbnails!,
-          );
-        }),
-        onPageChanged: (index) {
-          if (mounted) {
-            if (index > stream.length - 5) {
-              SchedulerBinding.instance.addPostFrameCallback((_) {
-                paginateFeed(context);
-              });
+            return TikTokView(
+              media: post.mux!,
+              vod: post.vod!,
+              data: post,
+              isFriends: true,
+              nextImage: [
+                post2 == null ? null : post2.media!.first,
+                post3 == null ? null : post3.media!.first,
+                post4 == null ? null : post4.media!.first
+              ],
+              page: "feed",
+              feedPosts: stream,
+              index1: index,
+              index2: index + 1,
+              urls: post.media!,
+              isHome: true,
+              isInView: true,
+              thumbails: post.thumbnails!,
+            );
+          }),
+          onPageChanged: (index) {
+            if (mounted) {
+              if (index > stream.length - 5) {
+                SchedulerBinding.instance.addPostFrameCallback((_) {
+                  paginateFeed(context);
+                });
+              }
             }
-          }
-        },
-      ),
+          },
+        );
+      }, FriendWare.instance.friendPost),
     );
   }
 

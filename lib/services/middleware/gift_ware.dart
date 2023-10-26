@@ -445,14 +445,14 @@ class GiftWare extends GetxController {
               if (element.isNotEmpty) {
                 try {
                   if (element.contains('.mp4')) {
-                    await SaveMediaController.saveNetworkVideo(
-                        context, element);
+                    await SaveMediaController.saveNetworkVideo(context, element,
+                        data.data!.description ?? "macanacki");
                   } else if (element.contains('.mp3')) {
-                    await SaveMediaController.saveNetworkAudio(
-                        context, element);
+                    await SaveMediaController.saveNetworkAudio(context, element,
+                        data.data!.description ?? "macanacki");
                   } else {
-                    await SaveMediaController.saveNetworkImage(
-                        context, element);
+                    await SaveMediaController.saveNetworkImage(context, element,
+                        data.data!.description ?? "macanacki");
                   }
                 } catch (e) {
                   debugPrint(e.toString());
@@ -462,13 +462,19 @@ class GiftWare extends GetxController {
           } else {
             if (data.data!.media!.first.contains('.mp4')) {
               await SaveMediaController.saveNetworkVideo(
-                  context, data.data!.media!.first);
+                  context,
+                  data.data!.media!.first,
+                  data.data!.description ?? "macanacki");
             } else if (data.data!.media!.first.contains('.mp3')) {
               await SaveMediaController.saveNetworkAudio(
-                  context, data.data!.media!.first);
+                  context,
+                  data.data!.media!.first,
+                  data.data!.description ?? "macanacki");
             } else {
               await SaveMediaController.saveNetworkImage(
-                  context, data.data!.media!.first);
+                  context,
+                  data.data!.media!.first,
+                  data.data!.description ?? "macanacki");
             }
           }
         } catch (e) {

@@ -6,6 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:macanacki/config/pay_ext.dart';
 import 'package:macanacki/model/reg_email_model.dart';
@@ -141,7 +142,7 @@ class LoginController {
     ChatController.retreiveUnread(context);
     ChatController.retrievChatController(context, false, false);
     FeedPostController.getUserPostController(context);
-      FeedPostController.getUserPostAudioController(context);
+    FeedPostController.getUserPostAudioController(context);
     //  ActionController.retrievAllUserFollowingController(context);
     // ActionController.retrievAllUserLikedCommentsController(context);
   }
@@ -190,6 +191,7 @@ class LoginController {
                     width: 5,
                   ),
                   Container(
+                    constraints: BoxConstraints(maxWidth: Get.width * 0.7),
                     decoration: BoxDecoration(
                       backgroundBlendMode: BlendMode.colorDodge,
                       gradient: LinearGradient(
@@ -216,6 +218,8 @@ class LoginController {
                           text: message.notification!.body!,
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
+                          maxLines: 5,
+                          overflow: TextOverflow.ellipsis,
                           size: 14),
                     ),
                   ),

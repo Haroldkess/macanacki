@@ -96,7 +96,7 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
     }
 
     return SafeArea(
-      top: false,
+      top: true,
       child: Scaffold(
         backgroundColor: tabs.index == 4 || tabs.index == 2
             ? HexColor(backgroundColor)
@@ -233,125 +233,6 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
                     }),
               );
             }),
-        // bottomNavigationBar: CupertinoTabBar(
-        //   currentIndex: context.watch<TabProvider>().index,
-        //   onTap: (index) async {
-        //     // Operations.controlSystemColor();
-
-        //     provide.changeIndex(index);
-        //     ChatController.initSocket(context)
-        //         .whenComplete(() => ChatController.addUserToSocket(context));
-        //     // if (chat.socket != null) {
-        //     //   ChatController.addUserToSocket(context);
-        //     // }
-        //     if (chat.chatPage != 0) {
-        //       ChatController.changeChatPage(context, 0);
-        //     }
-
-        //     if (provide.index == 0) {
-        //       provide.addtapTrack();
-        //       if (provide.index == 0 &&
-        //           index == 0 &&
-        //           provide.tapTracker > 1) {
-        //         await FeedPostController.reloadPage(context);
-
-        //         // setState(() {});
-        //         // setState(() {
-        //         //   FeedHome().createState().dispose();
-
-        //         //   // _children = [
-
-        //         //   //   const GlobalSearch(),
-        //         //   //   const SwipeCardScreen(),
-        //         //   //   const ConversationScreen(),
-        //         //   //   const ProfileScreen(),
-        //         //   // ];
-        //         // });
-
-        //         // setState(() {
-        //         //   FeedHome().createState().build(context);
-        //         // });
-        //         //  emitter("referesh");
-        //       }
-        //       tabs.pageController!.animateToPage(
-        //         index,
-        //         duration: const Duration(milliseconds: 1),
-        //         curve: Curves.easeIn,
-        //       );
-        //       if (provide.isTapped) {
-        //         provide.tap(false);
-        //       }
-        //       provide.isHomeChange(false);
-        //     } else {
-        //       if (index == 4) {
-        //         try {
-        //           NotificationController.retrievNotificationController(
-        //               context, false);
-        //           // if (provide.controller != null) {
-        //           //   if (provide.controller!.value.isInitialized) {
-        //           //     if (provide.controller!.value.isBuffering ||
-        //           //         provide.controller!.value.isPlaying) {
-        //           //       if (mounted) {
-        //           //       //  provide.pauseControl();
-        //           //       //  provide.tap(true);
-        //           //       }
-        //           //     } else {
-        //           //       if (mounted) {
-        //           //       //  provide.pauseControl();
-        //           //      //   provide.tap(true);
-        //           //       }
-        //           //     }
-        //           //   }
-        //           // }
-        //         } catch (e) {
-        //           emitter(e.toString());
-        //         }
-        //       }
-        //       // setState(() {
-        //       //   trackTaps = 0;
-        //       // });
-        //       provide.tapTrack(0);
-        //       tabs.pageController!.animateToPage(
-        //         index,
-        //         duration: const Duration(milliseconds: 1),
-        //         curve: Curves.easeIn,
-        //       );
-        //       try {
-        //         // if (provide.controller != null) {
-        //         //   if (provide.controller!.value.isInitialized) {
-        //         //     if (provide.controller!.value.isBuffering ||
-        //         //         provide.controller!.value.isPlaying) {
-        //         //       if (mounted) {
-        //         //         provide.pauseControl();
-        //         //         provide.tap(true);
-        //         //       }
-        //         //     } else {
-        //         //       if (mounted) {
-        //         //         provide.pauseControl();
-        //         //         provide.tap(true);
-        //         //       }
-        //         //     }
-        //         //   }
-        //         // }
-        //       } catch (e) {
-        //         emitter(e.toString());
-        //       }
-        //       //provide.isHomeChange(true);
-        //     }
-        //   },
-        //   items: [
-        //     barItem('assets/icon/home.svg', tabs.index == 0 ? true : false),
-        //     barItem('assets/icon/search.svg', tabs.index == 1 ? true : false),
-        //     barItem('assets/icon/crown.svg', tabs.index == 2 ? true : false),
-        //     barItem(
-        //         'assets/icon/chat.svg', tabs.index == 3 ? true : false, true),
-        //     barItem(
-        //         'assets/icon/profile.svg', tabs.index == 4 ? true : false),
-        //   ],
-        //   activeColor: HexColor(primaryColor),
-        //   backgroundColor:
-        //       Platform.isIOS ? Colors.black : HexColor(backgroundColor),
-        // ),
       ),
     );
   }

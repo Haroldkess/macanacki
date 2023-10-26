@@ -30,189 +30,192 @@ class MatchRequestScreen extends StatelessWidget {
     ActionWare stream = context.watch<ActionWare>();
     ActionWare action = Provider.of<ActionWare>(context, listen: false);
     ChatWare myChat = context.watch<ChatWare>();
-    return Scaffold(
-      backgroundColor: HexColor(backgroundColor),
-      body: Stack(
-        children: [
-          Column(
-            children: [
-              SizedBox(height: height * 0.58, child: buildCard(img!)),
-              Expanded(
-                  child: Padding(
-                padding: const EdgeInsets.only(left: 16),
-                child: Container(
-                  alignment: Alignment.topLeft,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      Row(
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: HexColor(backgroundColor),
+        body: Stack(
+          children: [
+            SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(height: height * 0.58, child: buildCard(img!)),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16),
+                    child: Container(
+                      alignment: Alignment.topLeft,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Expanded(
-                            child: InkWell(
-                              onTap: () {
-                                PageRouting.pushToPage(
-                                    context, UsersProfile(username: userName!));
-                              },
-                              child: RichText(
-                                  text: TextSpan(
-                                      text: userName ?? "",
-                                      style: GoogleFonts.leagueSpartan(
-                                        color: HexColor(darkColor),
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                      children: [
-                                    TextSpan(
-                                      text: "",
-                                      style: GoogleFonts.leagueSpartan(
-                                          color: HexColor("#C0C0C0"),
-                                          fontSize: 20),
-                                    )
-                                  ])),
-                            ),
+                          const SizedBox(
+                            height: 15,
                           ),
-                          // Image.asset(
-                          //   "assets/pic/verified.png",
-                          //   height: 27,
-                          //   width: 27,
-                          //   color: HexColor(primaryColor),
-                          // )
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      Column(
-                        children: [
                           Row(
                             children: [
-                              CircleAvatar(
-                                radius: 5,
-                                backgroundColor: myChat.allSocketUsers
-                                        .where((element) =>
-                                            element.userId.toString() ==
-                                            id.toString())
-                                        .toList()
-                                        .isEmpty
-                                    ? Colors.red
-                                    : HexColor("#00B074"),
+                              Expanded(
+                                child: InkWell(
+                                  onTap: () {
+                                    PageRouting.pushToPage(context,
+                                        UsersProfile(username: userName!));
+                                  },
+                                  child: RichText(
+                                      text: TextSpan(
+                                          text: userName ?? "",
+                                          style: GoogleFonts.leagueSpartan(
+                                            color: HexColor(darkColor),
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                          children: [
+                                        TextSpan(
+                                          text: "",
+                                          style: GoogleFonts.leagueSpartan(
+                                              color: HexColor("#C0C0C0"),
+                                              fontSize: 20),
+                                        )
+                                      ])),
+                                ),
                               ),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              AppText(
-                                text: myChat.allSocketUsers
-                                        .where((element) =>
-                                            element.userId.toString() ==
-                                            id.toString())
-                                        .toList()
-                                        .isEmpty
-                                    ? "offline"
-                                    : "online",
-                                size: 12,
-                                fontWeight: FontWeight.w500,
-                              )
+                              // Image.asset(
+                              //   "assets/pic/verified.png",
+                              //   height: 27,
+                              //   width: 27,
+                              //   color: HexColor(primaryColor),
+                              // )
                             ],
                           ),
-                          SizedBox(
-                            height: 7,
+                          const SizedBox(
+                            height: 15,
                           ),
-                          Row(
+                          Column(
                             children: [
-                              SvgPicture.asset("assets/icon/location.svg"),
-                              const SizedBox(
-                                width: 5,
+                              Row(
+                                children: [
+                                  CircleAvatar(
+                                    radius: 5,
+                                    backgroundColor: myChat.allSocketUsers
+                                            .where((element) =>
+                                                element.userId.toString() ==
+                                                id.toString())
+                                            .toList()
+                                            .isEmpty
+                                        ? Colors.red
+                                        : HexColor("#00B074"),
+                                  ),
+                                  const SizedBox(
+                                    width: 5,
+                                  ),
+                                  AppText(
+                                    text: myChat.allSocketUsers
+                                            .where((element) =>
+                                                element.userId.toString() ==
+                                                id.toString())
+                                            .toList()
+                                            .isEmpty
+                                        ? "offline"
+                                        : "online",
+                                    size: 12,
+                                    fontWeight: FontWeight.w500,
+                                  )
+                                ],
                               ),
-                              AppText(
-                                text: "some km away",
-                                size: 12,
-                                fontWeight: FontWeight.w500,
-                              )
+                              SizedBox(
+                                height: 7,
+                              ),
+                              // Row(
+                              //   children: [
+                              //     SvgPicture.asset("assets/icon/location.svg"),
+                              //     const SizedBox(
+                              //       width: 5,
+                              //     ),
+                              //     AppText(
+                              //       text: "some km away",
+                              //       size: 12,
+                              //       fontWeight: FontWeight.w500,
+                              //     )
+                              //   ],
+                              // )
                             ],
                           )
                         ],
-                      )
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  Container(
+                    height: 58,
+                    width: 280,
+                    child: stream.loadStatus
+                        ? Loader(color: HexColor(primaryColor))
+                        : AppButton(
+                            width: 280,
+                            height: 58,
+                            color: primaryColor,
+                            text: stream.followIds.contains(id)
+                                ? "UnFollow"
+                                : "Follow Back",
+                            backColor: primaryColor,
+                            onTap: () => followAction(context, userName!, id),
+                            curves: 37,
+                            textColor: "#FFFFFF"),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    height: 58,
+                    width: 280,
+                    child: AppButton(
+                        width: 280,
+                        height: 58,
+                        color: "#F5F2F9",
+                        text: "Maybe Later",
+                        backColor: "#F5F2F9",
+                        onTap: () {
+                          PageRouting.popToPage(context);
+                        },
+                        curves: 37,
+                        textColor: "#8B8B8B"),
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                ],
+              ),
+            ),
+            Positioned(
+              top: 40,
+              child: Container(
+                width: width,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 15),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      InkWell(
+                        onTap: () => PageRouting.popToPage(context),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: HexColor("#FFFFFF"),
+                              border: Border.all(
+                                  width: 1.0,
+                                  color: HexColor("#FFFFFF"),
+                                  style: BorderStyle.solid)),
+                          child: Icon(
+                            Icons.clear,
+                            color: HexColor("#8B8B8B").withOpacity(.6),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
-              )),
-              const SizedBox(
-                height: 25,
               ),
-              Container(
-                height: 58,
-                width: 280,
-                child: stream.loadStatus
-                    ? Loader(color: HexColor(primaryColor))
-                    : AppButton(
-                        width: 280,
-                        height: 58,
-                        color: primaryColor,
-                        text: stream.followIds.contains(id)
-                            ? "UnFollow"
-                            : "Follow Back",
-                        backColor: primaryColor,
-                        onTap: () => followAction(context, userName!, id),
-                        curves: 37,
-                        textColor: "#FFFFFF"),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Container(
-                height: 58,
-                width: 280,
-                child: AppButton(
-                    width: 280,
-                    height: 58,
-                    color: "#F5F2F9",
-                    text: "Maybe Later",
-                    backColor: "#F5F2F9",
-                    onTap: () {
-                      PageRouting.popToPage(context);
-                    },
-                    curves: 37,
-                    textColor: "#8B8B8B"),
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-            ],
-          ),
-          Positioned(
-            top: 40,
-            child: Container(
-              width: width,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 20, right: 15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    InkWell(
-                      onTap: () => PageRouting.popToPage(context),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: HexColor("#FFFFFF"),
-                            border: Border.all(
-                                width: 1.0,
-                                color: HexColor("#FFFFFF"),
-                                style: BorderStyle.solid)),
-                        child: Icon(
-                          Icons.clear,
-                          color: HexColor("#8B8B8B").withOpacity(.6),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }
@@ -225,7 +228,8 @@ class MatchRequestScreen extends StatelessWidget {
   }
 
   Widget buildCard(String image) => ClipRRect(
-        borderRadius: BorderRadius.circular(30),
+        borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(30), bottomRight: Radius.circular(30)),
         child: Container(
           decoration: BoxDecoration(
               image: DecorationImage(

@@ -65,48 +65,9 @@ class _VodViewState extends State<VodView> {
   String apiToken = "";
   @override
   void initState() {
-    // widget.controller!.addListener(ApiVideoPlayerControllerEventsListener(
-    //   // onReady: () {
-    //   //   if (widget.index == 0) {
-    //   //     widget.controller.play();
-    //   //     widget.controller.setIsLooping(true);
-    //   //   } else {
-    //   //     widget.controller.play();
-    //   //     widget.controller.setIsLooping(true);
-    //   //   }
-    //   //   setState(() {
-    //   //     isReady = true;
-    //   //     tapped = false;
-    //   //     delayUser = false;
-    //   //     _duration = 'Get duration';
-    //   //   });
-    //   // },
-    //   onEnd: () async {
-    //     log("video ended");
-    //     ViewController.handleView(widget.data!.id!);
-    //     setState(() {});
-    //   },
-    // ));
-
-    //  if (widget.index == 0) {
-    // widget.controller!.initialize();
-    //}
-    // buildVideoOptions();
     super.initState();
-  }
 
-  void buildVideoOptions() {
-    final token = apiToken.isEmpty ? null : apiToken;
-
-    final videoOptions =
-        VideoOptions(videoId: widget.vod, type: VideoType.vod, token: token);
-
-    if (_controller == null) {
-      _controller = ApiVideoPlayerController(
-          videoOptions: videoOptions, autoplay: false, onEnd: () {});
-    } else {
-      _controller?.setVideoOptions(videoOptions);
-    }
+    widget.controller!.initialize();
   }
 
   @override
@@ -154,39 +115,14 @@ class _PlayerWidgetState extends State<PlayerWidget> {
 
   @override
   void initState() {
-    // setState(() {
-    //   tapped = true;
-    // });
-    // widget.controller.addListener(ApiVideoPlayerControllerEventsListener(
-    //   // onReady: () {
-    //   //   if (widget.index == 0) {
-    //   //     widget.controller.play();
-    //   //     widget.controller.setIsLooping(true);
-    //   //   } else {
-    //   //     widget.controller.play();
-    //   //     widget.controller.setIsLooping(true);
-    //   //   }
-    //   //   setState(() {
-    //   //     isReady = true;
-    //   //     tapped = false;
-    //   //     delayUser = false;
-    //   //     _duration = 'Get duration';
-    //   //   });
-    //   // },
-    //   onEnd: () async {
-    //     log("video ended");
-    //     ViewController.handleView(widget.data!.id!);
-    //     setState(() {});
-    //   },
-    // ));
+    addListener();
     super.initState();
   }
 
   @override
   void dispose() {
-    if (widget.controller != null) {
-      widget.controller.dispose();
-    }
+    widget.controller.dispose();
+
     // widget.controller.dispose();
 
     super.dispose();
@@ -194,17 +130,16 @@ class _PlayerWidgetState extends State<PlayerWidget> {
 
   void addListener() {
     widget.controller.addListener(ApiVideoPlayerControllerEventsListener(
-      // onReady: () {
-      //   // widget.controller.play();
-      //   // widget.controller.setIsLooping(true);
-
-      //   // setState(() {
-      //   //   isReady = true;
-      //   //   tapped = false;
-      //   //   delayUser = false;
-      //   //   _duration = 'Get duration';
-      //   // });
-      // },
+      onReady: () async {
+        if (await widget.controller.isPlaying) {
+          setState(() {
+            isReady = true;
+            tapped = false;
+            delayUser = false;
+            _duration = 'Get duration';
+          });
+        }
+      },
       onPlay: () {
         // setState(() {
         //   isReady = true;
@@ -384,12 +319,14 @@ class _PlayerWidgetState extends State<PlayerWidget> {
                       }
                       //  if (widget.index! == 0) {
 
-                      setState(() {
-                        isReady = true;
-                        tapped = false;
-                        delayUser = false;
-                        _duration = 'Get duration';
-                      });
+                      if (await widget.controller.isPlaying) {
+                        setState(() {
+                          isReady = true;
+                          tapped = false;
+                          delayUser = false;
+                          _duration = 'Get duration';
+                        });
+                      }
                       // widget.controller
                       //     .addListener(ApiVideoPlayerControllerEventsListener(
                       //   onReady: () {

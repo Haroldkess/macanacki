@@ -76,16 +76,14 @@ class _GlobalSearchState extends State<GlobalSearch> {
               FocusScope.of(context).requestFocus(FocusNode());
             },
             child: SizedBox(
-                  height: Get.height,
-      width: Get.width,
+              height: Get.height,
+              width: Get.width,
               child: UserGlobalResult(
                 userName: userName!,
               ),
             )),
       ),
     );
-  
-  
   }
 
   @override

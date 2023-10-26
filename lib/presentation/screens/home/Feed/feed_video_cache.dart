@@ -354,11 +354,9 @@ class _VideoView2State extends State<VideoView2> {
   //   }
   // }
 
-  Future<void> buildVideoOptions() async {
-    final token = apiToken.isEmpty ? null : apiToken;
-
+  void buildVideoOptions() {
     final videoOptions = VideoOptions(
-        videoId: widget.data.vod!.first!, type: VideoType.vod, token: token);
+        videoId: widget.data.vod!.first!, type: VideoType.vod, token: null);
 
     _controller = ApiVideoPlayerController(
         videoOptions: videoOptions,
@@ -369,31 +367,6 @@ class _VideoView2State extends State<VideoView2> {
         onReady: () {
           log("READY!!!");
         });
-
-    await _controller!.initialize();
-
-    _controller!.addListener(ApiVideoPlayerControllerEventsListener(
-      // onReady: () {
-      //   if (widget.index == 0) {
-      //     widget.controller.play();
-      //     widget.controller.setIsLooping(true);
-      //   } else {
-      //     widget.controller.play();
-      //     widget.controller.setIsLooping(true);
-      //   }
-      //   setState(() {
-      //     isReady = true;
-      //     tapped = false;
-      //     delayUser = false;
-      //     _duration = 'Get duration';
-      //   });
-      // },
-      onEnd: () {
-        log("video ended");
-        ViewController.handleView(widget.data.id!);
-        //setState(() {});
-      },
-    ));
   }
 
   Future<void> innit() async {}

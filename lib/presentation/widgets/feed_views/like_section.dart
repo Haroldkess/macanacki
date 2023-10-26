@@ -102,8 +102,8 @@ class _LikeSectionState extends State<LikeSection> {
                 // Operations.commentOperation(
                 //     context, false, widget.data.comments!);
 
-                commentModal(context, widget.data.id!, widget.page,
-                    widget.showComment, widget.userName);
+                commentModal(context, widget.data.id!, widget.page, false,
+                    widget.userName);
               },
               child: Padding(
                 padding: const EdgeInsets.only(right: 3.0),
@@ -132,13 +132,13 @@ class _LikeSectionState extends State<LikeSection> {
                               try {
                                 if (element.contains('.mp4')) {
                                   await SaveMediaController.saveNetworkVideo(
-                                      context, element);
+                                      context, element, "macanacki");
                                 } else if (element.contains('.mp3')) {
                                   await SaveMediaController.saveNetworkAudio(
-                                      context, element);
+                                      context, element, "macanacki");
                                 } else {
                                   await SaveMediaController.saveNetworkImage(
-                                      context, element);
+                                      context, element, "macanacki");
                                 }
                               } catch (e) {
                                 debugPrint(e.toString());
@@ -148,10 +148,20 @@ class _LikeSectionState extends State<LikeSection> {
                         } else {
                           if (widget.data.media!.first.contains('.mp4')) {
                             await SaveMediaController.saveNetworkVideo(
-                                context, widget.data.media!.first);
+                                context,
+                                widget.data.media!.first,
+                                widget.data.description ?? "macanacki");
+                          } else if (widget.data.media!.first
+                              .contains('.mp3')) {
+                            await SaveMediaController.saveNetworkAudio(
+                                context,
+                                widget.data.media!.first,
+                                widget.data.description ?? "macanacki");
                           } else {
                             await SaveMediaController.saveNetworkImage(
-                                context, widget.data.media!.first);
+                                context,
+                                widget.data.media!.first,
+                                widget.data.description ?? "macanacki");
                           }
                         }
                       } else {
@@ -195,10 +205,13 @@ class _LikeSectionState extends State<LikeSection> {
                               try {
                                 if (element.contains('.mp4')) {
                                   await SaveMediaController.saveNetworkVideo(
-                                      context, element);
+                                      context, element, "macanacki");
+                                } else if (element.contains('.mp3')) {
+                                  await SaveMediaController.saveNetworkAudio(
+                                      context, element, "macanacki");
                                 } else {
                                   await SaveMediaController.saveNetworkImage(
-                                      context, element);
+                                      context, element, "macanacki");
                                 }
                               } catch (e) {
                                 debugPrint(e.toString());
@@ -208,10 +221,20 @@ class _LikeSectionState extends State<LikeSection> {
                         } else {
                           if (widget.data.media!.first.contains('.mp4')) {
                             await SaveMediaController.saveNetworkVideo(
-                                context, widget.data.media!.first);
+                                context,
+                                widget.data.media!.first,
+                                widget.data.description ?? "macanacki");
+                          } else if (widget.data.media!.first
+                              .contains('.mp3')) {
+                            await SaveMediaController.saveNetworkAudio(
+                                context,
+                                widget.data.media!.first,
+                                widget.data.description ?? "macanacki");
                           } else {
                             await SaveMediaController.saveNetworkImage(
-                                context, widget.data.media!.first);
+                                context,
+                                widget.data.media!.first,
+                                widget.data.description ?? "macanacki");
                           }
                         }
                       } else {

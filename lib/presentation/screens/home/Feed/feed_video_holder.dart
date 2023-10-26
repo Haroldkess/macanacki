@@ -438,6 +438,7 @@ class _VideoViewState extends State<VideoView> {
   String apiToken = "";
   @override
   void initState() {
+    buildVideoOptions();
     // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
     //   if (mounted) {
     //     for (var i in widget.vodList) {
@@ -449,9 +450,6 @@ class _VideoViewState extends State<VideoView> {
     //     }
     //   }
     // });
-    if (widget.inComingController == null) {
-      buildVideoOptions();
-    }
 
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -459,15 +457,15 @@ class _VideoViewState extends State<VideoView> {
     });
   }
 
-  Future<void> buildVideoOptions() async {
-    final token = apiToken.isEmpty ? null : apiToken;
+  void buildVideoOptions() async {
+    // final token = apiToken.isEmpty ? null : apiToken;
 
     final videoOptions = VideoOptions(
-        videoId: widget.data.vod!.first!, type: VideoType.vod, token: token);
+        videoId: widget.data.vod!.first!, type: VideoType.vod, token: null);
 
     _controller = ApiVideoPlayerController(
         videoOptions: videoOptions,
-        autoplay: false,
+        autoplay: true,
         onEnd: () {
           ViewController.handleView(widget.data.id!);
         },
@@ -475,30 +473,7 @@ class _VideoViewState extends State<VideoView> {
           log("READY!!!");
         });
 
-    await _controller!.initialize();
-
-    _controller!.addListener(ApiVideoPlayerControllerEventsListener(
-      // onReady: () {
-      //   if (widget.index == 0) {
-      //     widget.controller.play();
-      //     widget.controller.setIsLooping(true);
-      //   } else {
-      //     widget.controller.play();
-      //     widget.controller.setIsLooping(true);
-      //   }
-      //   setState(() {
-      //     isReady = true;
-      //     tapped = false;
-      //     delayUser = false;
-      //     _duration = 'Get duration';
-      //   });
-      // },
-      onEnd: () {
-        log("video ended");
-        ViewController.handleView(widget.data.id!);
-        //setState(() {});
-      },
-    ));
+    // _controller!.initialize();
   }
 
   Future<void> innit() async {}

@@ -38,7 +38,8 @@ class SaveMediaController {
     // _toastInfo('requestPermission result: ${statuses}');
   }
 
-  static Future<void> saveNetworkVideo(BuildContext context, String url) async {
+  static Future<void> saveNetworkVideo(
+      BuildContext context, String url, name) async {
     // showToast2(context, "Download started. Scroll to check out more content",
     //    isError: false);
     print(url);
@@ -47,7 +48,7 @@ class SaveMediaController {
     Get.showSnackbar(successSnackBar("Downloading", "Video"));
     final dir = await getTemporaryDirectory();
     String savePath =
-        "${dir.path}/${DateTime.now().millisecondsSinceEpoch}.mp4";
+        "${dir.path}.${DateTime.now().millisecondsSinceEpoch}.mp4";
     String path = url;
     await requestPermission();
     await Dio().download(path, savePath,
@@ -60,7 +61,7 @@ class SaveMediaController {
     final result = await SaverGallery.saveFile(
         file: savePath,
         androidExistNotSave: true,
-        name: 'macanacki${basename(savePath)}.mp4',
+        name: '$name${savePath}.mp4',
         androidRelativePath: "Movies");
 
     emitter(" the download link $url");
@@ -107,7 +108,8 @@ class SaveMediaController {
     }
   }
 
-  static Future<void> saveNetworkImage(BuildContext context, String url) async {
+  static Future<void> saveNetworkImage(
+      BuildContext context, String url, name) async {
     // showToast2(context, "Download started. Scroll to check out more content",
     //     isError: false);
     MediaDownloadProgress.instance.addProgress(1, 100);
@@ -120,8 +122,7 @@ class SaveMediaController {
         ), onReceiveProgress: (received, total) {
       MediaDownloadProgress.instance.addProgress(received, total);
     });
-    String picturesPath =
-        "${path.split(".").first.isEmpty ? "name" : path.split(".").first.isEmpty}.jpg";
+    String picturesPath = "$name ${DateTime.now().millisecondsSinceEpoch}.jpg";
     await requestPermission();
     debugPrint(picturesPath);
     final result = await SaverGallery.saveImage(
@@ -170,7 +171,10 @@ class SaveMediaController {
     }
   }
 
-  static Future<void> saveNetworkAudio(BuildContext context, String url) async {
+  static Future<void> saveNetworkAudio(
+      BuildContext context, String url, name) async {
+    getPermission();
+
     Map<String, dynamic> result = {
       'isSuccess': false,
       'filePath': null,
@@ -192,8 +196,7 @@ class SaveMediaController {
         ), onReceiveProgress: (received, total) {
       MediaDownloadProgress.instance.addProgress(received, total);
     });
-    String musicPath =
-        "${path.split(".").first.isEmpty ? "macanacki" : path.split(":").first}.mp3";
+    String musicPath = "$name.${DateTime.now().millisecondsSinceEpoch}.mp3";
     await requestPermission();
     debugPrint(musicPath);
 
@@ -312,6 +315,12 @@ class SaveMediaController {
       reverseAnimationCurve: Curves.fastOutSlowIn,
       duration: const Duration(seconds: 3),
     );
+  }
+
+  static void getPermission() async {
+    Map<Permission, PermissionStatus> permissions = await [
+      Permission.storage,
+    ].request();
   }
 }
 
