@@ -361,22 +361,22 @@ class _UserTikTokViewState extends State<UserTikTokView>
                                   }
                                 });
                               } else {
-                                if (widget.media.first.contains('.mp4')) {
+                                if (widget.data.media!.first.contains('.mp4')) {
                                   emitter(widget.media.first);
                                   await SaveMediaController.saveNetworkVideo(
                                       context,
-                                      widget.media.first,
+                                      widget.data.media!.first,
                                       widget.data.description ?? "macanacki");
-                                } else if (widget.media.first
+                                } else if (widget.data.media!.first
                                     .contains('.mp3')) {
                                   await SaveMediaController.saveNetworkAudio(
                                       context,
-                                      widget.media.first,
+                                      widget.data.media!.first,
                                       widget.data.description ?? "macanacki");
                                 } else {
                                   await SaveMediaController.saveNetworkImage(
                                       context,
-                                      widget.media.first,
+                                      widget.data.media!.first,
                                       widget.data.description ?? "macanacki");
                                 }
                               }
