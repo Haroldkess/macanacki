@@ -69,6 +69,11 @@ optionModal(BuildContext cont, List<String> url,
                                                       await SaveMediaController
                                                           .saveNetworkVideo(
                                                               context, element);
+                                                    } else if (element
+                                                        .contains('.mp3')) {
+                                                      await SaveMediaController
+                                                          .saveNetworkAudio(
+                                                              context, element);
                                                     } else {
                                                       await SaveMediaController
                                                           .saveNetworkImage(
@@ -84,6 +89,11 @@ optionModal(BuildContext cont, List<String> url,
                                                   .contains('.mp4')) {
                                                 await SaveMediaController
                                                     .saveNetworkVideo(context,
+                                                        data.media!.first);
+                                              } else if (data.media!.first
+                                                  .contains('.mp3')) {
+                                                await SaveMediaController
+                                                    .saveNetworkAudio(context,
                                                         data.media!.first);
                                               } else {
                                                 await SaveMediaController
@@ -106,7 +116,7 @@ optionModal(BuildContext cont, List<String> url,
                                                   media: url.first,
                                                   id: postId!));
                                         } else if (e.id == 4) {
-                                          print(postId);
+                                        //  print(postId);
                                           PageRouting.popToPage(context);
 
                                           ScaffoldMessenger.of(cont)

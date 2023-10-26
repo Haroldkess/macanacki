@@ -410,7 +410,7 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
                                   await UrlLaunchController.launchWebViewOrVC(
                                       Uri.parse(widget.data.btnLink!));
                                 } else {
-                                  await UrlLaunchController.launchInWebViewOrVC(
+                                  await UrlLaunchController.launchWebViewOrVC(
                                       Uri.parse(widget.data.btnLink!));
                                 }
                               }
