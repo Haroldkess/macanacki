@@ -9,11 +9,12 @@ import 'pay_styles.dart';
 class Paywall extends StatefulWidget {
   final List<Package> packages;
   final String title;
+  final bool showTermAndConditions;
   final String description;
   final Function() onSucess;
   final Function(String) onError;
 
-  const Paywall({Key? key, required this.packages, required this.title, required this.description, required this.onSucess, required this.onError}) : super(key: key);
+  const Paywall({Key? key, required this.packages, required this.title, required this.description, required this.onSucess, required this.onError, required this.showTermAndConditions}) : super(key: key);
 
   @override
   _PaywallState createState() => _PaywallState();
@@ -113,7 +114,7 @@ class _PaywallState extends State<Paywall> {
           const Icon(Icons.keyboard_arrow_down_outlined, size: 30,
             color: Colors.white,),
           const SizedBox(height: 10,),
-          Text(termAndConditions,
+          widget.showTermAndConditions ? Text(termAndConditions,
               textAlign: TextAlign.center,
               style: GoogleFonts.leagueSpartan(
                   textStyle: const TextStyle(
@@ -121,7 +122,7 @@ class _PaywallState extends State<Paywall> {
                     decorationStyle: TextDecorationStyle.solid,
                     fontSize: 13,
                     height: 1.2
-                  ))),
+                  ))) : Container(),
         ],
       ),
     );

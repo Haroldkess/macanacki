@@ -41,6 +41,7 @@ buyDiamondsModal(BuildContext context, rate) async {
         return FractionallySizedBox(
           heightFactor: 0.9,
           child: Paywall(
+            showTermAndConditions: false,
             title: "Buy Diamonds",
             description: "Diamonds are gift sent to creators to show appreciation for their content.",
             packages: diamondPackages,

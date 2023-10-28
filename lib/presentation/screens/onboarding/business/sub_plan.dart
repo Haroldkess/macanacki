@@ -384,6 +384,7 @@ payModal(BuildContext context, PlanData plan, bool? isBusiness, bool isPayOnly,
             return FractionallySizedBox(
               heightFactor: 0.9,
               child: Paywall(
+                showTermAndConditions: true,
                 title: "Verification Packages",
                 description: "Unlock the full verification experience",
                 packages: verificationPackages,
