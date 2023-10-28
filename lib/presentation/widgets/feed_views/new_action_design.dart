@@ -637,7 +637,7 @@ class VideoUser extends StatefulWidget {
   final FeedPost data;
   String page;
   final List<String> media;
-  ApiVideoPlayerController? controller;
+  dynamic controller;
   bool? isAudio;
   AudioPlayer? player;
   bool? isVideo;

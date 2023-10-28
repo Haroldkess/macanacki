@@ -132,6 +132,8 @@ class SaveMediaController {
       BuildContext context, String url, name) async {
     Platform.isAndroid ? getPermission() : await getPermissionIos();
 
+    await requestPermission();
+
     Map<String, dynamic> result = {
       'isSuccess': false,
       'filePath': null,

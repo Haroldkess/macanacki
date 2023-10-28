@@ -180,366 +180,380 @@ class _ProfileScreenState extends State<ProfileScreen>
       drawer: DrawerSide(
         scafKey: key,
       ),
-      body: CustomRefreshIndicator(
-        onStateChanged: (change) {
-          /// set [_renderCompleteState] to true when controller.state become completed
-          if (change.didChange(to: IndicatorState.complete)) {
-            setState(() {
-              _renderCompleteState = true;
-            });
-
-            /// set [_renderCompleteState] to false when controller.state become idle
-          } else if (change.didChange(to: IndicatorState.idle)) {
-            setState(() {
-              _renderCompleteState = false;
-            });
-          }
+      body: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onPanDown: (_) {
+          //  PersistentNavController.instance.toggleHide();
+          WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+            if (PersistentNavController.instance.hide.value == true) {
+              PersistentNavController.instance.toggleHide();
+            }
+          });
         },
-        builder: (
-          BuildContext context,
-          Widget child,
-          IndicatorController controller,
-        ) {
-          return Stack(
-            children: <Widget>[
-              AnimatedBuilder(
-                animation: controller,
-                builder: (BuildContext context, Widget? _) {
-                  if (controller.scrollingDirection ==
-                          ScrollDirection.reverse &&
-                      prevScrollDirection == ScrollDirection.forward) {
-                    // controller.stopDrag();
-                  }
+        child: CustomRefreshIndicator(
+          onStateChanged: (change) {
+            /// set [_renderCompleteState] to true when controller.state become completed
+            if (change.didChange(to: IndicatorState.complete)) {
+              setState(() {
+                _renderCompleteState = true;
+              });
 
-                  prevScrollDirection = controller.scrollingDirection;
+              /// set [_renderCompleteState] to false when controller.state become idle
+            } else if (change.didChange(to: IndicatorState.idle)) {
+              setState(() {
+                _renderCompleteState = false;
+              });
+            }
+          },
+          builder: (
+            BuildContext context,
+            Widget child,
+            IndicatorController controller,
+          ) {
+            return Stack(
+              children: <Widget>[
+                AnimatedBuilder(
+                  animation: controller,
+                  builder: (BuildContext context, Widget? _) {
+                    if (controller.scrollingDirection ==
+                            ScrollDirection.reverse &&
+                        prevScrollDirection == ScrollDirection.forward) {
+                      // controller.stopDrag();
+                    }
 
-                  final containerHeight = controller.value * _indicatorSize;
+                    prevScrollDirection = controller.scrollingDirection;
 
-                  return Container(
-                    alignment: Alignment.center,
-                    height: containerHeight,
-                    child: OverflowBox(
-                      maxHeight: 40,
-                      minHeight: 40,
-                      maxWidth: 40,
-                      minWidth: 40,
+                    final containerHeight = controller.value * _indicatorSize;
+
+                    return Container(
                       alignment: Alignment.center,
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 150),
+                      height: containerHeight,
+                      child: OverflowBox(
+                        maxHeight: 40,
+                        minHeight: 40,
+                        maxWidth: 40,
+                        minWidth: 40,
                         alignment: Alignment.center,
-                        child: _renderCompleteState
-                            ? const Icon(
-                                Icons.check,
-                                color: Colors.white,
-                              )
-                            : SizedBox(
-                                height: 30,
-                                width: 30,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  valueColor: const AlwaysStoppedAnimation(
-                                      Colors.white),
-                                  value: controller.isDragging ||
-                                          controller.isArmed
-                                      ? controller.value.clamp(0.0, 1.0)
-                                      : null,
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 150),
+                          alignment: Alignment.center,
+                          child: _renderCompleteState
+                              ? const Icon(
+                                  Icons.check,
+                                  color: Colors.white,
+                                )
+                              : SizedBox(
+                                  height: 30,
+                                  width: 30,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    valueColor: const AlwaysStoppedAnimation(
+                                        Colors.white),
+                                    value: controller.isDragging ||
+                                            controller.isArmed
+                                        ? controller.value.clamp(0.0, 1.0)
+                                        : null,
+                                  ),
                                 ),
-                              ),
-                        decoration: BoxDecoration(
-                          color: _renderCompleteState
-                              ? Colors.greenAccent
-                              : HexColor(primaryColor),
-                          shape: BoxShape.circle,
+                          decoration: BoxDecoration(
+                            color: _renderCompleteState
+                                ? Colors.greenAccent
+                                : HexColor(primaryColor),
+                            shape: BoxShape.circle,
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                },
-              ),
-              AnimatedBuilder(
-                builder: (context, _) {
-                  return Transform.translate(
-                    offset: Offset(0.0, controller.value * _indicatorSize),
-                    child: child,
-                  );
-                },
-                animation: controller,
-              ),
-            ],
-          );
-        },
-        notificationPredicate: (notification) {
-          // with NestedScrollView local(depth == 2) OverscrollNotification are not sent
-          return notification.depth == 0;
-        },
-        onRefresh: () async {
-          await _onRefresh();
-        },
-        child: ExtendedNestedScrollView(
-          controller: _controller,
+                    );
+                  },
+                ),
+                AnimatedBuilder(
+                  builder: (context, _) {
+                    return Transform.translate(
+                      offset: Offset(0.0, controller.value * _indicatorSize),
+                      child: child,
+                    );
+                  },
+                  animation: controller,
+                ),
+              ],
+            );
+          },
+          notificationPredicate: (notification) {
+            // with NestedScrollView local(depth == 2) OverscrollNotification are not sent
+            return notification.depth == 0;
+          },
+          onRefresh: () async {
+            await _onRefresh();
+          },
+          child: ExtendedNestedScrollView(
+            controller: _controller,
 
-          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-            return <Widget>[
-              SliverAppBar(
-                automaticallyImplyLeading: false,
+            headerSliverBuilder:
+                (BuildContext context, bool innerBoxIsScrolled) {
+              return <Widget>[
+                SliverAppBar(
+                  automaticallyImplyLeading: false,
 
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    InkWell(
-                        onTap: () => key.currentState!.openDrawer(),
-                        child: SvgPicture.asset(
-                          "assets/icon/drawer.svg",
-                          height: 15,
-                          width: 20,
-                        )),
-                    // myIcon("assets/icon/macanackiicon.svg", primaryColor, 16.52,
-                    //     70, false),
-                    InkWell(
-                      onTap: () => PageRouting.pushToPage(
-                          context, const NotificationScreen()),
-                      child: Stack(
-                        children: [
-                          SvgPicture.asset(
-                            "assets/icon/notification.svg",
-                          ),
-                          notify.readAll
-                              ? SizedBox.shrink()
-                              : Positioned(
-                                  right: 5,
-                                  child: Align(
-                                    alignment: Alignment.topCenter,
-                                    child: Container(
-                                      height: 10,
-                                      width: 10,
-                                      decoration: const BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: Colors.red),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(0.0),
-                                        child: Center(
-                                          child: AppText(
-                                            text: notify.notifyData.length > 9
-                                                ? ""
-                                                : "",
-                                            size: 8,
-                                            fontWeight: FontWeight.bold,
+                  title: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      InkWell(
+                          onTap: () => key.currentState!.openDrawer(),
+                          child: SvgPicture.asset(
+                            "assets/icon/drawer.svg",
+                            height: 15,
+                            width: 20,
+                          )),
+                      // myIcon("assets/icon/macanackiicon.svg", primaryColor, 16.52,
+                      //     70, false),
+                      InkWell(
+                        onTap: () => PageRouting.pushToPage(
+                            context, const NotificationScreen()),
+                        child: Stack(
+                          children: [
+                            SvgPicture.asset(
+                              "assets/icon/notification.svg",
+                            ),
+                            notify.readAll
+                                ? SizedBox.shrink()
+                                : Positioned(
+                                    right: 5,
+                                    child: Align(
+                                      alignment: Alignment.topCenter,
+                                      child: Container(
+                                        height: 10,
+                                        width: 10,
+                                        decoration: const BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: Colors.red),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(0.0),
+                                          child: Center(
+                                            child: AppText(
+                                              text: notify.notifyData.length > 9
+                                                  ? ""
+                                                  : "",
+                                              size: 8,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                )
-                        ],
+                                  )
+                          ],
+                        ),
+
+                        // myIcon("assets/icon/notification.svg", "#828282",
+                        //     19.13, 17.31, true),
                       ),
+                    ],
+                  ),
+                  // floating: true,
+                  pinned: true,
 
-                      // myIcon("assets/icon/notification.svg", "#828282",
-                      //     19.13, 17.31, true),
+                  backgroundColor: HexColor("#F5F2F9"),
+                  expandedHeight: 370,
+                  foregroundColor: Colors.amber,
+                  flexibleSpace: const FlexibleSpaceBar(
+                    collapseMode: CollapseMode.pin,
+                    background: ProfileInfo(
+                      isMine: true,
                     ),
-                  ],
-                ),
-                // floating: true,
-                pinned: true,
-
-                backgroundColor: HexColor("#F5F2F9"),
-                expandedHeight: 370,
-                foregroundColor: Colors.amber,
-                flexibleSpace: const FlexibleSpaceBar(
-                  collapseMode: CollapseMode.pin,
-                  background: ProfileInfo(
-                    isMine: true,
                   ),
                 ),
-              ),
-              user.userProfileModel.aboutMe != null
-                  ? SliverToBoxAdapter(
-                      child: Row(
-                        children: [
-                          Expanded(
-                              child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 20, horizontal: 20),
-                            child: RichText(
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: showMore ? 3 : 2,
-                                text: TextSpan(
-                                    text:
-                                        user.userProfileModel.aboutMe!.length >=
-                                                    seeMoreVal &&
-                                                showMore == false
-                                            ? user.userProfileModel.aboutMe!
-                                                .substring(0, seeMoreVal - 3)
-                                            : user.userProfileModel.aboutMe!,
-                                    style: GoogleFonts.leagueSpartan(
-                                        textStyle: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      color:
-                                          HexColor(darkColor).withOpacity(0.6),
-                                      decorationStyle:
-                                          TextDecorationStyle.solid,
-                                      fontSize: 12,
-                                      fontFamily: '',
-                                    )),
-                                    recognizer: tapGestureRecognizer
-                                      ..onTap = () async {
-                                        //    print("object");
-                                        if (showMore) {
-                                          setState(() {
-                                            showMore = false;
-                                          });
-                                        } else {
-                                          setState(() {
-                                            showMore = true;
-                                          });
-                                        }
-                                      },
-                                    children: [
-                                      user.userProfileModel.aboutMe!.length <
-                                              seeMoreVal
-                                          ? const TextSpan(text: "")
-                                          : TextSpan(
-                                              text:
-                                                  showMore ? "" : "...see more",
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                color: HexColor(darkColor)
-                                                    .withOpacity(0.6),
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                              recognizer: tapGestureRecognizer
-                                                ..onTap = () async {
-                                                  //    print("object");
-                                                  if (showMore) {
-                                                    setState(() {
-                                                      showMore = false;
-                                                    });
-                                                  } else {
-                                                    setState(() {
-                                                      showMore = true;
-                                                    });
-                                                  }
-                                                },
-                                            )
-                                    ])),
-                          )),
-                        ],
+                user.userProfileModel.aboutMe != null
+                    ? SliverToBoxAdapter(
+                        child: Row(
+                          children: [
+                            Expanded(
+                                child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 20, horizontal: 20),
+                              child: RichText(
+                                  textAlign: TextAlign.center,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: showMore ? 3 : 2,
+                                  text: TextSpan(
+                                      text: user.userProfileModel.aboutMe!
+                                                      .length >=
+                                                  seeMoreVal &&
+                                              showMore == false
+                                          ? user.userProfileModel.aboutMe!
+                                              .substring(0, seeMoreVal - 3)
+                                          : user.userProfileModel.aboutMe!,
+                                      style: GoogleFonts.leagueSpartan(
+                                          textStyle: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        color: HexColor(darkColor)
+                                            .withOpacity(0.6),
+                                        decorationStyle:
+                                            TextDecorationStyle.solid,
+                                        fontSize: 12,
+                                        fontFamily: '',
+                                      )),
+                                      recognizer: tapGestureRecognizer
+                                        ..onTap = () async {
+                                          //    print("object");
+                                          if (showMore) {
+                                            setState(() {
+                                              showMore = false;
+                                            });
+                                          } else {
+                                            setState(() {
+                                              showMore = true;
+                                            });
+                                          }
+                                        },
+                                      children: [
+                                        user.userProfileModel.aboutMe!.length <
+                                                seeMoreVal
+                                            ? const TextSpan(text: "")
+                                            : TextSpan(
+                                                text: showMore
+                                                    ? ""
+                                                    : "...see more",
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: HexColor(darkColor)
+                                                      .withOpacity(0.6),
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                                recognizer: tapGestureRecognizer
+                                                  ..onTap = () async {
+                                                    //    print("object");
+                                                    if (showMore) {
+                                                      setState(() {
+                                                        showMore = false;
+                                                      });
+                                                    } else {
+                                                      setState(() {
+                                                        showMore = true;
+                                                      });
+                                                    }
+                                                  },
+                                              )
+                                      ])),
+                            )),
+                          ],
+                        ),
+                      )
+                    : const SliverToBoxAdapter(
+                        child: SizedBox(height: 20),
                       ),
-                    )
-                  : const SliverToBoxAdapter(
-                      child: SizedBox(height: 20),
-                    ),
-              SliverToBoxAdapter(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    ProfileQuickLinks(
-                      onClick: () {
-                        PageRouting.pushToPage(
-                            context, const DiamondBalanceScreen());
-                      },
-                      name: "Account balance",
-                      icon: "assets/icon/diamond.svg",
-                      color: null,
-                      isVerified: false,
-                    ),
-                    ProfileQuickLinks(
-                      onClick: () async {
-                        PageRouting.pushToPage(context, const PromoteScreen());
-                      },
-                      name: "Promote post",
-                      icon: "assets/icon/promote.svg",
-                      color: Colors.grey,
-                      isVerified: false,
-                    ),
-                    ProfileQuickLinks(
-                      onClick: () => Operations.verifyOperation(context),
-                      name: "Verify account",
-                      icon: "assets/icon/badge.svg",
-                      color: HexColor("#0597FF"),
-                      isVerified: true,
-                    )
-                  ],
+                SliverToBoxAdapter(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ProfileQuickLinks(
+                        onClick: () {
+                          PageRouting.pushToPage(
+                              context, const DiamondBalanceScreen());
+                        },
+                        name: "Account balance",
+                        icon: "assets/icon/diamond.svg",
+                        color: null,
+                        isVerified: false,
+                      ),
+                      ProfileQuickLinks(
+                        onClick: () async {
+                          PageRouting.pushToPage(
+                              context, const PromoteScreen());
+                        },
+                        name: "Promote post",
+                        icon: "assets/icon/promote.svg",
+                        color: Colors.grey,
+                        isVerified: false,
+                      ),
+                      ProfileQuickLinks(
+                        onClick: () => Operations.verifyOperation(context),
+                        name: "Verify account",
+                        icon: "assets/icon/badge.svg",
+                        color: HexColor("#0597FF"),
+                        isVerified: true,
+                      )
+                    ],
+                  ),
                 ),
-              ),
-              const SliverToBoxAdapter(
-                child: SizedBox(height: 20),
-              ),
-            ];
-          },
-          restorationId: 'Tab${_tabController!.index}',
-          // innerScrollPositionKeyBuilder: () {
-          //   return Key('Tab${_tabController.index}');
-          // },
+                const SliverToBoxAdapter(
+                  child: SizedBox(height: 20),
+                ),
+              ];
+            },
+            restorationId: 'Tab${_tabController!.index}',
+            // innerScrollPositionKeyBuilder: () {
+            //   return Key('Tab${_tabController.index}');
+            // },
 
-          pinnedHeaderSliverHeightBuilder: () {
-            final double statusBarHeight = MediaQuery.of(context).padding.top;
-            var pinnedHeaderHeight =
-                //statusBar height
-                statusBarHeight +
-                    //pinned SliverAppBar height in header
-                    kToolbarHeight;
-            return pinnedHeaderHeight;
-          },
-          onlyOneScrollInBody: true,
-          body: Column(
-            children: [
-              TabBar(
-                controller: _tabController,
-                labelColor: Colors.grey,
-                unselectedLabelColor: Colors.grey,
-                indicatorColor: Colors.grey,
-                indicatorWeight: 2,
-                indicatorSize: TabBarIndicatorSize.tab,
-                indicatorPadding: EdgeInsets.symmetric(horizontal: 16),
-                labelPadding: EdgeInsets.only(bottom: 10),
-                onTap: (index) {
-                  FeedPostWare ind =
-                      Provider.of<FeedPostWare>(context, listen: false);
-                  ind.changeTabIndex(index);
-                },
-                tabs: _tabs
-                    .map((String tab) => tab == "others"
-                        ? Container(
-                            height: 20,
-                            width: 20,
-                            child: SvgPicture.asset(
-                              "assets/icon/vid.svg",
-                              color: Colors.grey,
-                            ))
-                        : Container(
-                            height: 20,
-                            width: 20,
-                            child: SvgPicture.asset("assets/icon/aud.svg",
-                                color: Colors.grey)))
-                    .toList(),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Expanded(
-                child: TabBarView(
+            pinnedHeaderSliverHeightBuilder: () {
+              final double statusBarHeight = MediaQuery.of(context).padding.top;
+              var pinnedHeaderHeight =
+                  //statusBar height
+                  statusBarHeight +
+                      //pinned SliverAppBar height in header
+                      kToolbarHeight;
+              return pinnedHeaderHeight;
+            },
+            onlyOneScrollInBody: true,
+            body: Column(
+              children: [
+                TabBar(
                   controller: _tabController,
-                  children: _tabs.asMap().entries.map((entry) {
-                    return entry.value == "others"
-                        ? ProfilePostGrid(
-                            ware: stream,
-                            parentController: _controller,
-                            tabKey: Key('Tab${entry.key}'),
-                            tabName: entry.value,
-                            isHome: 1,
-                          )
-                        : ProfilePostAudioGrid(
-                            ware: stream,
-                            parentController: _controller,
-                            tabKey: Key('Tab${entry.key}'),
-                            tabName: entry.value,
-                            isHome: 1,
-                          );
-                  }).toList(),
+                  labelColor: Colors.grey,
+                  unselectedLabelColor: Colors.grey,
+                  indicatorColor: Colors.grey,
+                  indicatorWeight: 2,
+                  indicatorSize: TabBarIndicatorSize.tab,
+                  indicatorPadding: EdgeInsets.symmetric(horizontal: 16),
+                  labelPadding: EdgeInsets.only(bottom: 10),
+                  onTap: (index) {
+                    FeedPostWare ind =
+                        Provider.of<FeedPostWare>(context, listen: false);
+                    ind.changeTabIndex(index);
+                  },
+                  tabs: _tabs
+                      .map((String tab) => tab == "others"
+                          ? Container(
+                              height: 20,
+                              width: 20,
+                              child: SvgPicture.asset(
+                                "assets/icon/vid.svg",
+                                color: Colors.grey,
+                              ))
+                          : Container(
+                              height: 20,
+                              width: 20,
+                              child: SvgPicture.asset("assets/icon/aud.svg",
+                                  color: Colors.grey)))
+                      .toList(),
                 ),
-              ),
-            ],
+                SizedBox(
+                  height: 10,
+                ),
+                Expanded(
+                  child: TabBarView(
+                    controller: _tabController,
+                    children: _tabs.asMap().entries.map((entry) {
+                      return entry.value == "others"
+                          ? ProfilePostGrid(
+                              ware: stream,
+                              parentController: _controller,
+                              tabKey: Key('Tab${entry.key}'),
+                              tabName: entry.value,
+                              isHome: 1,
+                            )
+                          : ProfilePostAudioGrid(
+                              ware: stream,
+                              parentController: _controller,
+                              tabKey: Key('Tab${entry.key}'),
+                              tabName: entry.value,
+                              isHome: 1,
+                            );
+                    }).toList(),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
