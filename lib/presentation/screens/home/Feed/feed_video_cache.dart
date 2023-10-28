@@ -333,6 +333,45 @@ class _VideoView2State extends State<VideoView2> {
 
   @override
   Widget build(BuildContext context) {
+    const textStyle = TextStyle(color: Colors.transparent);
+    final buttonStyle = TextButton.styleFrom(
+        iconColor: Colors.transparent,
+        foregroundColor: Colors.transparent,
+        side: BorderSide.none,
+        textStyle: textStyle);
+
+    final settingsBarStyle = SettingsBarStyle(
+        buttonStyle: buttonStyle,
+        sliderTheme: SliderThemeData(
+            activeTrackColor: Colors.transparent,
+            thumbColor: Colors.transparent,
+            overlayShape: SliderComponentShape.noThumb,
+            thumbShape: const RoundSliderThumbShape(
+                enabledThumbRadius: 0.0, disabledThumbRadius: 0)));
+
+    final controlsBarStyle = ControlsBarStyle(
+        mainControlButtonStyle: buttonStyle,
+        seekBackwardControlButtonStyle: null,
+        seekForwardControlButtonStyle: null);
+
+    final timeSliderStyle = TimeSliderStyle(
+        sliderTheme: const SliderThemeData(
+            //    overlayColor: Colors.white,
+
+            activeTrackColor: Colors.transparent,
+            inactiveTrackColor: Colors.transparent,
+            disabledThumbColor: Color.fromARGB(0, 31, 25, 25),
+            thumbColor: Colors.transparent,
+            thumbShape: RoundSliderThumbShape(
+              enabledThumbRadius: 0.0,
+            ),
+            //   thumbSelector: ,
+            valueIndicatorTextStyle: textStyle));
+
+    PlayerStyle applyStyle = PlayerStyle(
+        settingsBarStyle: settingsBarStyle,
+        controlsBarStyle: controlsBarStyle,
+        timeSliderStyle: timeSliderStyle);
     return Stack(
       children: [
         Center(
@@ -344,6 +383,7 @@ class _VideoView2State extends State<VideoView2> {
                 index: widget.index,
                 //vod: widget.data.vod!.first!,
                 controller: _controller!,
+                applyStyle: applyStyle,
               )
             ],
           ),

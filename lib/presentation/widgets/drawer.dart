@@ -116,11 +116,9 @@ class _DrawerSideState extends State<DrawerSide> {
                             Restart.restartApp();
                           } else {
                             try {
-                             // Phoenix.rebirth(context);
-                                  Restart.restartApp();
+                              // Phoenix.rebirth(context);
+                              Restart.restartApp();
                             } catch (e) {
-                              PageRouting.removeAllToPage(
-                                  context, const Splash());
                               //     Restart.restartApp();
                             }
                           }
@@ -283,7 +281,6 @@ class _DrawerSideState extends State<DrawerSide> {
                   size: 15,
                 ),
               ),
-              
               ListTile(
                 onTap: () async {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -327,7 +324,6 @@ class _DrawerSideState extends State<DrawerSide> {
                   size: 15,
                 ),
               )
-
             ],
           ),
         )),

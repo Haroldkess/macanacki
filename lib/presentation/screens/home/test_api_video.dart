@@ -10,94 +10,99 @@ import '../../../model/feed_post_model.dart';
 import '../../../services/controllers/view_controller.dart';
 import '../../widgets/loader.dart';
 
-class ApiVideoDemo extends StatelessWidget {
-  const ApiVideoDemo({super.key});
+// class ApiVideoDemo extends StatelessWidget {
+//   const ApiVideoDemo({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    PageController pageController =
-        PageController(initialPage: 0, keepPage: false);
-    List<String> demoVideos = [
-      "vi5ytnPMtCQR8XUyU5yOqJWP",
-      "vi7OTHEnU8egpug47CDJddor",
-      "vi58kXu4ezjMqtdt0yjEKxTJ",
-      "vi1vN8pDBBAJ70cDXBlrfCxn",
-      "vi6agTwyDINhyYVGZg8hsBBW",
-      "vi7RYvsDH5tuzPL7AzHa6Vg7",
-      "vi3RqBWa6WjSlct8hi3fNgZA",
-      "vi17coOs319rN7WgtTG2gW8d",
-      "vi7OTHEnU8egpug47CDJddor",
-      "vi5ytnPMtCQR8XUyU5yOqJWP"
-    ];
-    return SizedBox(
-      height: Get.height,
-      width: Get.width,
-      child: PageView.builder(
-          itemCount: demoVideos.length,
-          controller: pageController,
-          //  preloadPagesCount: 0,
-          scrollDirection: Axis.vertical,
-          itemBuilder: ((context, index) {
-            String vod = demoVideos[index];
-            return VodView(
-              vod: vod,
-            );
-          })),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     PageController pageController =
+//         PageController(initialPage: 0, keepPage: false);
+//     List<String> demoVideos = [
+//       "vi5ytnPMtCQR8XUyU5yOqJWP",
+//       "vi7OTHEnU8egpug47CDJddor",
+//       "vi58kXu4ezjMqtdt0yjEKxTJ",
+//       "vi1vN8pDBBAJ70cDXBlrfCxn",
+//       "vi6agTwyDINhyYVGZg8hsBBW",
+//       "vi7RYvsDH5tuzPL7AzHa6Vg7",
+//       "vi3RqBWa6WjSlct8hi3fNgZA",
+//       "vi17coOs319rN7WgtTG2gW8d",
+//       "vi7OTHEnU8egpug47CDJddor",
+//       "vi5ytnPMtCQR8XUyU5yOqJWP"
+//     ];
+//     return SizedBox(
+//       height: Get.height,
+//       width: Get.width,
+//       child: PageView.builder(
+//           itemCount: demoVideos.length,
+//           controller: pageController,
+//           //  preloadPagesCount: 0,
+//           scrollDirection: Axis.vertical,
+//           itemBuilder: ((context, index) {
+//             String vod = demoVideos[index];
+//             return VodView(
+//               vod: vod,
+//             );
+//           })),
+//     );
+//   }
+// }
 
-class VodView extends StatefulWidget {
-  final String vod;
-  final FeedPost? data;
-  int? index;
-  ApiVideoPlayerController? controller;
+// class VodView extends StatefulWidget {
+//   final String vod;
+//   final FeedPost? data;
+//   int? index;
+//   ApiVideoPlayerController? controller;
 
-  VodView(
-      {super.key, required this.vod, this.data, this.index, this.controller});
+//   VodView(
+//       {super.key, required this.vod, this.data, this.index, this.controller});
 
-  @override
-  State<VodView> createState() => _VodViewState();
-}
+//   @override
+//   State<VodView> createState() => _VodViewState();
+// }
 
-class _VodViewState extends State<VodView> {
-  ApiVideoPlayerController? _controller;
-  String apiToken = "";
-  @override
-  void initState() {
-    super.initState();
+// class _VodViewState extends State<VodView> {
+//   ApiVideoPlayerController? _controller;
+//   String apiToken = "";
+//   @override
+//   void initState() {
+//     super.initState();
 
-    widget.controller!.initialize();
-  }
+//     widget.controller!.initialize();
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    return widget.controller != null
-        ? PlayerWidget(
-            controller: widget.controller!,
-            index: widget.index,
-            data: widget.data,
-          )
-        : Container(
-            width: Get.width,
-            height: Get.height,
-            decoration: BoxDecoration(
-                color: Colors.black,
-                image: DecorationImage(
-                  image: CachedNetworkImageProvider(
-                      widget.data!.thumbnails!.first ?? ""),
-                  fit: BoxFit.cover,
-                )),
-          );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return widget.controller != null
+//         ? PlayerWidget(
+//             controller: widget.controller!,
+//             index: widget.index,
+//             data: widget.data,
+//           )
+//         : Container(
+//             width: Get.width,
+//             height: Get.height,
+//             decoration: BoxDecoration(
+//                 color: Colors.black,
+//                 image: DecorationImage(
+//                   image: CachedNetworkImageProvider(
+//                       widget.data!.thumbnails!.first ?? ""),
+//                   fit: BoxFit.cover,
+//                 )),
+//           );
+//   }
+// }
 
 class PlayerWidget extends StatefulWidget {
   PlayerWidget(
-      {super.key, required this.controller, this.index, required this.data});
+      {super.key,
+      required this.controller,
+      this.index,
+      required this.data,
+      required this.applyStyle});
   int? index;
   final ApiVideoPlayerController controller;
   final FeedPost? data;
+  final PlayerStyle applyStyle;
 
   @override
   State<PlayerWidget> createState() => _PlayerWidgetState();
@@ -223,46 +228,6 @@ class _PlayerWidgetState extends State<PlayerWidget> {
 
   @override
   Widget build(BuildContext context) {
-    const textStyle = TextStyle(color: Colors.transparent);
-    final buttonStyle = TextButton.styleFrom(
-        iconColor: Colors.transparent,
-        foregroundColor: Colors.transparent,
-        side: BorderSide.none,
-        textStyle: textStyle);
-
-    final settingsBarStyle = SettingsBarStyle(
-        buttonStyle: buttonStyle,
-        sliderTheme: SliderThemeData(
-            activeTrackColor: Colors.transparent,
-            thumbColor: Colors.transparent,
-            overlayShape: SliderComponentShape.noThumb,
-            thumbShape: const RoundSliderThumbShape(
-                enabledThumbRadius: 0.0, disabledThumbRadius: 0)));
-
-    final controlsBarStyle = ControlsBarStyle(
-        mainControlButtonStyle: buttonStyle,
-        seekBackwardControlButtonStyle: null,
-        seekForwardControlButtonStyle: null);
-
-    final timeSliderStyle = TimeSliderStyle(
-        sliderTheme: const SliderThemeData(
-            //    overlayColor: Colors.white,
-
-            activeTrackColor: Colors.transparent,
-            inactiveTrackColor: Colors.transparent,
-            disabledThumbColor: Color.fromARGB(0, 31, 25, 25),
-            thumbColor: Colors.transparent,
-            thumbShape: RoundSliderThumbShape(
-              enabledThumbRadius: 0.0,
-            ),
-            //   thumbSelector: ,
-            valueIndicatorTextStyle: textStyle));
-
-    PlayerStyle applyStyle = PlayerStyle(
-        settingsBarStyle: settingsBarStyle,
-        controlsBarStyle: controlsBarStyle,
-        timeSliderStyle: timeSliderStyle);
-
     return isReady == false || delayUser
         ? Stack(
             children: [
@@ -319,7 +284,8 @@ class _PlayerWidgetState extends State<PlayerWidget> {
                                     color: Colors.white,
                                     // size: 35,
                                   ),
-                            style: controlsBarStyle.mainControlButtonStyle,
+                            style: widget.applyStyle.controlsBarStyle!
+                                .mainControlButtonStyle,
                           ),
                         ),
                       );
@@ -332,7 +298,7 @@ class _PlayerWidgetState extends State<PlayerWidget> {
             height: Get.height,
             child: ApiVideoPlayer(
               controller: widget.controller,
-              style: applyStyle,
+              style: widget.applyStyle,
             ),
           );
   }
