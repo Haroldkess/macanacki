@@ -158,51 +158,6 @@ class _UserMultipleViewState extends State<UserMultipleView> {
   void initState() {
     super.initState();
     if (!widget.media!.contains("https")) {
-      // _controller = VideoPlayerController.network(
-      //     "$muxStreamBaseUrl/${widget.media}.$videoExtension"
-
-      //     //   videoPlayerOptions: VideoPlayerOptions()
-      //     );
-      // thisData = widget.data.copyWith(controller: _controller);
-
-      // thisData!.controller!.initialize().whenComplete(() {
-      //   WidgetsBinding.instance.addPostFrameCallback((_) {
-      //     TabProvider provide =
-      //         Provider.of<TabProvider>(context, listen: false);
-      //     if (provide.index == 0) {
-      //       //  thisData!.controller!.play();
-      //       // provide.tap(false);
-      //     } else {
-      //       if (provide.index == 4 && provide.isHome) {
-      //         emitter("heyyyyy");
-      //         //  thisData!.controller!.play();
-      //         //   provide.tap(false);
-      //       } else {
-      //         //   thisData!.controller!.pause();
-      //       }
-      //     }
-      //   });
-      //   //_controller!.play();
-      //   setState(() {});
-      // }).then((value) => {
-      //       thisData!.controller!.addListener(() {
-      //         if (thisData!.controller!.value.position.inSeconds > 7 &&
-      //             thisData!.controller!.value.position.inSeconds < 10) {
-      //           ViewController.handleView(widget.data.id!);
-      //           //log("Watched more than 10 seconds");
-      //         }
-      //       })
-      //     });
-
-      // // Use the controller to loop the video.
-
-      // thisData!.controller!.setLooping(true);
-      // WidgetsBinding.instance.addPostFrameCallback((_) {
-      //   TabProvider action = Provider.of<TabProvider>(context, listen: false);
-
-      //   action.addHoldControl(thisData!.controller!);
-      //   action.tap(true);
-      // });
     } else {
       Future.delayed(const Duration(seconds: 2))
           .whenComplete(() => ViewController.handleView(widget.data.id!));
@@ -243,6 +198,7 @@ class _UserMultipleViewState extends State<UserMultipleView> {
             isInView: widget.isInView,
             postId: 0,
             data: widget.data,
+            extended: false,
             showComment: widget.showComment,
           )
         : Stack(
@@ -253,27 +209,6 @@ class _UserMultipleViewState extends State<UserMultipleView> {
                 height: height,
                 decoration: BoxDecoration(color: Colors.black),
               ),
-              // Container(
-              //   width: width,
-              //   height: height,
-              //   decoration: BoxDecoration(
-
-              //         image: DecorationImage(
-              //       image: CachedNetworkImageProvider(
-              //         widget.media!.replaceAll('\\', '/'),
-              //       ),
-              //       fit: BoxFit.fill,
-
-              //     )
-              //   ),
-              //   child: BackdropFilter(
-              //     filter: ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0),
-              //     child: Container(
-              //       decoration:
-              //           BoxDecoration(color: Colors.white.withOpacity(0.0)),
-              //     ),
-              //   )
-              // ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 0),
                 child: GestureDetector(
@@ -331,27 +266,6 @@ class _UserMultipleViewState extends State<UserMultipleView> {
                   ),
                 ),
               ),
-              // CachedNetworkImage(
-              //   imageUrl: widget.media!.replaceAll('\\', '/'),
-              //   progressIndicatorBuilder: (context, url, downloadProgress) =>
-              //       Center(
-              //           child: Loader(
-              //     color: HexColor(primaryColor),
-              //   )),
-              //   errorWidget: (context, url, error) => Icon(
-              //     Icons.error,
-              //     color: HexColor(primaryColor),
-              //   ),
-              // ),
-              // Image(
-              //   //  fit: BoxFit.fitWidth,
-              //   width: widget.constraints!.maxWidth,
-              //   image: widget.media!.contains("/data/user/0/")
-              //       ? FileImage(File(widget.media!))
-              //       : NetworkImage(
-              //           widget.media!.replaceAll('\\', '/'),
-              //         ) as ImageProvider,
-              // ),
             ],
           );
   }

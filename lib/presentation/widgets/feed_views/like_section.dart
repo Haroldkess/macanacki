@@ -31,6 +31,7 @@ class LikeSection extends StatefulWidget {
   String? userName;
   bool? isHome;
   bool showComment;
+  dynamic mediaController;
 
   // final List<String> media;
   // final List<String> urls;
@@ -42,6 +43,7 @@ class LikeSection extends StatefulWidget {
     this.isAudio,
     this.userName,
     required this.showComment,
+    required this.mediaController,
     // required this.media,
     // required this.urls
   });
@@ -102,8 +104,8 @@ class _LikeSectionState extends State<LikeSection> {
                 // Operations.commentOperation(
                 //     context, false, widget.data.comments!);
 
-                commentModal(context, widget.data.id!, widget.page, false,
-                    widget.userName);
+                commentModal(context, widget.data.id!, widget.page, false, true,
+                    widget.mediaController, widget.data.comments);
               },
               child: Padding(
                 padding: const EdgeInsets.only(right: 3.0),

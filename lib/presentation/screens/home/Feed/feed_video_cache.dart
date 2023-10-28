@@ -44,6 +44,7 @@ class FeedVideoHolderPrivate extends StatefulWidget {
   int postId;
   final FeedPost data;
   bool showComment;
+  bool? extended;
 
   FeedVideoHolderPrivate(
       {super.key,
@@ -56,6 +57,7 @@ class FeedVideoHolderPrivate extends StatefulWidget {
       required this.isInView,
       required this.postId,
       required this.data,
+      required this.extended,
       required this.showComment});
 
   @override
@@ -94,25 +96,20 @@ class _FeedVideoHolderPrivateState extends State<FeedVideoHolderPrivate>
 
   @override
   void dispose() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      // VideoWareHome.instance.initSomeVideo(
-      //     "$muxStreamBaseUrl/${widget.data.mux!.first}.$videoExtension",
-      //     widget.postId,
-      //     0);
-
-      VideoWare.instance.disposeAllVideo(
-        widget.postId,
-        "$muxStreamBaseUrl/${widget.data.mux!.first}.$videoExtension",
-      );
-
-      VideoWare.instance.disposeAllVideoV2(widget.data.id!,
-          "$muxStreamBaseUrl/${widget.data.mux!.first}.$videoExtension");
-    });
-
     super.dispose();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      PersistentNavController.instance.toggleHide();
+      if (widget.page == "user") {
+        if (PersistentNavController.instance.hide.value == true) {
+          PersistentNavController.instance.toggleHide();
+        }
+      } else {
+        if (widget.extended == false) {
+          if (PersistentNavController.instance.hide.value == true) {
+            PersistentNavController.instance.toggleHide();
+          }
+        }
+      }
     });
   }
 
@@ -137,18 +134,6 @@ class _FeedVideoHolderPrivateState extends State<FeedVideoHolderPrivate>
           itemBuilder: ((context, index) {
             FeedPost post = allVideos[index];
             return GestureDetector(
-              // onTap: () {
-              //   if (index != 0) {
-              //     VideoWare.instance.loadVideo(true);
-
-              //     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-              //       VideoWare.instance.initSomeVideo(
-              //           "$muxStreamBaseUrl/${post.mux!.first}.$videoExtension",
-              //           post.id!,
-              //           index);
-              //     });
-              //   }
-              // },
               onDoubleTap: () async {
                 if (mounted) {
                   if (controller.value == 1) {
@@ -203,14 +188,6 @@ class _FeedVideoHolderPrivateState extends State<FeedVideoHolderPrivate>
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  // AdsDisplay(
-                                  //   sponsored: false,
-                                  //   color: HexColor('#00B074'),
-                                  //   title: '\$10.000.00',
-                                  // ),
-                                  // SizedBox(
-                                  //   height: 10,
-                                  // ),
                                   AdsDisplay(
                                     sponsored: true,
                                     //  color: HexColor('#00B074'),
@@ -278,18 +255,12 @@ class _FeedVideoHolderPrivateState extends State<FeedVideoHolderPrivate>
 
   Future paginateFeed() async {
     emitter("Pageinating");
-    //FeedPostWare provide = Provider.of<FeedPostWare>(context, listen: false);
-
-    ///  provide.indexChange(index);
 
     // int checkNum = provide.feedPosts.length - 3; // lenght of posts
     int pageNum = VideoWareHome
         .instance.feedData.value.currentPage!; // api current  page num
     int maxPages =
         VideoWareHome.instance.feedData.value.lastPage!; // api last page num
-    //  emitter("there");
-    //  emitter(maxPages.toString());
-    // emitter(pageNum.toString());
 
     if (pageNum >= maxPages) {
       emitter("cannot paginate");
@@ -299,7 +270,7 @@ class _FeedVideoHolderPrivateState extends State<FeedVideoHolderPrivate>
       if (VideoWareHome.instance.paginating.value) {
         return;
       }
-      // emitter((pageNum + 1) as String);
+
       await VideoWareHome.instance
           .getVideoPostFromApi(pageNum + 1, true)
           .whenComplete(() => emitter("paginated"));
@@ -340,20 +311,6 @@ class _VideoView2State extends State<VideoView2> {
     buildVideoOptions();
   }
 
-  // void buildVideoOptions() {
-  //   final token = apiToken.isEmpty ? null : apiToken;
-
-  //   final videoOptions = VideoOptions(
-  //       videoId: widget.data.vod!.first!, type: VideoType.vod, token: token);
-
-  //   if (_controller == null) {
-  //     _controller = ApiVideoPlayerController(
-  //         videoOptions: videoOptions, autoplay: true, onEnd: () {});
-  //   } else {
-  //     _controller?.setVideoOptions(videoOptions);
-  //   }
-  // }
-
   void buildVideoOptions() {
     final videoOptions = VideoOptions(
         videoId: widget.data.vod!.first!, type: VideoType.vod, token: null);
@@ -369,41 +326,8 @@ class _VideoView2State extends State<VideoView2> {
         });
   }
 
-  Future<void> innit() async {}
-
   @override
   void dispose() {
-    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-    //   if (VideoWare.instance.videoController
-    //           .where((item) => item.id == widget.postId)
-    //           .first
-    //           .chewie !=
-    //       null) {
-    //     VideoWare.instance.videoController
-    //         .where((item) => item.id == widget.postId)
-    //         .first
-    //         .chewie!
-    //         .pause();
-    //     VideoWare.instance.videoController
-    //         .where((item) => item.id == widget.postId)
-    //         .first
-    //         .controller!
-    //         .value
-    //         .pause();
-    //   }
-    // });
-    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-    //   VideoWareHome.instance.loadVideo(false);
-    // });
-
-    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-    //   //  if (widget.index == 0) return;
-    //   VideoWare.instance.disposeVideo(widget.data.id!,
-    //       "$muxStreamBaseUrl/${widget.data.mux!.first}.$videoExtension");
-    //   // VideoWare.instance.disposeAllVideoV2(widget.data.id!,
-    //   //     "$muxStreamBaseUrl/${widget.data.mux!.first}.$videoExtension");
-    // });
-
     super.dispose();
   }
 
@@ -415,11 +339,11 @@ class _VideoView2State extends State<VideoView2> {
           child: Stack(
             alignment: Alignment.center,
             children: [
-              VodView(
+              PlayerWidget(
                 data: widget.data,
                 index: widget.index,
-                vod: widget.data.vod!.first!,
-                controller: _controller,
+                //vod: widget.data.vod!.first!,
+                controller: _controller!,
               )
             ],
           ),
@@ -451,6 +375,7 @@ class _VideoView2State extends State<VideoView2> {
                     userName: widget.data.user!.username,
                     isHome: widget.isHome,
                     showComment: widget.showComment,
+                    mediaController: _controller,
                   ),
                 ),
               ),

@@ -252,6 +252,7 @@ class _UserTikTokViewState extends State<UserTikTokView>
                                 data: widget.data,
                                 vod: widget.vod.first,
                                 showComment: widget.showComment,
+                                allPost: widget.allPost,
                                 //   vlcController: _vlcController,
                               )
                             : UserMultiplePost(
@@ -427,6 +428,7 @@ class _UserTikTokViewState extends State<UserTikTokView>
                   controller: _controller,
                   isHome: false,
                   showComment: widget.showComment,
+                  extended: true,
                 )
 
                 // : FollowSection(

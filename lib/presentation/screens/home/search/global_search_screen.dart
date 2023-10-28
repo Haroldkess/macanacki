@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:macanacki/presentation/allNavigation.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
 import 'package:macanacki/presentation/screens/home/search/searchextras/search_bar.dart';
 import 'package:macanacki/presentation/screens/home/search/searchextras/user_search_result.dart';
@@ -34,21 +35,34 @@ class _GlobalSearchState extends State<GlobalSearch> {
         // resizeToAvoidBottomInset: false,
         appBar: AppBar(
           automaticallyImplyLeading: false,
+
           bottom: PreferredSize(
             preferredSize: Size(0, 20),
             child: Align(
               alignment: Alignment.bottomLeft,
               child: Padding(
                 padding:
-                    const EdgeInsets.only(left: 15.0, bottom: 15, right: 15),
+                    const EdgeInsets.only(left: 0.0, bottom: 15, right: 15),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     const SizedBox(
                       height: 10,
                     ),
-                    GlobalSearchBar(
-                      x: controller,
+                    Row(
+                      children: [
+                        IconButton(
+                            onPressed: () => PageRouting.popToPage(context),
+                            icon: Icon(
+                              Icons.arrow_back,
+                              color: Colors.black,
+                            )),
+                        Expanded(
+                          child: GlobalSearchBar(
+                            x: controller,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),

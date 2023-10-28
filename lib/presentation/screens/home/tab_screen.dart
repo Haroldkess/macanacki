@@ -192,7 +192,7 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
                           confineInSafeArea: true,
                           hideNavigationBar: nav.value,
                           stateManagement: true,
-                          popAllScreensOnTapAnyTabs: true,
+                          popAllScreensOnTapAnyTabs: false,
                           // onWillPop: (context) async {
                           //   final shouldPop =
                           //       await Operations.showWarning(context!);

@@ -25,6 +25,7 @@ import '../../constants/colors.dart';
 import '../../constants/string.dart';
 import '../../operations.dart';
 import '../../screens/home/profile/profile_screen.dart';
+import '../../screens/userprofile/testing_profile.dart';
 import '../../screens/userprofile/user_profile_screen.dart';
 import '../../uiproviders/screen/comment_provider.dart';
 import '../../uiproviders/screen/tab_provider.dart';
@@ -40,6 +41,7 @@ class NewDesignTest extends StatefulWidget {
   ApiVideoPlayerController? controller;
   bool isHome;
   bool showComment;
+  bool extended;
   NewDesignTest(
       {super.key,
       required this.isHome,
@@ -47,7 +49,8 @@ class NewDesignTest extends StatefulWidget {
       required this.page,
       required this.media,
       required this.showComment,
-      this.controller});
+      this.controller,
+      required this.extended});
 
   @override
   State<NewDesignTest> createState() => _NewDesignTestState();
@@ -135,110 +138,20 @@ class _NewDesignTestState extends State<NewDesignTest> {
                             TabProvider action = Provider.of<TabProvider>(
                                 context,
                                 listen: false);
-                            // if (widget.data.media!.length > 1) {
-                            //   for (var i = 0;
-                            //       i < widget.data.media!.length;
-                            //       i++) {
-                            //     if (widget.data.media![i].contains(".mp4")) {
-                            //       if (action.controller != null) {
-                            //         if (action
-                            //             .controller!.value.isInitialized) {
-                            //           if (mounted) {
-                            //             action.controller!.pause();
-                            //           }
-                            //         } else {
-                            //           if (mounted) {
-                            //             action.controller!.pause();
-                            //           }
-                            //         }
-                            //       }
-                            //       if (action.controller != null) {
-                            //         if (action
-                            //             .controller!.value.isInitialized) {
-                            //           if (action
-                            //                   .controller!.value.isBuffering ||
-                            //               action.controller!.value.isPlaying) {
-                            //             if (mounted) {
-                            //               action.tap(true);
-                            //               action.pauseControl();
-                            //             }
-                            //           } else {
-                            //             if (mounted) {
-                            //               action.tap(true);
-                            //               action.pauseControl();
-                            //             }
-
-                            //             //  return;
-                            //           }
-                            //         }
-                            //       }
-
-                            //       // widget.controller!.pause();
-                            //     }
-                            //   }
-                            // } else {
-                            //   if (widget.data.media!.first.contains(".mp4")) {
-                            //     if (action.controller != null) {
-                            //       if (action.controller!.value.isInitialized) {
-                            //         if (action.controller!.value.isBuffering ||
-                            //             action.controller!.value.isPlaying) {
-                            //           if (mounted) {
-                            //             action.tap(true);
-                            //             action.pauseControl();
-                            //           }
-                            //           // action.tap(true);
-                            //           // action.pauseControl();
-                            //         } else {
-                            //           // action.tap(true);
-                            //           // action.pauseControl();
-                            //           //  return;
-                            //         }
-                            //       }
-                            //     }
-                            //     widget.controller!.pause();
-                            //   }
-                            // }
 
                             if (widget.data.user!.username! ==
                                 user.userProfileModel.username) {
-                              // action.pageController!.animateToPage(
-                              //   4,
-                              //   duration: const Duration(milliseconds: 1),
-                              //   curve: Curves.easeIn,
-                              // );
-                              // PageRouting.pushToPage(
-                              //     context, const ProfileScreen());
                             } else {
                               if (widget.isHome == false) {
                                 return;
                               }
-                              try {
-                                WidgetsBinding.instance
-                                    .addPostFrameCallback((timeStamp) {
-                                  VideoWareHome.instance.pauseAnyVideo();
-                                  WidgetsBinding.instance
-                                      .addPostFrameCallback((timeStamp) {
-                                    VideoWareHome.instance.disposeVideo(
-                                        widget.data.id!,
-                                        "$muxStreamBaseUrl/${widget.media.first}.$videoExtension");
-                                  });
-                                  WidgetsBinding.instance
-                                      .addPostFrameCallback((timeStamp) {
-                                    VideoWareHome.instance.disposeAllVideoV2(
-                                        widget.data.id!,
-                                        "$muxStreamBaseUrl/${widget.media.first}.$videoExtension");
-                                  });
-                                });
-                              } catch (e) {
-                                WidgetsBinding.instance
-                                    .addPostFrameCallback((timeStamp) {
-                                  VideoWareHome.instance.pauseAnyVideo();
-                                });
-                              }
+                              try {} catch (e) {}
                               PageRouting.pushToPage(
                                   context,
-                                  UsersProfile(
+                                  TestProfile(
                                     username: widget.data.user!.username!,
+                                    extended: widget.extended,
+                                    page: widget.page,
                                   ));
                             }
                           },
@@ -406,6 +319,8 @@ class _NewDesignTestState extends State<NewDesignTest> {
                                 widget.data.id!,
                                 widget.page,
                                 widget.showComment,
+                                false,
+                                widget.controller,
                                 widget.data.comments!,
                               );
                             },

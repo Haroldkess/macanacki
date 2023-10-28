@@ -25,13 +25,6 @@ import 'package:intl/intl.dart';
 import 'presentation/uiproviders/screen/tab_provider.dart';
 
 void main() async {
-  await JustAudioBackground.init(
-    androidNotificationChannelId:'com.ryanheise.bg_demo.channel.audio',
-    androidNotificationChannelName: 'Audio playback',
-    androidNotificationOngoing: true,
-    
-  );
-
   // Initialize inApp Store
   PayExt.initializeStore();
 

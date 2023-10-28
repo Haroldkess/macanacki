@@ -28,11 +28,13 @@ import '../../services/middleware/extra_profile_ware.dart';
 import '../../services/middleware/user_profile_ware.dart';
 import '../allNavigation.dart';
 import '../screens/userprofile/extra_profile.dart';
+import '../screens/userprofile/testing_profile.dart';
 import '../screens/userprofile/user_profile_screen.dart';
 import '../uiproviders/screen/tab_provider.dart';
 import 'hexagon_avatar.dart';
 
 commentModal(BuildContext context, int id, String page, bool isHome,
+    bool isFullScreen, dynamic mediaController,
     [dynamic com]) async {
   var height = MediaQuery.of(context).size.height;
   var width = MediaQuery.of(context).size.width;
@@ -117,6 +119,9 @@ commentModal(BuildContext context, int id, String page, bool isHome,
                                                 id: id,
                                                 com: com,
                                                 isHome: isHome,
+                                                isFullScreen: isFullScreen,
+                                                mediaController:
+                                                    mediaController,
                                               );
                                             })),
                                     // Column(
@@ -360,11 +365,15 @@ class CommentTile extends StatelessWidget {
   int id;
   dynamic com;
   bool isHome;
+  bool isFullScreen;
+  dynamic mediaController;
   CommentTile(
       {super.key,
       required this.e,
       required this.id,
       this.com,
+      required this.isFullScreen,
+      required this.mediaController,
       required this.isHome});
 
   @override
@@ -392,6 +401,9 @@ class CommentTile extends StatelessWidget {
                           Provider.of<UserProfileWare>(context, listen: false);
                       TabProvider action =
                           Provider.of<TabProvider>(context, listen: false);
+                      if (mediaController != null) {
+                        mediaController.pause();
+                      }
                       if (e.username == null) {
                         return;
                       }
@@ -416,24 +428,37 @@ class CommentTile extends StatelessWidget {
                           }
                         }
                       }
-                      Get.put(ProfilesController());
+
                       // widget.controller!.pause();
 
                       if (e.username! != user.userProfileModel.username) {
                         if (isHome == false) {
                           PageRouting.popToPage(context);
+                          if (isFullScreen == true) {
+                            PageRouting.popToPage(context);
+                          }
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      UsersProfile(username: e.username!)));
+                                  builder: (context) => TestProfile(
+                                        username: e.username!,
+                                        extended:
+                                            isFullScreen == true ? true : false,
+                                      )));
                         } else {
                           PageRouting.popToPage(context);
+                          if (isFullScreen == true) {
+                            PageRouting.popToPage(context);
+                          }
+                          log("test profile ");
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      ExtraProfile(username: e.username!)));
+                                  builder: (context) => TestProfile(
+                                      username: e.username!,
+                                      extended: isFullScreen == true
+                                          ? true
+                                          : false)));
                         }
 
                         // action.changeIndex(4);

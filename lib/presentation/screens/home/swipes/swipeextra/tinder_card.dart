@@ -31,6 +31,7 @@ import '../../../../../services/middleware/gift_ware.dart';
 import '../../../../uiproviders/screen/card_provider.dart';
 import '../../../../widgets/filter_address_modal.dart';
 import '../../../../widgets/snack_msg.dart';
+import '../../../userprofile/testing_profile.dart';
 import '../../diamond/balance/diamond_balance_screen.dart';
 import '../../diamond/diamond_modal/buy_modal.dart';
 import '../../diamond/diamond_modal/give_modal.dart';
@@ -313,9 +314,11 @@ class _TinderCardState extends State<TinderCard> {
                               // ignore: use_build_context_synchronously
                               PageRouting.pushToPage(
                                   context,
-                                  UsersProfile(
-                                      username:
-                                          widget.users[indexer].username!));
+                                  TestProfile(
+                                    username: widget.users[indexer].username!,
+                                    extended: false,
+                                    page: "swipe",
+                                  ));
                             }
                           },
                           child: Container(

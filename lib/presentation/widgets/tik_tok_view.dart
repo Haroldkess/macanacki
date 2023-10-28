@@ -218,6 +218,7 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
                                 postId: widget.data.id!,
                                 data: widget.data,
                                 vod: widget.vod.first,
+                                allPost: [],
                               )
                             : MultiplePost(
                                 media: widget.media,
@@ -306,6 +307,7 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
                   controller: _controller,
                   isHome: true,
                   showComment: true,
+                  extended: false,
                 )),
           ),
           widget.data.promoted == "yes"

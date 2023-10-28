@@ -19,6 +19,7 @@ import 'package:provider/provider.dart';
 import '../../../../model/public_profile_model.dart';
 import '../../../constants/params.dart';
 import '../../../widgets/loader.dart';
+import '../testing_profile.dart';
 
 class PublicFollowTile extends StatelessWidget {
   final PublicUserFollowerAndFollowingModel data;
@@ -32,8 +33,9 @@ class PublicFollowTile extends StatelessWidget {
       onTap: () {
         PageRouting.pushToPage(
             context,
-            UsersProfile(
+            TestProfile(
               username: data.username!,
+              extended: true,
             ));
       },
       child: Container(

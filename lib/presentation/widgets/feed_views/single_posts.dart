@@ -21,23 +21,11 @@ import '../../../services/middleware/user_profile_ware.dart';
 import '../../allNavigation.dart';
 import '../../constants/colors.dart';
 import '../../constants/string.dart';
-import '../../screens/home/Feed/better_video_holder.dart';
 import '../../screens/home/Feed/feed_audio_holder.dart';
 import '../../screens/home/Feed/feed_video_cache.dart';
 import '../../screens/home/Feed/feed_video_holder.dart';
 import '../../screens/home/Feed/user_feed_audio_holder.dart';
 import '../loader.dart';
-
-// List<String> data = stream.thumbs.where((val) {
-//               return val.contains(thumbLink);
-//             }).toList();
-//             if (data.isEmpty) {
-//               //   emitter("nothing found ${widget.controller.value.isPlaying}");
-//             } else {
-//               var val = data.first.split(thumbLink);
-
-//               // emitter(val.first + "  Second" + val.last);
-//             }
 
 class SinglePost extends StatelessWidget {
   final String media;
@@ -50,6 +38,7 @@ class SinglePost extends StatelessWidget {
   final postId;
   final FeedPost data;
   final String? vod;
+  List<dynamic> allPost;
   SinglePost(
       {super.key,
       required this.media,
@@ -59,6 +48,7 @@ class SinglePost extends StatelessWidget {
       required this.isHome,
       required this.thumbLink,
       required this.isInView,
+      required this.allPost,
       required this.postId,
       required this.vod,
       required this.data});
@@ -117,6 +107,7 @@ class SinglePost extends StatelessWidget {
                           thumbLink: thumbLink ?? "",
                           page: "feed",
                           isInView: isInView,
+                          extended: false,
                           postId: postId,
                           data: data,
                         ),
@@ -146,6 +137,8 @@ class SinglePost extends StatelessWidget {
                           thumbLink: thumbLink ?? "",
                           page: "feed",
                           isInView: isInView,
+                          extended: false,
+
                           postId: postId,
                           data: data,
                         ),
@@ -318,6 +311,7 @@ class UserSinglePost extends StatelessWidget {
   final FeedPost data;
   String? vod;
   bool showComment;
+  List<dynamic> allPost;
   UserSinglePost(
       {super.key,
       required this.media,
@@ -327,6 +321,7 @@ class UserSinglePost extends StatelessWidget {
       required this.constraints,
       required this.isHome,
       required this.thumbLink,
+      required this.allPost,
       required this.page,
       required this.isInView,
       required this.postId,
@@ -405,9 +400,10 @@ class UserSinglePost extends StatelessWidget {
                                 isHome: isHome,
                                 vod: vod ?? "",
                                 thumbLink: thumbLink ?? "",
-                                page: "feed",
+                                page: page,
                                 isInView: isInView,
                                 postId: postId,
+                                extended: true,
                                 data: data,
                                 showComment: showComment,
                               ),
@@ -424,28 +420,29 @@ class UserSinglePost extends StatelessWidget {
                           });
 
                           VideoWare.instance
-                              .addVideoToList(data)
+                              .getVideoPostFromApi(allPost)
                               .whenComplete(() {
-                            // VideoWareHome.instance.initSomeVideo(
-                            //     "$muxStreamBaseUrl/$media.$videoExtension",
-                            //     data.id!,
-                            //     0);
-                            PageRouting.pushToPage(
-                              context,
-                              FeedVideoHolderPrivate(
-                                file:
-                                    "$muxStreamBaseUrl/$media.$videoExtension",
-                                // controller: controller!,
-                                shouldPlay: true,
-                                isHome: isHome,
-                                thumbLink: thumbLink ?? "",
-                                page: "public",
-                                isInView: isInView,
-                                postId: postId,
-                                data: data,
-                                showComment: showComment,
-                              ),
-                            );
+                            VideoWare.instance
+                                .addVideoToList(data)
+                                .whenComplete(() {
+                              PageRouting.pushToPage(
+                                context,
+                                FeedVideoHolderPrivate(
+                                  file:
+                                      "$muxStreamBaseUrl/$media.$videoExtension",
+                                  // controller: controller!,
+                                  shouldPlay: true,
+                                  isHome: isHome,
+                                  thumbLink: thumbLink ?? "",
+                                  page: page,
+                                  extended: true,
+                                  isInView: isInView,
+                                  postId: postId,
+                                  data: data,
+                                  showComment: showComment,
+                                ),
+                              );
+                            });
                           });
                         }
                       },

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:external_path/external_path.dart';
 import 'package:get/get.dart';
+import 'package:media_storage/media_storage.dart';
 import 'package:path/path.dart' as pat;
 // import 'package:gallery_saver/gallery_saver.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -38,11 +39,14 @@ class SaveMediaController {
     // _toastInfo('requestPermission result: ${statuses}');
   }
 
+  static Future<bool> getPermissionIos() async {
+    bool isPermission = await MediaStorage.getRequestStoragePermission();
+    // print(isPermission);  // true or false
+    return isPermission;
+  }
+
   static Future<void> saveNetworkVideo(
       BuildContext context, String url, name) async {
-    // showToast2(context, "Download started. Scroll to check out more content",
-    //    isError: false);
-    print(url);
     MediaDownloadProgress.instance.addProgress(1, 100);
 
     Get.showSnackbar(successSnackBar("Downloading", "Video"));
@@ -65,9 +69,6 @@ class SaveMediaController {
         androidRelativePath: "Movies");
 
     emitter(" the download link $url");
-    // bool isDone = await GallerySaver.saveVideo(path).then((success) {
-    //   return success!;
-    // });
 
     if (result.isSuccess) {
       // ignore: use_build_context_synchronously
@@ -79,39 +80,19 @@ class SaveMediaController {
           showToastLater('Video downloaded successfully');
         } catch (e) {
           showToastLater('Video downloaded successfully');
-          // await Fluttertoast.showToast(
-          //     msg: 'Video downloaded successfully',
-          //     textColor: HexColor(backgroundColor),
-          //     gravity: ToastGravity.TOP,
-          //     backgroundColor: HexColor(primaryColor));
         }
       }
-
-      // ignore: use_build_context_synchronously
-      // PageRouting.popToPage(context);
     } else {
       try {
         showToastLater("Could not download video");
-        //   showToast2(context, "Could not download video", isError: true);
       } catch (e) {
         showToastLater('Could not download video');
-        // Fluttertoast.showToast(
-        //     msg: 'Could not download video',
-        //     textColor: HexColor(backgroundColor),
-        //     gravity: ToastGravity.TOP,
-        //     backgroundColor: HexColor(primaryColor));
       }
-      // ignore: use_build_context_synchronously
-
-      // ignore: use_build_context_synchronously
-      //   PageRouting.popToPage(context);
     }
   }
 
   static Future<void> saveNetworkImage(
       BuildContext context, String url, name) async {
-    // showToast2(context, "Download started. Scroll to check out more content",
-    //     isError: false);
     MediaDownloadProgress.instance.addProgress(1, 100);
 
     Get.showSnackbar(successSnackBar("Downloading", "Image"));
@@ -131,49 +112,25 @@ class SaveMediaController {
         name: picturesPath,
         androidRelativePath: "Pictures/aa/macanacki",
         androidExistNotSave: true);
-    // final save = await SaverGallery.
-    // bool isDone = await GallerySaver.saveImage(path).then((success) {
-    //   return success!;
-    // });
 
     if (result.isSuccess) {
-      // ignore: use_build_context_synchronously
-
       try {
-        // showToast2(context, "Image downloaded successfully", isError: false);
         showToastLater("Image downloaded successfully");
       } catch (e) {
         showToastLater('Image downloaded successfully');
-        // await Fluttertoast.showToast(
-        //     msg: 'Image downloaded successfully',
-        //     textColor: HexColor(backgroundColor),
-        //     gravity: ToastGravity.TOP,
-        //     backgroundColor: HexColor(primaryColor));
       }
-      // ignore: use_build_context_synchronously
-      // PageRouting.popToPage(context);
     } else {
-      // ignore: use_build_context_synchronously
-
       try {
         showToastLater("Could not download Image");
-        //  showToast2(context, "Could not download Image", isError: true);
       } catch (e) {
         showToastLater('Could not download Image');
-        // await Fluttertoast.showToast(
-        //     msg: 'Could not download Image',
-        //     textColor: HexColor(backgroundColor),
-        //     gravity: ToastGravity.TOP,
-        //     backgroundColor: HexColor(primaryColor));
       }
-      // ignore: use_build_context_synchronously
-      // PageRouting.popToPage(context);
     }
   }
 
   static Future<void> saveNetworkAudio(
       BuildContext context, String url, name) async {
-    getPermission();
+    Platform.isAndroid ? getPermission() : await getPermissionIos();
 
     Map<String, dynamic> result = {
       'isSuccess': false,
@@ -181,11 +138,13 @@ class SaveMediaController {
       'error': null,
       'id': null
     };
-    final dir = await ExternalPath.getExternalStoragePublicDirectory(
-        ExternalPath.DIRECTORY_DOWNLOADS);
+    final dir = Platform.isAndroid
+        ? await ExternalPath.getExternalStoragePublicDirectory(
+            ExternalPath.DIRECTORY_DOWNLOADS)
+        : await MediaStorage.getExternalStoragePublicDirectory(
+            MediaStorage.DIRECTORY_DOWNLOADS);
+    // /storage/emulated/0/Download
 
-    // showToast2(context, "Download started. Scroll to check out more content",
-    //     isError: false);
     MediaDownloadProgress.instance.addProgress(1, 100);
 
     Get.showSnackbar(successSnackBar("Downloading", "audio"));
@@ -197,20 +156,10 @@ class SaveMediaController {
       MediaDownloadProgress.instance.addProgress(received, total);
     });
     String musicPath = "$name.${DateTime.now().millisecondsSinceEpoch}.mp3";
-    await requestPermission();
+    // await requestPermission();
     debugPrint(musicPath);
 
     final fullPath = pat.join(dir.toString(), musicPath);
-
-    // final result = await SaverGallery.saveFile(
-    //     file: musicPath,
-    //     androidExistNotSave: true,
-    //     name: 'macanacki${basename(musicPath)}.mp3',
-    //     androidRelativePath: "Music");
-    // final save = await SaverGallery.
-    // bool isDone = await GallerySaver.saveImage(path).then((success) {
-    //   return success!;
-    // });
 
     if (response.statusCode == 200) {
       result['isSuccess'] = response.statusCode == 200;
@@ -221,37 +170,19 @@ class SaveMediaController {
       raf.writeFromSync(response.data);
 
       await raf.close();
-      // ignore: use_build_context_synchronously
 
       try {
-        // showToast2(context, "Image downloaded successfully", isError: false);
         showToastLater("Audio downloaded successfully");
       } catch (e) {
         showToastLater('Audio downloaded successfully');
-        // await Fluttertoast.showToast(
-        //     msg: 'Image downloaded successfully',
-        //     textColor: HexColor(backgroundColor),
-        //     gravity: ToastGravity.TOP,
-        //     backgroundColor: HexColor(primaryColor));
       }
-      // ignore: use_build_context_synchronously
-      // PageRouting.popToPage(context);
     } else {
-      // ignore: use_build_context_synchronously
-
       try {
         showToastLater("Could not download Audio");
         //  showToast2(context, "Could not download Image", isError: true);
       } catch (e) {
         showToastLater('Could not download Audio');
-        // await Fluttertoast.showToast(
-        //     msg: 'Could not download Image',
-        //     textColor: HexColor(backgroundColor),
-        //     gravity: ToastGravity.TOP,
-        //     backgroundColor: HexColor(primaryColor));
       }
-      // ignore: use_build_context_synchronously
-      // PageRouting.popToPage(context);
     }
   }
 
@@ -281,7 +212,7 @@ class SaveMediaController {
                 CircleAvatar(
                   radius: 8,
                   backgroundColor: Colors.transparent,
-                  child: CircularProgressIndicator.adaptive(
+                  child: CircularProgressIndicator(
                     value: double.tryParse(download.value.toString())! * 0.01,
                     valueColor: AlwaysStoppedAnimation(
                       HexColor(primaryColor),
@@ -301,12 +232,6 @@ class SaveMediaController {
         color: HexColor(primaryColor),
       ),
       borderRadius: 12.0,
-      // mainButton: IconButton(icon: Icon(Icons.close, color: Colors.white,), onPressed: (){
-      //   if(Get.isSnackbarOpen){
-      //     Get.back();
-      //   }
-      // }),
-      //  duration: Duration(seconds: 2),
       margin: const EdgeInsets.all(10.0),
       backgroundColor: Colors.white,
       padding: const EdgeInsets.all(10),

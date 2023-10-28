@@ -5,6 +5,7 @@ import 'package:macanacki/presentation/widgets/text.dart';
 import 'package:provider/provider.dart';
 import 'package:numeral/numeral.dart';
 import '../../../../../services/middleware/user_profile_ware.dart';
+import '../../../../model/public_profile_model.dart';
 import '../../../../services/middleware/extra_profile_ware.dart';
 import '../../../allNavigation.dart';
 import '../../home/profile/followers_following.dart';
@@ -264,6 +265,103 @@ class PublicProfileFollowersStatisticsExtra extends StatelessWidget {
                                   null
                               ? 10
                               : stream.publicUserProfileModel.noOfFollowing!)
+                          .format(fractionDigits: 1),
+                      fontWeight: FontWeight.w600,
+                      size: 18,
+                    ),
+                  ),
+                  AppText(
+                    text: "Following",
+                    fontWeight: FontWeight.w500,
+                    size: 10,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class PublicProfileFollowersStatisticsTest extends StatelessWidget {
+  PublicUserData stream;
+  PublicProfileFollowersStatisticsTest({super.key, required this.stream});
+  @override
+  Widget build(BuildContext context) {
+    ;
+    var width = MediaQuery.of(context).size.width;
+
+    return Container(
+      width: width * 0.7,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          InkWell(
+            onTap: () => PageRouting.pushToPage(
+                context,
+                PublicUserFollowerFollowingScreen(
+                  isFollowing: false,
+                  title: stream.username!,
+                )),
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 5),
+              decoration: BoxDecoration(
+                  shape: BoxShape.rectangle,
+                  border: Border.all(
+                      color: HexColor("#C0C0C0").withOpacity(.4), width: 1),
+                  borderRadius: BorderRadius.circular(38)),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 85,
+                    // color: Colors.amber,
+                    alignment: Alignment.center,
+                    child: AppText(
+                      text: Numeral(stream.noOfFollowers == null
+                              ? 10
+                              : stream.noOfFollowers!)
+                          .format(fractionDigits: 1),
+                      fontWeight: FontWeight.w600,
+                      size: 18,
+                    ),
+                  ),
+                  AppText(
+                    text: "Followers",
+                    fontWeight: FontWeight.w500,
+                    size: 10,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          InkWell(
+            onTap: () => PageRouting.pushToPage(
+                context,
+                PublicUserFollowerFollowingScreen(
+                  isFollowing: true,
+                  title: stream.username!,
+                )),
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 5),
+              decoration: BoxDecoration(
+                  shape: BoxShape.rectangle,
+                  border: Border.all(
+                      color: HexColor("#C0C0C0").withOpacity(.4), width: 1),
+                  borderRadius: BorderRadius.circular(38)),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 85,
+                    alignment: Alignment.center,
+                    // color: Colors.amber,
+                    child: AppText(
+                      text: Numeral(stream.noOfFollowing == null
+                              ? 10
+                              : stream.noOfFollowing!)
                           .format(fractionDigits: 1),
                       fontWeight: FontWeight.w600,
                       size: 18,

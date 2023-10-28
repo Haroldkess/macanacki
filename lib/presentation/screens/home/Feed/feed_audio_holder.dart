@@ -33,6 +33,7 @@ import '../../../widgets/debug_emitter.dart';
 import '../../../widgets/feed_views/like_section.dart';
 import '../../../widgets/feed_views/new_action_design.dart';
 import '../../../widgets/text.dart';
+import '../../userprofile/testing_profile.dart';
 import '../../userprofile/user_profile_screen.dart';
 import '../test_api_video.dart';
 import 'package:rxdart/rxdart.dart';
@@ -53,6 +54,7 @@ class FeedAudioHolder extends StatefulWidget {
   bool? isInView;
   int postId;
   final FeedPost data;
+  bool extended;
 
   FeedAudioHolder(
       {super.key,
@@ -65,7 +67,8 @@ class FeedAudioHolder extends StatefulWidget {
       required this.page,
       required this.isInView,
       required this.postId,
-      required this.data});
+      required this.data,
+      required this.extended});
 
   @override
   State<FeedAudioHolder> createState() => _FeedAudioHolderState();
@@ -109,19 +112,18 @@ class _FeedAudioHolderState extends State<FeedAudioHolder>
 
   @override
   void dispose() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      VideoWareHome.instance.getAudioPostFromApi(1);
-    });
-
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      PostSecurity.instance.toggleSecure(true);
+      PersistentNavController.instance.toggleHide();
+
+      if (widget.extended == false) {
+        PersistentNavController.instance.toggleHide();
+        if (PersistentNavController.instance.hide.value == true) {
+          PersistentNavController.instance.toggleHide();
+        }
+      }
     });
 
     super.dispose();
-
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      PersistentNavController.instance.toggleHide();
-    });
   }
 
   bool flag = false;
@@ -415,17 +417,8 @@ class _AudioViewState extends State<AudioView> {
 
   @override
   void initState() {
-    // newVideos = widget.allVideos;
-    // newVideos.shuffle();
-    // newVideos.insert(0, widget.data);
     super.initState();
-    //  ambiguate(WidgetsBinding.instance)!.addObserver(this);
-    // SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    //   statusBarColor: Colors.black,
-    // ));
-    Future.delayed(Duration(seconds: 2), () {
-      _init();
-    });
+    _init();
   }
 
   Future<void> _init() async {
@@ -440,33 +433,8 @@ class _AudioViewState extends State<AudioView> {
     });
     // Try to load audio from a source and catch any errors.
     try {
-      // ConcatenatingAudioSource(children: [
-      //   ClippingAudioSource(
-      //     start: const Duration(seconds: 60),
-      //     end: const Duration(seconds: 90),
-      //     child: AudioSource.uri(Uri.parse(
-      //         "https://s3.amazonaws.com/scifri-episodes/scifri20181123-episode.mp3")),
-      //     tag: MediaItem(
-      //       id: '${_nextMediaId++}',
-      //       album: "Science Friday",
-      //       title: "A Salute To Head-Scratching Science (30 seconds)",
-      //       artUri: Uri.parse(
-      //           "https://media.wnyc.org/i/1400/1400/l/80/1/ScienceFriday_WNYCStudios_1400.jpg"),
-      //     ),
-      //   ),
-      // ]);
-
-      // AAC example: https://dl.espressif.com/dl/audio/ff-16b-2c-44100hz.aac
       await _player.setAudioSource(LockCachingAudioSource(
         Uri.parse(widget.data.media!.first.toString()),
-        tag: MediaItem(
-          // Specify a unique ID for each media item:
-          id: widget.data.id.toString(),
-          // Metadata to display in the notification:
-          album: widget.data.description ?? "",
-          title: widget.data.user!.username ?? "",
-          artUri: Uri.parse(widget.data.thumbnails!.first! ?? ""),
-        ),
       ));
 
       _player.play();
@@ -564,26 +532,19 @@ class _AudioViewState extends State<AudioView> {
                           _player.pause();
                           if (widget.data.user!.username! ==
                               user.userProfileModel.username) {
-                            // action.pageController!.animateToPage(
-                            //   4,
-                            //   duration: const Duration(milliseconds: 1),
-                            //   curve: Curves.easeIn,
-                            // );
                           } else {
                             if (widget.isHome == false) {
                               return;
                             }
-                            // try {
-                            //   WidgetsBinding.instance
-                            //       .addPostFrameCallback((timeStamp) {
-                            //     VideoWareHome.instance.pauseAnyVideo();
-                            //   });
-                            // } catch (e) {}
+
+                            PageRouting.popToPage(context);
+
                             PageRouting.pushToPage(
                                 context,
-                                UsersProfile(
-                                  username: widget.data.user!.username!,
-                                ));
+                                TestProfile(
+                                    username: widget.data.user!.username!,
+                                    extended: false,
+                                    page: "audio"));
                           }
                         },
                         style: TextButton.styleFrom(
@@ -596,9 +557,7 @@ class _AudioViewState extends State<AudioView> {
                           size: 13,
                         ),
                       ),
-                      SizedBox(
-                        height: 30,
-                      ),
+
                       StreamBuilder<PositionData>(
                         stream: _positionDataStream,
                         builder: (context, snapshot) {
@@ -652,6 +611,7 @@ class _AudioViewState extends State<AudioView> {
               isHome: widget.isHome,
               userName: widget.data.user!.username,
               showComment: true,
+              mediaController: _player,
             ),
           ),
         ),

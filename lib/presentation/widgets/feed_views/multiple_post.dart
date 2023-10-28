@@ -167,6 +167,7 @@ class _MultipleViewState extends State<MultipleView> {
             isInView: widget.isInView!,
             page: 'feed',
             postId: widget.data.id!,
+            extended: false,
             data: widget.data,
             vod: "",
           )

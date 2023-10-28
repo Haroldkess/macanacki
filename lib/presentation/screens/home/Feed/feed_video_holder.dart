@@ -49,6 +49,7 @@ class FeedVideoHolder extends StatefulWidget {
   bool? isInView;
   int postId;
   final FeedPost data;
+  bool? extended;
 
   FeedVideoHolder(
       {super.key,
@@ -61,7 +62,8 @@ class FeedVideoHolder extends StatefulWidget {
       required this.page,
       required this.isInView,
       required this.postId,
-      required this.data});
+      required this.data,
+      required this.extended});
 
   @override
   State<FeedVideoHolder> createState() => _FeedVideoHolderState();
@@ -111,14 +113,14 @@ class _FeedVideoHolderState extends State<FeedVideoHolder>
     });
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      PostSecurity.instance.toggleSecure(true);
+      if (widget.extended == false) {
+        if (PersistentNavController.instance.hide.value == true) {
+          PersistentNavController.instance.toggleHide();
+        }
+      }
     });
 
     super.dispose();
-
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      PersistentNavController.instance.toggleHide();
-    });
   }
 
   String apiToken = "";
@@ -494,11 +496,11 @@ class _VideoViewState extends State<VideoView> {
         Center(
           child: Stack(
             children: [
-              VodView(
+              PlayerWidget(
                 data: widget.data,
                 index: widget.index,
-                vod: widget.data.vod!.first!,
-                controller: widget.inComingController ?? _controller,
+                //   vod: widget.data.vod!.first!,
+                controller: _controller!,
               )
             ],
           ),
@@ -526,6 +528,7 @@ class _VideoViewState extends State<VideoView> {
               userName: widget.data.user!.username,
               isHome: widget.isHome,
               showComment: true,
+              mediaController: _controller,
             ),
           ),
         ),

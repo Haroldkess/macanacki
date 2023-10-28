@@ -16,6 +16,7 @@ import 'package:shimmer/shimmer.dart';
 
 import '../../../../../services/controllers/user_profile_controller.dart';
 import '../../../../../services/middleware/user_profile_ware.dart';
+import '../../../../model/public_profile_model.dart';
 import '../../../../services/controllers/chat_controller.dart';
 
 class PublicProfileInfo extends StatefulWidget {
@@ -131,6 +132,65 @@ class _PublicProfileInfoExtraState extends State<PublicProfileInfoExtra> {
           Padding(
             padding: EdgeInsets.only(bottom: 20.0),
             child: UserProfileActionsExtra(),
+          )
+        ],
+      ),
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //   ChatController.retrievChatController(context, false);
+    // });
+  }
+}
+
+class PublicProfileInfoTest extends StatefulWidget {
+  final bool isMine;
+  PublicUserData stream;
+  PublicProfileInfoTest(
+      {super.key, required this.isMine, required this.stream});
+
+  @override
+  State<PublicProfileInfoTest> createState() => _PublicProfileInfoTestState();
+}
+
+class _PublicProfileInfoTestState extends State<PublicProfileInfoTest> {
+  @override
+  Widget build(BuildContext context) {
+    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
+
+    return Container(
+      //  height: height / 2,
+      width: width,
+      alignment: Alignment.topCenter,
+      decoration: BoxDecoration(
+          color: HexColor(backgroundColor),
+          shape: BoxShape.rectangle,
+          borderRadius: const BorderRadius.only(
+              bottomLeft: Radius.elliptical(250, 200),
+              bottomRight: Radius.elliptical(250, 200))),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          SizedBox(
+            height: 50,
+          ),
+          PublicProfileImageAndNameTest(
+            stream: widget.stream,
+          ),
+          PublicProfileFollowersStatisticsTest(
+            stream: widget.stream,
+          ),
+          Padding(
+            padding: EdgeInsets.only(bottom: 20.0),
+            child: UserProfileActionsTest(
+              data: widget.stream,
+            ),
           )
         ],
       ),

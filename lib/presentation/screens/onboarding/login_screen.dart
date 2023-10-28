@@ -83,7 +83,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       // ),
 
                       HexagonWidget.pointy(
-                        width: w,
+                        width: w.isNegative ? 0 : w,
                         elevation: 0.0,
                         //  color: HexColor('#FC9DBF'),
                         color: Colors.grey,

@@ -1117,6 +1117,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.0"
+  media_storage:
+    dependency: "direct main"
+    description:
+      name: media_storage
+      sha256: "6302174814adf84e4fd723c3aad37b030a2d9394e0b91924e3863d961f435c3d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.1"
   meta:
     dependency: transitive
     description:

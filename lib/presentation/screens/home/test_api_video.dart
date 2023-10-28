@@ -104,10 +104,6 @@ class PlayerWidget extends StatefulWidget {
 }
 
 class _PlayerWidgetState extends State<PlayerWidget> {
-  String _currentTime = 'Get current time';
-  String _duration = 'Get duration';
-  bool _hideControls = false;
-
   bool isReady = false;
   bool tapped = false;
 
@@ -115,6 +111,7 @@ class _PlayerWidgetState extends State<PlayerWidget> {
 
   @override
   void initState() {
+    widget.controller.initialize();
     addListener();
     super.initState();
   }
@@ -122,8 +119,6 @@ class _PlayerWidgetState extends State<PlayerWidget> {
   @override
   void dispose() {
     widget.controller.dispose();
-
-    // widget.controller.dispose();
 
     super.dispose();
   }
@@ -136,7 +131,6 @@ class _PlayerWidgetState extends State<PlayerWidget> {
             isReady = true;
             tapped = false;
             delayUser = false;
-            _duration = 'Get duration';
           });
         }
       },
@@ -235,23 +229,6 @@ class _PlayerWidgetState extends State<PlayerWidget> {
         foregroundColor: Colors.transparent,
         side: BorderSide.none,
         textStyle: textStyle);
-    final buttonStyleSeek = ButtonStyle(
-      maximumSize: MaterialStateProperty.all<Size>(Size(0.0, 0.0)),
-      iconSize: MaterialStateProperty.all<double>(
-        0.0,
-      ),
-      iconColor: MaterialStateProperty.all<Color>(Colors.transparent),
-      backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
-      foregroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
-      overlayColor: MaterialStateProperty.resolveWith<Color?>(
-        (Set<MaterialState> states) {
-          if (states.contains(MaterialState.hovered)) return Colors.transparent;
-          if (states.contains(MaterialState.focused) ||
-              states.contains(MaterialState.pressed)) return Colors.transparent;
-          return Colors.transparent; // Defer to the widget's default.
-        },
-      ),
-    );
 
     final settingsBarStyle = SettingsBarStyle(
         buttonStyle: buttonStyle,
@@ -266,11 +243,6 @@ class _PlayerWidgetState extends State<PlayerWidget> {
         mainControlButtonStyle: buttonStyle,
         seekBackwardControlButtonStyle: null,
         seekForwardControlButtonStyle: null);
-
-    // .styleFrom(
-    //   mainControlButtonStyle: buttonStyle,
-    //   sideControlButtonStyle: buttonStyle,
-    // );
 
     final timeSliderStyle = TimeSliderStyle(
         sliderTheme: const SliderThemeData(
@@ -314,9 +286,9 @@ class _PlayerWidgetState extends State<PlayerWidget> {
                       setState(() {
                         tapped = true;
                       });
-                      if (await widget.controller.isCreated) {
-                        widget.controller.play();
-                      }
+
+                      widget.controller.play();
+
                       //  if (widget.index! == 0) {
 
                       if (await widget.controller.isPlaying) {
@@ -324,61 +296,8 @@ class _PlayerWidgetState extends State<PlayerWidget> {
                           isReady = true;
                           tapped = false;
                           delayUser = false;
-                          _duration = 'Get duration';
                         });
                       }
-                      // widget.controller
-                      //     .addListener(ApiVideoPlayerControllerEventsListener(
-                      //   onReady: () {
-                      //     if (widget.index == 0) {
-                      //       widget.controller.play();
-                      //       widget.controller.setIsLooping(true);
-                      //     } else {
-                      //       widget.controller.play();
-                      //       widget.controller.setIsLooping(true);
-                      //     }
-                      //     setState(() {
-                      //       isReady = true;
-                      //       tapped = false;
-                      //       delayUser = false;
-                      //       _duration = 'Get duration';
-                      //     });
-                      //   },
-                      //   onEnd: () async {
-                      //     log("video ended");
-                      //     ViewController.handleView(widget.data!.id!);
-                      //     setState(() {});
-                      //   },
-                      // ));
-
-                      // } else {
-                      //   setState(() {
-                      //     tapped = true;
-                      //   });
-                      //   widget.controller
-                      //       .addListener(ApiVideoPlayerControllerEventsListener(
-                      //     onReady: () {
-                      //       if (widget.index == 0) {
-                      //         widget.controller.play();
-                      //         widget.controller.setIsLooping(true);
-                      //       } else {
-                      //         widget.controller.play();
-                      //         widget.controller.setIsLooping(true);
-                      //       }
-                      //       setState(() {
-                      //         isReady = true;
-                      //         tapped = false;
-                      //         delayUser = false;
-                      //         _duration = 'Get duration';
-                      //       });
-                      //     },
-                      //     onEnd: () {
-                      //       log("video ended");
-                      //       ViewController.handleView(widget.data!.id!);
-                      //       setState(() {});
-                      //     },
-                      //   ));
-                      // }
                     }, // set duration
                     builder: (context, value, _) {
                       return Container(
@@ -392,10 +311,10 @@ class _PlayerWidgetState extends State<PlayerWidget> {
                           child: IconButton(
                             onPressed: null,
                             icon: tapped
-                                ? Loader(
+                                ? const Loader(
                                     color: Colors.white,
                                   )
-                                : Icon(
+                                : const Icon(
                                     Icons.play_arrow,
                                     color: Colors.white,
                                     // size: 35,
@@ -408,29 +327,12 @@ class _PlayerWidgetState extends State<PlayerWidget> {
               )
             ],
           )
-        : Container(
+        : SizedBox(
             width: Get.width,
             height: Get.height,
             child: ApiVideoPlayer(
               controller: widget.controller,
               style: applyStyle,
-              // style: PlayerStyle.of(context).copyWith(
-              //     controlsBarStyle: ControlsBarStyle(
-
-              //         seekBackwardControlButtonStyle: ButtonStyle(
-              //             backgroundColor:
-              //                 MaterialStateProperty.all(Colors.white),
-              //             iconColor:
-              //                 MaterialStateProperty.all(Colors.white)),
-              //         mainControlButtonStyle: ButtonStyle(
-              //             backgroundColor:
-              //                 MaterialStateProperty.all(Colors.white),
-              //             iconColor:
-              //                 MaterialStateProperty.all(Colors.white))),
-              //     settingsBarStyle: SettingsBarStyle(
-              //         buttonStyle: ButtonStyle(
-              //             iconColor:
-              //                 MaterialStateProperty.all(Colors.green))))
             ),
           );
   }

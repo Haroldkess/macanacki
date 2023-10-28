@@ -168,9 +168,10 @@ class TabProvider extends ChangeNotifier {
 }
 
 class PersistentNavController extends GetxController {
-    static PersistentNavController get instance {
+  static PersistentNavController get instance {
     return Get.find<PersistentNavController>();
   }
+
   PersistentTabController persistentPagecontroller =
       PersistentTabController(initialIndex: 0);
   RxBool hide = false.obs;
@@ -186,10 +187,8 @@ class PersistentNavController extends GetxController {
   }
 }
 
-
 class scrolNotify extends GetxController {
-
-    static scrolNotify get instance {
+  static scrolNotify get instance {
     return Get.find<scrolNotify>();
   }
 
@@ -206,8 +205,7 @@ class scrolNotify extends GetxController {
 }
 
 class scrolNotifyPublic extends GetxController {
-
-    static scrolNotify get instance {
+  static scrolNotify get instance {
     return Get.find<scrolNotify>();
   }
 
@@ -223,10 +221,8 @@ class scrolNotifyPublic extends GetxController {
   }
 }
 
-
 class scrolNotifyPublicExtra extends GetxController {
-
-    static scrolNotify get instance {
+  static scrolNotify get instance {
     return Get.find<scrolNotify>();
   }
 

@@ -32,6 +32,7 @@ import '../../../widgets/debug_emitter.dart';
 import '../../../widgets/feed_views/like_section.dart';
 import '../../../widgets/feed_views/new_action_design.dart';
 import '../../../widgets/text.dart';
+import '../../userprofile/testing_profile.dart';
 import '../../userprofile/user_profile_screen.dart';
 import '../test_api_video.dart';
 import 'package:rxdart/rxdart.dart';
@@ -53,6 +54,7 @@ class FeedAudioHolderUser extends StatefulWidget {
   int postId;
   final FeedPost data;
   bool showComment;
+  bool extended;
 
   FeedAudioHolderUser(
       {super.key,
@@ -66,6 +68,7 @@ class FeedAudioHolderUser extends StatefulWidget {
       required this.page,
       required this.isInView,
       required this.postId,
+      required this.extended,
       required this.data});
 
   @override
@@ -115,14 +118,20 @@ class _FeedAudioHolderUserState extends State<FeedAudioHolderUser>
     });
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      PostSecurity.instance.toggleSecure(true);
+      if (widget.page == "user") {
+        if (PersistentNavController.instance.hide.value == true) {
+          PersistentNavController.instance.toggleHide();
+        }
+      } else {
+        if (widget.extended == false) {
+          if (PersistentNavController.instance.hide.value == true) {
+            PersistentNavController.instance.toggleHide();
+          }
+        }
+      }
     });
 
     super.dispose();
-
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      PersistentNavController.instance.toggleHide();
-    });
   }
 
   bool flag = false;
@@ -420,17 +429,9 @@ class _AudioViewState extends State<AudioView> {
 
   @override
   void initState() {
-    // newVideos = widget.allVideos;
-    // newVideos.shuffle();
-    // newVideos.insert(0, widget.data);
     super.initState();
-    //  ambiguate(WidgetsBinding.instance)!.addObserver(this);
-    // SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    //   statusBarColor: Colors.black,
-    // ));
-    Future.delayed(Duration(seconds: 2), () {
-      _init();
-    });
+
+    _init();
   }
 
   Future<void> _init() async {
@@ -448,14 +449,6 @@ class _AudioViewState extends State<AudioView> {
       // AAC example: https://dl.espressif.com/dl/audio/ff-16b-2c-44100hz.aac
       await _player.setAudioSource(LockCachingAudioSource(
         Uri.parse(widget.data.media!.first.toString()),
-        tag: MediaItem(
-          // Specify a unique ID for each media item:
-          id: widget.data.id.toString(),
-          // Metadata to display in the notification:
-          album: widget.data.description ?? "",
-          title: widget.data.user!.username ?? "",
-          artUri: Uri.parse(widget.data.thumbnails!.first! ?? ""),
-        ),
       ));
 
       _player.play();
@@ -567,11 +560,14 @@ class _AudioViewState extends State<AudioView> {
                             //     VideoWareHome.instance.pauseAnyVideo();
                             //   });
                             // } catch (e) {}
+                            PageRouting.popToPage(context);
+
                             PageRouting.pushToPage(
                                 context,
-                                UsersProfile(
-                                  username: widget.data.user!.username!,
-                                ));
+                                TestProfile(
+                                    username: widget.data.user!.username!,
+                                    extended: true,
+                                    page: "audio"));
                           }
                         },
                         style: TextButton.styleFrom(
@@ -585,9 +581,6 @@ class _AudioViewState extends State<AudioView> {
                         ),
                       ),
 
-                      SizedBox(
-                        height: 30,
-                      ),
                       StreamBuilder<PositionData>(
                         stream: _positionDataStream,
                         builder: (context, snapshot) {
@@ -641,6 +634,7 @@ class _AudioViewState extends State<AudioView> {
               userName: widget.data.user!.username,
               isHome: widget.isHome,
               showComment: widget.showComment,
+              mediaController: _player,
             ),
           ),
         ),

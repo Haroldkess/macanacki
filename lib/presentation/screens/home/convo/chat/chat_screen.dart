@@ -25,6 +25,7 @@ import '../../../../uiproviders/screen/tab_provider.dart';
 import '../../../../widgets/hexagon_avatar.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:macanacki/services/api_url.dart';
+import '../../../userprofile/testing_profile.dart';
 import '../../../userprofile/user_profile_screen.dart';
 import '../../profile/profile_screen.dart';
 
@@ -270,8 +271,9 @@ class _ChatScreenState extends State<ChatScreen> {
                   } else {
                     PageRouting.pushToPage(
                         context,
-                        UsersProfile(
+                        TestProfile(
                           username: name,
+                          extended: true,
                         ));
                   }
                 }
@@ -495,25 +497,25 @@ class _ChatScreenState extends State<ChatScreen> {
                                 user: widget.user,
                               )
                             : ChatList(
-                              chat: widget.chat,
-                              me: widget.user.conversations!.last.sender ==
-                                      stream.userName
-                                  ? widget.user.userOne!
-                                  : widget.user.userTwo!,
-                              myUserId: ware.userProfileModel.id.toString(),
-                              to: widget.user.conversations!.last.sender ==
-                                      stream.userName
-                                  ? widget.user.userTwo
-                                  : widget.user.userOne,
-                              toUserId:
-                                  widget.user.conversations!.last.sender ==
-                                          stream.userName
-                                      ? widget.user.userTwoId.toString()
-                                      : widget.user.userOneId.toString(),
-                              controller: controiller!,
-                              isHome: widget.isHome,
-                              user: widget.user,
-                            ),
+                                chat: widget.chat,
+                                me: widget.user.conversations!.last.sender ==
+                                        stream.userName
+                                    ? widget.user.userOne!
+                                    : widget.user.userTwo!,
+                                myUserId: ware.userProfileModel.id.toString(),
+                                to: widget.user.conversations!.last.sender ==
+                                        stream.userName
+                                    ? widget.user.userTwo
+                                    : widget.user.userOne,
+                                toUserId:
+                                    widget.user.conversations!.last.sender ==
+                                            stream.userName
+                                        ? widget.user.userTwoId.toString()
+                                        : widget.user.userOneId.toString(),
+                                controller: controiller!,
+                                isHome: widget.isHome,
+                                user: widget.user,
+                              ),
                       ),
                       Align(
                           alignment: Alignment.bottomCenter,
