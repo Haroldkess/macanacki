@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'dart:ui';
 
@@ -418,8 +419,9 @@ class UserSinglePost extends StatelessWidget {
                               .addPostFrameCallback((timeStamp) {
                             VideoWare.instance.loadVideo(true);
                           });
+                          log(allPost.length.toString());
 
-                          VideoWare.instance
+                          await VideoWare.instance
                               .getVideoPostFromApi(allPost)
                               .whenComplete(() {
                             VideoWare.instance

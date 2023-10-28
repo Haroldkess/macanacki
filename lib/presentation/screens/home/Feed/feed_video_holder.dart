@@ -467,7 +467,7 @@ class _VideoViewState extends State<VideoView> {
 
     _controller = ApiVideoPlayerController(
         videoOptions: videoOptions,
-        autoplay: true,
+        autoplay: false,
         onEnd: () {
           ViewController.handleView(widget.data.id!);
         },

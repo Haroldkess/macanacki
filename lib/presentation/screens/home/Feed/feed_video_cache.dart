@@ -72,6 +72,7 @@ class _FeedVideoHolderPrivateState extends State<FeedVideoHolderPrivate>
   @override
   void initState() {
     super.initState();
+
     controller = AnimationController(
       duration: const Duration(milliseconds: 500), //controll animation duration
       vsync: this,
@@ -126,6 +127,7 @@ class _FeedVideoHolderPrivateState extends State<FeedVideoHolderPrivate>
       backgroundColor: Colors.black,
       resizeToAvoidBottomInset: false,
       body: ObxValue((allVideos) {
+        log(allVideos.length.toString() + "just checkinh");
         return PageView.builder(
           itemCount: allVideos.length,
           controller: pageController,

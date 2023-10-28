@@ -8,6 +8,7 @@ import 'package:simple_animations/animation_builder/play_animation_builder.dart'
 
 import '../../../model/feed_post_model.dart';
 import '../../../services/controllers/view_controller.dart';
+import '../../../services/middleware/video/video_ware.dart';
 import '../../widgets/loader.dart';
 
 // class ApiVideoDemo extends StatelessWidget {
@@ -123,6 +124,10 @@ class _PlayerWidgetState extends State<PlayerWidget> {
 
   @override
   void dispose() {
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //   VideoWare.instance
+    //       .dismissSingleVideo(widget.controller, widget.data!.id!, true);
+    // });
     widget.controller.dispose();
 
     super.dispose();
@@ -151,6 +156,10 @@ class _PlayerWidgetState extends State<PlayerWidget> {
         setState(() {});
       },
     ));
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //   VideoWare.instance
+    //       .addSingleVideo(widget.controller, widget.data!.id!, true);
+    // });
   }
 
   // onTap: () async {

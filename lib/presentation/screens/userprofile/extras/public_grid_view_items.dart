@@ -89,7 +89,7 @@ class _PublicGridViewItemsState extends State<PublicGridViewItems> {
     return InkWell(
       splashColor: HexColor(primaryColor),
       onTap: () async {
-        //   print(widget.posts.length);
+        //  print(widget.posts.length);
         PageRouting.pushToPage(
             context,
             PublicUserProfileFeed(

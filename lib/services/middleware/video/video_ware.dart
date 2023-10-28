@@ -19,11 +19,19 @@ import 'dart:convert';
 class VideoModel {
   int? id;
   Rx<ApiVideoPlayerController>? controller;
+//  Rx<ApiVideoPlayerController>? controller;
+  bool? inUse;
   // ChewieController? chewie;
-  VideoModel({
-    this.id,
-    this.controller,
-  });
+  VideoModel({this.id, this.controller, this.inUse});
+}
+
+class SingleVideoModel {
+  int? id;
+  ApiVideoPlayerController? controller;
+//  Rx<ApiVideoPlayerController>? controller;
+  Rx<bool>? inUse;
+  // ChewieController? chewie;
+  SingleVideoModel({this.id, this.controller, this.inUse});
 }
 
 class VideoWare extends GetxController {
@@ -49,6 +57,7 @@ class VideoWare extends GetxController {
   RxList<FeedPost> feedPosts = <FeedPost>[].obs;
   RxList<FeedPost> feedPostsAudio = <FeedPost>[].obs;
 
+  RxList<SingleVideoModel> allVideoController = <SingleVideoModel>[].obs;
   RxList<VideoModel> videoController = <VideoModel>[].obs;
 
   Rx<ChewieController> chewieController = ChewieController(
@@ -275,6 +284,37 @@ class VideoWare extends GetxController {
             videoOptions: videoOptions, autoplay: false, onEnd: () {})
         .obs;
     videoController.add(VideoModel(id: postId, controller: vid));
+    update();
+  }
+
+  void addSingleVideo(
+      ApiVideoPlayerController control, int postId, bool inUse) async {
+    allVideoController.add(
+        SingleVideoModel(id: postId, controller: control, inUse: inUse.obs));
+    update();
+  }
+
+  void dismissSingleVideo(
+      ApiVideoPlayerController control, int postId, bool inUse) async {
+    allVideoController
+        .where((p0) => p0.id == postId && p0.inUse!.value == true)
+        .first
+        .inUse!
+        .value = false;
+    update();
+
+    List lister =
+        allVideoController.where((p0) => p0.inUse!.value == false).toList();
+    if (lister.isNotEmpty && lister.length > 1) {
+      for (var element in allVideoController) {
+        if (element.inUse!.value == false) {
+          element.controller!.dispose();
+        }
+      }
+
+      allVideoController.removeWhere((val) => val.id! == postId);
+    }
+
     update();
   }
 
