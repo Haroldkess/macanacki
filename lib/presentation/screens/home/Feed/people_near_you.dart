@@ -23,6 +23,7 @@ import '../../../../services/middleware/feed_post_ware.dart';
 import '../../../constants/colors.dart';
 import '../../../constants/string.dart';
 import '../../../uiproviders/screen/find_people_provider.dart';
+import '../../../uiproviders/screen/tab_provider.dart';
 import '../../../widgets/buttons.dart';
 import '../../../widgets/debug_emitter.dart';
 
@@ -44,102 +45,113 @@ class _PeopleHomeState extends State<PeopleHome> {
     PreloadPageController controller =
         PreloadPageController(initialPage: stream.index, keepPage: true);
 
-    return SizedBox(
-      height: Get.height,
-      width: Get.width,
-      child: stream.feedPosts.isEmpty
-          ? Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Center(
-                  child: Column(
-                    children: [
-                      LottieBuilder.asset("assets/icon/nodata.json"),
-                      stream.loadStatus
-                          ? Loader(color: HexColor(primaryColor))
-                          : AppButton(
-                              width: 0.5,
-                              height: 0.06,
-                              color: backgroundColor,
-                              text: "Reload",
-                              backColor: primaryColor,
-                              curves: buttonCurves * 5,
-                              textColor: backgroundColor,
-                              onTap: () async {
-                                await FeedPostController.getFeedPostController(
-                                    context, 1, true);
-                                //  PageRouting.pushToPage(context, const BusinessVerification());
-                              }),
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onPanDown: (_) {
+        // PersistentNavController.instance.toggleHide();
+        WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+          if (PersistentNavController.instance.hide.value == true) {
+            PersistentNavController.instance.toggleHide();
+          }
+        });
+      },
+      child: SizedBox(
+        height: Get.height,
+        width: Get.width,
+        child: stream.feedPosts.isEmpty
+            ? Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Center(
+                    child: Column(
+                      children: [
+                        LottieBuilder.asset("assets/icon/nodata.json"),
+                        stream.loadStatus
+                            ? Loader(color: HexColor(primaryColor))
+                            : AppButton(
+                                width: 0.5,
+                                height: 0.06,
+                                color: backgroundColor,
+                                text: "Reload",
+                                backColor: primaryColor,
+                                curves: buttonCurves * 5,
+                                textColor: backgroundColor,
+                                onTap: () async {
+                                  await FeedPostController
+                                      .getFeedPostController(context, 1, true);
+                                  //  PageRouting.pushToPage(context, const BusinessVerification());
+                                }),
+                      ],
+                    ),
+                  )
+                ],
+              )
+            : PreloadPageView.builder(
+                itemCount: stream.feedPosts.length,
+                controller: controller,
+                preloadPagesCount: 0,
+                scrollDirection: Axis.vertical,
+                itemBuilder: ((context, index) {
+                  FeedPost post = stream.feedPosts[index];
+                  FeedPost? post2 = index + 1 < stream.feedPosts.length
+                      ? stream.feedPosts[index + 1]
+                      : null;
+                  FeedPost? post3 = index + 2 < stream.feedPosts.length
+                      ? stream.feedPosts[index + 2]
+                      : null;
+                  FeedPost? post4 = index + 3 < stream.feedPosts.length
+                      ? stream.feedPosts[index + 3]
+                      : null;
+
+                  return TikTokView(
+                    media: post.mux!,
+                    vod: post.vod!,
+                    data: post,
+                    isFriends: false,
+                    nextImage: [
+                      post2 == null ? null : post2.media!.first,
+                      post3 == null ? null : post3.media!.first,
+                      post4 == null ? null : post4.media!.first
                     ],
-                  ),
-                )
-              ],
-            )
-          : PreloadPageView.builder(
-              itemCount: stream.feedPosts.length,
-              controller: controller,
-              preloadPagesCount: 0,
-              scrollDirection: Axis.vertical,
-              itemBuilder: ((context, index) {
-                FeedPost post = stream.feedPosts[index];
-                FeedPost? post2 = index + 1 < stream.feedPosts.length
-                    ? stream.feedPosts[index + 1]
-                    : null;
-                FeedPost? post3 = index + 2 < stream.feedPosts.length
-                    ? stream.feedPosts[index + 2]
-                    : null;
-                FeedPost? post4 = index + 3 < stream.feedPosts.length
-                    ? stream.feedPosts[index + 3]
-                    : null;
+                    page: "feed",
+                    feedPosts: stream.feedPosts,
+                    index1: index,
+                    index2: index + 1,
+                    urls: post.media!,
+                    isHome: true,
+                    isInView: true,
+                    thumbails: post.thumbnails!,
+                  );
+                }),
+                onPageChanged: (index) {
+                  if (mounted) {
+                    if (index > stream.feedPosts.length - 5) {
+                      SchedulerBinding.instance.addPostFrameCallback((_) {
+                        paginateFeed(context);
+                      });
+                    }
+                    // SchedulerBinding.instance.addPostFrameCallback((_) {
+                    //   FeedPostWare postLenght =
+                    //       Provider.of<FeedPostWare>(context, listen: false);
+                    //   if (index % 1 == 0) {
+                    //     List<FeedPost> toSend = [];
 
-                return TikTokView(
-                  media: post.mux!,
-                  vod: post.vod!,
-                  data: post,
-                  isFriends: false,
-                  nextImage: [
-                    post2 == null ? null : post2.media!.first,
-                    post3 == null ? null : post3.media!.first,
-                    post4 == null ? null : post4.media!.first
-                  ],
-                  page: "feed",
-                  feedPosts: stream.feedPosts,
-                  index1: index,
-                  index2: index + 1,
-                  urls: post.media!,
-                  isHome: true,
-                  isInView: true,
-                  thumbails: post.thumbnails!,
-                );
-              }),
-              onPageChanged: (index) {
-                if (mounted) {
-                  if (index > stream.feedPosts.length - 5) {
-                    SchedulerBinding.instance.addPostFrameCallback((_) {
-                      paginateFeed(context);
-                    });
+                    //     for (var i = index; i < (stream.feedPosts.length); i++) {
+                    //       toSend.add(postLenght.feedPosts[i]);
+                    //     }
+                    //     emitter("sending ${toSend.length} posts for caching");
+                    //     FeedPostController.downloadThumbs(
+                    //         toSend, context, MediaQuery.of(context).size.height);
+                    //     //  emitter('caching next ${toSend.length} sent');
+                    //   }
+                    // });
                   }
-                  // SchedulerBinding.instance.addPostFrameCallback((_) {
-                  //   FeedPostWare postLenght =
-                  //       Provider.of<FeedPostWare>(context, listen: false);
-                  //   if (index % 1 == 0) {
-                  //     List<FeedPost> toSend = [];
-
-                  //     for (var i = index; i < (stream.feedPosts.length); i++) {
-                  //       toSend.add(postLenght.feedPosts[i]);
-                  //     }
-                  //     emitter("sending ${toSend.length} posts for caching");
-                  //     FeedPostController.downloadThumbs(
-                  //         toSend, context, MediaQuery.of(context).size.height);
-                  //     //  emitter('caching next ${toSend.length} sent');
-                  //   }
-                  // });
-                }
-                // paginateFeed(context);
-                // provide.changeIndex(index);
-              },
-            ),
+                  // paginateFeed(context);
+                  // provide.changeIndex(index);
+                },
+              ),
+      ),
     );
     // InViewNotifierList(
     //     isInViewPortCondition:

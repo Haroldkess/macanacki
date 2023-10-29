@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:apivideo_player/apivideo_player.dart';
@@ -255,17 +256,29 @@ class _FeedVideoHolderState extends State<FeedVideoHolder>
                 },
                 child: Stack(
                   children: [
-                    VideoView(
-                      allThumb: allThumbs,
-                      thumbLink: post.thumbnails!.first,
-                      page: widget.page,
-                      postId: post.id!,
-                      index: index,
-                      vodList: vodVid,
-                      data: post,
-                      inComingController: null,
-                      isHome: widget.isHome,
-                    ),
+                    Platform.isAndroid
+                        ? VideoView(
+                            allThumb: allThumbs,
+                            thumbLink: post.thumbnails!.first,
+                            page: widget.page,
+                            postId: post.id!,
+                            index: index,
+                            vodList: vodVid,
+                            data: post,
+                            inComingController: null,
+                            isHome: widget.isHome,
+                          )
+                        : VideoViewIos(
+                            allThumb: allThumbs,
+                            thumbLink: post.thumbnails!.first,
+                            page: widget.page,
+                            postId: post.id!,
+                            index: index,
+                            vodList: vodVid,
+                            data: post,
+                            inComingController: null,
+                            isHome: widget.isHome,
+                          ),
                     post.promoted == "yes"
                         ? Positioned(
                             bottom: 140,
@@ -567,6 +580,245 @@ class _VideoViewState extends State<VideoView> {
               data: widget.data,
               userName: widget.data.user!.username,
               isHome: widget.isHome,
+              showComment: true,
+              mediaController: _controller,
+            ),
+          ),
+        ),
+        Align(
+          alignment: Alignment.bottomLeft,
+          child: VideoUser(
+            page: widget.page,
+            data: widget.data,
+            media: [],
+            isHome: true,
+            controller: _controller,
+            isVideo: true,
+          ),
+        ),
+        widget.data.btnLink != null && widget.data.button != null
+            ? Positioned(
+                bottom: .1,
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: Get.width,
+                        child: InkWell(
+                          onTap: () async {
+                            if (widget.data.button == "Call Now") {
+                              await UrlLaunchController.makePhoneCall(
+                                  widget.data.btnLink!);
+                            }
+                            if (widget.data.button == "Whatsapp") {
+                              //   print(widget.data.btnLink!);
+
+                              if (widget.data.btnLink!
+                                  .contains("https://wa.me/https://")) {
+                                var start = widget.data.btnLink!
+                                    .split("https://wa.me/https://");
+
+                                String newVal =
+                                    "https://${start.last}".toString();
+                                emitter(newVal);
+                                await UrlLaunchController.launchWebViewOrVC(
+                                    Uri.parse(newVal));
+                              } else {
+                                await UrlLaunchController.launchWebViewOrVC(
+                                    Uri.parse(widget.data.btnLink!));
+                              }
+                            } else {
+                              //  print(widget.data.btnLink);
+                              await UrlLaunchController.launchInWebViewOrVC(
+                                  Uri.parse(widget.data.btnLink!));
+                            }
+                          },
+                          child: Container(
+                            height: 35,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.zero,
+                                color: HexColor("#FFFFFF")),
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  AppText(
+                                    text: widget.data.button ?? "",
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w500,
+                                    size: 12,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            : const SizedBox.shrink(),
+      ],
+    );
+  }
+}
+
+class VideoViewIos extends StatefulWidget {
+  String thumbLink;
+  final String page;
+  int index;
+  bool isHome;
+  int postId;
+  final FeedPost data;
+  final List? allThumb;
+  List<VodClass> vodList;
+  // VideoModel? video;
+  ApiVideoPlayerController? inComingController;
+
+  VideoViewIos(
+      {super.key,
+      required this.allThumb,
+      // required this.video,
+      required this.thumbLink,
+      required this.index,
+      required this.page,
+      required this.postId,
+      required this.vodList,
+      required this.inComingController,
+      required this.isHome,
+      required this.data});
+
+  @override
+  State<VideoViewIos> createState() => _VideoViewIosState();
+}
+
+class _VideoViewIosState extends State<VideoViewIos> {
+  VideoPlayerController? _controller;
+  String apiToken = "";
+  @override
+  void initState() {
+    buildVideoOptions();
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //   if (mounted) {
+    //     for (var i in widget.vodList) {
+    //       if (i.controller != null) {
+    //         if (i.id != widget.data.id) {
+    //           i.controller!.pause();
+    //         }
+    //       }
+    //     }
+    //   }
+    // });
+
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      VideoWareHome.instance.viewToggle(0);
+    });
+  }
+
+  void buildVideoOptions() async {
+    _controller = VideoPlayerController.networkUrl(Uri.parse(
+        "https://vod.api.video/vod/${widget.data.vod!.first}/hls/manifest.$videoExtension"));
+
+    // final token = apiToken.isEmpty ? null : apiToken;
+
+    // _controller!.initialize();
+  }
+
+  Future<void> innit() async {}
+
+  @override
+  void dispose() {
+    super.dispose();
+    // if (_controller != null) {
+    //   _controller!.dispose();
+    // }
+  }
+
+  Rx<VideoPlayerController>? vid;
+  @override
+  Widget build(BuildContext context) {
+    const textStyle = TextStyle(color: Colors.transparent);
+    final buttonStyle = TextButton.styleFrom(
+        iconColor: Colors.transparent,
+        foregroundColor: Colors.transparent,
+        side: BorderSide.none,
+        textStyle: textStyle);
+
+    final settingsBarStyle = SettingsBarStyle(
+        buttonStyle: buttonStyle,
+        sliderTheme: SliderThemeData(
+            activeTrackColor: Colors.transparent,
+            thumbColor: Colors.transparent,
+            overlayShape: SliderComponentShape.noThumb,
+            thumbShape: const RoundSliderThumbShape(
+                enabledThumbRadius: 0.0, disabledThumbRadius: 0)));
+
+    final controlsBarStyle = ControlsBarStyle(
+        mainControlButtonStyle: buttonStyle,
+        seekBackwardControlButtonStyle: null,
+        seekForwardControlButtonStyle: null);
+
+    final timeSliderStyle = TimeSliderStyle(
+        sliderTheme: const SliderThemeData(
+            //    overlayColor: Colors.white,
+
+            activeTrackColor: Colors.transparent,
+            inactiveTrackColor: Colors.transparent,
+            disabledThumbColor: Color.fromARGB(0, 31, 25, 25),
+            thumbColor: Colors.transparent,
+            thumbShape: RoundSliderThumbShape(
+              enabledThumbRadius: 0.0,
+            ),
+            //   thumbSelector: ,
+            valueIndicatorTextStyle: textStyle));
+
+    PlayerStyle applyStyle = PlayerStyle(
+        settingsBarStyle: settingsBarStyle,
+        controlsBarStyle: controlsBarStyle,
+        timeSliderStyle: timeSliderStyle);
+    return Stack(
+      children: [
+        Center(
+          child: Stack(
+            children: [
+              PlayerWidgetIos(
+                data: widget.data,
+                index: widget.index,
+                //   vod: widget.data.vod!.first!,
+                controller: _controller!,
+                applyStyle: applyStyle,
+              )
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 30, left: 5),
+          child: Align(
+            alignment: Alignment.topLeft,
+            child: IconButton(
+                onPressed: () => PageRouting.popToPage(context),
+                icon: const Icon(
+                  Icons.arrow_back_ios,
+                  color: Colors.white,
+                )),
+          ),
+        ),
+        FadeInRight(
+          duration: Duration(seconds: 1),
+          animate: true,
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: LikeSection(
+              page: widget.page,
+              data: widget.data,
+              userName: widget.data.user!.username,
+              isHome: true,
               showComment: true,
               mediaController: _controller,
             ),

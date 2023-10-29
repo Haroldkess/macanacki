@@ -104,8 +104,14 @@ class _LikeSectionState extends State<LikeSection> {
                 // Operations.commentOperation(
                 //     context, false, widget.data.comments!);
 
-                commentModal(context, widget.data.id!, widget.page, false, true,
-                    widget.mediaController, widget.data.comments);
+                commentModal(
+                    context,
+                    widget.data.id!,
+                    widget.page,
+                    widget.isHome ?? false,
+                    true,
+                    widget.mediaController,
+                    widget.data.comments);
               },
               child: Padding(
                 padding: const EdgeInsets.only(right: 3.0),

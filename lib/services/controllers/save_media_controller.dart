@@ -132,6 +132,8 @@ class SaveMediaController {
       BuildContext context, String url, name) async {
     Platform.isAndroid ? getPermission() : await getPermissionIos();
 
+    await requestPermission();
+
     Map<String, dynamic> result = {
       'isSuccess': false,
       'filePath': null,
@@ -141,8 +143,7 @@ class SaveMediaController {
     final dir = Platform.isAndroid
         ? await ExternalPath.getExternalStoragePublicDirectory(
             ExternalPath.DIRECTORY_DOWNLOADS)
-        : await MediaStorage.getExternalStoragePublicDirectory(
-            MediaStorage.DIRECTORY_DOWNLOADS);
+        : (await getDownloadsDirectory())!.path;
     // /storage/emulated/0/Download
 
     MediaDownloadProgress.instance.addProgress(1, 100);

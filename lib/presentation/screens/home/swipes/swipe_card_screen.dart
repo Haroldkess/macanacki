@@ -17,6 +17,7 @@ import '../../../../services/controllers/mode_controller.dart';
 import '../../../../services/controllers/swipe_users_controller.dart';
 import '../../../allNavigation.dart';
 import '../../../constants/colors.dart';
+import '../../../uiproviders/screen/tab_provider.dart';
 import '../../notification/notification_screen.dart';
 
 class SwipeCardScreen extends StatefulWidget {
@@ -104,19 +105,28 @@ class _SwipeCardScreenState extends State<SwipeCardScreen> {
               // ),
 
               ),
-          body: SizedBox(
-                height: Get.height,
-      width: Get.width,
-      child: swipe.loadStatus
-              ? const Center(child: ScanningPerimeter())
-              : Container(
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  child: buildCards(stream.swipedUser),
-                ),
-          )
-          
-          ),
+          body: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onPanDown: (_) {
+              //  PersistentNavController.instance.toggleHide();
+              WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+                if (PersistentNavController.instance.hide.value == true) {
+                  PersistentNavController.instance.toggleHide();
+                }
+              });
+            },
+            child: SizedBox(
+              height: Get.height,
+              width: Get.width,
+              child: swipe.loadStatus
+                  ? const Center(child: ScanningPerimeter())
+                  : Container(
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      child: buildCards(stream.swipedUser),
+                    ),
+            ),
+          )),
     );
   }
 

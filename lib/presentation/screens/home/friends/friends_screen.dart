@@ -13,6 +13,7 @@ import 'package:shimmer/shimmer.dart';
 import '../../../../model/feed_post_model.dart';
 import '../../../constants/colors.dart';
 import '../../../constants/string.dart';
+import '../../../uiproviders/screen/tab_provider.dart';
 import '../../../widgets/debug_emitter.dart';
 import '../../../widgets/text.dart';
 import '../Feed/friends_page_view.dart';
@@ -127,84 +128,90 @@ class _FriendsScreenState extends State<FriendsScreen> {
         body: GetX<FriendWare>(
             //   stream: null,
             builder: (friends) {
-          return Column(
-            children: [
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-                child: Row(
-                  children: [
-                    AppText(
-                      text: "Post from people you follow",
-                      color: Colors.grey,
-                      size: 13,
-                    )
-                  ],
+          return GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onPanDown: (_) {
+              //    PersistentNavController.instance.toggleHide();
+              WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+                if (PersistentNavController.instance.hide.value == true) {
+                  PersistentNavController.instance.toggleHide();
+                }
+              });
+            },
+            child: Column(
+              children: [
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+                  child: Row(
+                    children: [
+                      AppText(
+                        text: "Post from people you follow",
+                        color: Colors.grey,
+                        size: 13,
+                      )
+                    ],
+                  ),
                 ),
-              ),
-              Expanded(
-                child: SmartRefresher(
-                  // onRefresh: () async {
-                  //   _getUserPost(true);
-                  // },
-                  // backgroundColor: HexColor(primaryColor),
-                  // color: Colors.white,
-                  enablePullDown: true,
-                  enablePullUp: true,
-                  header: WaterDropHeader(
-                    waterDropColor: HexColor(primaryColor),
-                    refresh: CircleAvatar(
-                      radius: 5,
-                      backgroundColor: Colors.transparent,
-                      child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color?>(
-                            HexColor(primaryColor)),
+                Expanded(
+                  child: SmartRefresher(
+                    enablePullDown: true,
+                    enablePullUp: true,
+                    header: WaterDropHeader(
+                      waterDropColor: HexColor(primaryColor),
+                      refresh: CircleAvatar(
+                        radius: 5,
+                        backgroundColor: Colors.transparent,
+                        child: CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color?>(
+                              HexColor(primaryColor)),
+                        ),
                       ),
                     ),
-                  ),
-                  footer: CustomFooter(
-                    builder: (BuildContext context, LoadStatus? mode) {
-                      Widget body;
-                      if (mode == LoadStatus.idle) {
-                        body = Text("pull up load");
-                      } else if (mode == LoadStatus.loading) {
-                        body = CupertinoActivityIndicator(
-                          color: HexColor(primaryColor),
+                    footer: CustomFooter(
+                      builder: (BuildContext context, LoadStatus? mode) {
+                        Widget body;
+                        if (mode == LoadStatus.idle) {
+                          body = Text("pull up load");
+                        } else if (mode == LoadStatus.loading) {
+                          body = CupertinoActivityIndicator(
+                            color: HexColor(primaryColor),
+                          );
+                        } else if (mode == LoadStatus.failed) {
+                          body = const Text("Load Failed!Click retry!");
+                        } else if (mode == LoadStatus.canLoading) {
+                          body = Text("release to load more");
+                        } else {
+                          body = Text("No more Data");
+                        }
+                        return Container(
+                          height: 55.0,
+                          child: Center(child: body),
                         );
-                      } else if (mode == LoadStatus.failed) {
-                        body = const Text("Load Failed!Click retry!");
-                      } else if (mode == LoadStatus.canLoading) {
-                        body = Text("release to load more");
-                      } else {
-                        body = Text("No more Data");
-                      }
-                      return Container(
-                        height: 55.0,
-                        child: Center(child: body),
-                      );
-                    },
+                      },
+                    ),
+                    controller: _refreshController,
+                    onRefresh: _onRefresh,
+                    onLoading: _onLoading,
+                    child: GridView.builder(
+                        itemCount: friends.friendPost.length,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 3,
+                                childAspectRatio: 200 / 300,
+                                crossAxisSpacing: 1,
+                                mainAxisSpacing: 1),
+                        itemBuilder: (context, index) {
+                          FeedPost _data = friends.friendPost[index];
+                          return FriendsViewItems(
+                            data: _data,
+                            index: index,
+                          );
+                        }),
                   ),
-                  controller: _refreshController,
-                  onRefresh: _onRefresh,
-                  onLoading: _onLoading,
-                  child: GridView.builder(
-                      itemCount: friends.friendPost.length,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3,
-                              childAspectRatio: 200 / 300,
-                              crossAxisSpacing: 1,
-                              mainAxisSpacing: 1),
-                      itemBuilder: (context, index) {
-                        FeedPost _data = friends.friendPost[index];
-                        return FriendsViewItems(
-                          data: _data,
-                          index: index,
-                        );
-                      }),
                 ),
-              ),
-            ],
+              ],
+            ),
           );
         }),
       ),
