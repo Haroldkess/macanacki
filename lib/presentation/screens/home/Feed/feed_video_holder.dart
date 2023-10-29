@@ -723,7 +723,7 @@ class _VideoViewIosState extends State<VideoViewIos> {
 
   void buildVideoOptions() async {
     _controller = VideoPlayerController.networkUrl(Uri.parse(
-        "$muxStreamBaseUrl/${widget.data.mux!.first}.$videoExtension"));
+        "https://vod.api.video/vod/${widget.data.vod!.first}/hls/manifest.$videoExtension"));
 
     // final token = apiToken.isEmpty ? null : apiToken;
 
@@ -818,7 +818,7 @@ class _VideoViewIosState extends State<VideoViewIos> {
               page: widget.page,
               data: widget.data,
               userName: widget.data.user!.username,
-              isHome: widget.isHome,
+              isHome: true,
               showComment: true,
               mediaController: _controller,
             ),

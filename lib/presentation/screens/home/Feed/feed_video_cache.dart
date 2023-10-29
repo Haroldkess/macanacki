@@ -554,7 +554,7 @@ class _VideoView2IosState extends State<VideoView2Ios> {
         videoId: widget.data.vod!.first!, type: VideoType.vod, token: null);
 
     _controller = VideoPlayerController.networkUrl(Uri.parse(
-        "$muxStreamBaseUrl/${widget.data.mux!.first}.$videoExtension"));
+        "https://vod.api.video/vod/${widget.data.vod!.first}/hls/manifest.$videoExtension"));
   }
 
   @override

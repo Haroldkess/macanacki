@@ -434,7 +434,7 @@ class CommentTile extends StatelessWidget {
                       if (e.username! != user.userProfileModel.username) {
                         if (isHome == false) {
                           PageRouting.popToPage(context);
-                          if (isFullScreen == true) {
+                          if (isFullScreen == true && isHome == false) {
                             PageRouting.popToPage(context);
                           }
                           Navigator.push(
@@ -447,7 +447,7 @@ class CommentTile extends StatelessWidget {
                                       )));
                         } else {
                           PageRouting.popToPage(context);
-                          if (isFullScreen == true) {
+                          if (isFullScreen == true && isHome == false) {
                             PageRouting.popToPage(context);
                           }
                           log("test profile ");

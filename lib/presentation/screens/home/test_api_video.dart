@@ -395,11 +395,11 @@ class _PlayerWidgetIosState extends State<PlayerWidgetIos> {
                     tween: Tween(begin: 10.0, end: 50.0), // set tween
                     duration: const Duration(milliseconds: 1500),
                     onCompleted: () async {
-                      // setState(() {
-                      //   tapped = true;
-                      // });
+                      setState(() {
+                        tapped = true;
+                      });
 
-                      // widget.controller.play();
+                      widget.controller.play();
 
                       // if (widget.controller.value.isPlaying) {
                       //   setState(() {
@@ -432,13 +432,13 @@ class _PlayerWidgetIosState extends State<PlayerWidgetIos> {
 
                               widget.controller.play();
 
-                              if (widget.controller.value.isPlaying) {
-                                setState(() {
-                                  isReady = true;
-                                  tapped = false;
-                                  delayUser = false;
-                                });
-                              }
+                              // if (widget.controller.value.isPlaying) {
+                              //   setState(() {
+                              //     isReady = true;
+                              //     tapped = false;
+                              //     delayUser = false;
+                              //   });
+                              // }
                             },
                             icon: tapped
                                 ? const Loader(
