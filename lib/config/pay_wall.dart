@@ -48,7 +48,7 @@ class _PaywallState extends State<Paywall> {
                 ),
               ),
             ),
-            Positioned(bottom: 0, left: 0,child: Center(child: Text('---------'),),)
+            //Positioned(bottom: 0, left: 0,child: Center(child: Text('---------'),),)
           ],
         ),
       ),
