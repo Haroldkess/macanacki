@@ -205,7 +205,7 @@ class _TestProfileState extends State<TestProfile>
             });
           }
         } else if (_controller.position.pixels >
-            (_controller.position.maxScrollExtent - 25)) {
+            (_controller.position.maxScrollExtent - 30)) {
           WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
             if (mounted) {
               scrolNotifyPublicExtra.instance.changeTabOne(false);
