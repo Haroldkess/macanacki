@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
+import '../services/controllers/url_launch_controller.dart';
 import 'pay_constant.dart';
 import 'pay_styles.dart';
 
@@ -10,11 +12,12 @@ class Paywall extends StatefulWidget {
   final List<Package> packages;
   final String title;
   final bool showTermAndConditions;
+  final bool showTermsOfUse;
   final String description;
   final Function() onSucess;
   final Function(String) onError;
 
-  const Paywall({Key? key, required this.packages, required this.title, required this.description, required this.onSucess, required this.onError, required this.showTermAndConditions}) : super(key: key);
+  const Paywall({Key? key, required this.packages, required this.title, required this.description, required this.onSucess, required this.onError, required this.showTermAndConditions, required this.showTermsOfUse}) : super(key: key);
 
   @override
   _PaywallState createState() => _PaywallState();
@@ -26,21 +29,87 @@ class _PaywallState extends State<Paywall> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: HexColor(darkColor),
-      body: SingleChildScrollView(
-        child: SafeArea(
-          child: Wrap(
-            children: <Widget>[
-              _buildHeaderField(context),
+      body: Container(
+        width: double.infinity,
+        height: Get.height,
+        child: Stack(
 
-              _buildPackagesField(context),
-              //
-              _buildFooterField(context),
-            ],
-          ),
+          children: [
+            SingleChildScrollView(
+              child: SafeArea(
+                child: Wrap(
+                  children: <Widget>[
+                    _buildHeaderField(context),
+
+                    _buildPackagesField(context),
+                    //
+                    _buildFooterField(context),
+                  ],
+                ),
+              ),
+            ),
+            Positioned(bottom: 0, left: 0,child: Center(child: Text('---------'),),)
+          ],
         ),
       ),
     );
   }
+
+  Widget _buildTermsOfUseAndPrivacyPolicyField(BuildContext context){
+    return  widget.showTermsOfUse ? Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+
+        const SizedBox(height: 20,),
+        Row(
+          children: [
+            GestureDetector(
+              onTap: () async {
+                await UrlLaunchController
+                    .launchInWebViewOrVC(
+                    Uri.parse("https://www.apple.com/legal/internet-services/itunes/dev/stdeula/"));
+              },
+              child: Text("Terms Of Use",
+                  //textAlign: TextAlign.center,
+
+                  style: GoogleFonts.leagueSpartan(
+                      textStyle: const TextStyle(
+                        //decoration: TextDecoration.underline,
+                          color: Colors.white,
+                          decorationStyle: TextDecorationStyle.solid,
+                          fontSize: 13,
+                          height: 1.2
+                      ))),
+            ),
+
+
+            GestureDetector(
+              onTap: () async {
+                await UrlLaunchController
+                    .launchInWebViewOrVC(
+                    Uri.parse("https://www.apple.com/legal/internet-services/itunes/dev/stdeula/"));
+              },
+              child: Text("Privacy Policy",
+                  textAlign: TextAlign.center,
+
+                  style: GoogleFonts.leagueSpartan(
+                      textStyle: const TextStyle(
+                        //decoration: TextDecoration.underline,
+                          color: Colors.white,
+                          decorationStyle: TextDecorationStyle.solid,
+                          fontSize: 13,
+                          height: 1.2
+                      ))),
+            ),
+          ],
+        ),
+        const SizedBox(height: 20,),
+      ],
+    )
+        : Container();
+
+  }
+
 
 
   Widget _buildPackagesField(BuildContext context){
@@ -115,7 +184,7 @@ class _PaywallState extends State<Paywall> {
             color: Colors.white,),
           const SizedBox(height: 10,),
           widget.showTermAndConditions ? Text(termAndConditions,
-              textAlign: TextAlign.center,
+              textAlign: TextAlign.start,
               style: GoogleFonts.leagueSpartan(
                   textStyle: const TextStyle(
                     color: Colors.white,
@@ -123,6 +192,11 @@ class _PaywallState extends State<Paywall> {
                     fontSize: 13,
                     height: 1.2
                   ))) : Container(),
+
+
+
+
+
         ],
       ),
     );

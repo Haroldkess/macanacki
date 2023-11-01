@@ -385,6 +385,7 @@ payModal(BuildContext context, PlanData plan, bool? isBusiness, bool isPayOnly,
               heightFactor: 0.9,
               child: Paywall(
                 showTermAndConditions: true,
+                showTermsOfUse: true,
                 title: "Verification Packages",
                 description: "Unlock the full verification experience",
                 packages: verificationPackages,
