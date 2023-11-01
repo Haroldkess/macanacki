@@ -262,23 +262,25 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
                       SizedBox(
                         width: widget.isFriends ? 20 : 15,
                       ),
-                      GestureDetector(
-                          onTap: () async {
-                            downloadDiamondsModal(
-                                context,
-                                widget.data.id!,
-                                widget.data.media!.first.contains(".mp3")
-                                    ? true
-                                    : false);
-                          },
-                          child: Container(
-                            height: 25,
-                            width: 25,
-                            child: SvgPicture.asset(
-                              "assets/icon/d.svg",
-                              color: HexColor(backgroundColor),
-                            ),
-                          )),
+                      widget.data.media!.first.contains(".mp3")
+                          ? SizedBox.shrink()
+                          : GestureDetector(
+                              onTap: () async {
+                                downloadDiamondsModal(
+                                    context,
+                                    widget.data.id!,
+                                    widget.data.media!.first.contains(".mp3")
+                                        ? true
+                                        : false);
+                              },
+                              child: Container(
+                                height: 25,
+                                width: 25,
+                                child: SvgPicture.asset(
+                                  "assets/icon/d.svg",
+                                  color: HexColor(backgroundColor),
+                                ),
+                              )),
                     ],
                   ),
                   GestureDetector(

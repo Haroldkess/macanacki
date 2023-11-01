@@ -265,22 +265,23 @@ class _DrawerSideState extends State<DrawerSide> {
               const SizedBox(
                 height: 10,
               ),
-              ListTile(
-                onTap: () async {
-                  showToast2(context, "Account not Eligible", isError: true);
-                },
-                title: AppText(
-                  text: "Monetize Account",
-                  color: HexColor(backgroundColor),
-                  fontWeight: FontWeight.w400,
-                  size: 16,
-                ),
-                trailing: const Icon(
-                  Icons.arrow_forward_ios,
-                  color: Colors.white,
-                  size: 15,
-                ),
-              ),
+              // ListTile(
+              //   onTap: () async {
+              //     showToast2(context, "Account not Eligible", isError: true);
+              //   },
+              //   title: AppText(
+              //     text: "Monetize Account",
+              //     color: HexColor(backgroundColor),
+              //     fontWeight: FontWeight.w400,
+              //     size: 16,
+              //   ),
+              //   trailing: const Icon(
+              //     Icons.arrow_forward_ios,
+              //     color: Colors.white,
+              //     size: 15,
+              //   ),
+              // ),
+
               ListTile(
                 onTap: () async {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(

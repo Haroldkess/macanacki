@@ -47,10 +47,10 @@ class DiamondBalanceScreen extends StatelessWidget {
                 height: 10,
               ),
               RevenueCard(),
-              SizedBox(
-                height: 10,
-              ),
-              EstimatedRevenue(),
+              // SizedBox(
+              //   height: 10,
+              // ),
+              // EstimatedRevenue(),
               SizedBox(
                 height: 30,
               ),

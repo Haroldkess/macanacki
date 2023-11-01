@@ -123,8 +123,8 @@ class _ProfileScreenState extends State<ProfileScreen>
             });
           }
         } else if (_controller.position.pixels >
-            (_controller.position.maxScrollExtent - 25)) {
-          print("WE HERE SOME PIXELS BEFORE END");
+            (_controller.position.maxScrollExtent - 30)) {
+          // print("WE HERE SOME PIXELS BEFORE END");
           WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
             if (mounted) {
               scrolNotify.instance.changeTabOne(false);
