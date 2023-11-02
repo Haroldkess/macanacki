@@ -74,12 +74,13 @@ optionModal(BuildContext cont, List<String> url,
                                                                   "macanacki");
                                                     } else if (element
                                                         .contains('.mp3')) {
-                                                      await SaveMediaController
-                                                          .saveNetworkAudio(
-                                                              context,
-                                                              element,
-                                                              data.description ??
-                                                                  "macanacki");
+                                                      return;
+                                                      // await SaveMediaController
+                                                      //     .saveNetworkAudio(
+                                                      //         context,
+                                                      //         element,
+                                                      //         data.description ??
+                                                      //             "macanacki");
                                                     } else {
                                                       await SaveMediaController
                                                           .saveNetworkImage(
@@ -104,12 +105,13 @@ optionModal(BuildContext cont, List<String> url,
                                                             "macanacki");
                                               } else if (data.media!.first
                                                   .contains('.mp3')) {
-                                                await SaveMediaController
-                                                    .saveNetworkAudio(
-                                                        context,
-                                                        data.media!.first,
-                                                        data.description ??
-                                                            "macanacki");
+                                                return;
+                                                // await SaveMediaController
+                                                //     .saveNetworkAudio(
+                                                //         context,
+                                                //         data.media!.first,
+                                                //         data.description ??
+                                                //             "macanacki");
                                               } else {
                                                 await SaveMediaController
                                                     .saveNetworkImage(
@@ -120,10 +122,15 @@ optionModal(BuildContext cont, List<String> url,
                                               }
                                             }
                                           } else {
-                                            downloadDiamondsModal(
-                                              context,
-                                              postId!,
-                                            );
+                                            if (data.media!.first
+                                                .contains('.mp3')) {
+                                              return;
+                                            } else {
+                                              downloadDiamondsModal(
+                                                context,
+                                                postId!,
+                                              );
+                                            }
                                           }
 
                                           // }
