@@ -912,6 +912,8 @@ PODS:
   - libwebp/sharpyuv (1.3.2)
   - libwebp/webp (1.3.2):
     - libwebp/sharpyuv
+  - media_storage (0.0.1):
+    - Flutter
   - MobileVLCKit (3.6.0b10)
   - nanopb (2.30909.0):
     - nanopb/decode (= 2.30909.0)
@@ -989,6 +991,7 @@ DEPENDENCIES:
   - image_editor_common (from `.symlinks/plugins/image_editor_common/ios`)
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
   - just_audio (from `.symlinks/plugins/just_audio/ios`)
+  - media_storage (from `.symlinks/plugins/media_storage/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - pay_ios (from `.symlinks/plugins/pay_ios/ios`)
@@ -1083,6 +1086,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/image_picker_ios/ios"
   just_audio:
     :path: ".symlinks/plugins/just_audio/ios"
+  media_storage:
+    :path: ".symlinks/plugins/media_storage/ios"
   package_info_plus:
     :path: ".symlinks/plugins/package_info_plus/ios"
   path_provider_foundation:
@@ -1158,6 +1163,7 @@ SPEC CHECKSUMS:
   just_audio: baa7252489dbcf47a4c7cc9ca663e9661c99aafa
   leveldb-library: f03246171cce0484482ec291f88b6d563699ee06
   libwebp: 1786c9f4ff8a279e4dac1e8f385004d5fc253009
+  media_storage: 1405ee60d68c2428ca59d7f2d4be07c9590d7ff1
   MobileVLCKit: 5600003cf2dc47acf7ad2fd87fe9f3739b2475ed
   nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
   package_info_plus: 115f4ad11e0698c8c1c5d8a689390df880f47e85
