@@ -39,10 +39,10 @@ buyDiamondsModal(BuildContext context, rate) async {
       return StatefulBuilder(
           builder: (BuildContext context, StateSetter setModalState) {
         return FractionallySizedBox(
-          heightFactor: 0.9,
+          heightFactor: 0.95,
           child: Paywall(
-            showTermAndConditions: true,
-            showTermsOfUse: true,
+            isOneTimePurchase: true,
+            showTermsOfUseAndPrivacyPolicy: true,
             title: "Buy Diamonds",
             description: "Diamonds are gift sent to creators to show appreciation for their content.",
             packages: diamondPackages,

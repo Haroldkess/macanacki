@@ -382,10 +382,10 @@ payModal(BuildContext context, PlanData plan, bool? isBusiness, bool isPayOnly,
       return StatefulBuilder(
           builder: (BuildContext context, StateSetter setModalState) {
             return FractionallySizedBox(
-              heightFactor: 0.9,
+              heightFactor: 0.95,
               child: Paywall(
-                showTermAndConditions: true,
-                showTermsOfUse: true,
+                isOneTimePurchase: false,
+                showTermsOfUseAndPrivacyPolicy: true,
                 title: "Verification Packages",
                 description: "Unlock the full verification experience",
                 packages: verificationPackages,
