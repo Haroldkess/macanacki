@@ -14,8 +14,6 @@ import 'package:macanacki/services/middleware/action_ware.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-import 'package:video_thumbnail/video_thumbnail.dart';
-
 import '../../model/feed_post_model.dart';
 import '../../model/public_profile_model.dart';
 import '../../presentation/widgets/debug_emitter.dart';
@@ -376,15 +374,17 @@ class FeedPostController {
   static Future<String?> genThumbnail(String url, double height) async {
     late String name;
     try {
-      final fileName = await VideoThumbnail.thumbnailFile(
-        video: url,
-        thumbnailPath: (await getTemporaryDirectory()).path,
-        imageFormat: ImageFormat.WEBP,
-        maxHeight: height
-            .toInt(), // specify the height of the thumbnail, let the width auto-scaled to keep the source aspect ratio
-        quality: 75,
-      );
-      name = fileName!;
+      final fileName = "";
+
+      // await VideoThumbnail.thumbnailFile(
+      //   video: url,
+      //   thumbnailPath: (await getTemporaryDirectory()).path,
+      //   imageFormat: ImageFormat.WEBP,
+      //   maxHeight: height
+      //       .toInt(), // specify the height of the thumbnail, let the width auto-scaled to keep the source aspect ratio
+      //   quality: 75,
+      // );
+      name = fileName;
       //   emitter(fileName.toString());
     } catch (e) {
       // emitter(e.toString());

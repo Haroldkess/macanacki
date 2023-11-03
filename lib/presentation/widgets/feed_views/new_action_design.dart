@@ -783,9 +783,11 @@ class _VideoUserState extends State<VideoUser> {
                                           // } catch (e) {}
                                           PageRouting.pushToPage(
                                               context,
-                                              UsersProfile(
+                                              TestProfile(
                                                 username:
                                                     widget.data.user!.username!,
+                                                extended: true,
+                                                page: widget.page,
                                               ));
                                         }
                                       },

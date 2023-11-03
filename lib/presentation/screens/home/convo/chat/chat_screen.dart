@@ -16,6 +16,7 @@ import 'package:macanacki/services/temps/temp.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../../model/conversation_model.dart';
+import '../../../../../model/public_profile_model.dart';
 import '../../../../../services/controllers/mode_controller.dart';
 import '../../../../../services/middleware/chat_ware.dart';
 import '../../../../../services/temps/temps_id.dart';
@@ -36,6 +37,7 @@ class ChatScreen extends StatefulWidget {
   String? mode;
   bool isHome;
   int verified;
+  PublicUserData? otherUser;
   ChatScreen(
       {super.key,
       required this.user,
@@ -43,6 +45,7 @@ class ChatScreen extends StatefulWidget {
       this.dp,
       required this.verified,
       required this.isHome,
+      this.otherUser,
       required this.mode});
 
   @override
@@ -88,7 +91,7 @@ class _ChatScreenState extends State<ChatScreen> {
       Temp temp = Provider.of<Temp>(context, listen: false);
 
       widget.user.conversations!.isEmpty
-          ? ChatController.readAll(context, ware.publicUserProfileModel.id!)
+          ? ChatController.readAll(context, widget.otherUser!.id!)
           : ChatController.readAll(
               context,
               widget.user.conversations!.last.sender == temp.userName
@@ -118,7 +121,7 @@ class _ChatScreenState extends State<ChatScreen> {
         }
       } else {
         setState(() {
-          toId = user.publicUserProfileModel.id.toString();
+          toId = widget.otherUser!.id.toString();
         });
       }
 
@@ -141,7 +144,7 @@ class _ChatScreenState extends State<ChatScreen> {
         }
       } else {
         setState(() {
-          toId = user.publicUserProfileModel.id.toString();
+          toId = widget.otherUser!.id.toString();
         });
       }
 
@@ -202,7 +205,8 @@ class _ChatScreenState extends State<ChatScreen> {
     var w = (size.width - 4 * 1) / 15;
     Temp stream = context.watch<Temp>();
     Temp temp = context.watch<Temp>();
-    UserProfileWare ware = Provider.of<UserProfileWare>(context, listen: false);
+    UserProfileWare myAccount =
+        Provider.of<UserProfileWare>(context, listen: false);
     ChatWare myChat = context.watch<ChatWare>();
     if (widget.user.conversations!.isEmpty) {
       isOnline = false;
@@ -229,7 +233,7 @@ class _ChatScreenState extends State<ChatScreen> {
         id = widget.user.userOneId!;
       }
     } else {
-      id = ware.publicUserProfileModel.id;
+      id = widget.otherUser!.id;
     }
 
     if (myChat.chatPage == 0 && leaving == false) {
@@ -266,7 +270,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           ? widget.user.userTwo!
                           : widget.user.userOne!;
 
-                  if (name == ware.userProfileModel.username) {
+                  if (name == myAccount.userProfileModel.username) {
                     PageRouting.pushToPage(context, const ProfileScreen());
                   } else {
                     PageRouting.pushToPage(
@@ -487,11 +491,11 @@ class _ChatScreenState extends State<ChatScreen> {
                         child: widget.user.conversations!.isEmpty
                             ? ChatList(
                                 chat: widget.chat,
-                                me: ware.userProfileModel.username,
-                                myUserId: ware.userProfileModel.id.toString(),
-                                to: ware.publicUserProfileModel.username,
-                                toUserId:
-                                    ware.publicUserProfileModel.id.toString(),
+                                me: myAccount.userProfileModel.username,
+                                myUserId:
+                                    myAccount.userProfileModel.id.toString(),
+                                to: widget.otherUser!.username,
+                                toUserId: widget.otherUser!.id.toString(),
                                 controller: controiller!,
                                 isHome: widget.isHome,
                                 user: widget.user,
@@ -502,7 +506,8 @@ class _ChatScreenState extends State<ChatScreen> {
                                         stream.userName
                                     ? widget.user.userOne!
                                     : widget.user.userTwo!,
-                                myUserId: ware.userProfileModel.id.toString(),
+                                myUserId:
+                                    myAccount.userProfileModel.id.toString(),
                                 to: widget.user.conversations!.last.sender ==
                                         stream.userName
                                     ? widget.user.userTwo
@@ -523,13 +528,12 @@ class _ChatScreenState extends State<ChatScreen> {
                               ? ChatForm(
                                   controller: controiller!,
                                   msgController: msgController,
-                                  sendTo: ware.publicUserProfileModel.username!,
+                                  sendTo: widget.otherUser!.username!,
                                   chat: widget.user,
                                   socket: myChat.socket == null
                                       ? null
                                       : myChat.socket!,
-                                  toId:
-                                      ware.publicUserProfileModel.id!.toString()
+                                  toId: widget.otherUser!.id!.toString()
 
                                   //  val: controiller!.position.maxScrollExtent,
                                   )

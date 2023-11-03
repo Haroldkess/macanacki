@@ -12,7 +12,6 @@ import 'package:macanacki/presentation/uiproviders/screen/tab_provider.dart';
 import 'package:macanacki/presentation/widgets/debug_emitter.dart';
 import 'package:numeral/numeral.dart';
 import 'package:provider/provider.dart';
-import 'package:video_thumbnail/video_thumbnail.dart';
 
 import '../../../../../model/feed_post_model.dart';
 import 'package:path_provider/path_provider.dart';
@@ -44,7 +43,7 @@ class _GridViewItemsState extends State<GridViewItems> {
   void initState() {
     super.initState();
 
-    getThumbnail();
+    // getThumbnail();
   }
 
 // getgif (){
@@ -57,28 +56,28 @@ class _GridViewItemsState extends State<GridViewItems> {
 // )
 
 //}
-  getThumbnail() async {
-    if (!widget.data.media!.contains(".mp4")) {
-      return;
-    }
-    try {
-      final fileName = await VideoThumbnail.thumbnailFile(
-        video: widget.data.media!.first,
-        thumbnailPath: (await getTemporaryDirectory()).path,
-        imageFormat: ImageFormat.WEBP,
-        maxHeight:
-            0, // specify the height of the thumbnail, let the width auto-scaled to keep the source aspect ratio
-        quality: 100,
-      ).whenComplete(() => log(" thumbnail generated"));
+  // getThumbnail() async {
+  //   if (!widget.data.media!.contains(".mp4")) {
+  //     return;
+  //   }
+  //   try {
+  //     final fileName = await VideoThumbnail.thumbnailFile(
+  //       video: widget.data.media!.first,
+  //       thumbnailPath: (await getTemporaryDirectory()).path,
+  //       imageFormat: ImageFormat.WEBP,
+  //       maxHeight:
+  //           0, // specify the height of the thumbnail, let the width auto-scaled to keep the source aspect ratio
+  //       quality: 100,
+  //     ).whenComplete(() => log(" thumbnail generated"));
 
-      log(fileName.toString());
-      setState(() {
-        thumbnail = fileName;
-      });
-    } catch (e) {
-      log(e.toString());
-    }
-  }
+  //     log(fileName.toString());
+  //     setState(() {
+  //       thumbnail = fileName;
+  //     });
+  //   } catch (e) {
+  //     log(e.toString());
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -101,8 +100,10 @@ class _GridViewItemsState extends State<GridViewItems> {
             borderRadius: BorderRadius.circular(0),
             image: DecorationImage(
                 fit: BoxFit.cover,
-                image: widget.data.media!.contains(".mp4")
-                    ? FileImage(File(thumbnail!))
+                image: widget.data.media!.contains(".mp4") ||
+                        widget.data.media!.first.contains(".mp3") ||
+                        !widget.data.media!.first.contains("http")
+                    ? NetworkImage(widget.data.thumbnails!.first ?? "")
                     : NetworkImage(widget.data.media!.first) as ImageProvider)),
         child: Stack(
           alignment: Alignment.center,
@@ -174,28 +175,28 @@ class _MyGridViewItemsState extends State<MyGridViewItems> {
 
 //}
   getThumbnail() async {
-    if (!widget.data.media!.first.contains(".mp4")) {
-      return;
-    }
-    try {
-      final fileName = await VideoThumbnail.thumbnailFile(
-        video: widget.data.media!.first,
-        thumbnailPath: (await getTemporaryDirectory()).path,
-        imageFormat: ImageFormat.WEBP,
-        maxHeight:
-            0, // specify the height of the thumbnail, let the width auto-scaled to keep the source aspect ratio
-        quality: 100,
-      ).whenComplete(() => emitter("thumbnail generated"));
+    // if (!widget.data.media!.first.contains(".mp4")) {
+    //   return;
+    // }
+    // try {
+    //   final fileName = await VideoThumbnail.thumbnailFile(
+    //     video: widget.data.media!.first,
+    //     thumbnailPath: (await getTemporaryDirectory()).path,
+    //     imageFormat: ImageFormat.WEBP,
+    //     maxHeight:
+    //         0, // specify the height of the thumbnail, let the width auto-scaled to keep the source aspect ratio
+    //     quality: 100,
+    //   ).whenComplete(() => emitter("thumbnail generated"));
 
-      // log(fileName.toString());
-      if (mounted) {
-        setState(() {
-          thumbnail = fileName;
-        });
-      }
-    } catch (e) {
-      emitter(e.toString());
-    }
+    //   // log(fileName.toString());
+    //   if (mounted) {
+    //     setState(() {
+    //       thumbnail = fileName;
+    //     });
+    //   }
+    // } catch (e) {
+    //   emitter(e.toString());
+    // }
   }
 
   @override

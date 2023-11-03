@@ -19,6 +19,7 @@ import '../../../../../services/controllers/action_controller.dart';
 import '../../../../../services/middleware/action_ware.dart';
 import '../../../../uiproviders/screen/tab_provider.dart';
 import '../../../../widgets/loader.dart';
+import '../../../userprofile/testing_profile.dart';
 import '../../../userprofile/user_profile_screen.dart';
 import '../../profile/profile_screen.dart';
 
@@ -54,8 +55,9 @@ class UserResultTile extends StatelessWidget {
           // ignore: use_build_context_synchronously
           PageRouting.pushToPage(
               context,
-              UsersProfile(
+              TestProfile(
                 username: data.username!,
+                extended: true,
               ));
         }
       },

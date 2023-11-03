@@ -1493,16 +1493,16 @@ class UserProfileActionsTest extends StatelessWidget {
                               icon: "assets/icon/call.svg",
                               isSwipe: false,
                               onClick: () async {
-                                UserProfileWare data =
-                                    Provider.of<UserProfileWare>(context,
-                                        listen: false);
-                                if (data.publicUserProfileModel.phone == null) {
+                                // UserProfileWare data =
+                                //     Provider.of<UserProfileWare>(context,
+                                //         listen: false);
+                                if (data.phone == null) {
                                   showToast2(context,
                                       "Can't reach this Business at the moment",
                                       isError: true);
                                 } else {
                                   UrlLaunchController.makePhoneCall(
-                                      data.publicUserProfileModel.phone ?? "");
+                                      data.phone ?? "");
                                 }
                               },
                               color: "#FFC1D6",
@@ -1655,13 +1655,13 @@ class UserProfileActionsTest extends StatelessWidget {
                                     PageRouting.pushToPage(
                                         context,
                                         ChatScreen(
-                                          user: element,
-                                          chat: element.conversations!,
-                                          dp: data.profilephoto,
-                                          mode: data.mode,
-                                          isHome: false,
-                                          verified: data.verified!,
-                                        ));
+                                            user: element,
+                                            chat: element.conversations!,
+                                            dp: data.profilephoto,
+                                            mode: data.mode,
+                                            isHome: false,
+                                            verified: data.verified!,
+                                            otherUser: data));
                                     return;
                                   } else if (element.userOne == data.username) {
                                     chat = element;
@@ -1669,13 +1669,13 @@ class UserProfileActionsTest extends StatelessWidget {
                                     PageRouting.pushToPage(
                                         context,
                                         ChatScreen(
-                                          user: element,
-                                          chat: element.conversations!,
-                                          dp: data.profilephoto,
-                                          mode: data.profilephoto,
-                                          isHome: false,
-                                          verified: data.verified!,
-                                        ));
+                                            user: element,
+                                            chat: element.conversations!,
+                                            dp: data.profilephoto,
+                                            mode: data.profilephoto,
+                                            isHome: false,
+                                            verified: data.verified!,
+                                            otherUser: data));
                                     return;
                                   } else {
                                     chat = ChatData();
@@ -1701,26 +1701,26 @@ class UserProfileActionsTest extends StatelessWidget {
                                     PageRouting.pushToPage(
                                         context,
                                         ChatScreen(
-                                          user: checker.first,
-                                          chat: checker.first.conversations!,
-                                          dp: data.profilephoto,
-                                          mode: data.mode,
-                                          isHome: false,
-                                          verified: data.verified!,
-                                        ));
+                                            user: checker.first,
+                                            chat: checker.first.conversations!,
+                                            dp: data.profilephoto,
+                                            mode: data.mode,
+                                            isHome: false,
+                                            verified: data.verified!,
+                                            otherUser: data));
                                   } else if (checker.isEmpty &&
                                       checker2.isNotEmpty) {
                                     // ignore: use_build_context_synchronously
                                     PageRouting.pushToPage(
                                         context,
                                         ChatScreen(
-                                          user: checker2.first,
-                                          chat: checker2.first.conversations!,
-                                          dp: data.profilephoto,
-                                          mode: data.mode,
-                                          isHome: false,
-                                          verified: data.verified!,
-                                        ));
+                                            user: checker2.first,
+                                            chat: checker2.first.conversations!,
+                                            dp: data.profilephoto,
+                                            mode: data.mode,
+                                            isHome: false,
+                                            verified: data.verified!,
+                                            otherUser: data));
                                   } else {
                                     // ignore: use_build_context_synchronously
 
@@ -1728,13 +1728,13 @@ class UserProfileActionsTest extends StatelessWidget {
                                     PageRouting.pushToPage(
                                         context,
                                         ChatScreen(
-                                          user: chatData,
-                                          chat: empty,
-                                          dp: data.profilephoto,
-                                          mode: data.mode,
-                                          isHome: false,
-                                          verified: data.verified!,
-                                        ));
+                                            user: chatData,
+                                            chat: empty,
+                                            dp: data.profilephoto,
+                                            mode: data.mode,
+                                            isHome: false,
+                                            verified: data.verified!,
+                                            otherUser: data));
                                   }
 
                                   // ignore: use_build_context_synchronously
@@ -1778,17 +1778,16 @@ class UserProfileActionsTest extends StatelessWidget {
                         icon: "assets/icon/email.svg",
                         isSwipe: true,
                         onClick: () async {
-                          UserProfileWare data = Provider.of<UserProfileWare>(
-                              context,
-                              listen: false);
-                          if (data.publicUserProfileModel.email == null ||
-                              data.publicUserProfileModel.email!.isEmpty) {
+                          // UserProfileWare data = Provider.of<UserProfileWare>(
+                          //     context,
+                          //     listen: false);
+                          if (data.email == null || data.email!.isEmpty) {
                             showToast2(
                                 context, "Can't reach this user at the moment",
                                 isError: true);
                           } else {
                             final url =
-                                'mailTo:${data.publicUserProfileModel.email}?subject=${Uri.encodeFull("From a follower on Macanacki")}&body=${Uri.encodeFull("Sending from my device")}';
+                                'mailTo:${data.email}?subject=${Uri.encodeFull("From a follower on Macanacki")}&body=${Uri.encodeFull("Sending from my device")}';
 
                             UrlLaunchController.launchInWebViewOrVC(
                                 Uri.parse(url));
@@ -1942,13 +1941,13 @@ class UserProfileActionsTest extends StatelessWidget {
                                     PageRouting.pushToPage(
                                         context,
                                         ChatScreen(
-                                          user: element,
-                                          chat: element.conversations!,
-                                          dp: data.profilephoto,
-                                          mode: data.mode,
-                                          isHome: false,
-                                          verified: data.verified!,
-                                        ));
+                                            user: element,
+                                            chat: element.conversations!,
+                                            dp: data.profilephoto,
+                                            mode: data.mode,
+                                            isHome: false,
+                                            verified: data.verified!,
+                                            otherUser: data));
                                     return;
                                   } else if (element.userOne == data.username) {
                                     chat = element;
@@ -1956,13 +1955,13 @@ class UserProfileActionsTest extends StatelessWidget {
                                     PageRouting.pushToPage(
                                         context,
                                         ChatScreen(
-                                          user: element,
-                                          chat: element.conversations!,
-                                          dp: data.profilephoto,
-                                          mode: data.profilephoto,
-                                          isHome: false,
-                                          verified: data.verified!,
-                                        ));
+                                            user: element,
+                                            chat: element.conversations!,
+                                            dp: data.profilephoto,
+                                            mode: data.profilephoto,
+                                            isHome: false,
+                                            verified: data.verified!,
+                                            otherUser: data));
                                     return;
                                   } else {
                                     chat = ChatData();
@@ -2001,13 +2000,13 @@ class UserProfileActionsTest extends StatelessWidget {
                                     PageRouting.pushToPage(
                                         context,
                                         ChatScreen(
-                                          user: checker2.first,
-                                          chat: checker2.first.conversations!,
-                                          dp: data.profilephoto,
-                                          mode: data.mode,
-                                          isHome: false,
-                                          verified: data.verified!,
-                                        ));
+                                            user: checker2.first,
+                                            chat: checker2.first.conversations!,
+                                            dp: data.profilephoto,
+                                            mode: data.mode,
+                                            isHome: false,
+                                            verified: data.verified!,
+                                            otherUser: data));
                                   } else {
                                     // ignore: use_build_context_synchronously
 
@@ -2015,13 +2014,13 @@ class UserProfileActionsTest extends StatelessWidget {
                                     PageRouting.pushToPage(
                                         context,
                                         ChatScreen(
-                                          user: chatData,
-                                          chat: empty,
-                                          dp: data.profilephoto,
-                                          mode: data.mode,
-                                          isHome: false,
-                                          verified: data.verified!,
-                                        ));
+                                            user: chatData,
+                                            chat: empty,
+                                            dp: data.profilephoto,
+                                            mode: data.mode,
+                                            isHome: false,
+                                            verified: data.verified!,
+                                            otherUser: data));
                                   }
 
                                   // ignore: use_build_context_synchronously

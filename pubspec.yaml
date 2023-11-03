@@ -41,7 +41,7 @@ dependencies:
   file_picker:
   video_player: ^2.7.2
   cached_network_image:
-  video_thumbnail: ^0.5.3
+  # video_thumbnail: ^0.5.3
   numeral: ^2.0.1
   # preload_page_view: ^0.1.6
   # should_rebuild: ^1.0.1

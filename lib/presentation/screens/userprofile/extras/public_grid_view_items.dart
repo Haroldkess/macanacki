@@ -10,7 +10,6 @@ import 'package:macanacki/presentation/constants/colors.dart';
 import 'package:macanacki/presentation/widgets/debug_emitter.dart';
 import 'package:macanacki/presentation/widgets/loader.dart';
 import 'package:numeral/numeral.dart';
-import 'package:video_thumbnail/video_thumbnail.dart';
 
 import '../../../../../model/feed_post_model.dart';
 import 'package:path_provider/path_provider.dart';
@@ -57,31 +56,31 @@ class _PublicGridViewItemsState extends State<PublicGridViewItems> {
 //}
 
   getThumbnail() async {
-    if (widget.data.media!.isEmpty) {
-      return;
-    }
-    if (!widget.data.media!.first.contains(".mp4")) {
-      return;
-    }
-    try {
-      final fileName = await VideoThumbnail.thumbnailFile(
-        video: widget.data.media!.first,
-        thumbnailPath: (await getTemporaryDirectory()).path,
-        imageFormat: ImageFormat.WEBP,
-        maxHeight:
-            0, // specify the height of the thumbnail, let the width auto-scaled to keep the source aspect ratio
-        quality: 100,
-      );
+    // if (widget.data.media!.isEmpty) {
+    //   return;
+    // }
+    // if (!widget.data.media!.first.contains(".mp4")) {
+    //   return;
+    // }
+    // try {
+    //   final fileName = await VideoThumbnail.thumbnailFile(
+    //     video: widget.data.media!.first,
+    //     thumbnailPath: (await getTemporaryDirectory()).path,
+    //     imageFormat: ImageFormat.WEBP,
+    //     maxHeight:
+    //         0, // specify the height of the thumbnail, let the width auto-scaled to keep the source aspect ratio
+    //     quality: 100,
+    //   );
 
-      // emitter(fileName.toString());
-      if (mounted) {
-        setState(() {
-          thumbnail = fileName;
-        });
-      }
-    } catch (e) {
-      emitter(e.toString());
-    }
+    //   // emitter(fileName.toString());
+    //   if (mounted) {
+    //     setState(() {
+    //       thumbnail = fileName;
+    //     });
+    //   }
+    // } catch (e) {
+    //   emitter(e.toString());
+    // }
   }
 
   @override
