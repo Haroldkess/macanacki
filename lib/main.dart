@@ -105,6 +105,7 @@ class MyApp extends StatelessWidget {
                     maxWidth: maxWidth,
                     maxHeight: maxHeight,
                     configs: configs))));
+    
     configs.externalImageEditors['external_image_editor_2'] = EditorParams(
         title: 'Edit Image',
         icon: Icons.edit_attributes,
@@ -131,7 +132,7 @@ class MyApp extends StatelessWidget {
           toastTheme: ToastThemeData(alignment: Alignment.center),
           child: GetMaterialApp(
             debugShowCheckedModeBanner: false,
-            title: 'Macanacki',
+            title: 'Macaveli',
             theme: ThemeData(
                 primaryColor: HexColor(primaryColor),
                 brightness: Brightness.light,
@@ -147,7 +148,6 @@ class MyApp extends StatelessWidget {
                         : UpgradeDialogStyle.material,
                     debugLogging: false),
                 child: const Splash()),
-          ),
-        ));
+          ),));
   }
 }
