@@ -11,13 +11,13 @@ import 'pay_styles.dart';
 class Paywall extends StatefulWidget {
   final List<Package> packages;
   final String title;
-  final bool showTermAndConditions;
-  final bool showTermsOfUse;
+  final bool showTermsOfUseAndPrivacyPolicy;
   final String description;
   final Function() onSucess;
   final Function(String) onError;
+  final bool isOneTimePurchase;
 
-  const Paywall({Key? key, required this.packages, required this.title, required this.description, required this.onSucess, required this.onError, required this.showTermAndConditions, required this.showTermsOfUse}) : super(key: key);
+  const Paywall({Key? key, required this.packages, required this.title, required this.description, required this.onSucess, required this.onError, required this.showTermsOfUseAndPrivacyPolicy, required this.isOneTimePurchase}) : super(key: key);
 
   @override
   _PaywallState createState() => _PaywallState();
@@ -32,42 +32,40 @@ class _PaywallState extends State<Paywall> {
       body: Container(
         width: double.infinity,
         height: Get.height,
-        child: Stack(
+        child: SingleChildScrollView(
+          child: SafeArea(
+            child: Wrap(
+              children: <Widget>[
+                _buildHeaderField(context),
+                _buildPackagesField(context),
+                //
+                _buildPaymentDescriptionField(context),
 
-          children: [
-            SingleChildScrollView(
-              child: SafeArea(
-                child: Wrap(
-                  children: <Widget>[
-                    _buildHeaderField(context),
-
-                    _buildPackagesField(context),
-                    //
-                    _buildFooterField(context),
-                  ],
-                ),
-              ),
+                _buildTermsOfUseAndPrivacyPolicyField(context),
+              ],
             ),
-            //Positioned(bottom: 0, left: 0,child: Center(child: Text('---------'),),)
-          ],
+          ),
         ),
       ),
     );
   }
 
   Widget _buildTermsOfUseAndPrivacyPolicyField(BuildContext context){
-    return  widget.showTermsOfUse ? Column(
+    return  widget.showTermsOfUseAndPrivacyPolicy ? Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
 
-        const SizedBox(height: 20,),
+        Divider(color: const Color(0xffF5F5F5).withOpacity(.2)),
+        //const SizedBox(height: 10,),
         Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             GestureDetector(
               onTap: () async {
                 await UrlLaunchController
                     .launchInWebViewOrVC(
-                    Uri.parse("https://www.apple.com/legal/internet-services/itunes/dev/stdeula/"));
+                    Uri.parse("https://macanacki.com/tou.html"));
               },
               child: Text("Terms Of Use",
                   //textAlign: TextAlign.center,
@@ -81,13 +79,12 @@ class _PaywallState extends State<Paywall> {
                           height: 1.2
                       ))),
             ),
-
-
+            const SizedBox(width: 20,),
             GestureDetector(
               onTap: () async {
                 await UrlLaunchController
                     .launchInWebViewOrVC(
-                    Uri.parse("https://www.apple.com/legal/internet-services/itunes/dev/stdeula/"));
+                    Uri.parse("https://macanacki.com/privacy.html"));
               },
               child: Text("Privacy Policy",
                   textAlign: TextAlign.center,
@@ -103,6 +100,7 @@ class _PaywallState extends State<Paywall> {
             ),
           ],
         ),
+        Divider(color: const Color(0xffF5F5F5).withOpacity(.2)),
         const SizedBox(height: 20,),
       ],
     )
@@ -114,7 +112,7 @@ class _PaywallState extends State<Paywall> {
 
   Widget _buildPackagesField(BuildContext context){
     return Padding(
-      padding: const EdgeInsets.only(top: 30),
+      padding: const EdgeInsets.only(top: 10),
       child: ListView.builder(
         itemCount: widget.packages.length,
         itemBuilder: (BuildContext context, int index) {
@@ -164,34 +162,28 @@ class _PaywallState extends State<Paywall> {
 
 
 
-  Widget _buildFooterField(BuildContext context){
-    // return Padding(
-    //   padding:
-    //   EdgeInsets.only(top: 32, bottom: 16, left: 16.0, right: 16.0),
-    //   child: SizedBox(
-    //     child: Text(
-    //       footerText,
-    //       style: kDescriptionTextStyle,
-    //     ),
-    //     width: double.infinity,
-    //   ),
-    // );
+  Widget _buildPaymentDescriptionField(BuildContext context){
     return Padding(
-      padding: const EdgeInsets.only(top: 20, left: 10, right: 10),
+      padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
       child: Column(
         children: [
-          const Icon(Icons.keyboard_arrow_down_outlined, size: 30,
-            color: Colors.white,),
-          const SizedBox(height: 10,),
-          widget.showTermAndConditions ? Text(termAndConditions,
-              textAlign: TextAlign.start,
-              style: GoogleFonts.leagueSpartan(
-                  textStyle: const TextStyle(
-                    color: Colors.white,
-                    decorationStyle: TextDecorationStyle.solid,
-                    fontSize: 13,
-                    height: 1.2
-                  ))) : Container(),
+
+          Column(
+            children: [
+              Divider(color: const Color(0xffF5F5F5).withOpacity(.2)),
+              const SizedBox(height: 10,),
+              Text(widget.isOneTimePurchase ? oneTimePurchaseDesc : autoRenewalDesc,
+                  textAlign: TextAlign.start,
+                  style: GoogleFonts.leagueSpartan(
+                      textStyle: const TextStyle(
+                          color: Colors.white,
+                          decorationStyle: TextDecorationStyle.solid,
+                          fontSize: 13,
+                          height: 1.2
+                      )))
+            ],
+          ),
+
 
 
 
