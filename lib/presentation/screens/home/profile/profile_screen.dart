@@ -180,6 +180,47 @@ class _ProfileScreenState extends State<ProfileScreen>
       drawer: DrawerSide(
         scafKey: key,
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async{
+          List<Package> verificationPackages = await PayExt.fetchPackagesFromOfferings(identifier: 'promotion');
+          if(!context.mounted) return;
+          await showModalBottomSheet(
+          useRootNavigator: true,
+          isDismissible: true,
+          isScrollControlled: true,
+          backgroundColor: Colors.brown,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
+          ),
+          context: context,
+          builder: (BuildContext context) {
+            return StatefulBuilder(
+                builder: (BuildContext context, StateSetter setModalState) {
+                  return FractionallySizedBox(
+                    heightFactor: 0.95,
+                    child: Paywall(
+                      isOneTimePurchase: false,
+                      showTermsOfUseAndPrivacyPolicy: true,
+                      title: "Verification Packages",
+                      description: "Unlock the full verification experience",
+                      packages: verificationPackages,
+                      onError: (String e){
+
+                        showToast2(context, "Payment not verified try again", isError: true);
+                        Navigator.pop(context);
+
+                      },
+                      onSucess: (){
+                        //PaymentController.verifyOnServerExt(context, isBusiness, isPayOnly);
+                      },
+
+                    ),
+                  );
+                });
+          },
+          );
+        },
+      ),
       body: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onPanDown: (_) {
