@@ -1,4 +1,4 @@
-package com.thomas.macanacki
+package com.thomas.macaveli
 
 import io.flutter.embedding.android.FlutterActivity
 
