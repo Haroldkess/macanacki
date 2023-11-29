@@ -39,11 +39,13 @@ Future<http.Response?> sendAd(SendAdModel data) async {
     "duration": data.duration,
   };
 
+  print('$baseUrl/public/api/post/promote/${data.postId}/${data.planId}');
+
   try {
     response = await http
         .post(
             Uri.parse(
-                '$baseUrl/public/api/post/promote/${data.postId}/${data.planId}'),
+                '$baseUrl/public/api/v2/post/promote/${data.postId}'),
             headers: {
               HttpHeaders.contentTypeHeader: "application/json",
               HttpHeaders.authorizationHeader: "Bearer $token",

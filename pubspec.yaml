@@ -144,7 +144,7 @@ flutter_icons:
   android: true
   ios: true
   remove_alpha_ios: true
-  image_path: "assets/pic/newlogo.png"
+  image_path: "assets/pic/new-logo-dark.jpeg"
 
 
 

@@ -82,12 +82,15 @@ class AdsWare extends ChangeNotifier {
 
   Future<bool> sendAdsFromApi(SendAdModel data) async {
     late bool isSuccessful;
+    print(" ----- Inside SendAdFrom API");
     try {
       http.Response? response = await sendAd(data)
           .whenComplete(() => emitter("ad price gotten successfully"));
       if (response == null) {
+        print(" ----- Inside Error - Null");
         isSuccessful = false;
       } else if (response.statusCode == 200) {
+        print(" ----- Inside Success");
         var jsonData = jsonDecode(response.body);
 
         try {
@@ -101,7 +104,9 @@ class AdsWare extends ChangeNotifier {
 
         isSuccessful = true;
       } else {
+        print(" ----- Inside Something went wrong");
         var jsonData = jsonDecode(response.body);
+        print(jsonData);
 
         try {
           message2 = jsonData["message"];
@@ -113,6 +118,7 @@ class AdsWare extends ChangeNotifier {
         isSuccessful = false;
       }
     } catch (e) {
+      print(" ----- Inside Catch - Error");
       isSuccessful = false;
     }
 

@@ -46,8 +46,10 @@ void main() async {
   Get.put(scrolNotify());
   Get.put(scrolNotifyPublic());
 
-  // Configure inApp SDK
-  await PayExt.configureSDK();
+  try {
+    // Configure inApp SDK
+    await PayExt.configureSDK();
+  }catch(e){}
 
   runApp(Phoenix(child: const MyApp()));
 }
