@@ -180,6 +180,7 @@ class _ProfileScreenState extends State<ProfileScreen>
       drawer: DrawerSide(
         scafKey: key,
       ),
+
       body: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onPanDown: (_) {

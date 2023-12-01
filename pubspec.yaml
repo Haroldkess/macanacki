@@ -6,7 +6,7 @@ description: A new Flutter project.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 
-version: 1.0.4+26
+version: 1.0.0+15
 
 environment:
   sdk: '>=3.0.6 <4.0.0'
@@ -144,7 +144,7 @@ flutter_icons:
   android: true
   ios: true
   remove_alpha_ios: true
-  image_path: "assets/pic/newlogo.png"
+  image_path: "assets/pic/maca-logo-black-1024.png"
 
 
 

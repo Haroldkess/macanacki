@@ -117,7 +117,12 @@ class LoginController {
       //   emitter("removing all previous screens");
       //   PageRouting.removeAllToPage(context, const TabScreen());
       // }
-      PayExt.loginUser();
+
+      try {
+        PayExt.loginUser();
+      }catch(e){
+
+      }
 
       await callFeedPost(context);
       emitter("removing all previous screens");

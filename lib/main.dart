@@ -46,8 +46,10 @@ void main() async {
   Get.put(scrolNotify());
   Get.put(scrolNotifyPublic());
 
-  // Configure inApp SDK
-  await PayExt.configureSDK();
+  try {
+    // Configure inApp SDK
+    await PayExt.configureSDK();
+  }catch(e){}
 
   runApp(Phoenix(child: const MyApp()));
 }
@@ -132,7 +134,7 @@ class MyApp extends StatelessWidget {
           toastTheme: ToastThemeData(alignment: Alignment.center),
           child: GetMaterialApp(
             debugShowCheckedModeBanner: false,
-            title: 'Macaveli',
+            title: 'Macanacki',
             theme: ThemeData(
                 primaryColor: HexColor(primaryColor),
                 brightness: Brightness.light,

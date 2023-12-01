@@ -22,8 +22,8 @@ class _SplashState extends State<Splash> {
       backgroundColor: Colors.black,
     //  backgroundColor: HexColor(primaryColor),
       body: Center(
-        child: SvgPicture.asset("assets/icon/crown.svg",
-            color: Colors.white, height: 50, width: 50),
+        child: SvgPicture.asset("assets/icon/mac-logo-200.svg",
+            color: Colors.white, height: 100, width: 100),
       ),
     );
   }

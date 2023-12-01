@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.thomas.macaveli">
+    package="com.thomas.macanacki">
       <uses-permission android:name="android.permission.INTERNET" />
 
         <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -32,7 +32,7 @@
   </intent>
 </queries>
    <application
-        android:label="Macaveli"
+        android:label="Macanacki"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
        android:requestLegacyExternalStorage="true"
@@ -49,6 +49,7 @@ android:resource="@mipmap/maca" />
            android:name="com.yalantis.ucrop.UCropActivity"
            android:screenOrientation="portrait"
            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+
 
         <activity
             android:name=".MainActivity"

@@ -169,8 +169,9 @@ class Operations {
   static Future changePhotoFromGallery(BuildContext context) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     final ImagePicker picker = ImagePicker();
-    late XFile? imageFile;
+    //late XFile? imageFile;
     FacialWare facial = Provider.of<FacialWare>(context, listen: false);
+    print("xxxxxxxxxxxxxxxxxxxxxx");
     try {
       if (await Permission.storage.request().isGranted) {
         // Call FilePicker.platform.pickFiles in here
@@ -180,8 +181,10 @@ class Operations {
             preferredCameraDevice: CameraDevice.rear,
             requestFullMetadata: true);
 
+        print("xxxxxxxxxxxxxxxxxxxxxx  1111");
+
         if (file != null) {
-          imageFile = file;
+          XFile imageFile = file;
           emitter("FilePath: ${file.path}");
 
           //Lets crop image
@@ -208,11 +211,17 @@ class Operations {
             ],
           );
 
+          print("xxxxxxxxxxxxxxxxxxxxxx  22222222");
+
           if (croppedFile == null) return;
           XFile croppedFileX = XFile(croppedFile.path);
 
+          print("xxxxxxxxxxxxxxxxxxxxxx 3333333");
+
           pref.setString(temPhotoKey, croppedFileX.path);
           emitter("FilePath after cropping: ${croppedFileX.path}");
+
+          print("xxxxxxxxxxxxxxxxxxxxxx 4444");
 
           facial.addDp(croppedFileX);
           // pref.setString(temPhotoKey, imageFile.path);

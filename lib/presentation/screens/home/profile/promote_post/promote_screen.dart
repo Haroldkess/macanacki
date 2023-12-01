@@ -23,6 +23,7 @@ import '../../../../../services/middleware/feed_post_ware.dart';
 import '../../../../constants/colors.dart';
 import '../../../../constants/params.dart';
 import '../../../../widgets/buttons.dart';
+import '../../../../widgets/debug_emitter.dart';
 import '../../../../widgets/text.dart';
 import '../profileextras/profile_action_buttons.dart';
 
@@ -142,18 +143,18 @@ class _PromoteScreenState extends State<PromoteScreen> {
                   const SizedBox(
                     height: 20,
                   ),
-                  AdsAction(
-                      title: "select budget  ",
-                      subTitle:
-                          "Price: N${convertToCurrency(stream.selected.price == null ? "0" : stream.selected.price.toString())}      Reach: ${convertToCurrency(stream.selected.reach ?? "0")}",
-                      name: "Budget & Reach",
-                      SubName: "Select your preferred budget and reach ",
-                      action: () {
-                        priceOptionModal(context);
-                      }),
-                  const SizedBox(
-                    height: 20,
-                  ),
+                  // AdsAction(
+                  //     title: "select budget  ",
+                  //     subTitle:
+                  //         "Price: N${convertToCurrency(stream.selected.price == null ? "0" : stream.selected.price.toString())}      Reach: ${convertToCurrency(stream.selected.reach ?? "0")}",
+                  //     name: "Budget & Reach",
+                  //     SubName: "Select your preferred budget and reach ",
+                  //     action: () {
+                  //       priceOptionModal(context);
+                  //     }),
+                  // const SizedBox(
+                  //   height: 20,
+                  // ),
                   AdsAction(
                       title: "select Duration  ",
                       subTitle: stream.duration,
@@ -353,19 +354,18 @@ class _PromoteScreenState extends State<PromoteScreen> {
   }
 
   _submit(context, id) async {
+    print("------------------sssssss");
     AdsWare action = Provider.of<AdsWare>(context, listen: false);
-    if (action.adsPrice.isEmpty) {
-      showToast2(context, "Failed to get the ads price please try again");
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        AdsController.retrievAdsController(context);
-      });
-      return;
-    }
+    // if (action.adsPrice.isEmpty) {
+    //   showToast2(context, "Failed to get the ads price please try again");
+    //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //     AdsController.retrievAdsController(context);
+    //   });
+    //   return;
+    // }
+    print("Iiiiiiiiiiiiiiiaaaaaaa");
     if (choosenCountry.isEmpty) {
       showToast2(context, "Select country", isError: true);
-      return;
-    } else if (action.selected.price == null) {
-      showToast2(context, "Add budget", isError: true);
       return;
     } else if (action.duration == "select") {
       showToast2(context, "Add duration", isError: true);
@@ -375,7 +375,7 @@ class _PromoteScreenState extends State<PromoteScreen> {
           country: choosenCountry,
           postId: id.toString(),
           duration: action.duration,
-          planId: action.selected.id.toString());
+          planId: "-");
       AdsController.sendAdRequeest(context, data);
     }
   }
