@@ -62,7 +62,7 @@ class ProfilePicture extends StatelessWidget {
               Align(
                 alignment: Alignment.center,
                 child: InkWell(
-                  onTap: () => Operations.changePhotoFromGallery(context),
+                  onTap: ()  async => await Operations.changePhotoFromGallery(context),
                   child: SvgPicture.asset(
                     "assets/icon/encrypt.svg",
                     color: HexColor(backgroundColor),

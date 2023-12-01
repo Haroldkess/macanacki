@@ -142,9 +142,9 @@ dev_dependencies:
 
 flutter_icons:
   android: true
-  ios: false
+  ios: true
   remove_alpha_ios: true
-  image_path: "assets/pic/logo-x.jpeg"
+  image_path: "assets/pic/maca-logo-black-1024.png"
 
 
 
