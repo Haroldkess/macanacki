@@ -3,8 +3,7 @@
 import 'dart:io';
 
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
-import 'package:dio/dio.dart';
-import 'package:easy_debounce/easy_debounce.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart' hide NestedScrollView;
@@ -15,6 +14,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:macanacki/config/pay_ext.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
 import 'package:macanacki/presentation/operations_ext.dart';
@@ -179,6 +179,13 @@ class _ProfileScreenState extends State<ProfileScreen>
       backgroundColor: HexColor("#F5F2F9"),
       drawer: DrawerSide(
         scafKey: key,
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+         await OperationsExt.changePhotoFromGallery(context);
+
+
+        },
       ),
 
       body: GestureDetector(

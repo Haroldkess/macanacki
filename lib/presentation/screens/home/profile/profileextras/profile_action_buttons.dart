@@ -237,7 +237,7 @@ class AllProfileActions extends StatelessWidget {
                 ),
                 SizedBox(width: 10),
                 AppText(
-                  text: "Post Audio",
+                  text: "   Post Audio",
                   fontWeight: FontWeight.w400,
                   size: 18,
                   color: HexColor("#797979"),

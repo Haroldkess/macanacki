@@ -49,7 +49,9 @@ void main() async {
   try {
     // Configure inApp SDK
     await PayExt.configureSDK();
-  }catch(e){}
+  }catch(e){
+
+  }
 
   runApp(Phoenix(child: const MyApp()));
 }

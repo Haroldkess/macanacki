@@ -1,9 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.thomas.macanacki">
-      <uses-permission android:name="android.permission.INTERNET" />
 
-        <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="com.android.vending.BILLING" />
 
     
@@ -15,35 +15,31 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
-    
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.GALLERY"/>
    
     <!-- Provide required visibility configuration for API level 30 and above -->
-<queries>
-  <!-- If your app checks for SMS support -->
-  <intent>
-    <action android:name="android.intent.action.VIEW" />
-    <data android:scheme="sms" />
-  </intent>
-  <!-- If your app checks for call support -->
-  <intent>
-    <action android:name="android.intent.action.VIEW" />
-    <data android:scheme="tel" />
-  </intent>
-</queries>
+    <queries>
+      <!-- If your app checks for SMS support -->
+      <intent>
+        <action android:name="android.intent.action.VIEW" />
+        <data android:scheme="sms" />
+      </intent>
+      <!-- If your app checks for call support -->
+      <intent>
+        <action android:name="android.intent.action.VIEW" />
+        <data android:scheme="tel" />
+      </intent>
+    </queries>
+
    <application
         android:label="Macanacki"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
        android:requestLegacyExternalStorage="true"
         android:usesCleartextTraffic="true">
-              <meta-data
-        android:name="com.google.firebase.messaging.default_notification_icon"
-android:resource="@mipmap/maca" />
-
-
-
-
+       <meta-data
+        android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@mipmap/maca" />
 
        <activity
            android:name="com.yalantis.ucrop.UCropActivity"
@@ -60,15 +56,6 @@ android:resource="@mipmap/maca" />
             android:hardwareAccelerated="true"
             android:resizeableActivity="true"
             android:windowSoftInputMode="adjustResize">
-
-            
-
-   
-            
-            <!-- Specifies an Android theme to apply to this Activity as soon as
-                 the Android process has started. This theme is visible to the user
-                 while the Flutter UI initializes. After that, this theme continues
-                 to determine the Window background behind the Flutter UI. -->
          
             
             <meta-data
@@ -91,13 +78,9 @@ android:resource="@mipmap/maca" />
 
 
 
-        <meta-data
-            android:name="flutterEmbedding"
-            android:value="2" />
+        <meta-data android:name="flutterEmbedding" android:value="2" />
 
-               <meta-data
-      android:name="android.allow_multiple_resumed_activities"
-      android:value="true" />
+        <meta-data android:name="android.allow_multiple_resumed_activities" android:value="true" />
                        
     </application>
 </manifest>
