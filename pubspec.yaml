@@ -118,8 +118,6 @@ dependencies:
   purchases_flutter: ^6.0.0
   just_audio_background: ^0.0.1-beta.10
   external_path: ^1.0.1
-  media_storage: ^0.0.1
-  native_image_cropper: ^0.4.0
 
 
 

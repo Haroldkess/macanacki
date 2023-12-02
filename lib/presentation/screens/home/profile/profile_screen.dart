@@ -180,13 +180,7 @@ class _ProfileScreenState extends State<ProfileScreen>
       drawer: DrawerSide(
         scafKey: key,
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-         await OperationsExt.changePhotoFromGallery(context);
 
-
-        },
-      ),
 
       body: GestureDetector(
         behavior: HitTestBehavior.opaque,

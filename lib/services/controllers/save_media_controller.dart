@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:external_path/external_path.dart';
 import 'package:get/get.dart';
-import 'package:media_storage/media_storage.dart';
 import 'package:path/path.dart' as pat;
 // import 'package:gallery_saver/gallery_saver.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -40,9 +39,10 @@ class SaveMediaController {
   }
 
   static Future<bool> getPermissionIos() async {
-    bool isPermission = await MediaStorage.getRequestStoragePermission();
-    // print(isPermission);  // true or false
-    return isPermission;
+    // bool isPermission = await MediaStorage.getRequestStoragePermission();
+    // // print(isPermission);  // true or false
+    // return isPermission;
+    return false;
   }
 
   static Future<void> saveNetworkVideo(

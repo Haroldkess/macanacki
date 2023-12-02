@@ -4,17 +4,10 @@ import 'package:advance_image_picker/models/image_object.dart';
 import 'package:advance_image_picker/widgets/picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:macanacki/presentation/screens/home/profile/createpost/create_post_screen.dart';
-import 'package:macanacki/presentation/widgets/debug_emitter.dart';
-import 'package:macanacki/presentation/widgets/image_trimmer.dart';
 import 'package:macanacki/presentation/widgets/video_trimmer.dart';
-import 'package:native_image_cropper/native_image_cropper.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../services/middleware/create_post_ware.dart';
-import '../services/middleware/facial_ware.dart';
-import '../services/middleware/user_profile_ware.dart';
-import '../services/temps/temps_id.dart';
 import 'allNavigation.dart';
 import 'package:image_picker/image_picker.dart' as simple_image_picker;
 import 'package:path/path.dart' as path;
@@ -93,45 +86,6 @@ class OperationsExt {
     return recievedFiles;
   }
 
-
-  static Future<void> changePhotoFromGallery(BuildContext context) async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-
-    // ignore: use_build_context_synchronously
-    FacialWare facial = Provider.of<FacialWare>(context, listen: false);
-
-    // ignore: use_build_context_synchronously
-    List<File> recievedFiles = await _getImages(context, maxCount: 1);
-    if(recievedFiles.isEmpty) return;
-    final Uint8List bytes = await File(recievedFiles.first.path).readAsBytes();
-    final controller = CropController();
-
-    //ignore: use_build_context_synchronously
-    PageRouting.pushToPage(context, ImageTrimmer(bytes: bytes, onCrop: (Uint8List? value){
-      print("---------------------------------------------------");
-      print("ccccccccc ${value.toString()}");
-      if (value == null) return;
-      simple_image_picker.XFile croppedFileX = simple_image_picker.XFile(File.fromRawPath(value) as String);
-
-      print("xxxxxxxxxxxxxxxxxxxxxx 3333333");
-
-      pref.setString(temPhotoKey, croppedFileX.path);
-      emitter("FilePath after cropping: ${croppedFileX.path}");
-
-      print("xxxxxxxxxxxxxxxxxxxxxx 4444");
-
-      facial.addDp(croppedFileX);
-    },));
-
-
-
-    // pref.setString(temPhotoKey, imageFile.path);
-    // facial.isLoading(true);
-
-
-
-
-  }
 
 
 }
