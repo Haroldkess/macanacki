@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexagon/hexagon.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -30,7 +31,9 @@ class PublicFollowTile extends StatelessWidget {
     ActionWare stream = context.watch<ActionWare>();
     Temp name = context.watch<Temp>();
     return InkWell(
-      onTap: () {
+      onTap: () async {
+        PageRouting.popToPage(context);
+
         PageRouting.pushToPage(
             context,
             TestProfile(

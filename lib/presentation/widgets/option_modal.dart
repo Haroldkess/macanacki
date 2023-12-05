@@ -6,6 +6,7 @@ import 'package:macanacki/presentation/model/ui_model.dart';
 import 'package:macanacki/presentation/screens/home/subscription/subscrtiption_plan.dart';
 import 'package:macanacki/presentation/widgets/debug_emitter.dart';
 import 'package:macanacki/presentation/widgets/loader.dart';
+import 'package:macanacki/presentation/widgets/snack_msg.dart';
 import 'package:macanacki/presentation/widgets/text.dart';
 import 'package:macanacki/services/controllers/create_post_controller.dart';
 import 'package:macanacki/services/controllers/plan_controller.dart';
@@ -183,6 +184,10 @@ optionModal(BuildContext cont, List<String> url,
                                                   //     cont);
                                                 }),
                                           ));
+                                        } else {
+                                          showToast2(context,
+                                              "Can't perfom this action",
+                                              isError: true);
                                         }
                                       },
                                       title: Padding(
@@ -280,6 +285,10 @@ optionModal(BuildContext cont, List<String> url,
                                           }
 
                                           // }
+                                        } else {
+                                          showToast2(context,
+                                              "Can't perfom this action",
+                                              isError: true);
                                         }
                                       },
                                       title: Padding(

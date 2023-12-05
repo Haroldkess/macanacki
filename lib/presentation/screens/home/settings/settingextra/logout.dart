@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:macanacki/main.dart';
@@ -7,6 +9,8 @@ import 'package:macanacki/presentation/widgets/text.dart';
 import 'package:macanacki/services/temps/temps_id.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:restart_app/restart_app.dart';
+import '../../../../../config/pay_ext.dart';
+import '../../../../widgets/screen_loader.dart';
 import '../../../onboarding/splash_screen.dart';
 
 class Logout extends StatelessWidget {
@@ -16,6 +20,10 @@ class Logout extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () async {
+        SharedPreferences pref = await SharedPreferences.getInstance();
+        // await PlanController.retrievPlanController(context, true);
+        // PageRouting.pushToPage(
+        //     context, const SubscriptionPlansBusiness());
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           behavior: SnackBarBehavior.floating,
           duration: const Duration(seconds: 5),
@@ -25,12 +33,15 @@ class Logout extends StatelessWidget {
               const EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 3),
           content: Row(
             children: [
-              AppText(
-                text: "You will be signed out proceeed?",
-                color: Colors.white,
-                size: 15,
-                fontWeight: FontWeight.w600,
-              )
+              Container(
+                  constraints: BoxConstraints(maxWidth: 200),
+                  child: AppText(
+                      text: "Sure you want to log out?",
+                      color: Colors.white,
+                      size: 15,
+                      fontWeight: FontWeight.w600,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis))
             ],
           ),
           backgroundColor: HexColor(primaryColor).withOpacity(.9),
@@ -38,8 +49,9 @@ class Logout extends StatelessWidget {
               label: "Yes",
               textColor: Colors.white,
               onPressed: () async {
-                SharedPreferences pref = await SharedPreferences.getInstance();
-
+                progressIndicator(context, message: "Logging you out...");
+                PayExt.logoutUser();
+                await Future.delayed(const Duration(seconds: 3));
                 await pref.remove(isLoggedInKey);
                 await pref.remove(tokenKey);
                 await pref.remove(passwordKey);
@@ -56,7 +68,19 @@ class Logout extends StatelessWidget {
 
                 // ignore: use_build_context_synchronously
                 PageRouting.removeAllToPage(context, const Splash());
-                Restart.restartApp();
+                if (Platform.isAndroid) {
+                  Restart.restartApp();
+                } else {
+                  try {
+                    // Phoenix.rebirth(context);
+                    Restart.restartApp();
+                  } catch (e) {
+                    //     Restart.restartApp();
+                  }
+                }
+
+                // PageRouting.popToPage(
+                //     cont);
               }),
         ));
       },

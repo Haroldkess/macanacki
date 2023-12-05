@@ -144,7 +144,7 @@ class AllProfileActions extends StatelessWidget {
                 ProfileActionButton(
                   icon: "assets/icon/setting.svg",
                   onClick: () {
-                    // PageRouting.pushToPage(context, const SettingsScreen())
+                    PageRouting.pushToPage(context, const SettingsScreen());
                   },
                   color: "#C0C0C0",
                 ),

@@ -14,20 +14,20 @@ class SettingLogo extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         SvgPicture.asset(
-          "assets/icon/crown.svg",
+          "assets/icon/crown-latest.svg",
           width: 42.77,
           height: 28.48,
-          color: HexColor(primaryColor),
+          //  color: HexColor(primaryColor),
         ),
         const SizedBox(
           height: 10,
         ),
-        AppText(
-          text: "Version 1.322",
-          color: HexColor("#A8A8A8"),
-          size: 16,
-          fontWeight: FontWeight.w400,
-        )
+        // AppText(
+        //   text: "Version 1.322",
+        //   color: HexColor("#A8A8A8"),
+        //   size: 16,
+        //   fontWeight: FontWeight.w400,
+        // )
       ],
     );
   }

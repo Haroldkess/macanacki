@@ -55,51 +55,51 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 SizedBox(
                   height: 16,
                 ),
-                VerificationSettings(),
-                SizedBox(
-                  height: 16,
-                ),
-                AccountSettings(),
-                SizedBox(
-                  height: 16,
-                ),
-                DiscoverySettings(),
-                SizedBox(
-                  height: 16,
-                ),
-                ShowMeSettings(),
-                SizedBox(
-                  height: 16,
-                ),
-                AgeRangeSettings(),
-                SizedBox(
-                  height: 16,
-                ),
-                ControlSight(),
-                SizedBox(
-                  height: 16,
-                ),
-                AppSettingsNotification(),
-                SizedBox(
-                  height: 16,
-                ),
-                MeasureDistanceSelect(),
-                SizedBox(
-                  height: 16,
-                ),
-                ManagePayment(),
-                SizedBox(
-                  height: 16,
-                ),
-                CoumunityHandles(),
-                SizedBox(
-                  height: 16,
-                ),
-                HelpAndSupport(),
-                SizedBox(
-                  height: 16,
-                ),
-                Privacy(),
+                // VerificationSettings(),
+                // SizedBox(
+                //   height: 16,
+                // ),
+                // AccountSettings(),
+                // SizedBox(
+                //   height: 16,
+                // ),
+                // DiscoverySettings(),
+                // SizedBox(
+                //   height: 16,
+                // ),
+                // ShowMeSettings(),
+                // SizedBox(
+                //   height: 16,
+                // ),
+                // AgeRangeSettings(),
+                // SizedBox(
+                //   height: 16,
+                // ),
+                // ControlSight(),
+                // SizedBox(
+                //   height: 16,
+                // ),
+                // AppSettingsNotification(),
+                // SizedBox(
+                //   height: 16,
+                // ),
+                // MeasureDistanceSelect(),
+                // SizedBox(
+                //   height: 16,
+                // ),
+                // ManagePayment(),
+                // SizedBox(
+                //   height: 16,
+                // ),
+                // CoumunityHandles(),
+                // SizedBox(
+                //   height: 16,
+                // ),
+                // HelpAndSupport(),
+                // SizedBox(
+                //   height: 16,
+                // ),
+                // Privacy(),
                 SizedBox(
                   height: 16,
                 ),
@@ -107,7 +107,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 SizedBox(
                   height: 16,
                 ),
-                SettingLogo(),
+                // SettingLogo(),
                 SizedBox(
                   height: 16,
                 ),

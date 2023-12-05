@@ -49,9 +49,7 @@ void main() async {
   try {
     // Configure inApp SDK
     await PayExt.configureSDK();
-  }catch(e){
-
-  }
+  } catch (e) {}
 
   runApp(Phoenix(child: const MyApp()));
 }
@@ -61,7 +59,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
         //  systemNavigationBarColor: Colors.transparent,
         //systemNavigationBarIconBrightness: Brightness.light,
         systemNavigationBarIconBrightness: Brightness.dark,
@@ -109,7 +107,7 @@ class MyApp extends StatelessWidget {
                     maxWidth: maxWidth,
                     maxHeight: maxHeight,
                     configs: configs))));
-    
+
     configs.externalImageEditors['external_image_editor_2'] = EditorParams(
         title: 'Edit Image',
         icon: Icons.edit_attributes,
@@ -152,6 +150,7 @@ class MyApp extends StatelessWidget {
                         : UpgradeDialogStyle.material,
                     debugLogging: false),
                 child: const Splash()),
-          ),));
+          ),
+        ));
   }
 }

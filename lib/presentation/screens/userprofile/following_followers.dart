@@ -19,8 +19,11 @@ class PublicUserFollowerFollowingScreen extends StatefulWidget {
   final String title;
   final bool isFollowing;
 
-  const PublicUserFollowerFollowingScreen(
-      {super.key, required this.title, required this.isFollowing});
+  const PublicUserFollowerFollowingScreen({
+    super.key,
+    required this.title,
+    required this.isFollowing,
+  });
 
   @override
   State<PublicUserFollowerFollowingScreen> createState() =>
@@ -34,6 +37,13 @@ class _PublicUserFollowerFollowingScreenState
   void initState() {
     super.initState();
     // if (widget.isFollowing) {
+
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) async {
+      UserProfileWare user =
+          Provider.of<UserProfileWare>(context, listen: false);
+
+      user.getPublicUserProfileFromApi(widget.title);
+    });
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) async {
       FindPeopleProvider search =
           Provider.of<FindPeopleProvider>(context, listen: false);
@@ -104,8 +114,8 @@ class _PublicUserFollowerFollowingScreenState
         ),
         body: PublicFollowFollowingList(
             data: widget.isFollowing
-                ? user.publicUserProfileModel.followings!
-                : user.publicUserProfileModel.followers!,
+                ? user.publicUserProfileModel.followings ?? []
+                : user.publicUserProfileModel.followers ?? [],
             what: widget.isFollowing ? "Following" : "Followers",
             ware: ware),
       ),

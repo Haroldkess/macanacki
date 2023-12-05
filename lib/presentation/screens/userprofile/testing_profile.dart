@@ -10,6 +10,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -36,6 +37,7 @@ import '../../../services/middleware/video/video_ware.dart';
 import '../../allNavigation.dart';
 import '../../constants/colors.dart';
 import '../../widgets/app_bar.dart';
+import '../../widgets/dialogue.dart';
 import '../home/diamond/diamond_modal/buy_modal.dart';
 import '../home/diamond/diamond_modal/give_modal.dart';
 import '../home/profile/profileextras/extra_profile_view.dart';
@@ -497,17 +499,42 @@ class _TestProfileState extends State<TestProfile>
                     children: [
                       ProfileQuickLinks(
                         onClick: () {
-                          // showToast2(context, "Feature coming soon");
+                          Get.dialog(seeWebsiteDialog(
+                              svg: "seelocation",
+                              title: "Lives in",
+                              message:
+                                  "${publicUserProfileModel.city ?? ""}, ${publicUserProfileModel.state ?? ""}, ${publicUserProfileModel.country ?? ""} ",
+                              confirmText: "Yes",
+                              cancelText: "Go back",
+                              onPressedCancel: () {
+                                Get.back();
+                              },
+                              onPressed: () {
+                                Get.back();
+                              }));
                         },
-                        name: "Block Account",
-                        icon: "assets/icon/block.svg",
+                        name: "View Location",
+                        icon: "assets/icon/seelocation.svg",
                         color: Colors.grey,
                         isVerified: false,
                       ),
                       ProfileQuickLinks(
-                        onClick: () async {},
-                        name: "report Account",
-                        icon: "assets/icon/report.svg",
+                        onClick: () async {
+                          Get.dialog(seeWebsiteDialog(
+                              svg: "seeweb",
+                              title: "Website",
+                              message: "Website not published by user",
+                              confirmText: "Yes",
+                              cancelText: "Go back",
+                              onPressedCancel: () {
+                                Get.back();
+                              },
+                              onPressed: () {
+                                Get.back();
+                              }));
+                        },
+                        name: "View Website",
+                        icon: "assets/icon/seeweb.svg",
                         color: Colors.grey,
                         isVerified: false,
                       ),

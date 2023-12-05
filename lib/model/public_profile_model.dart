@@ -136,49 +136,53 @@ class PublicUserPost {
 }
 
 class PublicUserData {
-  PublicUserData(
-      {this.id,
-      this.email,
-      this.username,
-      this.faceVerification,
-      this.dob,
-      this.emailVerified,
-      this.registrationComplete,
-      this.emailVerifiedAt,
-      this.createdAt,
-      this.updatedAt,
-      this.firebaseId,
-      this.longitude,
-      this.latitude,
-      this.mode,
-      this.ageLowerBound,
-      this.ageUpperBound,
-      this.useCurrentLocation,
-      this.useGlobalLocationSearch,
-      this.enablePushNotification,
-      this.enableEmailNotification,
-      this.setMaxDistSearch,
-      this.twitter,
-      this.facebook,
-      this.instagram,
-      this.linkedin,
-      this.telegram,
-      this.fullName,
-      this.nationality,
-      this.idType,
-      this.idNumber,
-      this.verified,
-      this.aboutMe,
-      this.phone,
-      this.posts,
-      this.followers,
-      this.followings,
-      this.gender,
-      this.profilephoto,
-      this.noOfFollowers,
-      this.noOfFollowing,
-      this.verification,
-      this.activePlan});
+  PublicUserData({
+    this.id,
+    this.email,
+    this.username,
+    this.faceVerification,
+    this.dob,
+    this.emailVerified,
+    this.registrationComplete,
+    this.emailVerifiedAt,
+    this.createdAt,
+    this.updatedAt,
+    this.firebaseId,
+    this.longitude,
+    this.latitude,
+    this.mode,
+    this.ageLowerBound,
+    this.ageUpperBound,
+    this.useCurrentLocation,
+    this.useGlobalLocationSearch,
+    this.enablePushNotification,
+    this.enableEmailNotification,
+    this.setMaxDistSearch,
+    this.twitter,
+    this.facebook,
+    this.instagram,
+    this.linkedin,
+    this.telegram,
+    this.fullName,
+    this.nationality,
+    this.idType,
+    this.idNumber,
+    this.verified,
+    this.aboutMe,
+    this.phone,
+    this.posts,
+    this.followers,
+    this.followings,
+    this.gender,
+    this.profilephoto,
+    this.noOfFollowers,
+    this.noOfFollowing,
+    this.verification,
+    this.activePlan,
+    this.country,
+    this.state,
+    this.city,
+  });
 
   int? id;
   String? email;
@@ -222,6 +226,9 @@ class PublicUserData {
   int? noOfFollowers;
   int? noOfFollowing;
   Verification? verification;
+  String? country;
+  String? state;
+  String? city;
 
   factory PublicUserData.fromJson(Map<String, dynamic> json) => PublicUserData(
         id: json["id"],
@@ -283,6 +290,9 @@ class PublicUserData {
             ? null
             : Verification.fromJson(json["verification"]),
         activePlan: json["active_plan"],
+        country: json["country"],
+        state: json["state"],
+        city: json["city"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -334,6 +344,9 @@ class PublicUserData {
         "no_of_following": noOfFollowing,
         "verification": verification?.toJson(),
         "active_plan": activePlan,
+        "country": country,
+        "state": state,
+        "city": city,
       };
 }
 
