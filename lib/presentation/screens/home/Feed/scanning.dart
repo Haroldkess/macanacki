@@ -28,6 +28,7 @@ class _ScanningPerimeterState extends State<ScanningPerimeter> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         AvatarGlow(
+
             endRadius: 120.0,
             duration: Duration(milliseconds: 800),
             glowColor: HexColor(primaryColor),
