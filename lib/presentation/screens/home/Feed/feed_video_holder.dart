@@ -17,6 +17,7 @@ import 'package:smooth_video_progress/smooth_video_progress.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../../../model/feed_post_model.dart';
+import '../../../../preload/preload_controller.dart';
 import '../../../../services/controllers/action_controller.dart';
 import '../../../../services/controllers/url_launch_controller.dart';
 import '../../../../services/controllers/view_controller.dart';
@@ -122,6 +123,7 @@ class _FeedVideoHolderState extends State<FeedVideoHolder>
     });
 
     super.dispose();
+
   }
 
   String apiToken = "";
@@ -152,8 +154,10 @@ class _FeedVideoHolderState extends State<FeedVideoHolder>
       List<VodClass> lister =
           vodVid.where((element) => element.id == id).toList();
       if (lister.isEmpty) {
+
         final videoOptions =
             VideoOptions(videoId: vod!, type: VideoType.vod, token: token);
+
         ApiVideoPlayerController controller = ApiVideoPlayerController(
             videoOptions: videoOptions,
             autoplay: false,
@@ -256,19 +260,7 @@ class _FeedVideoHolderState extends State<FeedVideoHolder>
                 },
                 child: Stack(
                   children: [
-                    Platform.isAndroid
-                        ? VideoView(
-                            allThumb: allThumbs,
-                            thumbLink: post.thumbnails!.first,
-                            page: widget.page,
-                            postId: post.id!,
-                            index: index,
-                            vodList: vodVid,
-                            data: post,
-                            inComingController: null,
-                            isHome: widget.isHome,
-                          )
-                        : VideoViewIos(
+                    VideoView(
                             allThumb: allThumbs,
                             thumbLink: post.thumbnails!.first,
                             page: widget.page,
@@ -279,6 +271,17 @@ class _FeedVideoHolderState extends State<FeedVideoHolder>
                             inComingController: null,
                             isHome: widget.isHome,
                           ),
+                        // : VideoViewIos(
+                        //     allThumb: allThumbs,
+                        //     thumbLink: post.thumbnails!.first,
+                        //     page: widget.page,
+                        //     postId: post.id!,
+                        //     index: index,
+                        //     vodList: vodVid,
+                        //     data: post,
+                        //     inComingController: null,
+                        //     isHome: widget.isHome,
+                        //   ),
                     post.promoted == "yes"
                         ? Positioned(
                             bottom: 140,
@@ -449,11 +452,19 @@ class VideoView extends StatefulWidget {
 }
 
 class _VideoViewState extends State<VideoView> {
+  late VideoPlayerController _videoPlayerController;
+  ChewieController? _chewieController;
+  int? bufferDelay;
   ApiVideoPlayerController? _controller;
   String apiToken = "";
+
+  final preloadController = PreloadController.to;
+
   @override
   void initState() {
-    buildVideoOptions();
+    log("--------------------------------------xxx Inside FeedVideoHolder");
+    //buildVideoOptions();
+    initializePlayer();
     // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
     //   if (mounted) {
     //     for (var i in widget.vodList) {
@@ -472,30 +483,65 @@ class _VideoViewState extends State<VideoView> {
     });
   }
 
-  void buildVideoOptions() async {
-    // final token = apiToken.isEmpty ? null : apiToken;
 
-    final videoOptions = VideoOptions(
-        videoId: widget.data.vod!.first!, type: VideoType.vod, token: null);
+  Future<void> initializePlayer() async {
+    log(" ffffffffffffffff ${widget.data.mux!.first}");
+    log(" ffffffffffffffff ${widget.data.vod!.first}");
 
-    _controller = ApiVideoPlayerController(
-        videoOptions: videoOptions,
-        autoplay: false,
-        onEnd: () {
-          ViewController.handleView(widget.data.id!);
-        },
-        onReady: () {
-          log("READY!!!");
-        });
-
-    // _controller!.initialize();
+    _videoPlayerController = preloadController.getPreloadById(widget.postId).controller!;
+    // _videoPlayerController =
+    //     VideoPlayerController.networkUrl(Uri.parse(widget.data.vod!.first));
+    // await Future.wait([ _videoPlayerController.initialize()]);
+    _createChewieController();
+    setState(() {});
   }
+  void disposePlayer(){
+    if(_videoPlayerController != null){
+      _videoPlayerController.pause();
+    }
+    _chewieController?.dispose();
+  }
+
+  void _createChewieController() {
+    _chewieController = ChewieController(
+      videoPlayerController: _videoPlayerController,
+      autoPlay: true,
+      looping: true,
+      progressIndicatorDelay:
+      bufferDelay != null ? Duration(milliseconds: bufferDelay!) : null,
+      showControls: true,
+      allowMuting: true,
+      //controlsSafeAreaMinimum: EdgeInsets.only(bottom: 40),
+      //autoInitialize: true,
+    );
+  }
+
+  // void buildVideoOptions() async {
+  //   // final token = apiToken.isEmpty ? null : apiToken;
+  //
+  //   final videoOptions = VideoOptions(
+  //       videoId: widget.data.vod!.first!, type: VideoType.vod, token: null);
+  //
+  //   _controller = ApiVideoPlayerController(
+  //       videoOptions: videoOptions,
+  //       autoplay: false,
+  //       onEnd: () {
+  //         ViewController.handleView(widget.data.id!);
+  //       },
+  //       onReady: () {
+  //         log("READY!!!");
+  //       });
+  //
+  //   // _controller!.initialize();
+  // }
 
   Future<void> innit() async {}
 
   @override
   void dispose() {
+    disposePlayer();
     super.dispose();
+
     // if (_controller != null) {
     //   _controller!.dispose();
     // }
@@ -504,57 +550,28 @@ class _VideoViewState extends State<VideoView> {
   Rx<VideoPlayerController>? vid;
   @override
   Widget build(BuildContext context) {
-    const textStyle = TextStyle(color: Colors.transparent);
-    final buttonStyle = TextButton.styleFrom(
-        iconColor: Colors.transparent,
-        foregroundColor: Colors.transparent,
-        side: BorderSide.none,
-        textStyle: textStyle);
+    log("-------------------------------------- Inside FeedVideoHolder");
 
-    final settingsBarStyle = SettingsBarStyle(
-        buttonStyle: buttonStyle,
-        sliderTheme: SliderThemeData(
-            activeTrackColor: Colors.transparent,
-            thumbColor: Colors.transparent,
-            overlayShape: SliderComponentShape.noThumb,
-            thumbShape: const RoundSliderThumbShape(
-                enabledThumbRadius: 0.0, disabledThumbRadius: 0)));
-
-    final controlsBarStyle = ControlsBarStyle(
-        mainControlButtonStyle: buttonStyle,
-        seekBackwardControlButtonStyle: null,
-        seekForwardControlButtonStyle: null);
-
-    final timeSliderStyle = TimeSliderStyle(
-        sliderTheme: const SliderThemeData(
-            //    overlayColor: Colors.white,
-
-            activeTrackColor: Colors.transparent,
-            inactiveTrackColor: Colors.transparent,
-            disabledThumbColor: Color.fromARGB(0, 31, 25, 25),
-            thumbColor: Colors.transparent,
-            thumbShape: RoundSliderThumbShape(
-              enabledThumbRadius: 0.0,
-            ),
-            //   thumbSelector: ,
-            valueIndicatorTextStyle: textStyle));
-
-    PlayerStyle applyStyle = PlayerStyle(
-        settingsBarStyle: settingsBarStyle,
-        controlsBarStyle: controlsBarStyle,
-        timeSliderStyle: timeSliderStyle);
     return Stack(
       children: [
         Center(
           child: Stack(
+            alignment: Alignment.center,
             children: [
-              PlayerWidget(
-                data: widget.data,
-                index: widget.index,
-                //   vod: widget.data.vod!.first!,
-                controller: _controller!,
-                applyStyle: applyStyle,
+              _chewieController != null &&
+                  _chewieController!
+                      .videoPlayerController.value.isInitialized
+                  ? Chewie(
+                controller: _chewieController!,
               )
+                  : const Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(height: 20),
+                  Text('Loading'),
+                ],
+              ),
             ],
           ),
         ),
@@ -702,6 +719,7 @@ class _VideoViewIosState extends State<VideoViewIos> {
   String apiToken = "";
   @override
   void initState() {
+    log("------------------------------------ BuildVideoOptions");
     buildVideoOptions();
     // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
     //   if (mounted) {
@@ -723,7 +741,7 @@ class _VideoViewIosState extends State<VideoViewIos> {
 
   void buildVideoOptions() async {
     _controller = VideoPlayerController.networkUrl(Uri.parse(
-        "https://vod.api.video/vod/${widget.data.vod!.first}/hls/manifest.$videoExtension"));
+        "${widget.data.vod!.first}"));
 
     // final token = apiToken.isEmpty ? null : apiToken;
 
@@ -735,6 +753,7 @@ class _VideoViewIosState extends State<VideoViewIos> {
   @override
   void dispose() {
     super.dispose();
+
     // if (_controller != null) {
     //   _controller!.dispose();
     // }

@@ -7,6 +7,7 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:macanacki/config/pay_ext.dart';
+import 'package:macanacki/preload/preload_controller.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
 import 'package:macanacki/presentation/screens/onboarding/splash_screen.dart';
 import 'package:macanacki/services/controllers/IAUpdate.dart';
@@ -45,6 +46,8 @@ void main() async {
   Get.put(PostSecurity());
   Get.put(scrolNotify());
   Get.put(scrolNotifyPublic());
+  Get.put<PreloadController>(PreloadController());
+  PreloadController.to.clear();
 
   try {
     // Configure inApp SDK

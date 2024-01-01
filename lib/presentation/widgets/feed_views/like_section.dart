@@ -199,67 +199,68 @@ class _LikeSectionState extends State<LikeSection> {
                     ),
                   ),
 
-            widget.data.user!.username! == user.userProfileModel.username ||
-                    widget.data.media!.first.contains(".mp3")
-                ? SizedBox.shrink()
-                : InkWell(
-                    onTap: () async {
-                      if (widget.data.media == null) return;
-                      if (widget.data.user!.username! ==
-                          user.userProfileModel.username) {
-                        if (widget.data.media!.length > 1) {
-                          await Future.forEach(widget.data.media!,
-                              (element) async {
-                            if (element.isNotEmpty) {
-                              try {
-                                if (element.contains('.mp4')) {
-                                  await SaveMediaController.saveNetworkVideo(
-                                      context, element, "macanacki");
-                                } else if (element.contains('.mp3')) {
-                                  await SaveMediaController.saveNetworkAudio(
-                                      context, element, "macanacki");
-                                } else {
-                                  await SaveMediaController.saveNetworkImage(
-                                      context, element, "macanacki");
-                                }
-                              } catch (e) {
-                                debugPrint(e.toString());
-                              }
-                            }
-                          });
-                        } else {
-                          if (widget.data.media!.first.contains('.mp4')) {
-                            await SaveMediaController.saveNetworkVideo(
-                                context,
-                                widget.data.media!.first,
-                                widget.data.description ?? "macanacki");
-                          } else if (widget.data.media!.first
-                              .contains('.mp3')) {
-                            await SaveMediaController.saveNetworkAudio(
-                                context,
-                                widget.data.media!.first,
-                                widget.data.description ?? "macanacki");
-                          } else {
-                            await SaveMediaController.saveNetworkImage(
-                                context,
-                                widget.data.media!.first,
-                                widget.data.description ?? "macanacki");
-                          }
-                        }
-                      } else {
-                        downloadDiamondsModal(
-                            context, widget.data.id!, widget.isAudio);
-                      }
-
-                      //  GiftWare.instance.giftForDownloadFromApi(
-                      //             widget.data.id!, context);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 3.0),
-                      child: myIcon(
-                          "assets/icon/d.svg", backgroundColor, 20, 20, null),
-                    ),
-                  ),
+            // Martins was here
+            // widget.data.user!.username! == user.userProfileModel.username ||
+            //         widget.data.media!.first.contains(".mp3")
+            //     ? SizedBox.shrink()
+            //     : InkWell(
+            //         onTap: () async {
+            //           if (widget.data.media == null) return;
+            //           if (widget.data.user!.username! ==
+            //               user.userProfileModel.username) {
+            //             if (widget.data.media!.length > 1) {
+            //               await Future.forEach(widget.data.media!,
+            //                   (element) async {
+            //                 if (element.isNotEmpty) {
+            //                   try {
+            //                     if (element.contains('.mp4')) {
+            //                       await SaveMediaController.saveNetworkVideo(
+            //                           context, element, "macanacki");
+            //                     } else if (element.contains('.mp3')) {
+            //                       await SaveMediaController.saveNetworkAudio(
+            //                           context, element, "macanacki");
+            //                     } else {
+            //                       await SaveMediaController.saveNetworkImage(
+            //                           context, element, "macanacki");
+            //                     }
+            //                   } catch (e) {
+            //                     debugPrint(e.toString());
+            //                   }
+            //                 }
+            //               });
+            //             } else {
+            //               if (widget.data.media!.first.contains('.mp4')) {
+            //                 await SaveMediaController.saveNetworkVideo(
+            //                     context,
+            //                     widget.data.media!.first,
+            //                     widget.data.description ?? "macanacki");
+            //               } else if (widget.data.media!.first
+            //                   .contains('.mp3')) {
+            //                 await SaveMediaController.saveNetworkAudio(
+            //                     context,
+            //                     widget.data.media!.first,
+            //                     widget.data.description ?? "macanacki");
+            //               } else {
+            //                 await SaveMediaController.saveNetworkImage(
+            //                     context,
+            //                     widget.data.media!.first,
+            //                     widget.data.description ?? "macanacki");
+            //               }
+            //             }
+            //           } else {
+            //             downloadDiamondsModal(
+            //                 context, widget.data.id!, widget.isAudio);
+            //           }
+            //
+            //           //  GiftWare.instance.giftForDownloadFromApi(
+            //           //             widget.data.id!, context);
+            //         },
+            //         child: Padding(
+            //           padding: const EdgeInsets.only(right: 3.0),
+            //           child: myIcon(
+            //               "assets/icon/d.svg", backgroundColor, 20, 20, null),
+            //         ),
+            //       ),
 
             // InkWell(
             //     onTap: () => optionModal(

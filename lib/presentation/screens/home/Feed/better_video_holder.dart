@@ -111,6 +111,7 @@ class _FeedVideoHolderV2State extends State<FeedVideoHolderV2> {
 
   @override
   Widget build(BuildContext context) {
+    log("------------------------------------- Better Video Holder");
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     TabProvider action = Provider.of<TabProvider>(context, listen: false);

@@ -7,6 +7,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:macanacki/model/common/data.dart';
 import 'package:macanacki/model/feed_post_model.dart';
 import 'package:macanacki/model/gender_model.dart';
+import 'package:macanacki/preload/preload_controller.dart';
 import 'package:macanacki/services/backoffice/feed_post_office.dart';
 import 'package:macanacki/services/backoffice/gender_office.dart';
 import 'dart:convert';
@@ -319,20 +320,33 @@ class FeedPostWare extends ChangeNotifier {
   Future<bool> getFeedPostFromApi(int pageNum) async {
     late bool isSuccessful;
     List<FeedPost> _moreFeedPosts = [];
+    print("000000000000000000000000000000000000 xxxxxx");
 
     try {
+      final preloadController = PreloadController.to;
       http.Response? response = await getFeedPost(pageNum).whenComplete(
           () => emitter("user feed posts data gotten successfully"));
       if (response == null) {
+        print("000000000000000000000000000000000000 0");
         isSuccessful = false;
         //   log("get feed posts data request failed");
       } else if (response.statusCode == 200) {
+        print("000000000000000000000000000000000000 1");
         var jsonData = jsonDecode(response.body);
+        print(jsonData);
 
         var incomingData = FeedData.fromJson(jsonData["data"]);
+        print("000000000000000000000000000000000000 2");
+
         _feedData = incomingData;
-        //  _feedData.data!.shuffle();
-        //emitter(pageNum.toString());
+
+        // Martins
+        if(incomingData.data != null){
+          for (var element in incomingData.data!) {
+            preloadController.addPreload(id: element.id!, vod: element.vod!);
+          }
+        }
+        print("000000000000000000000000000000000000 3");
 
         if (pageNum == 1) {
           _feedPosts = incomingData.data!;
@@ -401,6 +415,8 @@ class FeedPostWare extends ChangeNotifier {
         //  log("get feed posts data  request success");
         isSuccessful = true;
       } else {
+        print("000000000000000000000000000000000000 Status Code *** ${response.statusCode}");
+        print("&&&&& ${response.body.toString()}");
         // log("get feed posts data  request failed");
         isSuccessful = false;
       }
@@ -408,6 +424,7 @@ class FeedPostWare extends ChangeNotifier {
       isSuccessful = false;
       // log("get feed posts data  request failed");
       log(e.toString());
+      print("000000000000000000000000000000000000 4");
     }
 
     //notifyListeners();
@@ -461,6 +478,7 @@ class FeedPostWare extends ChangeNotifier {
     late bool isSuccessful;
     List<ProfileFeedDatum> others = [];
     List<ProfileFeedDatum> mp3 = [];
+    final preloadController = PreloadController.to;
 
     log(feedData.currentPage.toString());
     if (loading == true || _isLastPage == true) return false;
@@ -479,6 +497,11 @@ class FeedPostWare extends ChangeNotifier {
         int recordCount = jsonData['record_count'];
         var incomingData = ProfileFeedModel.fromJson(jsonData);
 
+        if(incomingData.data != null){
+          for (var element in incomingData.data!) {
+            preloadController.addPreload(id: element.id!, vod: element.vod!);
+          }
+        }
         // holdData = incomingData;
 
         // await Future.wait([
@@ -795,6 +818,7 @@ class FeedPostWareAudio extends ChangeNotifier {
   Future<bool> getFeedPostFromApi(int pageNum) async {
     late bool isSuccessful;
     List<FeedPost> _moreFeedPosts = [];
+    final preloadController = PreloadController.to;
 
     try {
       http.Response? response = await getFeedPost(pageNum).whenComplete(
@@ -806,6 +830,12 @@ class FeedPostWareAudio extends ChangeNotifier {
         var jsonData = jsonDecode(response.body);
 
         var incomingData = FeedData.fromJson(jsonData["data"]);
+
+        if(incomingData.data != null){
+          for (var element in incomingData.data!) {
+            preloadController.addPreload(id: element.id!, vod: element.vod!);
+          }
+        }
         _feedData = incomingData;
         //  _feedData.data!.shuffle();
         //emitter(pageNum.toString());

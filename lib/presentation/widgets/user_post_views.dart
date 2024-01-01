@@ -332,81 +332,81 @@ class _UserTikTokViewState extends State<UserTikTokView>
                           : SizedBox(
                               width: 10,
                             ),
-                      widget.data.media!.first.contains(".mp3")
-                          ? SizedBox.shrink()
-                          : GestureDetector(
-                              onTap: () async {
-                                if (widget.data.user!.username! ==
-                                    user.userProfileModel.username) {
-                                  if (widget.media.length > 1) {
-                                    await Future.forEach(widget.media,
-                                        (element) async {
-                                      if (element.isNotEmpty) {
-                                        try {
-                                          if (element.contains('.mp4')) {
-                                            await SaveMediaController
-                                                .saveNetworkVideo(
-                                                    context,
-                                                    element,
-                                                    widget.data.description ??
-                                                        "macanacki");
-                                          } else {
-                                            await SaveMediaController
-                                                .saveNetworkImage(
-                                                    context,
-                                                    element,
-                                                    widget.data.description ??
-                                                        "macanacki");
-                                          }
-                                        } catch (e) {
-                                          debugPrint(e.toString());
-                                        }
-                                      }
-                                    });
-                                  } else {
-                                    if (widget.data.media!.first
-                                        .contains('.mp4')) {
-                                      emitter(widget.media.first);
-                                      await SaveMediaController
-                                          .saveNetworkVideo(
-                                              context,
-                                              widget.data.media!.first,
-                                              widget.data.description ??
-                                                  "macanacki");
-                                    } else if (widget.data.media!.first
-                                        .contains('.mp3')) {
-                                      await SaveMediaController
-                                          .saveNetworkAudio(
-                                              context,
-                                              widget.data.media!.first,
-                                              widget.data.description ??
-                                                  "macanacki");
-                                    } else {
-                                      await SaveMediaController
-                                          .saveNetworkImage(
-                                              context,
-                                              widget.data.media!.first,
-                                              widget.data.description ??
-                                                  "macanacki");
-                                    }
-                                  }
-                                } else {
-                                  downloadDiamondsModal(
-                                      context,
-                                      widget.data.id!,
-                                      widget.data.media!.first.contains(".mp3")
-                                          ? true
-                                          : false);
-                                }
-                              },
-                              child: Container(
-                                height: 25,
-                                width: 25,
-                                child: SvgPicture.asset(
-                                  "assets/icon/d.svg",
-                                  color: HexColor(backgroundColor),
-                                ),
-                              )),
+                      // widget.data.media!.first.contains(".mp3")
+                      //     ? SizedBox.shrink()
+                      //     : GestureDetector(
+                      //         onTap: () async {
+                      //           if (widget.data.user!.username! ==
+                      //               user.userProfileModel.username) {
+                      //             if (widget.media.length > 1) {
+                      //               await Future.forEach(widget.media,
+                      //                   (element) async {
+                      //                 if (element.isNotEmpty) {
+                      //                   try {
+                      //                     if (element.contains('.mp4')) {
+                      //                       await SaveMediaController
+                      //                           .saveNetworkVideo(
+                      //                               context,
+                      //                               element,
+                      //                               widget.data.description ??
+                      //                                   "macanacki");
+                      //                     } else {
+                      //                       await SaveMediaController
+                      //                           .saveNetworkImage(
+                      //                               context,
+                      //                               element,
+                      //                               widget.data.description ??
+                      //                                   "macanacki");
+                      //                     }
+                      //                   } catch (e) {
+                      //                     debugPrint(e.toString());
+                      //                   }
+                      //                 }
+                      //               });
+                      //             } else {
+                      //               if (widget.data.media!.first
+                      //                   .contains('.mp4')) {
+                      //                 emitter(widget.media.first);
+                      //                 await SaveMediaController
+                      //                     .saveNetworkVideo(
+                      //                         context,
+                      //                         widget.data.media!.first,
+                      //                         widget.data.description ??
+                      //                             "macanacki");
+                      //               } else if (widget.data.media!.first
+                      //                   .contains('.mp3')) {
+                      //                 await SaveMediaController
+                      //                     .saveNetworkAudio(
+                      //                         context,
+                      //                         widget.data.media!.first,
+                      //                         widget.data.description ??
+                      //                             "macanacki");
+                      //               } else {
+                      //                 await SaveMediaController
+                      //                     .saveNetworkImage(
+                      //                         context,
+                      //                         widget.data.media!.first,
+                      //                         widget.data.description ??
+                      //                             "macanacki");
+                      //               }
+                      //             }
+                      //           } else {
+                      //             downloadDiamondsModal(
+                      //                 context,
+                      //                 widget.data.id!,
+                      //                 widget.data.media!.first.contains(".mp3")
+                      //                     ? true
+                      //                     : false);
+                      //           }
+                      //         },
+                      //         child: Container(
+                      //           height: 25,
+                      //           width: 25,
+                      //           child: SvgPicture.asset(
+                      //             "assets/icon/d.svg",
+                      //             color: HexColor(backgroundColor),
+                      //           ),
+                      //         )),
                     ],
                   ),
 

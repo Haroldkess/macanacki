@@ -5,6 +5,7 @@ import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:http/http.dart' as http;
+import 'package:macanacki/preload/preload_controller.dart';
 import '../../../model/feed_post_model.dart';
 import '../../../presentation/widgets/debug_emitter.dart';
 import '../../backoffice/feed_post_office.dart';
@@ -38,6 +39,7 @@ class FriendWare extends GetxController {
     }
 
     List<FeedPost> _moreFeedPosts = [];
+    final preloadController = PreloadController.to;
 
     try {
       http.Response? response = await getFriendsPost(pageNum).whenComplete(
@@ -51,6 +53,13 @@ class FriendWare extends GetxController {
         var jsonData = jsonDecode(response.body);
 
         var incomingData = FeedData.fromJson(jsonData["data"]);
+
+        // Martins
+        if(incomingData.data != null){
+          for (var element in incomingData.data!) {
+            preloadController.addPreload(id: element.id!, vod: element.vod!);
+          }
+        }
         friends.value = incomingData;
         //  _feedData.data!.shuffle();
         //emitter(pageNum.toString());

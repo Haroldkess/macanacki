@@ -12,8 +12,14 @@ Future<http.Response?> getFeedPost(int pageNum) async {
   String? token = pref.getString(tokenKey);
   http.Response? response;
   try {
+
+   //https://api.macanacki.com/api/v2/post/latest?page={page_number},
+    //v2/post/videos/list
+    //Uri.parse('$baseUrl/public/api/post/latest?page=$pageNum'),
+    //Uri.parse('https://api.macanacki.com/public/api/v2/user/e1/public/user/posts/tholscoa?type=videos_images&page=$pageNum'),
+    //Uri.parse('https://api.macanacki.com/public/api/v2/user/public/user/posts/tholscoa?type=videos_images&page=1'),
     response = await http.get(
-      Uri.parse('$baseUrl/public/api/post/latest?page=$pageNum'),
+      Uri.parse('$baseUrl/public/api/v2/post/latest?page=$pageNum'),
       headers: {
         HttpHeaders.contentTypeHeader: "application/json",
         HttpHeaders.authorizationHeader: "Bearer $token",
@@ -22,6 +28,7 @@ Future<http.Response?> getFeedPost(int pageNum) async {
     //  log(response.statusCode.toString());
     //   log(response.body.toString());
   } catch (e) {
+    print("000000000000000000000000000000000000 Errorrrrrrrrrr");
     response = null;
   }
   return response;

@@ -201,27 +201,27 @@ class AllProfileActions extends StatelessWidget {
               ],
             ),
           ),
-          // CupertinoActionSheetAction(
-          //   onPressed: () {
-          //     //Navigator.pop(context);
-          //     OperationsExt.pickVideoForPost(context);
-          //   },
-          //   child: Row(
-          //     children: [
-          //       Icon(
-          //         Icons.videocam_outlined,
-          //         color: HexColor(primaryColor),
-          //       ),
-          //       SizedBox(width: 10),
-          //       AppText(
-          //         text: "Post Videos",
-          //         fontWeight: FontWeight.w400,
-          //         size: 18,
-          //         color: HexColor("#797979"),
-          //       ),
-          //     ],
-          //   ),
-          // ),
+          CupertinoActionSheetAction(
+            onPressed: () {
+              //Navigator.pop(context);
+              OperationsExt.pickVideoForPost(context);
+            },
+            child: Row(
+              children: [
+                Icon(
+                  Icons.videocam_outlined,
+                  color: HexColor(primaryColor),
+                ),
+                SizedBox(width: 10),
+                AppText(
+                  text: "Post Videos",
+                  fontWeight: FontWeight.w400,
+                  size: 18,
+                  color: HexColor("#797979"),
+                ),
+              ],
+            ),
+          ),
           CupertinoActionSheetAction(
             onPressed: () {
               //Navigator.pop(context);
