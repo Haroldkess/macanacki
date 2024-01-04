@@ -24,7 +24,8 @@ class GifterView extends StatelessWidget {
       child: Container(
         height: 100,
         decoration: BoxDecoration(
-            color: Colors.white, borderRadius: BorderRadius.circular(5)),
+            color: HexColor(backgroundColor),
+            borderRadius: BorderRadius.circular(5)),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(
@@ -53,17 +54,17 @@ class GifterView extends StatelessWidget {
                                 maxLines: 1,
                                 text: TextSpan(
                                     text: "${data.sender!.username}",
-                                    style: GoogleFonts.leagueSpartan(
-                                        textStyle: const TextStyle(
+                                    style: GoogleFonts.roboto(
+                                        textStyle: TextStyle(
                                             fontWeight: FontWeight.w700,
-                                            color: Colors.black,
+                                            color: textWhite,
                                             decorationStyle:
                                                 TextDecorationStyle.solid,
                                             fontSize: 13)),
                                     children: [
                                       TextSpan(
                                         text: "",
-                                        style: GoogleFonts.leagueSpartan(
+                                        style: GoogleFonts.roboto(
                                             textStyle: const TextStyle(
                                                 fontWeight: FontWeight.w400,
                                                 color: Colors.black,
@@ -82,6 +83,9 @@ class GifterView extends StatelessWidget {
                                       // )
                                     ])),
                           ),
+                          SizedBox(
+                            width: 4,
+                          ),
                           data.sender!.verified == 1
                               ? SvgPicture.asset(
                                   "assets/icon/badge.svg",
@@ -99,7 +103,8 @@ class GifterView extends StatelessWidget {
                             "${Numeral(data.sender!.noOfFollowers!).format()} followers",
                         fontWeight: FontWeight.w500,
                         size: 10,
-                        color: HexColor("#0597FF"),
+                        color: Colors.green,
+                        // color: HexColor("#0597FF"),
                       ),
                       const SizedBox(
                         height: 5,
@@ -141,7 +146,7 @@ class GifterView extends StatelessWidget {
         HexagonWidget.pointy(
           width: w,
           elevation: 2.0,
-          color: Colors.white,
+          color: backgroundSecondary,
           cornerRadius: 20.0,
           child: AspectRatio(
             aspectRatio: HexagonType.POINTY.ratio,
@@ -198,31 +203,36 @@ class GifterView extends StatelessWidget {
   Widget giftButton(String title, bool isColor) {
     return Container(
       decoration: BoxDecoration(
-          color: HexColor(primaryColor),
-          border: Border.all(width: 1, color: HexColor(primaryColor)),
-          borderRadius: BorderRadius.circular(15),
+          color: backgroundSecondary,
+          border: Border.all(
+            width: 1,
+          ),
+          borderRadius: BorderRadius.circular(8),
           shape: BoxShape.rectangle),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
         child: Row(
           children: [
-            AppText(
-              text: "${Numeral(num.tryParse(title.toString())!).format()}",
-              color: HexColor(backgroundColor),
-              size: 14,
-              fontWeight: FontWeight.w600,
-            ),
             const SizedBox(
               width: 2,
             ),
             Padding(
-              padding: const EdgeInsets.only(bottom: 3),
+              padding: const EdgeInsets.only(bottom: 0),
               child: SvgPicture.asset(
                 "assets/icon/diamond.svg",
                 height: 13,
                 width: 13,
                 //   color: HexColor(diamondColor),
               ),
+            ),
+            const SizedBox(
+              width: 2,
+            ),
+            AppText(
+              text: "${Numeral(num.tryParse(title.toString())!).format()}",
+              color: textWhite,
+              size: 14,
+              fontWeight: FontWeight.w600,
             ),
           ],
         ),

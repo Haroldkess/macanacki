@@ -159,13 +159,12 @@ class PlanBox2 extends StatelessWidget {
         width: 103,
         decoration: BoxDecoration(
             color: plans.mostPopular == 1
-                ? HexColor(backgroundColor)
-                : HexColor("#F5F2F9"),
+                ? backgroundSecondary
+                : backgroundSecondary,
             shape: BoxShape.rectangle,
             border: Border.all(
-              color: stream.index == index
-                  ? HexColor(primaryColor)
-                  : HexColor("#F5F2F9"),
+              color:
+                  stream.index == index ? secondaryColor : backgroundSecondary,
             ),
             borderRadius: const BorderRadius.all(Radius.circular(12))),
         child: Column(
@@ -176,7 +175,7 @@ class PlanBox2 extends StatelessWidget {
               width: 95,
               height: 19,
               decoration: BoxDecoration(
-                  color: HexColor(primaryColor),
+                  color: secondaryColor,
                   shape: BoxShape.rectangle,
                   borderRadius: const BorderRadius.only(
                     bottomLeft: Radius.circular(11.5),
@@ -187,7 +186,7 @@ class PlanBox2 extends StatelessWidget {
               child: Center(
                 child: AppText(
                   text: "Subscription",
-                  color: HexColor(backgroundColor),
+                  color: textWhite,
                   size: 8,
                   fontWeight: FontWeight.w400,
                   align: TextAlign.center,
@@ -197,9 +196,9 @@ class PlanBox2 extends StatelessWidget {
             Center(
               child: AppText(
                 text: "Monthly",
-                color: HexColor(primaryColor),
+                color: textPrimary,
                 size: 14,
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w800,
                 align: TextAlign.center,
               ),
             ),
@@ -208,8 +207,8 @@ class PlanBox2 extends StatelessWidget {
               child: AppText(
                 text: "\$${plans.amount.toString()}",
                 size: 14,
-                fontWeight: FontWeight.w600,
-                color: HexColor("#222222"),
+                fontWeight: FontWeight.w800,
+                color: textWhite,
                 align: TextAlign.center,
               ),
             ),

@@ -65,13 +65,14 @@ class _SelectCategoryState extends State<SelectCategory> {
                           align: TextAlign.center,
                           size: 30,
                           fontWeight: FontWeight.w700,
+                          color: textWhite,
                         )),
                   ],
                 ),
               ),
             ),
             stream.loadStatus
-                ? Loader(color: HexColor(primaryColor))
+                ? Loader(color: textWhite)
                 : Column(
                     children: [
                       forms(context, "Search category", const SizedBox.shrink(),
@@ -86,7 +87,7 @@ class _SelectCategoryState extends State<SelectCategory> {
                                 SizedBox(
                                   height: 300,
                                   child: stream.loadStatus
-                                      ? Loader(color: HexColor(primaryColor))
+                                      ? Loader(color: textPrimary)
                                       : StreamBuilder(
                                           stream: null,
                                           builder: (context, snapshot) {
@@ -118,9 +119,9 @@ class _SelectCategoryState extends State<SelectCategory> {
                   child: AppButton(
                       width: 0.8,
                       height: 0.06,
-                      color: primaryColor,
+                      color: "#ffffff",
                       text: "Continue",
-                      backColor: primaryColor,
+                      backColor: "#ffffff",
                       curves: buttonCurves * 5,
                       textColor: backgroundColor,
                       onTap: () async {
@@ -147,12 +148,13 @@ class _SelectCategoryState extends State<SelectCategory> {
     return AppForm(
       hint: hint,
       borderRad: 0,
-      backColor: HexColor(backgroundColor),
+      backColor: backgroundSecondary,
       height: 56,
       fontSize: 13,
-      hintColor: Colors.black45,
+      hintColor: textPrimary,
       suffix: suffix,
       prefix: prefix,
+      textColor: textWhite,
       textInputType: type,
       controller: controller,
       input: input,
@@ -204,7 +206,7 @@ class _SelectCategoryState extends State<SelectCategory> {
                                       text: e.name!,
                                       size: 12,
                                       fontWeight: FontWeight.w400,
-                                      color: Colors.black87,
+                                      color: textPrimary,
                                     ),
                                   )
                                 ],

@@ -17,12 +17,18 @@ class NoSearchFound extends StatelessWidget {
           const SizedBox(
             height: 44,
           ),
-          SvgPicture.asset(
-            "assets/icon/nouser.svg",
-            // color: HexColor(primaryColor),
+          // SvgPicture.asset(
+          //   "assets/icon/nouser.svg",
+          //   // color: Colors.red,
+          // ),
+
+          Icon(
+            Icons.warning,
+            color: Colors.red,
+            size: 50,
           ),
           const SizedBox(
-            height: 30.7,
+            height: 15,
           ),
           AppText(
             text: "No Username Found",
@@ -30,15 +36,15 @@ class NoSearchFound extends StatelessWidget {
             size: 24,
             color: HexColor("#8B8B8B"),
           ),
-          const SizedBox(
-            height: 40,
-          ),
-          AppText(
-            text: "Please enter a valid username ",
-            fontWeight: FontWeight.w400,
-            size: 16,
-            color: HexColor("#222222"),
-          ),
+          // const SizedBox(
+          //   height: 40,
+          // ),
+          // AppText(
+          //   text: "Please enter a valid username ",
+          //   fontWeight: FontWeight.w400,
+          //   size: 16,
+          //   color: textPrimary,
+          // ),
         ],
       ),
     );

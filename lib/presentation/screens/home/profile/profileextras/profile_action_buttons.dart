@@ -31,18 +31,16 @@ class ProfileActionButton extends StatelessWidget {
       onTap: onClick,
       child: Card(
         elevation: 10,
+        color: Colors.grey.shade900,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(80),
           //set border radius more than 50% of height and width to make circle
         ),
-        child: Container(
-          decoration: BoxDecoration(shape: BoxShape.circle),
-          child: Padding(
-            padding: EdgeInsets.all(icon == "assets/icon/post.svg" ? 11 : 8.0),
-            child: SvgPicture.asset(
-              icon,
-              color: HexColor(color),
-            ),
+        child: Padding(
+          padding: EdgeInsets.all(icon == "assets/icon/post.svg" ? 11 : 8.0),
+          child: SvgPicture.asset(
+            icon,
+            color: HexColor(color),
           ),
         ),
       ),
@@ -111,12 +109,13 @@ class AllProfileActions extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 ProfileActionButton(
-                  icon: "assets/icon/post.svg",
-                  onClick: () {
-                    _showActionSheet(context);
-                  },
-                  color: "#F94C84",
-                ),
+                    icon: "assets/icon/post.svg",
+                    onClick: () {
+                      _showActionSheet(context);
+                    },
+                    color: "#FFFFFF"
+                    //"#F94C84",
+                    ),
                 const SizedBox(
                   height: 5,
                 ),

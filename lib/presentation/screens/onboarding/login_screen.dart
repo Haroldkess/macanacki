@@ -106,7 +106,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   fontWeight: FontWeight.w400,
                   size: 20,
                   align: TextAlign.center,
-                  color: HexColor(backgroundColor),
+                  color: textWhite,
                 ),
                 // AppText(
                 //   text: "usertagname@email.com",
@@ -136,7 +136,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               size: 24,
                               maxLines: 3,
                               overflow: TextOverflow.ellipsis,
-                              color: HexColor(backgroundColor),
+                              color: textWhite,
                               fontWeight: FontWeight.w400,
                             ),
                           ),
@@ -172,7 +172,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 AppText(
                                   text: "Email",
                                   size: 14,
-                                  color: HexColor(backgroundColor),
+                                  color: textWhite,
                                   fontWeight: FontWeight.w400,
                                 ),
                               ],
@@ -195,18 +195,18 @@ class _LoginScreenState extends State<LoginScreen> {
                                       ? null
                                       : "Enter a valid email";
                                 },
-                                style: GoogleFonts.leagueSpartan(
+                                style: GoogleFonts.roboto(
                                   //   color: HexColor('#F5F2F9'),
-                                  color: Colors.black,
+                                  color: HexColor(backgroundColor),
                                   fontSize: 16,
                                 ),
                                 decoration: InputDecoration(
                                   contentPadding:
                                       const EdgeInsets.only(left: 20),
                                   hintText: "Enter your email here",
-                                  hintStyle: GoogleFonts.leagueSpartan(
+                                  hintStyle: GoogleFonts.roboto(
                                       // color: HexColor('#F5F2F9'),
-                                      color: Colors.black,
+                                      color: HexColor(backgroundColor),
                                       fontSize: 16),
                                   border: InputBorder.none,
                                   enabledBorder: InputBorder.none,
@@ -223,7 +223,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 AppText(
                                   text: "Password",
                                   size: 14,
-                                  color: HexColor(backgroundColor),
+                                  color: textWhite,
                                   fontWeight: FontWeight.w400,
                                 ),
                               ],
@@ -311,7 +311,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       child: AppText(
                                         text: "Forgot Password?",
                                         size: 12,
-                                        color: HexColor(backgroundColor),
+                                        color: textWhite,
                                         fontWeight: FontWeight.w400,
                                       ),
                                     ),
@@ -344,11 +344,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           : AppButton(
                               width: 0.8,
                               height: 0.06,
-                              color: backgroundColor,
+                              color: "#FFFFFF",
                               text: "Continue",
-                              backColor: backgroundColor,
+                              backColor: "#FFFFFF",
                               curves: buttonCurves * 5,
-                              textColor: "#000000",
+                              textColor: backgroundColor,
                               onTap: () async {
                                 _submit(context);
                                 // PageRouting.pushToPage(
@@ -375,7 +375,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             },
                             child: AppText(
                               text: " SignUp",
-                              color: HexColor(backgroundColor),
+                              color: textWhite,
                             ),
                           )
                         ],

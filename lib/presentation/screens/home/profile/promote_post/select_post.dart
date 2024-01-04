@@ -16,6 +16,7 @@ Future selectPost(BuildContext context, List<ProfileFeedDatum> post) async {
   return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      backgroundColor: backgroundSecondary,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (context) => Padding(
@@ -46,7 +47,7 @@ Future selectPost(BuildContext context, List<ProfileFeedDatum> post) async {
                         children: [
                           AppText(
                             text: "Select Post",
-                            color: HexColor(darkColor),
+                            color: textWhite,
                             size: 16,
                             fontWeight: FontWeight.w700,
                           ),
@@ -64,7 +65,7 @@ Future selectPost(BuildContext context, List<ProfileFeedDatum> post) async {
                                     const EdgeInsets.symmetric(vertical: 7),
                                 child: InkWell(
                                   onTap: () async {
-                                    print(e.description);
+                                    //  print(e.description);
                                     Navigator.pop(context, e);
                                   },
                                   child: SizedBox(
@@ -101,12 +102,14 @@ Future selectPost(BuildContext context, List<ProfileFeedDatum> post) async {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               AppText(
-                                                text: e.description ??
-                                                    "NO DESCRIPTION",
+                                                text: e.description == null ||
+                                                        e.description!.isEmpty
+                                                    ? "NO DESCRIPTION"
+                                                    : e.description!,
                                                 fontWeight: FontWeight.w500,
                                                 size: 14,
                                                 maxLines: 2,
-                                                color: Colors.black,
+                                                color: textWhite,
                                                 overflow: TextOverflow.ellipsis,
                                               ),
                                             ],

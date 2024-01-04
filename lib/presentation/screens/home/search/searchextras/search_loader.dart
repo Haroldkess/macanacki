@@ -19,7 +19,8 @@ class SearchLoader extends StatelessWidget {
         Container(
           height: 100,
           decoration: BoxDecoration(
-              color: Colors.white, borderRadius: BorderRadius.circular(5)),
+              color: HexColor(backgroundColor),
+              borderRadius: BorderRadius.circular(5)),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Row(

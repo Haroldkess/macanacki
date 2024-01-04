@@ -17,6 +17,7 @@ import 'package:macanacki/services/middleware/user_profile_ware.dart';
 import 'package:provider/provider.dart';
 
 import '../../../operations.dart';
+import 'editprofileextra/website.dart';
 
 class EditProfile extends StatefulWidget {
   final String? aboutMe;
@@ -35,11 +36,13 @@ class _EditProfileState extends State<EditProfile> {
   late TextEditingController about;
 
   late TextEditingController phone;
+  late TextEditingController website = TextEditingController(text: "");
   @override
   void initState() {
     super.initState();
     about = TextEditingController(text: widget.aboutMe ?? "");
     phone = TextEditingController(text: widget.phone ?? "");
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       UserProfileWare user =
           Provider.of<UserProfileWare>(context, listen: false);
@@ -50,7 +53,7 @@ class _EditProfileState extends State<EditProfile> {
       });
     });
 
-  //  Operations.controlSystemColor();
+    //  Operations.controlSystemColor();
   }
 
   @override
@@ -66,21 +69,21 @@ class _EditProfileState extends State<EditProfile> {
             text: 'Profile',
             fontWeight: FontWeight.w400,
             size: 24,
-            color: Colors.black,
+            color: textWhite,
           ),
           centerTitle: true,
           backgroundColor: HexColor(backgroundColor),
           elevation: 0,
-          leading: BackButton(color: Colors.black),
+          leading: BackButton(color: textWhite),
         ),
         body: Container(
           height: height,
           width: width,
-          color: HexColor("#F5F2F9"),
+          color: backgroundSecondary,
           child: SingleChildScrollView(
             child: Column(
               children: [
-                const ProfilePicture(),
+                // const ProfilePicture(),
                 const SizedBox(
                   height: 20,
                 ),
@@ -92,27 +95,33 @@ class _EditProfileState extends State<EditProfile> {
                         about: about,
                       ),
                       const SizedBox(
-                        height: 30,
+                        height: 15,
                       ),
                       MyPhone(
                         phone: phone,
                       ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      MyWebsite(
+                        phone: website,
+                      ),
                       // EditSelectGender(),
-                      SizedBox(
-                        height: 30,
+                      const SizedBox(
+                        height: 15,
                       ),
                       Column(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(bottom: 16, left: 30),
+                            padding:
+                                const EdgeInsets.only(bottom: 16, left: 30),
                             child: Row(
                               children: [
                                 AppText(
-                                  text: "Your Location",
-                                  fontWeight: FontWeight.w600,
-                                  size: 17,
-                                  color: HexColor("#0C0C0C"),
-                                )
+                                    text: "Your Location",
+                                    fontWeight: FontWeight.w600,
+                                    size: 17,
+                                    color: textPrimary)
                               ],
                             ),
                           ),
@@ -126,16 +135,16 @@ class _EditProfileState extends State<EditProfile> {
                                 user.userProfileModel.city ?? "Select city",
                             currentState:
                                 user.userProfileModel.state ?? "Select state",
-                            currentCountry:
-                                user.userProfileModel.country ?? "Select country",
+                            currentCountry: user.userProfileModel.country ??
+                                "Select country",
                             flagState: CountryFlag.DISABLE,
                             onCountryChanged: (country) {
-                               if(country  != "Select country"){
-                              setState(() {
-                                selectedCountry = country;
-                              });
-                                }
-    
+                              if (country != "Select country") {
+                                setState(() {
+                                  selectedCountry = country;
+                                });
+                              }
+
                               // log(country);
                             },
                             onStateChanged: (state) {
@@ -155,7 +164,7 @@ class _EditProfileState extends State<EditProfile> {
                           ),
                         ],
                       ),
-    
+
                       //  EditStudies(),
                       // SizedBox(
                       //   height: 30,
@@ -168,16 +177,19 @@ class _EditProfileState extends State<EditProfile> {
                   height: 50,
                 ),
                 stream.loadStatus
-                    ? Loader(color: HexColor(primaryColor))
+                    ? Loader(color: textWhite)
                     : AppButton(
                         width: 0.8,
                         height: 0.09,
-                        color: primaryColor,
+                        color: backgroundColor,
                         text: "Save",
-                        backColor: primaryColor,
+                        backColor: backgroundColor,
                         onTap: () => submit(context),
                         curves: 40,
-                        textColor: backgroundColor)
+                        textColor: "#FFFFFF"),
+                const SizedBox(
+                  height: 50,
+                ),
               ],
             ),
           ),

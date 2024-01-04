@@ -26,6 +26,7 @@ addBankModal(
   return showModalBottomSheet(
       context: cont,
       isScrollControlled: true,
+      backgroundColor: HexColor(backgroundColor),
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (context) {
@@ -63,6 +64,7 @@ addBankModal(
                           text: "$name",
                           size: 17,
                           fontWeight: FontWeight.w400,
+                          color: textWhite,
                         ),
                         SizedBox(
                           height: 10,
@@ -72,6 +74,7 @@ addBankModal(
                           size: 13,
                           fontWeight: FontWeight.w400,
                           align: TextAlign.center,
+                          color: textPrimary,
                         ),
                       ],
                     ),
@@ -80,13 +83,16 @@ addBankModal(
                     height: 38,
                   ),
                   Container(
-                    color: Color(0xFFF5F2F8),
+                    color: backgroundSecondary,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Column(children: [
-                        AppForm(
+                        SizedBox(
+                          height: 10,
+                        ),
+                        AppFormAccount(
                           borderRad: 5.0,
-                          backColor: HexColor(backgroundColor),
+                          backColor: Colors.transparent,
                           hint: "Account Number",
                           hintColor: HexColor("#C0C0C0"),
                           controller: number,
@@ -95,9 +101,9 @@ addBankModal(
                         SizedBox(
                           height: 20,
                         ),
-                        AppForm(
+                        AppFormAccount(
                           borderRad: 5.0,
-                          backColor: HexColor(backgroundColor),
+                          backColor: Colors.transparent,
                           hint: "Account Name",
                           hintColor: HexColor("#C0C0C0"),
                           controller: accountName,
@@ -110,17 +116,16 @@ addBankModal(
                               ? Visibility(
                                   visible: tapped.value,
                                   child: Center(
-                                    child:
-                                        Loader(color: HexColor(primaryColor)),
+                                    child: Loader(color: textWhite),
                                   ))
                               : AppButton(
                                   width: 0.8,
                                   height: 0.06,
-                                  color: primaryColor,
+                                  color: backgroundColor,
                                   text: "Add bank",
-                                  backColor: primaryColor,
+                                  backColor: backgroundColor,
                                   curves: buttonCurves * 5,
-                                  textColor: backgroundColor,
+                                  textColor: "#FFFFFF",
                                   onTap: () async {
                                     if (number.text.isEmpty ||
                                         accountName.text.isEmpty) {

@@ -64,7 +64,8 @@ class UserResultTile extends StatelessWidget {
       child: Container(
         height: 100,
         decoration: BoxDecoration(
-            color: Colors.white, borderRadius: BorderRadius.circular(5)),
+            color: HexColor(backgroundColor),
+            borderRadius: BorderRadius.circular(5)),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(
@@ -92,17 +93,17 @@ class UserResultTile extends StatelessWidget {
                                 overflow: TextOverflow.ellipsis,
                                 text: TextSpan(
                                     text: data.username ?? "...",
-                                    style: GoogleFonts.leagueSpartan(
-                                        textStyle: const TextStyle(
+                                    style: GoogleFonts.roboto(
+                                        textStyle: TextStyle(
                                             fontWeight: FontWeight.w700,
-                                            color: Colors.black,
+                                            color: textWhite,
                                             decorationStyle:
                                                 TextDecorationStyle.solid,
                                             fontSize: 12)),
                                     children: [
                                       TextSpan(
                                         text: "",
-                                        style: GoogleFonts.leagueSpartan(
+                                        style: GoogleFonts.roboto(
                                             textStyle: const TextStyle(
                                                 fontWeight: FontWeight.w400,
                                                 color: Colors.black,
@@ -122,6 +123,9 @@ class UserResultTile extends StatelessWidget {
                                       // )
                                     ])),
                           ),
+                          SizedBox(
+                            width: 4,
+                          ),
                           data.verified == 1 && data.activePlan != sub
                               ? SvgPicture.asset("assets/icon/badge.svg",
                                   height: 15, width: 15)
@@ -136,7 +140,8 @@ class UserResultTile extends StatelessWidget {
                             "${Numeral(data.noOfFollowers!).format()} followers",
                         fontWeight: FontWeight.w500,
                         size: 10,
-                        color: HexColor("#0597FF"),
+                        color: Colors.green,
+                        //   color: HexColor("#0597FF"),
                       ),
                     ],
                   ),
@@ -144,17 +149,18 @@ class UserResultTile extends StatelessWidget {
               ),
               Expanded(
                 child: Align(
-                  alignment: Alignment.centerRight,
-                  child: user.userProfileModel.username == data.username
-                      ? const SizedBox.shrink()
-                      : InkWell(
-                          onTap: () {
-                            followAction(context);
-                          },
-                          child: !stream.followIds.contains(data.id!)
-                              ? followCardButton("Follow", true)
-                              : unfollowCardButton("Unfollow")),
-                ),
+                    alignment: Alignment.centerRight, child: SizedBox.shrink()
+
+                    //  user.userProfileModel.username == data.username
+                    //     ? const SizedBox.shrink()
+                    //     : InkWell(
+                    //         onTap: () {
+                    //           followAction(context);
+                    //         },
+                    //         child: !stream.followIds.contains(data.id!)
+                    //             ? followCardButton("Follow", true)
+                    //             : unfollowCardButton("Unfollow")),
+                    ),
               )
             ],
           ),
@@ -181,7 +187,7 @@ class UserResultTile extends StatelessWidget {
         HexagonWidget.pointy(
           width: w,
           elevation: 2.0,
-          color: Colors.white,
+          color: backgroundSecondary,
           cornerRadius: 20.0,
           child: AspectRatio(
             aspectRatio: HexagonType.POINTY.ratio,

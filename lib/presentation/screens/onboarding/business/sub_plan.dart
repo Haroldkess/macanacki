@@ -73,9 +73,9 @@ class _SubscriptionPlansBusinessState extends State<SubscriptionPlansBusiness> {
     PlanWare plans = context.watch<PlanWare>();
 
     return Scaffold(
-      backgroundColor: HexColor(darkColor),
+      backgroundColor: backgroundSecondary,
       appBar: AppBar(
-        backgroundColor: HexColor(darkColor),
+        backgroundColor: backgroundSecondary,
         elevation: 0,
         automaticallyImplyLeading: false,
         actions: [
@@ -103,7 +103,7 @@ class _SubscriptionPlansBusinessState extends State<SubscriptionPlansBusiness> {
       ),
       body: Center(
         child: Container(
-          height: height,
+          height: height * 0.76,
           width: width * 0.9,
           decoration: BoxDecoration(
               color: HexColor(backgroundColor),
@@ -113,12 +113,12 @@ class _SubscriptionPlansBusinessState extends State<SubscriptionPlansBusiness> {
             children: [
               Container(
                 // color: Colors.amber,
-                //height: 320,
+                // height: 320,
                 child: Stack(
                   //  alignment: Alignment.topCenter,
                   children: [
                     CustomPaint(
-                      size: Size((width).toDouble(), (300).toDouble()),
+                      size: Size((width).toDouble(), (220).toDouble()),
                       painter: RPSCustomPainter(),
                     ),
                     Container(
@@ -137,10 +137,10 @@ class _SubscriptionPlansBusinessState extends State<SubscriptionPlansBusiness> {
                                 text: "Subscription Plan",
                                 size: 17,
                                 fontWeight: FontWeight.w700,
-                                color: HexColor(backgroundColor),
+                                color: textWhite,
                               ),
                               const SizedBox(
-                                height: 10,
+                                height: 5,
                               ),
                             ],
                           ),
@@ -150,7 +150,10 @@ class _SubscriptionPlansBusinessState extends State<SubscriptionPlansBusiness> {
                             child: CircleAvatar(
                               radius: 25,
                               backgroundColor: Colors.white,
-                              child: SvgPicture.asset("assets/icon/key.svg"),
+                              child: SvgPicture.asset(
+                                "assets/icon/key.svg",
+                                color: secondaryColor,
+                              ),
                             ),
                           ),
                           // SizedBox(
@@ -165,20 +168,21 @@ class _SubscriptionPlansBusinessState extends State<SubscriptionPlansBusiness> {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
-                  //  color: Colors.amber,
-                  height: 420,
+                  // color: Colors.amber,
+                  height: 390,
                   child: Padding(
-                    padding: const EdgeInsets.only(bottom: 0, top: 10),
+                    padding: const EdgeInsets.only(bottom: 0, top: 30),
                     child: Align(
                       alignment: Alignment.bottomCenter,
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Container(
                             width: width * 0.8,
                             alignment: Alignment.center,
                             child: Column(
                               //  crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
                               children: [
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -187,7 +191,7 @@ class _SubscriptionPlansBusinessState extends State<SubscriptionPlansBusiness> {
                                       text: widget.isBusiness
                                           ? "Verified Businesses have blue checkmarks"
                                           : "Verified accounts have blue checkmarks",
-                                      color: HexColor(darkColor),
+                                      color: textWhite,
                                       size: 12,
                                       fontWeight: FontWeight.w700,
                                       align: TextAlign.start,
@@ -202,14 +206,14 @@ class _SubscriptionPlansBusinessState extends State<SubscriptionPlansBusiness> {
                                 AppText(
                                   text:
                                       "1. Premium access to exclusive features .",
-                                  color: HexColor(darkColor),
+                                  color: textPrimary,
                                   size: 12,
                                   fontWeight: FontWeight.w400,
                                   align: TextAlign.start,
                                 ),
                                 AppText(
                                   text: "2. Easier access to account support",
-                                  color: HexColor(darkColor),
+                                  color: textPrimary,
                                   size: 12,
                                   fontWeight: FontWeight.w400,
                                   align: TextAlign.start,
@@ -247,9 +251,9 @@ class _SubscriptionPlansBusinessState extends State<SubscriptionPlansBusiness> {
                               AppButton(
                                   width: 0.7,
                                   height: 0.06,
-                                  color: primaryColor,
+                                  color: "#ffffff",
                                   text: "Continue",
-                                  backColor: primaryColor,
+                                  backColor: "#ffffff",
                                   curves: buttonCurves * 5,
                                   textColor: backgroundColor,
                                   onTap: () async {
@@ -272,7 +276,7 @@ class _SubscriptionPlansBusinessState extends State<SubscriptionPlansBusiness> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   AppText(
-                                      text: "Not You? ", color: Colors.black),
+                                      text: "Not You? ", color: textPrimary),
                                   InkWell(
                                     onTap: () async {
                                       SharedPreferences pref =
@@ -307,8 +311,9 @@ class _SubscriptionPlansBusinessState extends State<SubscriptionPlansBusiness> {
                                                         TextOverflow.ellipsis))
                                           ],
                                         ),
-                                        backgroundColor: HexColor(primaryColor)
-                                            .withOpacity(.9),
+                                        backgroundColor:
+                                            HexColor(backgroundColor)
+                                                .withOpacity(.9),
                                         action: SnackBarAction(
                                             label: "Yes",
                                             textColor: Colors.white,
@@ -343,7 +348,7 @@ class _SubscriptionPlansBusinessState extends State<SubscriptionPlansBusiness> {
                                     },
                                     child: AppText(
                                       text: "Switch Account",
-                                      color: HexColor(primaryColor),
+                                      color: secondaryColor,
                                     ),
                                   )
                                 ],
@@ -366,9 +371,9 @@ class _SubscriptionPlansBusinessState extends State<SubscriptionPlansBusiness> {
 
 payModal(BuildContext context, PlanData plan, bool? isBusiness, bool isPayOnly,
     [String? id]) async {
-
-  List<Package> verificationPackages = await PayExt.fetchPackagesFromOfferings(identifier: 'verification');
-  if(!context.mounted) return;
+  List<Package> verificationPackages =
+      await PayExt.fetchPackagesFromOfferings(identifier: 'verification');
+  if (!context.mounted) return;
   await showModalBottomSheet(
     useRootNavigator: true,
     isDismissible: true,
@@ -381,27 +386,26 @@ payModal(BuildContext context, PlanData plan, bool? isBusiness, bool isPayOnly,
     builder: (BuildContext context) {
       return StatefulBuilder(
           builder: (BuildContext context, StateSetter setModalState) {
-            return FractionallySizedBox(
-              heightFactor: 0.95,
-              child: Paywall(
-                isOneTimePurchase: false,
-                showTermsOfUseAndPrivacyPolicy: true,
-                title: "Verification Packages",
-                description: "Unlock the full verification experience",
-                packages: verificationPackages,
-                onError: (String e){
-
-                  showToast2(context, "Payment not verified try again", isError: true);
-                  Navigator.pop(context);
-
-                },
-                onSucess: (){
-                  PaymentController.verifyOnServerExt(context, isBusiness, isPayOnly);
-                },
-
-              ),
-            );
-          });
+        return FractionallySizedBox(
+          heightFactor: 0.95,
+          child: Paywall(
+            isOneTimePurchase: false,
+            showTermsOfUseAndPrivacyPolicy: true,
+            title: "Verification Packages",
+            description: "Unlock the full verification experience",
+            packages: verificationPackages,
+            onError: (String e) {
+              showToast2(context, "Payment not verified try again",
+                  isError: true);
+              Navigator.pop(context);
+            },
+            onSucess: () {
+              PaymentController.verifyOnServerExt(
+                  context, isBusiness, isPayOnly);
+            },
+          ),
+        );
+      });
     },
   );
 }

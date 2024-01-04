@@ -201,30 +201,20 @@ class SinglePost extends StatelessWidget {
         : Stack(
             alignment: Alignment.center,
             children: [
-              Container(
-                width: width,
-                height: height,
-                decoration: BoxDecoration(color: Colors.black),
-              ),
               // Container(
-              //     width: width,
-              //     height: height,
-              //     decoration: BoxDecoration(
-              //         image: DecorationImage(
-              //       image: CachedNetworkImageProvider(
-              //         media,
-              //       ),
-              //       fit: BoxFit.fill,
-              //     )),
-              //     child: BackdropFilter(
-              //       filter: ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0),
-              //       child: Container(
-              //         decoration:
-              //             BoxDecoration(color: Colors.white.withOpacity(0.0)),
-              //       ),
-              //     )),
+              //   width: width,
+              //   height: height,
+              //   decoration: BoxDecoration(color: Colors.black),
+              // ),
+
               Padding(
-                padding: const EdgeInsets.only(top: 0),
+                padding: EdgeInsets.only(
+                    top: 0,
+                    bottom: data.btnLink != null && data.button != null
+                        ? 80
+                        : data.description!.isEmpty
+                            ? 10
+                            : 40),
                 child: GestureDetector(
                   onTap: () {
                     PageRouting.pushToPage(
@@ -236,11 +226,16 @@ class SinglePost extends StatelessWidget {
                             index: 0));
                   },
                   child: Container(
-                    height: 330,
+                    height: data.btnLink != null && data.button != null
+                        ? 380
+                        : data.description!.isEmpty
+                            ? 430
+                            : 410,
+                    //   height: 430,
+                    // height: data.description!.isEmpty ? Get.height : 400,
                     width: double.infinity,
                     //   color: Colors.amber,
-                    // decoration: BoxDecoration(
-                    //     border: Border.all(width: 2, color: Colors.amber)),
+
                     child: CachedNetworkImage(
                         imageUrl: media,
                         fit: BoxFit.fitWidth,
@@ -248,15 +243,16 @@ class SinglePost extends StatelessWidget {
                               width: width,
                               height: height,
                               decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15),
                                   image: DecorationImage(
-                                image: imageProvider,
-                                fit: BoxFit.fitWidth,
-                              )),
+                                    image: imageProvider,
+                                    fit: BoxFit.fitWidth,
+                                  )),
                             ),
                         progressIndicatorBuilder:
                             (context, url, downloadProgress) => Center(
                                     child: Loader(
-                                  color: HexColor(primaryColor),
+                                  color: textWhite,
                                 )),
                         errorWidget: (context, url, error) {
                           return CachedNetworkImage(
@@ -266,16 +262,15 @@ class SinglePost extends StatelessWidget {
                                     width: width,
                                     height: height,
                                     decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(15),
                                         image: DecorationImage(
-                                      image: imageProvider,
-                                      fit: BoxFit.fitWidth,
-                                    )),
+                                          image: imageProvider,
+                                          fit: BoxFit.fitWidth,
+                                        )),
                                   ),
                               progressIndicatorBuilder:
-                                  (context, url, downloadProgress) => Center(
-                                          child: Loader(
-                                        color: HexColor(primaryColor),
-                                      )),
+                                  (context, url, downloadProgress) =>
+                                      Center(child: Loader(color: textWhite)),
                               errorWidget: (context, url, error) {
                                 return SizedBox();
                               });
@@ -555,7 +550,13 @@ class UserSinglePost extends StatelessWidget {
               //       ),
               //     )),
               Padding(
-                padding: const EdgeInsets.only(top: 0),
+                padding: EdgeInsets.only(
+                    top: 0,
+                    bottom: data.btnLink != null && data.button != null
+                        ? 80
+                        : data.description!.isEmpty
+                            ? 10
+                            : 40),
                 child: GestureDetector(
                   onTap: () {
                     PageRouting.pushToPage(
@@ -567,7 +568,12 @@ class UserSinglePost extends StatelessWidget {
                             index: 0));
                   },
                   child: Container(
-                    height: 330,
+                    // height: 330,
+                    height: data.btnLink != null && data.button != null
+                        ? 380
+                        : data.description!.isEmpty
+                            ? 430
+                            : 410,
                     width: double.infinity,
                     child: CachedNetworkImage(
                       imageUrl: media,
@@ -576,16 +582,16 @@ class UserSinglePost extends StatelessWidget {
                         width: width,
                         height: height,
                         decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
                             image: DecorationImage(
-                          image: imageProvider,
-                          fit: BoxFit.fitWidth,
-                          //  fit: BoxFit.fill,
-                        )),
+                              image: imageProvider,
+                              fit: BoxFit.fitWidth,
+                            )),
                       ),
                       progressIndicatorBuilder:
                           (context, url, downloadProgress) => Center(
                               child: Loader(
-                        color: HexColor(primaryColor),
+                        color: textPrimary,
                       )),
                       errorWidget: (context, url, error) => CachedNetworkImage(
                           imageUrl: media,
@@ -594,16 +600,16 @@ class UserSinglePost extends StatelessWidget {
                                 width: width,
                                 height: height,
                                 decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15),
                                     image: DecorationImage(
-                                  image: imageProvider,
-                                  fit: BoxFit.fitWidth,
-                                  //  fit: BoxFit.fill,
-                                )),
+                                      image: imageProvider,
+                                      fit: BoxFit.fitWidth,
+                                    )),
                               ),
                           progressIndicatorBuilder:
                               (context, url, downloadProgress) => Center(
                                       child: Loader(
-                                    color: HexColor(primaryColor),
+                                    color: textPrimary,
                                   )),
                           errorWidget: (context, url, error) {
                             return SizedBox();

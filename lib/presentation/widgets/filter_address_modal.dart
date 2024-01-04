@@ -46,7 +46,7 @@ class _FilterAddressModalState extends State<FilterAddressModal> {
           child: Container(
             //height: MediaQuery.of(context).size.height * .5,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 11),
-            color: HexColor(backgroundColor),
+            color: backgroundSecondary,
             child: Column(
               children: [
                 const SizedBox(
@@ -62,6 +62,7 @@ class _FilterAddressModalState extends State<FilterAddressModal> {
                       text: "Filter by location",
                       fontWeight: FontWeight.w500,
                       size: 15,
+                      color: textWhite,
                     ),
                     GestureDetector(
                         onTap: () async {
@@ -141,11 +142,11 @@ class _FilterAddressModalState extends State<FilterAddressModal> {
                 AppButton(
                     width: 0.8,
                     height: 0.06,
-                    color: primaryColor,
+                    color: backgroundColor,
                     text: "Continue",
-                    backColor: primaryColor,
+                    backColor: backgroundColor,
                     curves: buttonCurves * 5,
-                    textColor: backgroundColor,
+                    textColor: "#FFFFFF",
                     onTap: () async {
                       SwipeWare swipe =
                           Provider.of<SwipeWare>(context, listen: false);
@@ -166,8 +167,6 @@ class _FilterAddressModalState extends State<FilterAddressModal> {
                       //  _submit(context);
                       //  //  PageRouting.pushToPage(context, const EmailOtp());
                     })
-        
-        
               ],
             ),
           ),

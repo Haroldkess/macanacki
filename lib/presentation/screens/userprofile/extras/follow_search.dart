@@ -23,29 +23,36 @@ class FollowSearch extends StatelessWidget {
           borderRadius: const BorderRadius.all(Radius.circular(8.0))),
       child: TextFormField(
         controller: controller,
+        cursorColor: textPrimary,
         // onChanged: (val) {
         //   FindPeopleProvider search =
         //       Provider.of<FindPeopleProvider>(context, listen: false);
         //   search.search(val);
         // },
+        style: GoogleFonts.roboto(color: HexColor("#C0C0C0"), fontSize: 14),
+
         onChanged: onChanged,
         decoration: InputDecoration(
-          hintText: " Search",
-          hintStyle: GoogleFonts.leagueSpartan(
-              color: HexColor("#C0C0C0"), fontSize: 14),
-          border: UnderlineInputBorder(
-              borderRadius: BorderRadius.circular(2.0),
-              borderSide: const BorderSide(color: Colors.transparent)),
-          disabledBorder: UnderlineInputBorder(
-              borderRadius: BorderRadius.circular(2.0),
-              borderSide: BorderSide(color: HexColor("#F5F2F9"))),
-          focusedBorder: UnderlineInputBorder(
-              borderRadius: BorderRadius.circular(2.0),
-              borderSide: BorderSide(color: HexColor(primaryColor))),
-        ),
+            hintText: " Search",
+            hintStyle:
+                GoogleFonts.roboto(color: HexColor("#C0C0C0"), fontSize: 14),
+            enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(2.0),
+                borderSide: BorderSide(color: textPrimary)),
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(2.0),
+                borderSide: BorderSide(color: textPrimary)),
+            focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(2.0),
+                borderSide: BorderSide(color: textPrimary))
+            // disabledBorder: UnderlineInputBorder(
+            //     borderRadius: BorderRadius.circular(2.0),
+            //     borderSide: BorderSide(color: HexColor("#F5F2F9"))),
+            // focusedBorder: OutlineInputBorder(
+            //     borderRadius: BorderRadius.circular(2.0),
+            //     borderSide: BorderSide(color: textPrimary)),
+            ),
       ),
     );
-  
-  
   }
 }

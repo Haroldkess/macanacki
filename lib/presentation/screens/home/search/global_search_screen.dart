@@ -31,7 +31,9 @@ class _GlobalSearchState extends State<GlobalSearch> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: HexColor("#F5F2F9"),
+        // backgroundColor: HexColor("#F5F2F9"),
+        backgroundColor: backgroundSecondary,
+
         // resizeToAvoidBottomInset: false,
         appBar: AppBar(
           automaticallyImplyLeading: false,
@@ -55,7 +57,7 @@ class _GlobalSearchState extends State<GlobalSearch> {
                             onPressed: () => PageRouting.popToPage(context),
                             icon: Icon(
                               Icons.arrow_back,
-                              color: Colors.black,
+                              color: textWhite,
                             )),
                         Expanded(
                           child: GlobalSearchBar(
@@ -83,6 +85,7 @@ class _GlobalSearchState extends State<GlobalSearch> {
           elevation: 0,
           backgroundColor: HexColor(backgroundColor),
           toolbarHeight: 60,
+          //  leading: BackButton(color: ),
         ),
         body: GestureDetector(
             behavior: HitTestBehavior.opaque,

@@ -23,16 +23,23 @@ class _NotificationListState extends State<NotificationList> {
   Widget build(BuildContext context) {
     NotificationWare stream = context.watch<NotificationWare>();
     return stream.loadStatus
-        ? Center(child: Loader(color: HexColor(primaryColor)))
+        ? Center(child: Loader(color: textPrimary))
         : ListView.builder(
             itemCount: stream.notifyData.length,
             itemBuilder: (context, index) {
               NotifyData notif = stream.notifyData[index];
-
               return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                child: NotificationTile(
-                  item: notif,
+                padding: const EdgeInsets.symmetric(vertical: 5),
+                child: Column(
+                  children: [
+                    NotificationTile(
+                      item: notif,
+                    ),
+                    Divider(
+                      thickness: 1,
+                      color: backgroundSecondary,
+                    )
+                  ],
                 ),
               );
             });

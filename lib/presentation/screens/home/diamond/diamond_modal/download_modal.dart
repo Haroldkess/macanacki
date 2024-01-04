@@ -14,12 +14,13 @@ import '../../../../widgets/loader.dart';
 // import 'package:macanacki/services/middleware/user_profile_ware.dart';
 // import 'package:provider/provider.dart';
 
-downloadDiamondsModal(BuildContext cont, int id,[bool? isAudio]) async {
+downloadDiamondsModal(BuildContext cont, int id, [bool? isAudio]) async {
   bool pay = true;
   TextEditingController amount = TextEditingController();
   return showModalBottomSheet(
       context: cont,
       isScrollControlled: true,
+      backgroundColor: HexColor(backgroundColor),
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (context) {
@@ -62,21 +63,24 @@ downloadDiamondsModal(BuildContext cont, int id,[bool? isAudio]) async {
                           height: 10,
                         ),
                         AppText(
-                          text: "Give Diamond to download ${isAudio == true? "Audio file" : ""}",
+                          text:
+                              "Give Diamond to download ${isAudio == true ? "Audio file" : ""}",
                           size: 17,
                           fontWeight: FontWeight.w400,
+                          color: textWhite,
                         ),
                         SizedBox(
                           height: 10,
                         ),
                         Container(
-                          width: 202,
+                          width: 300,
                           child: AppText(
                             text:
                                 "Diamonds are gift sent to creators to show appreciation for their content.",
                             size: 13,
                             fontWeight: FontWeight.w400,
                             align: TextAlign.center,
+                            color: textPrimary,
                           ),
                         ),
                       ],
@@ -86,14 +90,14 @@ downloadDiamondsModal(BuildContext cont, int id,[bool? isAudio]) async {
                     height: 30,
                   ),
                   Container(
-                    color: Color(0xFFF5F2F8),
+                    color: backgroundSecondary,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: ObxValue((load) {
                         return load.value
                             ? Visibility(
                                 visible: load.value,
-                                child: Loader(color: HexColor(primaryColor)),
+                                child: Loader(color: textWhite),
                               )
                             : SingleChildScrollView(
                                 child: Column(
@@ -167,8 +171,8 @@ downloadDiamondsModal(BuildContext cont, int id,[bool? isAudio]) async {
                                                               height: 44,
                                                               decoration:
                                                                   ShapeDecoration(
-                                                                color: Color(
-                                                                    0xFFFC72A6),
+                                                                color:
+                                                                    secondaryColor,
                                                                 shape:
                                                                     RoundedRectangleBorder(
                                                                   borderRadius:
@@ -180,8 +184,8 @@ downloadDiamondsModal(BuildContext cont, int id,[bool? isAudio]) async {
                                                               child: Center(
                                                                 child: AppText(
                                                                   text: 'Give',
-                                                                  color: Colors
-                                                                      .black,
+                                                                  color:
+                                                                      textWhite,
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .w400,

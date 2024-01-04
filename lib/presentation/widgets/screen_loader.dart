@@ -69,17 +69,17 @@ class _OverlayWidgetState extends State<OverlayWidget> {
                           height: 50,
                           width: 50,
                           child: CircularProgressIndicator(
-                            color: HexColor(primaryColor),
+                            color: textWhite,
                           )),
                       Center(
-                        child: SvgPicture.asset("assets/icon/crown.svg",
+                        child: SvgPicture.asset("assets/icon/logo2.svg",
                             color: Colors.white, height: 50, width: 50),
                       ),
                     ]),
                     const SizedBox(height: 10.0),
                     AppText(
                       text: widget.message ?? "",
-                      color: HexColor(backgroundColor),
+                      color: textPrimary,
                     )
                   ],
                 ),

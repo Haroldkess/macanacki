@@ -21,6 +21,7 @@ bankModal(
   return showModalBottomSheet(
       context: cont,
       isScrollControlled: true,
+      backgroundColor: HexColor(backgroundColor),
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (context) {
@@ -55,6 +56,7 @@ bankModal(
                         text: "Select your bank",
                         size: 17,
                         fontWeight: FontWeight.w400,
+                        color: textWhite,
                       ),
                       SizedBox(
                         height: 10,
@@ -75,7 +77,7 @@ bankModal(
                   height: 38,
                 ),
                 Container(
-                  color: Color(0xFFF5F2F8),
+                  color: backgroundSecondary,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Column(
@@ -105,6 +107,7 @@ bankModal(
                                               text: e.shortName!,
                                               size: 16,
                                               fontWeight: FontWeight.w700,
+                                              color: textWhite,
                                             ),
                                             SizedBox(
                                               height: 5,
@@ -112,6 +115,7 @@ bankModal(
                                             AppText(
                                               text: e.name!,
                                               size: 13,
+                                              color: textPrimary,
                                             ),
                                           ],
                                         )
@@ -137,6 +141,7 @@ myBankModal(
   return showModalBottomSheet(
       context: cont,
       isScrollControlled: true,
+      backgroundColor: HexColor(backgroundColor),
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (context) {
@@ -171,6 +176,7 @@ myBankModal(
                         text: "My bank",
                         size: 17,
                         fontWeight: FontWeight.w400,
+                        color: textWhite,
                       ),
                       SizedBox(
                         height: 10,
@@ -191,7 +197,7 @@ myBankModal(
                   height: 38,
                 ),
                 Container(
-                  color: Color(0xFFF5F2F8),
+                  color: backgroundSecondary,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Column(
@@ -211,7 +217,7 @@ myBankModal(
                                 text: "Change",
                                 size: 18,
                                 fontWeight: FontWeight.w700,
-                                color: HexColor(primaryColor),
+                                color: Colors.green,
                               ),
                             ),
                           ],
@@ -257,7 +263,7 @@ myBankModal(
                                               text: bank.value.accountNumber!,
                                               size: 24,
                                               fontWeight: FontWeight.w700,
-                                              color: HexColor(backgroundColor),
+                                              color: textWhite,
                                             ),
                                           ],
                                         ),
@@ -272,7 +278,7 @@ myBankModal(
                                               text: bank.value.name!,
                                               size: 16,
                                               fontWeight: FontWeight.w700,
-                                              color: HexColor(backgroundColor),
+                                              color: textPrimary,
                                             ),
                                           ],
                                         ),
@@ -285,7 +291,7 @@ myBankModal(
                                               text: bank.value.bankName!,
                                               size: 14,
                                               fontWeight: FontWeight.w700,
-                                              color: HexColor(backgroundColor),
+                                              color: textPrimary,
                                             ),
                                           ],
                                         ),
@@ -301,15 +307,15 @@ myBankModal(
                                             height: 50,
                                             width: 50,
                                           ),
-                                          Positioned(
-                                            bottom: -7,
-                                            left: 5,
-                                            child: SvgPicture.asset(
-                                                "assets/icon/crown.svg",
-                                                color: Colors.white,
-                                                height: 30,
-                                                width: 30),
-                                          ),
+                                          // Positioned(
+                                          //   bottom: -7,
+                                          //   left: 5,
+                                          //   child: SvgPicture.asset(
+                                          //       "assets/icon/crown.svg",
+                                          //       color: Colors.white,
+                                          //       height: 30,
+                                          //       width: 30),
+                                          // ),
                                         ],
                                       ),
                                     ],

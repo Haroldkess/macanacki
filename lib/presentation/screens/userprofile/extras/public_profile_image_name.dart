@@ -73,7 +73,7 @@ class PublicProfileImageAndName extends StatelessWidget {
                               Shimmer.fromColors(
                                   baseColor: Colors.grey,
                                   highlightColor:
-                                      HexColor(primaryColor).withOpacity(.7),
+                                      HexColor(backgroundColor).withOpacity(.7),
                                   child: CircleAvatar(
                                     radius: 15,
                                     backgroundColor: Colors.white,
@@ -82,16 +82,16 @@ class PublicProfileImageAndName extends StatelessWidget {
                         imageUrl:
                             stream.publicUserProfileModel.profilephoto ?? "",
                         fit: BoxFit.cover,
-                        progressIndicatorBuilder:
-                            (context, url, downloadProgress) =>
-                                Shimmer.fromColors(
-                                    baseColor: Colors.grey,
-                                    highlightColor:
-                                        HexColor(primaryColor).withOpacity(.7),
-                                    child: CircleAvatar(
-                                      radius: 15,
-                                      backgroundColor: Colors.white,
-                                    )),
+                        progressIndicatorBuilder: (context, url,
+                                downloadProgress) =>
+                            Shimmer.fromColors(
+                                baseColor: Colors.grey,
+                                highlightColor:
+                                    HexColor(backgroundColor).withOpacity(.7),
+                                child: CircleAvatar(
+                                  radius: 15,
+                                  backgroundColor: Colors.white,
+                                )),
                         errorWidget: (context, url, error) =>
                             CachedNetworkImage(
                                 imageUrl: stream
@@ -101,7 +101,7 @@ class PublicProfileImageAndName extends StatelessWidget {
                                 progressIndicatorBuilder:
                                     (context, url, downloadProgress) => Center(
                                             child: Loader(
-                                          color: HexColor(primaryColor),
+                                          color: HexColor(backgroundColor),
                                         )),
                                 errorWidget: (context, url, error) =>
                                     SizedBox()),
@@ -333,8 +333,8 @@ class PublicProfileImageAndNameTest extends StatelessWidget {
               HexagonWidget.pointy(
                 width: w,
                 elevation: 10.0,
-                color: Colors.white,
-                cornerRadius: 20.0,
+                color: HexColor("#C0C0C0").withOpacity(.4),
+                cornerRadius: 15.0,
                 child: AspectRatio(
                   aspectRatio: HexagonType.POINTY.ratio,
                   // child: Image.asset(
@@ -346,8 +346,8 @@ class PublicProfileImageAndNameTest extends StatelessWidget {
               HexagonWidget.pointy(
                 width: w,
                 elevation: 10.0,
-                color: HexColor("#5F5F5F"),
-                padding: 10,
+                color: Colors.black,
+                padding: 2,
                 cornerRadius: 20.0,
                 child: AspectRatio(
                     aspectRatio: HexagonType.POINTY.ratio,
@@ -359,7 +359,7 @@ class PublicProfileImageAndNameTest extends StatelessWidget {
                               Shimmer.fromColors(
                                   baseColor: Colors.grey,
                                   highlightColor:
-                                      HexColor(primaryColor).withOpacity(.7),
+                                      HexColor(backgroundColor).withOpacity(.7),
                                   child: CircleAvatar(
                                     radius: 15,
                                     backgroundColor: Colors.white,
@@ -367,16 +367,16 @@ class PublicProfileImageAndNameTest extends StatelessWidget {
                       errorWidget: (context, url, error) => CachedNetworkImage(
                         imageUrl: stream.profilephoto ?? "",
                         fit: BoxFit.cover,
-                        progressIndicatorBuilder:
-                            (context, url, downloadProgress) =>
-                                Shimmer.fromColors(
-                                    baseColor: Colors.grey,
-                                    highlightColor:
-                                        HexColor(primaryColor).withOpacity(.7),
-                                    child: CircleAvatar(
-                                      radius: 15,
-                                      backgroundColor: Colors.white,
-                                    )),
+                        progressIndicatorBuilder: (context, url,
+                                downloadProgress) =>
+                            Shimmer.fromColors(
+                                baseColor: Colors.grey,
+                                highlightColor:
+                                    HexColor(backgroundColor).withOpacity(.7),
+                                child: CircleAvatar(
+                                  radius: 15,
+                                  backgroundColor: Colors.white,
+                                )),
                         errorWidget: (context, url, error) =>
                             CachedNetworkImage(
                                 imageUrl: stream.profilephoto ?? "",
@@ -384,7 +384,7 @@ class PublicProfileImageAndNameTest extends StatelessWidget {
                                 progressIndicatorBuilder:
                                     (context, url, downloadProgress) => Center(
                                             child: Loader(
-                                          color: HexColor(primaryColor),
+                                          color: HexColor(backgroundColor),
                                         )),
                                 errorWidget: (context, url, error) =>
                                     SizedBox()),
@@ -408,7 +408,7 @@ class PublicProfileImageAndNameTest extends StatelessWidget {
                 constraints: BoxConstraints(maxWidth: 210),
                 child: AppText(
                   text: stream.username == null ? "" : "${stream.username}",
-                  color: HexColor(darkColor),
+                  color: Colors.white.withOpacity(.6),
                   size: 16,
                   letterSpacing: 0.0,
                   fontWeight: FontWeight.w800,
@@ -418,6 +418,9 @@ class PublicProfileImageAndNameTest extends StatelessWidget {
                       ? TextOverflow.ellipsis
                       : TextOverflow.fade,
                 ),
+              ),
+              SizedBox(
+                width: 4,
               ),
               stream.verified == 1 && stream.activePlan != sub
                   ? SvgPicture.asset(

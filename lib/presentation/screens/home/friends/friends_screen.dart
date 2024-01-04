@@ -81,7 +81,8 @@ class _FriendsScreenState extends State<FriendsScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: HexColor("#F5F2F9"),
+        backgroundColor: backgroundSecondary,
+        // backgroundColor: HexColor("#F5F2F9"),
         // resizeToAvoidBottomInset: false,
         appBar: AppBar(
           automaticallyImplyLeading: false,
@@ -147,7 +148,7 @@ class _FriendsScreenState extends State<FriendsScreen> {
                     children: [
                       AppText(
                         text: "Post from people you follow",
-                        color: Colors.grey,
+                        color: textPrimary,
                         size: 13,
                       )
                     ],
@@ -158,13 +159,12 @@ class _FriendsScreenState extends State<FriendsScreen> {
                     enablePullDown: true,
                     enablePullUp: true,
                     header: WaterDropHeader(
-                      waterDropColor: HexColor(primaryColor),
+                      waterDropColor: textPrimary,
                       refresh: CircleAvatar(
                         radius: 5,
                         backgroundColor: Colors.transparent,
                         child: CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color?>(
-                              HexColor(primaryColor)),
+                          valueColor: AlwaysStoppedAnimation<Color?>(textWhite),
                         ),
                       ),
                     ),
@@ -175,7 +175,7 @@ class _FriendsScreenState extends State<FriendsScreen> {
                           body = Text("pull up load");
                         } else if (mode == LoadStatus.loading) {
                           body = CupertinoActivityIndicator(
-                            color: HexColor(primaryColor),
+                            color: textWhite,
                           );
                         } else if (mode == LoadStatus.failed) {
                           body = const Text("Load Failed!Click retry!");
@@ -287,11 +287,11 @@ class _FriendsViewItemsState extends State<FriendsViewItems> {
                         progressIndicatorBuilder:
                             (context, url, downloadProgress) =>
                                 Shimmer.fromColors(
-                                    baseColor: Colors.white,
+                                    baseColor: HexColor(backgroundColor),
                                     highlightColor: Colors.grey.withOpacity(.2),
                                     period: Duration(seconds: 1),
                                     child: Container(
-                                      color: Colors.white,
+                                      color: HexColor(backgroundColor),
                                     )),
                         errorWidget: (context, url, error) =>
                             CachedNetworkImage(
@@ -300,27 +300,27 @@ class _FriendsViewItemsState extends State<FriendsViewItems> {
                           progressIndicatorBuilder: (context, url,
                                   downloadProgress) =>
                               Shimmer.fromColors(
-                                  baseColor: Colors.white,
+                                  baseColor: HexColor(backgroundColor),
                                   highlightColor:
                                       HexColor(primaryColor).withOpacity(.2),
                                   period: Duration(seconds: 1),
                                   child: Container(
-                                    color: Colors.white,
+                                    color: HexColor(backgroundColor),
                                   )),
                           errorWidget: (context, url, error) =>
                               CachedNetworkImage(
                                   imageUrl: url,
                                   fit: BoxFit.cover,
-                                  progressIndicatorBuilder:
-                                      (context, url, downloadProgress) =>
-                                          Shimmer.fromColors(
-                                              baseColor: Colors.white,
-                                              highlightColor:
-                                                  Colors.grey.withOpacity(.2),
-                                              period: Duration(seconds: 1),
-                                              child: Container(
-                                                color: Colors.white,
-                                              )),
+                                  progressIndicatorBuilder: (context, url,
+                                          downloadProgress) =>
+                                      Shimmer.fromColors(
+                                          baseColor: HexColor(backgroundColor),
+                                          highlightColor:
+                                              Colors.grey.withOpacity(.2),
+                                          period: Duration(seconds: 1),
+                                          child: Container(
+                                            color: HexColor(backgroundColor),
+                                          )),
                                   errorWidget: (context, url, error) =>
                                       SizedBox()),
                         ),
@@ -406,11 +406,11 @@ class _FriendsViewItemsState extends State<FriendsViewItems> {
                     fit: BoxFit.cover,
                     progressIndicatorBuilder:
                         (context, url, downloadProgress) => Shimmer.fromColors(
-                            baseColor: Colors.white,
+                            baseColor: HexColor(backgroundColor),
                             highlightColor: Colors.grey.withOpacity(.2),
                             period: Duration(seconds: 1),
                             child: Container(
-                              color: Colors.white,
+                              color: HexColor(backgroundColor),
                             )),
                     errorWidget: (context, url, error) => CachedNetworkImage(
                       imageUrl: url,
@@ -418,11 +418,11 @@ class _FriendsViewItemsState extends State<FriendsViewItems> {
                       progressIndicatorBuilder:
                           (context, url, downloadProgress) =>
                               Shimmer.fromColors(
-                                  baseColor: Colors.white,
+                                  baseColor: HexColor(backgroundColor),
                                   highlightColor: Colors.grey.withOpacity(.2),
                                   period: Duration(seconds: 1),
                                   child: Container(
-                                    color: Colors.white,
+                                    color: HexColor(backgroundColor),
                                   )),
                       errorWidget: (context, url, error) => CachedNetworkImage(
                           imageUrl: url,
@@ -430,11 +430,11 @@ class _FriendsViewItemsState extends State<FriendsViewItems> {
                           progressIndicatorBuilder: (context, url,
                                   downloadProgress) =>
                               Shimmer.fromColors(
-                                  baseColor: Colors.white,
+                                  baseColor: HexColor(backgroundColor),
                                   highlightColor: Colors.grey.withOpacity(.2),
                                   period: Duration(seconds: 1),
                                   child: Container(
-                                    color: Colors.white,
+                                    color: HexColor(backgroundColor),
                                   )),
                           errorWidget: (context, url, error) => SizedBox()),
                     ),

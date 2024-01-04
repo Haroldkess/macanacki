@@ -48,6 +48,7 @@ commentModal(BuildContext context, int id, String page, bool isHome,
   return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      backgroundColor: backgroundSecondary,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (context) {
@@ -56,6 +57,7 @@ commentModal(BuildContext context, int id, String page, bool isHome,
 
         return Scaffold(
           //    resizeToAvoidBottomInset: true,
+          backgroundColor: backgroundSecondary,
           body: Padding(
             padding: const EdgeInsets.only(
               top: 8.0,
@@ -85,7 +87,7 @@ commentModal(BuildContext context, int id, String page, bool isHome,
                                   text: "Be the first to comment!",
                                   size: 16,
                                   fontWeight: FontWeight.w400,
-                                  color: HexColor(primaryColor),
+                                  color: textWhite,
                                 ),
                               )
                             : Padding(
@@ -171,15 +173,16 @@ commentHeader(BuildContext context) {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         BackButton(
-          color: HexColor(darkColor),
+          color: textPrimary,
         ),
         AppText(
           text: "Comments",
           fontWeight: FontWeight.w700,
           size: 20,
           align: TextAlign.center,
+          color: textWhite,
         ),
-        const BackButton(
+        BackButton(
           color: Colors.transparent,
           onPressed: null,
         ),
@@ -255,7 +258,7 @@ class _CommentFormState extends State<CommentForm> {
               borderRadius: const BorderRadius.all(Radius.circular(8.0))),
           child: TextFormField(
             controller: widget.comment,
-            cursorColor: HexColor(primaryColor),
+            cursorColor: textWhite,
             focusNode: _focusNode,
             keyboardType: TextInputType.multiline,
             // onTap: () async {
@@ -276,10 +279,11 @@ class _CommentFormState extends State<CommentForm> {
                 });
               }
             },
+            style: GoogleFonts.roboto(color: textWhite, fontSize: 14),
             decoration: InputDecoration(
               hintText: "Write a comment...",
-              hintStyle: GoogleFonts.leagueSpartan(
-                  color: HexColor("#8B8B8B"), fontSize: 14),
+              hintStyle:
+                  GoogleFonts.roboto(color: HexColor("#8B8B8B"), fontSize: 14),
               contentPadding: EdgeInsets.only(left: 10, top: 15),
               // prefixIcon: Padding(
               //   padding: const EdgeInsets.all(15.0),
@@ -293,7 +297,7 @@ class _CommentFormState extends State<CommentForm> {
               suffixIcon: Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: stream.loadStatus2
-                    ? Loader(color: HexColor(primaryColor))
+                    ? Loader(color: textWhite)
                     : InkWell(
                         onTap: () async {
                           if (widget.comment.text.isEmpty) {
@@ -330,7 +334,7 @@ class _CommentFormState extends State<CommentForm> {
                           "assets/icon/Send.svg",
                           height: 7,
                           width: 7,
-                          color: typing ? HexColor(primaryColor) : Colors.grey,
+                          color: typing ? textWhite : Colors.grey,
                         ),
                       ),
               ),
@@ -480,7 +484,7 @@ class CommentTile extends StatelessWidget {
                             HexagonWidget.pointy(
                               width: w - 3,
                               elevation: 2.0,
-                              color: Colors.white,
+                              color: textPrimary,
                               cornerRadius: 2.0,
                               child: AspectRatio(
                                 aspectRatio: HexagonType.POINTY.ratio,
@@ -501,7 +505,7 @@ class CommentTile extends StatelessWidget {
                 ],
               ),
               const SizedBox(
-                width: 10,
+                width: 2,
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 10),
@@ -520,6 +524,7 @@ class CommentTile extends StatelessWidget {
                                 fontWeight: FontWeight.w700,
                                 size: 12,
                                 maxLines: 1,
+                                color: textWhite,
                               ),
                             ),
                             // const SizedBox(
@@ -540,6 +545,7 @@ class CommentTile extends StatelessWidget {
                             text: Operations.times(e.createdAt),
                             fontWeight: FontWeight.w400,
                             size: 10,
+                            color: textPrimary,
                           ),
                         ],
                       ),
@@ -553,6 +559,7 @@ class CommentTile extends StatelessWidget {
                           text: e.body ?? "",
                           fontWeight: FontWeight.w500,
                           size: 10,
+                          color: textWhite,
                         ),
                       ),
                     ),

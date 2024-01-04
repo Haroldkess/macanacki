@@ -27,7 +27,8 @@ class GiftDiamondHistory {
         message: json["message"],
         data: json["data"] == null
             ? []
-            : List<GifterInfo>.from(json["data"]!.map((x) => GifterInfo.fromJson(x))),
+            : List<GifterInfo>.from(
+                json["data"]!.map((x) => GifterInfo.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -142,7 +143,7 @@ class Sender {
   String? country;
   String? state;
   String? city;
-  DateTime? subscriptionExpires;
+  dynamic subscriptionExpires;
   String? device;
   dynamic celeb;
   dynamic walletBalance;
@@ -150,7 +151,7 @@ class Sender {
   String? profilephoto;
   dynamic noOfFollowers;
   dynamic noOfFollowing;
-  DateTime? activePlan;
+  dynamic activePlan;
   dynamic idFront;
   dynamic idBack;
   dynamic verification;
@@ -265,7 +266,7 @@ class Sender {
         city: json["city"],
         subscriptionExpires: json["subscription_expires"] == null
             ? null
-            : DateTime.parse(json["subscription_expires"]),
+            : json["subscription_expires"],
         device: json["device"],
         celeb: json["celeb"],
         walletBalance: json["wallet_balance"],
@@ -273,9 +274,7 @@ class Sender {
         profilephoto: json["profilephoto"],
         noOfFollowers: json["no_of_followers"],
         noOfFollowing: json["no_of_following"],
-        activePlan: json["active_plan"] == null
-            ? null
-            : DateTime.parse(json["active_plan"]),
+        activePlan: json["active_plan"] == null ? null : json["active_plan"],
         idFront: json["id_front"],
         idBack: json["id_back"],
         verification: json["verification"],

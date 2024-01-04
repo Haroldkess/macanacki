@@ -239,7 +239,7 @@ class _TestProfileState extends State<TestProfile>
 
   /// Whether to render check mark instead of spinner
   bool _renderCompleteState = false;
-
+  Color profileColor = Colors.black87;
   ScrollDirection prevScrollDirection = ScrollDirection.idle;
   @override
   Widget build(BuildContext context) {
@@ -249,7 +249,7 @@ class _TestProfileState extends State<TestProfile>
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: HexColor("#F5F2F9"),
+        backgroundColor: loadStatus2 ? HexColor(backgroundColor) : null,
         body: CustomRefreshIndicator(
           onStateChanged: (change) {
             /// set [_renderCompleteState] to true when controller.state become completed
@@ -288,6 +288,7 @@ class _TestProfileState extends State<TestProfile>
                     return Container(
                       alignment: Alignment.center,
                       height: containerHeight,
+                      color: Colors.black,
                       child: OverflowBox(
                         maxHeight: 40,
                         minHeight: 40,
@@ -300,7 +301,7 @@ class _TestProfileState extends State<TestProfile>
                           decoration: BoxDecoration(
                             color: _renderCompleteState
                                 ? Colors.greenAccent
-                                : HexColor(primaryColor),
+                                : Colors.black87,
                             shape: BoxShape.circle,
                           ),
                           child: _renderCompleteState
@@ -345,301 +346,307 @@ class _TestProfileState extends State<TestProfile>
           onRefresh: () async {
             await _onRefresh();
           },
-          child: ExtendedNestedScrollView(
-            controller: _controller,
+          child: Container(
+            color: profileColor,
+            child: ExtendedNestedScrollView(
+              controller: _controller,
 
-            headerSliverBuilder:
-                (BuildContext context, bool innerBoxIsScrolled) {
-              return <Widget>[
-                SliverAppBar(
-                  automaticallyImplyLeading: true,
-                  leading: BackButton(color: Colors.black),
-                  title: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      // myIcon("assets/icon/macanackiicon.svg", primaryColor, 16.52,
-                      //     70, false),
-                      InkWell(
-                        onTap: () => PageRouting.pushToPage(
-                            context, const NotificationScreen()),
-                        child: Stack(
-                          children: [
-                            SvgPicture.asset(
-                              "assets/icon/notification.svg",
+              headerSliverBuilder:
+                  (BuildContext context, bool innerBoxIsScrolled) {
+                return <Widget>[
+                  SliverAppBar(
+                    automaticallyImplyLeading: true,
+                    leading: BackButton(color: textWhite),
+                    // title: Row(
+                    //   mainAxisAlignment: MainAxisAlignment.end,
+                    //   children: [
+                    //     // myIcon("assets/icon/macanackiicon.svg", primaryColor, 16.52,
+                    //     //     70, false),
+                    //     InkWell(
+                    //       onTap: () => PageRouting.pushToPage(
+                    //           context, const NotificationScreen()),
+                    //       child: Stack(
+                    //         children: [
+                    //           SvgPicture.asset(
+                    //             "assets/icon/notification.svg",
+                    //           ),
+                    //           notify.readAll
+                    //               ? SizedBox.shrink()
+                    //               : Positioned(
+                    //                   right: 5,
+                    //                   child: Align(
+                    //                     alignment: Alignment.topCenter,
+                    //                     child: Container(
+                    //                       height: 10,
+                    //                       width: 10,
+                    //                       decoration: const BoxDecoration(
+                    //                           shape: BoxShape.circle,
+                    //                           color: Colors.red),
+                    //                       child: Padding(
+                    //                         padding: const EdgeInsets.all(0.0),
+                    //                         child: Center(
+                    //                           child: AppText(
+                    //                             text: notify.notifyData.length > 9
+                    //                                 ? ""
+                    //                                 : "",
+                    //                             size: 8,
+                    //                             fontWeight: FontWeight.bold,
+                    //                           ),
+                    //                         ),
+                    //                       ),
+                    //                     ),
+                    //                   ),
+                    //                 )
+                    //         ],
+                    //       ),
+
+                    //       // myIcon("assets/icon/notification.svg", "#828282",
+                    //       //     19.13, 17.31, true),
+                    //     ),
+                    //   ],
+                    // ),
+
+                    // floating: true,
+                    pinned: true,
+                    backgroundColor: profileColor,
+                    expandedHeight: 370,
+                    flexibleSpace: FlexibleSpaceBar(
+                      background: loadStatus2
+                          ? const PublicLoader()
+                          : PublicProfileInfoTest(
+                              isMine: false,
+                              stream: publicUserProfileModel,
                             ),
-                            notify.readAll
-                                ? SizedBox.shrink()
-                                : Positioned(
-                                    right: 5,
-                                    child: Align(
-                                      alignment: Alignment.topCenter,
-                                      child: Container(
-                                        height: 10,
-                                        width: 10,
-                                        decoration: const BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: Colors.red),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(0.0),
-                                          child: Center(
-                                            child: AppText(
-                                              text: notify.notifyData.length > 9
-                                                  ? ""
-                                                  : "",
-                                              size: 8,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                          ],
-                        ),
-
-                        // myIcon("assets/icon/notification.svg", "#828282",
-                        //     19.13, 17.31, true),
-                      ),
-                    ],
+                    ),
                   ),
-                  // floating: true,
-                  pinned: true,
-                  backgroundColor: HexColor("#F5F2F9"),
-                  expandedHeight: 370,
-                  flexibleSpace: FlexibleSpaceBar(
-                    background: loadStatus2
-                        ? const PublicLoader()
-                        : PublicProfileInfoTest(
-                            isMine: false,
-                            stream: publicUserProfileModel,
+                  publicUserProfileModel.aboutMe != null
+                      ? SliverToBoxAdapter(
+                          child: Row(
+                            children: [
+                              Expanded(
+                                  child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 20, horizontal: 20),
+                                child: RichText(
+                                    textAlign: TextAlign.center,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: showMore ? 3 : 2,
+                                    text: TextSpan(
+                                        text: publicUserProfileModel
+                                                        .aboutMe!.length >=
+                                                    seeMoreVal &&
+                                                showMore == false
+                                            ? publicUserProfileModel.aboutMe!
+                                                .substring(0, seeMoreVal - 3)
+                                            : publicUserProfileModel.aboutMe!,
+                                        style: GoogleFonts.leagueSpartan(
+                                            textStyle: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white.withOpacity(.6),
+                                          decorationStyle:
+                                              TextDecorationStyle.solid,
+                                          fontSize: 10,
+                                          fontFamily: '',
+                                        )),
+                                        recognizer: tapGestureRecognizer
+                                          ..onTap = () async {
+                                            //    print("object");
+                                            if (showMore) {
+                                              setState(() {
+                                                showMore = false;
+                                              });
+                                            } else {
+                                              setState(() {
+                                                showMore = true;
+                                              });
+                                            }
+                                          },
+                                        children: [
+                                          publicUserProfileModel
+                                                      .aboutMe!.length <
+                                                  seeMoreVal
+                                              ? const TextSpan(text: "")
+                                              : TextSpan(
+                                                  text: showMore
+                                                      ? " "
+                                                      : "...see more",
+                                                  style: TextStyle(
+                                                    fontSize: 10,
+                                                    color: Colors.white
+                                                        .withOpacity(.6),
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                  recognizer:
+                                                      tapGestureRecognizer
+                                                        ..onTap = () async {
+                                                          if (showMore) {
+                                                            setState(() {
+                                                              showMore = false;
+                                                            });
+                                                          } else {
+                                                            setState(() {
+                                                              showMore = true;
+                                                            });
+                                                          }
+                                                        },
+                                                )
+                                        ])),
+                              )),
+                            ],
                           ),
-                  ),
-                ),
-                publicUserProfileModel.aboutMe != null
-                    ? SliverToBoxAdapter(
-                        child: Row(
-                          children: [
-                            Expanded(
-                                child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 20, horizontal: 20),
-                              child: RichText(
-                                  textAlign: TextAlign.center,
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: showMore ? 3 : 2,
-                                  text: TextSpan(
-                                      text: publicUserProfileModel
-                                                      .aboutMe!.length >=
-                                                  seeMoreVal &&
-                                              showMore == false
-                                          ? publicUserProfileModel.aboutMe!
-                                              .substring(0, seeMoreVal - 3)
-                                          : publicUserProfileModel.aboutMe!,
-                                      style: GoogleFonts.leagueSpartan(
-                                          textStyle: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        color: HexColor(darkColor)
-                                            .withOpacity(0.6),
-                                        decorationStyle:
-                                            TextDecorationStyle.solid,
-                                        fontSize: 10,
-                                        fontFamily: '',
-                                      )),
-                                      recognizer: tapGestureRecognizer
-                                        ..onTap = () async {
-                                          //    print("object");
-                                          if (showMore) {
-                                            setState(() {
-                                              showMore = false;
-                                            });
-                                          } else {
-                                            setState(() {
-                                              showMore = true;
-                                            });
-                                          }
-                                        },
-                                      children: [
-                                        publicUserProfileModel.aboutMe!.length <
-                                                seeMoreVal
-                                            ? const TextSpan(text: "")
-                                            : TextSpan(
-                                                text: showMore
-                                                    ? " "
-                                                    : "...see more",
-                                                style: TextStyle(
-                                                  fontSize: 10,
-                                                  color: HexColor(darkColor)
-                                                      .withOpacity(0.6),
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                                recognizer: tapGestureRecognizer
-                                                  ..onTap = () async {
-                                                    if (showMore) {
-                                                      setState(() {
-                                                        showMore = false;
-                                                      });
-                                                    } else {
-                                                      setState(() {
-                                                        showMore = true;
-                                                      });
-                                                    }
-                                                  },
-                                              )
-                                      ])),
-                            )),
-                          ],
+                        )
+                      : const SliverToBoxAdapter(
+                          child: SizedBox(height: 20),
                         ),
-                      )
-                    : const SliverToBoxAdapter(
-                        child: SizedBox(height: 20),
-                      ),
-                SliverToBoxAdapter(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      ProfileQuickLinks(
-                        onClick: () {
-                          Get.dialog(seeWebsiteDialog(
-                              svg: "seelocation",
-                              title: "Lives in",
-                              message:
-                                  "${publicUserProfileModel.city ?? ""}, ${publicUserProfileModel.state ?? ""}, ${publicUserProfileModel.country ?? ""} ",
-                              confirmText: "Yes",
-                              cancelText: "Go back",
-                              onPressedCancel: () {
-                                Get.back();
-                              },
-                              onPressed: () {
-                                Get.back();
-                              }));
-                        },
-                        name: "View Location",
-                        icon: "assets/icon/seelocation.svg",
-                        color: Colors.grey,
-                        isVerified: false,
-                      ),
-                      ProfileQuickLinks(
-                        onClick: () async {
-                          Get.dialog(seeWebsiteDialog(
-                              svg: "seeweb",
-                              title: "Website",
-                              message: "Website not published by user",
-                              confirmText: "Yes",
-                              cancelText: "Go back",
-                              onPressedCancel: () {
-                                Get.back();
-                              },
-                              onPressed: () {
-                                Get.back();
-                              }));
-                        },
-                        name: "View Website",
-                        icon: "assets/icon/seeweb.svg",
-                        color: Colors.grey,
-                        isVerified: false,
-                      ),
-                      ProfileQuickLinks(
-                        onClick: () {
-                          if (int.tryParse(GiftWare.instance.gift.value.data
-                                  .toString())! <
-                              50) {
-                            buyDiamondsModal(
-                                context, GiftWare.instance.rate.value.data);
-                          } else {
-                            giveDiamondsModal(
-                                context, publicUserProfileModel.username!);
-                          }
-                        },
-                        name: "Give Diamond",
-                        icon: "assets/icon/diamond.svg",
-                        color: null,
-                        isVerified: true,
-                      )
-                    ],
+                  SliverToBoxAdapter(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ProfileQuickLinks(
+                          onClick: () {
+                            Get.dialog(seeWebsiteDialog(
+                                svg: "pin",
+                                title: "Lives in",
+                                message:
+                                    "${publicUserProfileModel.city ?? ""}, ${publicUserProfileModel.state ?? ""}, ${publicUserProfileModel.country ?? ""} ",
+                                confirmText: "Yes",
+                                cancelText: "Go back",
+                                onPressedCancel: () {
+                                  Get.back();
+                                },
+                                onPressed: () {
+                                  Get.back();
+                                }));
+                          },
+                          name: "View Location",
+                          icon: "assets/icon/pin.svg",
+                          color: Colors.green,
+                          isVerified: false,
+                        ),
+                        ProfileQuickLinks(
+                          onClick: () async {
+                            Get.dialog(seeWebsiteDialog(
+                                svg: "seeweb",
+                                title: "Website",
+                                message: "Website not published by user",
+                                confirmText: "Yes",
+                                cancelText: "Go back",
+                                onPressedCancel: () {
+                                  Get.back();
+                                },
+                                onPressed: () {
+                                  Get.back();
+                                }));
+                          },
+                          name: "View Website",
+                          icon: "assets/icon/seeweb.svg",
+                          color: Colors.grey,
+                          isVerified: false,
+                        ),
+                        ProfileQuickLinks(
+                          onClick: () {
+                            if (int.tryParse(GiftWare.instance.gift.value.data
+                                    .toString())! <
+                                50) {
+                              buyDiamondsModal(
+                                  context, GiftWare.instance.rate.value.data);
+                            } else {
+                              giveDiamondsModal(
+                                  context, publicUserProfileModel.username!);
+                            }
+                          },
+                          name: "Give Diamond",
+                          icon: "assets/icon/diamond.svg",
+                          color: null,
+                          isVerified: true,
+                        )
+                      ],
+                    ),
                   ),
-                ),
-                const SliverToBoxAdapter(
-                  child: SizedBox(height: 20),
-                ),
-              ];
-            },
-            restorationId: 'Tab${_tabController!.index}',
-            // innerScrollPositionKeyBuilder: () {
-            //   return Key('Tab${_tabController.index}');
-            // },
+                  const SliverToBoxAdapter(
+                    child: SizedBox(height: 20),
+                  ),
+                ];
+              },
+              restorationId: 'Tab${_tabController!.index}',
+              // innerScrollPositionKeyBuilder: () {
+              //   return Key('Tab${_tabController.index}');
+              // },
 
-            pinnedHeaderSliverHeightBuilder: () {
-              final double statusBarHeight = MediaQuery.of(context).padding.top;
-              var pinnedHeaderHeight =
-                  //statusBar height
-                  statusBarHeight +
-                      //pinned SliverAppBar height in header
-                      kToolbarHeight;
-              return pinnedHeaderHeight;
-            },
-            onlyOneScrollInBody: true,
-            body: Column(
-              children: [
-                TabBar(
-                  controller: _tabController,
-                  labelColor: Colors.grey,
-                  unselectedLabelColor: Colors.grey,
-                  indicatorColor: Colors.grey,
-                  indicatorWeight: 2,
-                  indicatorSize: TabBarIndicatorSize.tab,
-                  indicatorPadding: EdgeInsets.symmetric(horizontal: 16),
-                  labelPadding: EdgeInsets.only(bottom: 10),
-                  onTap: (index) {
-                    FeedPostWare ind =
-                        Provider.of<FeedPostWare>(context, listen: false);
-                    ind.changeTabIndex(index);
-                  },
-                  tabs: _tabs
-                      .map((String tab) => tab == "others"
-                          ? Container(
-                              height: 20,
-                              width: 20,
-                              child: SvgPicture.asset(
-                                "assets/icon/vid.svg",
-                                color: Colors.grey,
-                              ))
-                          : Container(
-                              height: 20,
-                              width: 20,
-                              child: SvgPicture.asset("assets/icon/aud.svg",
-                                  color: Colors.grey)))
-                      .toList(),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Expanded(
-                  child: TabBarView(
+              pinnedHeaderSliverHeightBuilder: () {
+                final double statusBarHeight =
+                    MediaQuery.of(context).padding.top;
+                var pinnedHeaderHeight =
+                    //statusBar height
+                    statusBarHeight +
+                        //pinned SliverAppBar height in header
+                        kToolbarHeight;
+                return pinnedHeaderHeight;
+              },
+              onlyOneScrollInBody: true,
+              body: Column(
+                children: [
+                  TabBar(
                     controller: _tabController,
-                    children: _tabs.asMap().entries.map((entry) {
-                      return entry.value == "others"
-                          ? TestPublicProfilePostGrid(
-                              pubPost: allPublicUserPostData,
-                              scrollController: _scrollController,
-                              tabKey: Key('Tab${entry.key}'),
-                              tabName: entry.value,
-                              username: widget.username,
-                              isHome: 0,
-                              pagingController: pagingController,
-                            )
-                          : TestPublicProfilePostGridAudio(
-                              pubPost: allPublicUserPostDataAudio,
-                              scrollController: _scrollController2,
-                              tabKey: Key('Tab${entry.key}'),
-                              tabName: entry.value,
-                              username: widget.username,
-                              isHome: 0,
-                              pagingController: pagingController2,
-                            );
-                    }).toList(),
+                    labelColor: Colors.grey,
+                    unselectedLabelColor: Colors.grey,
+                    indicatorColor: Colors.grey,
+                    indicatorWeight: 2,
+                    indicatorSize: TabBarIndicatorSize.tab,
+                    indicatorPadding: EdgeInsets.symmetric(horizontal: 16),
+                    labelPadding: EdgeInsets.only(bottom: 10),
+                    onTap: (index) {
+                      FeedPostWare ind =
+                          Provider.of<FeedPostWare>(context, listen: false);
+                      ind.changeTabIndex(index);
+                    },
+                    tabs: _tabs
+                        .map((String tab) => tab == "others"
+                            ? Container(
+                                height: 20,
+                                width: 20,
+                                child: SvgPicture.asset(
+                                  "assets/icon/vid.svg",
+                                  color: Colors.grey,
+                                ))
+                            : Container(
+                                height: 20,
+                                width: 20,
+                                child: SvgPicture.asset("assets/icon/aud.svg",
+                                    color: Colors.grey)))
+                        .toList(),
                   ),
-                ),
-              ],
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Expanded(
+                    child: TabBarView(
+                      controller: _tabController,
+                      children: _tabs.asMap().entries.map((entry) {
+                        return entry.value == "others"
+                            ? TestPublicProfilePostGrid(
+                                pubPost: allPublicUserPostData,
+                                scrollController: _scrollController,
+                                tabKey: Key('Tab${entry.key}'),
+                                tabName: entry.value,
+                                username: widget.username,
+                                isHome: 0,
+                                pagingController: pagingController,
+                              )
+                            : TestPublicProfilePostGridAudio(
+                                pubPost: allPublicUserPostDataAudio,
+                                scrollController: _scrollController2,
+                                tabKey: Key('Tab${entry.key}'),
+                                tabName: entry.value,
+                                username: widget.username,
+                                isHome: 0,
+                                pagingController: pagingController2,
+                              );
+                      }).toList(),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -947,6 +954,7 @@ class ProfileQuickLinks extends StatelessWidget {
     return InkWell(
       onTap: onClick,
       child: Card(
+        color: Colors.black,
         //  elevation: 10,
         // shape: RoundedRectangleBorder(
         //   borderRadius: BorderRadius.circular(80),

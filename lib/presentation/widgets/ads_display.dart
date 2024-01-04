@@ -40,7 +40,8 @@ class AdsDisplay extends StatelessWidget {
             children: [
               AppText(
                 text: title!,
-                color: HexColor(backgroundColor),
+                color: textWhite,
+                //  color: HexColor(backgroundColor),
                 size: 10,
                 fontWeight: FontWeight.w600,
                 maxLines: 1,

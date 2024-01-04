@@ -182,13 +182,15 @@ class _LikeSectionState extends State<LikeSection> {
                       //  GiftWare.instance.giftForDownloadFromApi(
                       //             widget.data.id!, context);
                     },
-                    child: widget.data.media!.first.contains(".mp3") ? SizedBox.shrink() :  Padding(
-                      padding: const EdgeInsets.only(right: 3.0),
-                      child: myIcon(
-                          "assets/icon/d.svg", backgroundColor, 20, 20, null),
-                    ),
+                    child: widget.data.media!.first.contains(".mp3")
+                        ? SizedBox.shrink()
+                        : Padding(
+                            padding: const EdgeInsets.only(right: 3.0),
+                            child: myIcon("assets/icon/d.svg", backgroundColor,
+                                20, 20, null),
+                          ),
                   )
-                :  InkWell(
+                : InkWell(
                     onTap: () async {
                       giveDiamondsModal(context, widget.data.user!.username!);
                     },
@@ -286,7 +288,7 @@ class _LikeSectionState extends State<LikeSection> {
             svgPath,
             height: height,
             width: width,
-            color: hexString == null ? null : HexColor(hexString),
+            color: hexString == null ? null : textPrimary,
           ),
         ),
         text == null
@@ -301,7 +303,7 @@ class _LikeSectionState extends State<LikeSection> {
                   size: 16,
                   align: TextAlign.center,
                   fontWeight: FontWeight.w700,
-                  color: HexColor(backgroundColor),
+                  color: textWhite,
                 ),
               )
       ],

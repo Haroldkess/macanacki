@@ -55,7 +55,8 @@ class _PeopleHomeState extends State<PeopleHome> {
           }
         });
       },
-      child: SizedBox(
+      child: Container(
+        color: HexColor(backgroundColor),
         height: Get.height,
         width: Get.width,
         child: stream.feedPosts.isEmpty
@@ -68,7 +69,7 @@ class _PeopleHomeState extends State<PeopleHome> {
                       children: [
                         LottieBuilder.asset("assets/icon/nodata.json"),
                         stream.loadStatus
-                            ? Loader(color: HexColor(primaryColor))
+                            ? Loader(color: textWhite)
                             : AppButton(
                                 width: 0.5,
                                 height: 0.06,

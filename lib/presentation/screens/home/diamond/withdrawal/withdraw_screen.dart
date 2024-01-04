@@ -19,17 +19,17 @@ class WithdrawDiamonds extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: HexColor("#F5F2F9"),
+        backgroundColor: backgroundSecondary,
         appBar: AppBar(
           backgroundColor: HexColor(backgroundColor),
           elevation: 0,
           leading: BackButton(
-            color: Colors.black,
+            color: textWhite,
           ),
           centerTitle: true,
           title: AppText(
             text: "Withdraw Diamond",
-            color: Colors.black,
+            color: textWhite,
             size: 24,
           ),
         ),
@@ -70,7 +70,7 @@ class WithdrawDiamonds extends StatelessWidget {
                                         padding: const EdgeInsets.all(8.0),
                                         child: Icon(
                                           Icons.credit_card_rounded,
-                                          color: HexColor(primaryColor),
+                                          color: HexColor(backgroundColor),
                                         )),
                                   ),
                                   SizedBox(
@@ -80,6 +80,7 @@ class WithdrawDiamonds extends StatelessWidget {
                                     text: "My Bank",
                                     size: 14,
                                     fontWeight: FontWeight.w400,
+                                    color: textPrimary,
                                   ),
                                 ],
                               ),
@@ -98,7 +99,7 @@ class WithdrawDiamonds extends StatelessWidget {
                                       padding: const EdgeInsets.all(8.0),
                                       child: Icon(
                                         Icons.add,
-                                        color: HexColor(primaryColor),
+                                        color: HexColor(backgroundColor),
                                       )),
                                 ),
                                 SizedBox(
@@ -108,6 +109,7 @@ class WithdrawDiamonds extends StatelessWidget {
                                   text: "Add Bank",
                                   size: 14,
                                   fontWeight: FontWeight.w400,
+                                  color: textPrimary,
                                 ),
                               ],
                             ),
@@ -125,7 +127,6 @@ class WithdrawDiamonds extends StatelessWidget {
 
 class BalanceCard extends StatelessWidget {
   const BalanceCard({super.key});
-
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -230,11 +231,11 @@ class _WithdrawalInputState extends State<WithdrawalInput> {
                 SizedBox(
                   height: 20,
                 ),
-                AppForm(
+                AppFormWithdraw(
                   borderRad: 5.0,
-                  backColor: HexColor(backgroundColor),
+                  backColor: Colors.transparent,
                   hint: "Enter Amount",
-                  hintColor: HexColor("#C0C0C0"),
+                  hintColor: textPrimary,
                   controller: amount,
                   textInputType: TextInputType.number,
                 ),
@@ -264,7 +265,7 @@ class _WithdrawalInputState extends State<WithdrawalInput> {
                       ? Visibility(
                           visible: loadWithdraw.value,
                           child: Center(
-                            child: Loader(color: HexColor(primaryColor)),
+                            child: Loader(color: textWhite),
                           ))
                       : Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -306,7 +307,7 @@ class _WithdrawalInputState extends State<WithdrawalInput> {
                                           padding: const EdgeInsets.all(8.0),
                                           child: Icon(
                                             Icons.remove,
-                                            color: HexColor(primaryColor),
+                                            color: HexColor(backgroundColor),
                                           )),
                                     ),
                                   ],

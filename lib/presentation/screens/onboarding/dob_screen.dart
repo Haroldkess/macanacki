@@ -53,7 +53,7 @@ class _DobScreenState extends State<DobScreen> {
                 height: height * 0.15,
                 // color: Colors.amber,
                 child: BackButton(
-                  color: HexColor(darkColor),
+                  color: textWhite,
                 ),
               ),
             ),
@@ -67,7 +67,7 @@ class _DobScreenState extends State<DobScreen> {
                     width: width * 0.9,
                     child: AppText(
                       text: "When were you born?",
-                      color: HexColor(darkColor),
+                      color: textWhite,
                       fontWeight: FontWeight.w700,
                       size: 40,
                       align: TextAlign.left,
@@ -86,9 +86,9 @@ class _DobScreenState extends State<DobScreen> {
                 AppButton(
                     width: 0.85,
                     height: 0.06,
-                    color: primaryColor,
+                    color: "#ffffff",
                     text: "Continue",
-                    backColor: primaryColor,
+                    backColor: "#ffffff",
                     curves: buttonCurves * 5,
                     textColor: backgroundColor,
                     onTap: () async {
@@ -160,14 +160,17 @@ class _DobScreenState extends State<DobScreen> {
           decoration: InputDecoration(
             suffixIcon: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [SvgPicture.asset("assets/icon/calendar.svg")],
+              children: [
+                SvgPicture.asset(
+                  "assets/icon/calendar.svg",
+                  color: textPrimary,
+                )
+              ],
             ),
             contentPadding: const EdgeInsets.only(left: 20, top: 17),
             hintText: d == "DAY" ? "Date of birth" : "$d-$m-$y",
             hintStyle: GoogleFonts.leagueSpartan(
-                color: HexColor('#424242'),
-                fontSize: 12,
-                fontWeight: FontWeight.w600),
+                color: textPrimary, fontSize: 12, fontWeight: FontWeight.w600),
             border: InputBorder.none,
             enabledBorder: InputBorder.none,
             focusedBorder: InputBorder.none,
@@ -187,7 +190,7 @@ class _DobScreenState extends State<DobScreen> {
       } else {
         //AddPhotoScreen()
         temp.addDobTemp(formattedDate).whenComplete(
-            () => PageRouting.pushToPage(context, const AddPasswordScreen() ));
+            () => PageRouting.pushToPage(context, const AddPasswordScreen()));
       }
     } catch (e) {
       log(e.toString());

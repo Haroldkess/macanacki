@@ -76,8 +76,8 @@ class PublicLoader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
-      baseColor: baseColor,
-      highlightColor: highlightColor,
+      baseColor: HexColor(backgroundColor),
+      highlightColor: backgroundSecondary,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: const [
@@ -164,35 +164,38 @@ class _PublicProfileInfoTestState extends State<PublicProfileInfoTest> {
     var width = MediaQuery.of(context).size.width;
 
     return Container(
-      //  height: height / 2,
-      width: width,
-      alignment: Alignment.topCenter,
-      decoration: BoxDecoration(
-          color: HexColor(backgroundColor),
-          shape: BoxShape.rectangle,
-          borderRadius: const BorderRadius.only(
-              bottomLeft: Radius.elliptical(250, 200),
-              bottomRight: Radius.elliptical(250, 200))),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          SizedBox(
-            height: 50,
-          ),
-          PublicProfileImageAndNameTest(
-            stream: widget.stream,
-          ),
-          PublicProfileFollowersStatisticsTest(
-            stream: widget.stream,
-          ),
-          Padding(
-            padding: EdgeInsets.only(bottom: 20.0),
-            child: UserProfileActionsTest(
-              data: widget.stream,
+      color: Colors.grey.shade900,
+      child: Container(
+        //  height: height / 2,
+        width: width,
+        alignment: Alignment.topCenter,
+        decoration: BoxDecoration(
+            color: HexColor(backgroundColor),
+            shape: BoxShape.rectangle,
+            borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.elliptical(250, 200),
+                bottomRight: Radius.elliptical(250, 200))),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SizedBox(
+              height: 50,
             ),
-          )
-        ],
+            PublicProfileImageAndNameTest(
+              stream: widget.stream,
+            ),
+            PublicProfileFollowersStatisticsTest(
+              stream: widget.stream,
+            ),
+            Padding(
+              padding: EdgeInsets.only(bottom: 20.0),
+              child: UserProfileActionsTest(
+                data: widget.stream,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -225,7 +228,7 @@ class LoaderImageAndName extends StatelessWidget {
             HexagonWidget.pointy(
               width: w,
               elevation: 10.0,
-              color: Colors.white,
+              color: textPrimary,
               cornerRadius: 20.0,
               child: AspectRatio(
                 aspectRatio: HexagonType.POINTY.ratio,
@@ -238,7 +241,8 @@ class LoaderImageAndName extends StatelessWidget {
             HexagonWidget.pointy(
               width: w,
               elevation: 10.0,
-              color: HexColor("#5F5F5F"),
+              color: HexColor(backgroundColor),
+              //color: HexColor("#5F5F5F"),
               padding: 10,
               cornerRadius: 20.0,
               child: AspectRatio(

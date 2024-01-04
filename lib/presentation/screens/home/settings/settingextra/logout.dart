@@ -44,7 +44,7 @@ class Logout extends StatelessWidget {
                       overflow: TextOverflow.ellipsis))
             ],
           ),
-          backgroundColor: HexColor(primaryColor).withOpacity(.9),
+          backgroundColor: HexColor(backgroundColor).withOpacity(.9),
           action: SnackBarAction(
               label: "Yes",
               textColor: Colors.white,
@@ -94,7 +94,7 @@ class Logout extends StatelessWidget {
           children: [
             AppText(
               text: "Logout",
-              color: HexColor("#0C0C0C"),
+              color: textPrimary,
               fontWeight: FontWeight.w400,
               size: 16,
             )

@@ -108,7 +108,7 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
         child: Scaffold(
           backgroundColor: tabs.index == 4 || tabs.index == 2
               ? HexColor(backgroundColor)
-              : HexColor("#F5F2F9"),
+              : HexColor(backgroundColor),
           appBar: tabs.index == 0 ||
                   tabs.index == 3 ||
                   tabs.index == 4 ||
@@ -260,13 +260,12 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
           'assets/icon/home.svg',
           height: 18,
           width: 18,
-          color: HexColor(primaryColor),
+          color: textWhite,
         ),
         title: ("Home"),
-
-        activeColorPrimary: HexColor(primaryColor),
+        activeColorPrimary: textWhite,
         inactiveColorPrimary: HexColor("#C0C0C0"),
-        activeColorSecondary: HexColor(primaryColor),
+        activeColorSecondary: textWhite,
         inactiveIcon: SvgPicture.asset(
           'assets/icon/home.svg',
           height: 18,
@@ -306,10 +305,10 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
           'assets/icon/search.svg',
           height: 18,
           width: 18,
-          color: HexColor(primaryColor),
+          color: textWhite,
         ),
         title: ("Search"),
-        activeColorPrimary: HexColor(primaryColor),
+        activeColorPrimary: textWhite,
         inactiveColorPrimary: HexColor("#C0C0C0"),
         inactiveIcon: SvgPicture.asset(
           'assets/icon/search.svg',
@@ -323,10 +322,10 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
           'assets/icon/crown.svg',
           height: 18,
           width: 18,
-          color: HexColor(primaryColor),
+          color: textWhite,
         ),
         title: ("Find"),
-        activeColorPrimary: HexColor(primaryColor),
+        activeColorPrimary: textWhite,
         inactiveColorPrimary: HexColor("#C0C0C0"),
         inactiveIcon: SvgPicture.asset(
           'assets/icon/crown.svg',
@@ -343,7 +342,7 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
               'assets/icon/chat.svg',
               height: 18,
               width: 18,
-              color: HexColor(primaryColor),
+              color: textWhite,
             ),
             unread < 1
                 ? const SizedBox.shrink()
@@ -358,8 +357,8 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
                         child: Container(
                           constraints:
                               BoxConstraints(maxHeight: 10, maxWidth: 10),
-                          decoration: const BoxDecoration(
-                              color: Colors.red, shape: BoxShape.circle),
+                          decoration: BoxDecoration(
+                              color: secondaryColor, shape: BoxShape.circle),
                           child: Center(
                             child: AppText(
                               size: 8,
@@ -376,7 +375,7 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
           ],
         ),
         title: ("Chat"),
-        activeColorPrimary: HexColor(primaryColor),
+        activeColorPrimary: textWhite,
         inactiveColorPrimary: HexColor("#C0C0C0"),
         inactiveIcon: Stack(
           alignment: Alignment.center,
@@ -401,7 +400,7 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
                           constraints:
                               BoxConstraints(maxHeight: 10, maxWidth: 10),
                           decoration: const BoxDecoration(
-                              color: Colors.red, shape: BoxShape.circle),
+                              color: Colors.green, shape: BoxShape.circle),
                           child: Center(
                             child: AppText(
                               size: 8,
@@ -419,14 +418,10 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
         ),
       ),
       PersistentBottomNavBarItem(
-        icon: SvgPicture.asset(
-          'assets/icon/profile.svg',
-          height: 26,
-          width: 26,
-          color: HexColor(primaryColor),
-        ),
+        icon: SvgPicture.asset('assets/icon/profile.svg',
+            height: 26, width: 26, color: textWhite),
         title: ("Profile"),
-        activeColorPrimary: HexColor(primaryColor),
+        activeColorPrimary: textWhite,
         inactiveColorPrimary: HexColor("#C0C0C0"),
         inactiveIcon: SvgPicture.asset(
           'assets/icon/profile.svg',
@@ -647,7 +642,6 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
     // SystemChrome.setPreferredOrientations(
     //       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     //    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
-
     //  = PageController(initialPage:  )
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -715,7 +709,6 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
-
     if (state == AppLifecycleState.inactive) return;
 
     final isBackground = state == AppLifecycleState.paused;

@@ -25,6 +25,7 @@ idModal(
   return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      backgroundColor: backgroundSecondary,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (context) {
@@ -41,7 +42,7 @@ idModal(
                   height: 10,
                 ),
                 stream.loadStatus
-                    ? Loader(color: HexColor(primaryColor))
+                    ? Loader(color: textWhite)
                     : Column(
                         // mainAxisSize: MainAxisSize.min,
                         children: id
@@ -58,8 +59,8 @@ idModal(
                                     child: AppText(
                                       text: e,
                                       color: user.id == e
-                                          ? Colors.black
-                                          : Colors.grey,
+                                          ? textWhite
+                                          : textPrimary,
                                       size: user.id == e ? 16 : 12,
                                       fontWeight: FontWeight.w600,
                                     ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:macanacki/presentation/constants/colors.dart';
 import 'package:macanacki/presentation/screens/userprofile/following_followers.dart';
 import 'package:macanacki/presentation/widgets/text.dart';
 import 'package:provider/provider.dart';
@@ -124,6 +125,7 @@ class PublicLoaderFollowers extends StatelessWidget {
     UserProfileWare stream = context.watch<UserProfileWare>();
     return Container(
       width: width * 0.7,
+      //color: HexColor(backgroundColor),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -148,6 +150,7 @@ class PublicLoaderFollowers extends StatelessWidget {
                   text: "Followers",
                   fontWeight: FontWeight.w400,
                   size: 12,
+                  color: textPrimary,
                 ),
               ),
             ],
@@ -173,6 +176,7 @@ class PublicLoaderFollowers extends StatelessWidget {
                   text: "Following",
                   fontWeight: FontWeight.w400,
                   size: 12,
+                  color: textPrimary,
                 ),
               ),
             ],
@@ -326,12 +330,14 @@ class PublicProfileFollowersStatisticsTest extends StatelessWidget {
                           .format(fractionDigits: 1),
                       fontWeight: FontWeight.w600,
                       size: 18,
+                      color: Colors.white.withOpacity(.6),
                     ),
                   ),
                   AppText(
                     text: "Followers",
                     fontWeight: FontWeight.w500,
                     size: 10,
+                    color: Colors.white.withOpacity(.6),
                   ),
                 ],
               ),
@@ -365,12 +371,14 @@ class PublicProfileFollowersStatisticsTest extends StatelessWidget {
                           .format(fractionDigits: 1),
                       fontWeight: FontWeight.w600,
                       size: 18,
+                      color: Colors.white.withOpacity(.6),
                     ),
                   ),
                   AppText(
                     text: "Following",
                     fontWeight: FontWeight.w500,
                     size: 10,
+                    color: Colors.white.withOpacity(.6),
                   ),
                 ],
               ),

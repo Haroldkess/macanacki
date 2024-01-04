@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:macanacki/presentation/allNavigation.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
@@ -24,6 +25,7 @@ optionModal(BuildContext cont, List<String> url,
   return showModalBottomSheet(
       context: cont,
       isScrollControlled: true,
+      backgroundColor: backgroundSecondary,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (context) {
@@ -40,7 +42,7 @@ optionModal(BuildContext cont, List<String> url,
                   height: 10,
                 ),
                 stream.loadStatus
-                    ? Loader(color: HexColor(primaryColor))
+                    ? Loader(color: textWhite)
                     : Column(
                         // mainAxisSize: MainAxisSize.min,
                         children: user.userProfileModel.id == id
@@ -192,14 +194,34 @@ optionModal(BuildContext cont, List<String> url,
                                       },
                                       title: Padding(
                                         padding:
-                                            const EdgeInsets.only(top: 15.0),
+                                            const EdgeInsets.only(top: 0.0),
                                         child: AppText(
                                           text: e.name,
-                                          color: HexColor(darkColor),
+                                          color: textPrimary,
                                           size: 16,
                                           fontWeight: FontWeight.w400,
                                         ),
                                       ),
+                                      trailing: e.name == "Download"
+                                          ? SvgPicture.asset(
+                                              "assets/icon/d.svg",
+                                              color: textPrimary,
+                                              height: 15,
+                                              width: 15,
+                                            )
+                                          : Icon(
+                                              e.name == "Report"
+                                                  ? Icons.report_outlined
+                                                  : e.name == "Report Abuse"
+                                                      ? Icons
+                                                          .report_problem_outlined
+                                                      : e.name == "Edit Post"
+                                                          ? Icons.edit_outlined
+                                                          : Icons
+                                                              .delete_outline,
+                                              color: textPrimary,
+                                              size: 15,
+                                            ),
                                     ))
                                 .toList()
                             : feedOption
@@ -296,7 +318,7 @@ optionModal(BuildContext cont, List<String> url,
                                             const EdgeInsets.only(top: 15.0),
                                         child: AppText(
                                           text: e.name,
-                                          color: HexColor(darkColor),
+                                          color: textPrimary,
                                           size: 16,
                                           fontWeight: FontWeight.w400,
                                         ),

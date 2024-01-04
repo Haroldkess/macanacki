@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:lottie/lottie.dart';
 import 'package:macanacki/presentation/screens/home/diamond/diamond_modal/buy_modal.dart';
+import 'package:macanacki/presentation/widgets/text.dart';
 import 'package:macanacki/services/middleware/gift_ware.dart';
 
 import '../constants/colors.dart';
@@ -20,6 +21,7 @@ AlertDialog confirmationDialog({
 }) {
   return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0)),
+      backgroundColor: backgroundSecondary,
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -37,18 +39,18 @@ AlertDialog confirmationDialog({
             ),
           ),
           SizedBox(height: 30),
-          Text(
-            title ?? "",
-            style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
-            textAlign: TextAlign.center,
+          AppText(
+            text: title ?? "",
+            fontWeight: FontWeight.w800,
+            size: 18,
+            color: textWhite,
           ),
-          Text(
-            message ?? "",
-            style: TextStyle(
-                fontWeight: FontWeight.w700,
-                fontSize: 14,
-                color: Color(0xff979797)),
-            textAlign: TextAlign.center,
+          AppText(
+            text: message ?? "",
+            fontWeight: FontWeight.w700,
+            size: 14,
+            color: textPrimary,
+            align: TextAlign.center,
           ),
           Divider(color: Color(0xffededed)),
           RawMaterialButton(
@@ -178,6 +180,7 @@ AlertDialog diamondDialog(
     bool? isFail,
     BuildContext? context}) {
   return AlertDialog(
+      backgroundColor: HexColor(backgroundColor),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0)),
       content: Column(
         mainAxisSize: MainAxisSize.min,
@@ -191,10 +194,11 @@ AlertDialog diamondDialog(
                 // color: isFail == true ? Colors.red : null,
               )),
           SizedBox(height: 30),
-          Text(
-            title ?? "",
-            style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
-            textAlign: TextAlign.center,
+          AppText(
+            text: title ?? "",
+            size: 18,
+            fontWeight: FontWeight.w800,
+            color: textWhite,
           ),
           Text(
             message ?? "",
@@ -350,6 +354,7 @@ AlertDialog seeWebsiteDialog(
     String? svg}) {
   return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0)),
+      backgroundColor: backgroundSecondary,
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -359,22 +364,23 @@ AlertDialog seeWebsiteDialog(
               width: 50,
               child: SvgPicture.asset(
                 "assets/icon/$svg.svg",
+                color: textWhite,
                 // color: isFail == true ? Colors.red : null,
               )),
           SizedBox(height: 30),
-          Text(
-            title ?? "",
-            style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
-            textAlign: TextAlign.center,
+          AppText(
+            text: title ?? "",
+            size: 18,
+            fontWeight: FontWeight.w800,
+            color: textWhite,
           ),
-          Text(
-            message ?? "",
-            style: TextStyle(
-                fontWeight: FontWeight.w700,
-                fontSize: 14,
-                color: Color(0xff979797)),
-            textAlign: TextAlign.center,
+          AppText(
+            text: message ?? "",
+            size: 14,
+            fontWeight: FontWeight.w800,
+            color: textPrimary,
           ),
+
           // Divider(color: Color(0xffededed)),
           // RawMaterialButton(
           //   onPressed: onPressed ??

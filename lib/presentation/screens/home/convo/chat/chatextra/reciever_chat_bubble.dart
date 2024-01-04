@@ -26,65 +26,93 @@ class ReceivingBubble extends StatelessWidget {
     return Padding(
       padding:
           const EdgeInsets.only(bottom: 5.0, left: 0.0, right: 35.0, top: 0),
-      child: Column(
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Container(
-            // width: MediaQuery.of(context).size.width * 0.8,
-            constraints: BoxConstraints(
-                maxWidth: MediaQuery.of(context).size.width * .8,
-                minWidth: MediaQuery.of(context).size.width * .3),
-            alignment: Alignment.centerLeft,
-            decoration: BoxDecoration(
-                color: HexColor(backgroundColor),
-                shape: BoxShape.rectangle,
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(15),
-                  topRight: Radius.circular(15),
-                  bottomRight: Radius.circular(15),
-                )),
-            child: Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  chat.media != null
-                      ? Container(
-                          constraints: BoxConstraints(
-                              maxHeight: 200,
-                              maxWidth:
-                                  MediaQuery.of(context).size.width * 0.5),
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  image:
-                                      CachedNetworkImageProvider(chat.media!))),
-                        )
-                      : const SizedBox.shrink(),
-                  AppText(
-                    text: chat.body!,
-                    color: HexColor("#5F5F5F"),
-                    size: 14,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 0.2,
+          Stack(
+            children: [
+              Container(
+                // width: MediaQuery.of(context).size.width * 0.8,
+                constraints: BoxConstraints(
+                    //  maxWidth: MediaQuery.of(context).size.width * .8,
+                    minWidth: MediaQuery.of(context).size.width * .3),
+                alignment: Alignment.centerLeft,
+                decoration: BoxDecoration(
+                    color: Colors.green,
+                    shape: BoxShape.rectangle,
+                    borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(8),
+                        topRight: Radius.circular(8),
+                        bottomRight: Radius.circular(8),
+                        bottomLeft: Radius.elliptical(5, 30))),
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      left: 15.0, right: 15, top: 5, bottom: 15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      chat.media != null
+                          ? Container(
+                              constraints: BoxConstraints(
+                                maxHeight: 200,
+                                maxWidth:
+                                    MediaQuery.of(context).size.width * 0.5,
+                              ),
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                      image: CachedNetworkImageProvider(
+                                          chat.media!))),
+                            )
+                          : const SizedBox.shrink(),
+                      ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxWidth: MediaQuery.of(context).size.width * .7,
+                        ),
+                        child: ChatAppText(
+                          text: chat.body!,
+                          color: textWhite,
+                          // color: HexColor("#5F5F5F"),
+                          size: 14,
+                          fontWeight: FontWeight.w400,
+                          letterSpacing: 0.2,
+                        ),
+                      ),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.end,
+                      //   children: [
+                      //     Padding(
+                      //       padding: const EdgeInsets.only(
+                      //         left: 0,
+                      //         top: 5,
+                      //       ),
+                      //       child: Row(
+                      //         children: [
+                      //           AppText(
+                      //             text:
+                      //                 Operations.times(chat.createdAt!).toString(),
+                      //             color: HexColor("#C0C0C0"),
+                      //             size: 10,
+                      //           )
+                      //         ],
+                      //       ),
+                      //     )
+                      //   ],
+                      // )
+                    ],
                   ),
-                ],
+                ),
               ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(
-              left: 10,
-              top: 5,
-            ),
-            child: Row(
-              children: [
-                AppText(
+              Positioned(
+                bottom: 5,
+                right: 10,
+                child: AppText(
                   text: Operations.times(chat.createdAt!).toString(),
-                  color: HexColor("#C0C0C0"),
-                  size: 12,
-                )
-              ],
-            ),
-          )
+                  color: textPrimary,
+                  size: 10,
+                ),
+              )
+            ],
+          ),
         ],
       ),
     );

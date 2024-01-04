@@ -21,6 +21,7 @@ giveDiamondsModal(BuildContext cont, String name,
   return showModalBottomSheet(
       context: cont,
       isScrollControlled: true,
+      backgroundColor: HexColor(backgroundColor),
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (context) {
@@ -28,7 +29,7 @@ giveDiamondsModal(BuildContext cont, String name,
         // UserProfileWare user = context.watch<UserProfileWare>();
         // PlanWare action = Provider.of<PlanWare>(context,listen: false);
         return Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(0),
           child: Container(
             child: SingleChildScrollView(
               child: Column(
@@ -66,6 +67,7 @@ giveDiamondsModal(BuildContext cont, String name,
                           text: "Give Diamond",
                           size: 17,
                           fontWeight: FontWeight.w400,
+                          color: textWhite,
                         ),
                         SizedBox(
                           height: 10,
@@ -78,6 +80,7 @@ giveDiamondsModal(BuildContext cont, String name,
                             size: 13,
                             fontWeight: FontWeight.w400,
                             align: TextAlign.center,
+                            color: textWhite,
                           ),
                         ),
                       ],
@@ -143,7 +146,8 @@ giveDiamondsModal(BuildContext cont, String name,
                     height: 30,
                   ),
                   Container(
-                    color: Color(0xFFF5F2F8),
+                    color: backgroundSecondary,
+                    //  color: Color(0xFFF5F2F8),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: ObxValue((load) {
@@ -221,8 +225,6 @@ giveDiamondsModal(BuildContext cont, String name,
                                                                     cont);
                                                             Get.back();
                                                           }));
-                                                  
-                                                  
                                                     },
                                                     child: Stack(
                                                       children: [
@@ -239,8 +241,8 @@ giveDiamondsModal(BuildContext cont, String name,
                                                               height: 44,
                                                               decoration:
                                                                   ShapeDecoration(
-                                                                color: Color(
-                                                                    0xFFFC72A6),
+                                                                color:
+                                                                    secondaryColor,
                                                                 shape:
                                                                     RoundedRectangleBorder(
                                                                   borderRadius:
@@ -253,8 +255,8 @@ giveDiamondsModal(BuildContext cont, String name,
                                                                 child: AppText(
                                                                   text:
                                                                       '\$${convertToCurrency(e.amount!)}',
-                                                                  color: Colors
-                                                                      .black,
+                                                                  color:
+                                                                      textWhite,
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .w400,

@@ -147,6 +147,7 @@ class GiftWare extends GetxController {
         isSuccessful = false;
       }
     } catch (e) {
+      emitter(e.toString());
       loadGifters.value = false;
       isSuccessful = false;
     }

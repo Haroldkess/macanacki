@@ -59,10 +59,10 @@ class _BusinessVerificationState extends State<BusinessVerification> {
     RegisterationWare stream = context.watch<RegisterationWare>();
     var width = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: backgroundSecondary,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        leading: BackButton(color: Colors.black),
+        backgroundColor: HexColor(backgroundColor),
+        leading: BackButton(color: textWhite),
         elevation: 0,
       ),
       body: ListView(
@@ -94,7 +94,7 @@ class _BusinessVerificationState extends State<BusinessVerification> {
             child: AppText(
               text: "Photo ID",
               size: 18,
-              color: HexColor("#333333"),
+              color: textWhite,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -107,7 +107,7 @@ class _BusinessVerificationState extends State<BusinessVerification> {
               text:
                   "Take a clear photo of your government ID (Must be one of Int. Pass, Driver Lincense, Etc) Make sure lighting is good and any lettering is clear before uploading. for best results, please use a mobile device.",
               size: 12,
-              color: HexColor("#333333"),
+              color: textPrimary,
               fontWeight: FontWeight.w400,
             ),
           ),
@@ -130,7 +130,7 @@ class _BusinessVerificationState extends State<BusinessVerification> {
                             AppText(
                               text: "Choose ID Type",
                               size: 16,
-                              color: HexColor("#0C0C0C"),
+                              color: textWhite,
                               fontWeight: FontWeight.w500,
                             ),
                             const SizedBox(
@@ -147,6 +147,7 @@ class _BusinessVerificationState extends State<BusinessVerification> {
                         Icon(
                           Icons.arrow_forward_ios_outlined,
                           size: 15,
+                          color: textPrimary,
                         )
                       ],
                     )
@@ -177,12 +178,15 @@ class _BusinessVerificationState extends State<BusinessVerification> {
                               child: AppText(
                                 text: basename(picked.idUser!.path),
                                 size: 12,
-                                color: HexColor("#818181"),
+                                color: textPrimary,
                                 fontWeight: FontWeight.w400,
                               ),
                             )
                           : Image.file(picked.idUser!)
-                      : SvgPicture.asset("assets/icon/upload.svg"))),
+                      : SvgPicture.asset(
+                          "assets/icon/upload.svg",
+                          color: textWhite,
+                        ))),
           const SizedBox(
             height: 20,
           ),
@@ -191,7 +195,7 @@ class _BusinessVerificationState extends State<BusinessVerification> {
             child: Row(
               children: [
                 Checkbox(
-                    fillColor: MaterialStatePropertyAll(HexColor(primaryColor)),
+                    fillColor: MaterialStatePropertyAll(secondaryColor),
                     value: iAgree,
                     onChanged: ((value) {
                       setState(() {
@@ -206,19 +210,19 @@ class _BusinessVerificationState extends State<BusinessVerification> {
                   child: RichText(
                     text: TextSpan(
                         text: "I consent to the use of MacaNacki ",
-                        style: GoogleFonts.leagueSpartan(
+                        style: GoogleFonts.roboto(
                             textStyle: TextStyle(
                                 fontWeight: FontWeight.w500,
-                                color: HexColor(darkColor),
+                                color: textPrimary,
                                 decorationStyle: TextDecorationStyle.solid,
                                 fontSize: 10)),
                         children: [
                           TextSpan(
                             text: "Terms of Use",
-                            style: GoogleFonts.leagueSpartan(
+                            style: GoogleFonts.roboto(
                                 textStyle: TextStyle(
                                     fontWeight: FontWeight.w500,
-                                    color: HexColor(primaryColor),
+                                    color: secondaryColor,
                                     decorationStyle: TextDecorationStyle.solid,
                                     fontSize: 10)),
                             recognizer: tapGestureRecognizer
@@ -232,16 +236,16 @@ class _BusinessVerificationState extends State<BusinessVerification> {
                             style: GoogleFonts.leagueSpartan(
                                 textStyle: TextStyle(
                                     fontWeight: FontWeight.w500,
-                                    color: HexColor(darkColor),
+                                    color: textPrimary,
                                     decorationStyle: TextDecorationStyle.solid,
                                     fontSize: 10)),
                           ),
                           TextSpan(
                             text: "Privacy Policy",
-                            style: GoogleFonts.leagueSpartan(
+                            style: GoogleFonts.roboto(
                                 textStyle: TextStyle(
                                     fontWeight: FontWeight.w500,
-                                    color: HexColor(primaryColor),
+                                    color: secondaryColor,
                                     decorationStyle: TextDecorationStyle.solid,
                                     fontSize: 10)),
                             recognizer: tapGestureRecognizer
@@ -260,15 +264,15 @@ class _BusinessVerificationState extends State<BusinessVerification> {
             height: 20,
           ),
           stream.loadUser
-              ? Loader(color: HexColor(primaryColor))
+              ? Loader(color: textWhite)
               : Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: AppButton(
                       width: 0.8,
                       height: 0.06,
-                      color: backgroundColor,
+                      color: "#ffffff",
                       text: "Continue",
-                      backColor: primaryColor,
+                      backColor: "#ffffff",
                       curves: buttonCurves * 5,
                       textColor: backgroundColor,
                       onTap: () async {
@@ -319,11 +323,10 @@ class _BusinessVerificationState extends State<BusinessVerification> {
             .saveInfoIndi(
               verify,
             )
-            .whenComplete(() => VerifyController.userVerify(context,true));
+            .whenComplete(() => VerifyController.userVerify(context, true));
       }
 
       //   VerifyController.business(context)
-
     }
   }
 }

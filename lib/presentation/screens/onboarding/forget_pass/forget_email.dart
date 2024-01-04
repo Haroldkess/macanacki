@@ -45,8 +45,8 @@ class _ForgetPasswordEmailState extends State<ForgetPasswordEmail> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: const [
                   AppIcon(
-                    width: 22.3,
-                    height: 20,
+                    width: 40.3,
+                    height: 40,
                   ),
                 ],
               ),
@@ -60,7 +60,7 @@ class _ForgetPasswordEmailState extends State<ForgetPasswordEmail> {
                       AppText(
                         text: "Forget password",
                         size: 25,
-                        color: HexColor(backgroundColor),
+                        color: textWhite,
                         fontWeight: FontWeight.w600,
                       ),
                     ],
@@ -73,7 +73,7 @@ class _ForgetPasswordEmailState extends State<ForgetPasswordEmail> {
                       AppText(
                         text: "Enter your email address to get started",
                         size: 12,
-                        color: HexColor(backgroundColor),
+                        color: textWhite,
                         fontWeight: FontWeight.w400,
                       ),
                     ],
@@ -139,11 +139,11 @@ class _ForgetPasswordEmailState extends State<ForgetPasswordEmail> {
                       : AppButton(
                           width: 0.8,
                           height: 0.06,
-                          color: backgroundColor,
+                          color: "#FFFFFF",
                           text: "Continue",
-                          backColor: backgroundColor,
+                          backColor: "#FFFFFF",
                           curves: buttonCurves * 5,
-                          textColor: "#000000",
+                          textColor: backgroundColor,
                           onTap: () async {
                             _submit(context);
                             //  PageRouting.pushToPage(context, const EmailOtp());
@@ -172,7 +172,7 @@ class _ForgetPasswordEmailState extends State<ForgetPasswordEmail> {
                         },
                         child: AppText(
                           text: " Login",
-                          color: HexColor(backgroundColor),
+                          color: textWhite,
                         ),
                       )
                     ],

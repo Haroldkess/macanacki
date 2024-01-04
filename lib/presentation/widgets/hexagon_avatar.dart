@@ -90,7 +90,7 @@ class DpAvatar extends StatelessWidget {
             progressIndicatorBuilder: (context, url, downloadProgress) =>
                 Shimmer.fromColors(
                     baseColor: Colors.grey,
-                    highlightColor: HexColor(primaryColor).withOpacity(.7),
+                    highlightColor: HexColor(backgroundColor).withOpacity(.4),
                     child: CircleAvatar(
                       radius: 10,
                       backgroundColor: Colors.white,
@@ -101,7 +101,7 @@ class DpAvatar extends StatelessWidget {
               progressIndicatorBuilder: (context, url, downloadProgress) =>
                   Shimmer.fromColors(
                       baseColor: Colors.grey,
-                      highlightColor: HexColor(primaryColor).withOpacity(.7),
+                      highlightColor: HexColor(backgroundColor).withOpacity(.4),
                       child: CircleAvatar(
                         radius: 10,
                         backgroundColor: Colors.white,
@@ -113,7 +113,7 @@ class DpAvatar extends StatelessWidget {
                       Shimmer.fromColors(
                           baseColor: Colors.grey,
                           highlightColor:
-                              HexColor(primaryColor).withOpacity(.7),
+                              HexColor(backgroundColor).withOpacity(.4),
                           child: CircleAvatar(
                             radius: 10,
                             backgroundColor: Colors.white,
@@ -121,8 +121,6 @@ class DpAvatar extends StatelessWidget {
                   errorWidget: (context, url, error) => SizedBox()),
             ),
           ),
-       
-       
         ),
       ),
     );

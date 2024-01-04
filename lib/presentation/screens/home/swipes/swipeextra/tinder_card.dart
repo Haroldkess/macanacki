@@ -19,6 +19,7 @@ import 'package:macanacki/services/temps/temps_id.dart';
 import 'package:numeral/numeral.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:swipe_cards/draggable_card.dart';
 import 'package:swipe_cards/swipe_cards.dart';
 
@@ -337,8 +338,8 @@ class _TinderCardState extends State<TinderCard> {
                                           text:
                                               widget.users[indexer].username ??
                                                   "",
-                                          style: GoogleFonts.leagueSpartan(
-                                            color: HexColor(darkColor),
+                                          style: GoogleFonts.roboto(
+                                            color: textPrimary,
                                             fontSize: 16,
                                             fontWeight: FontWeight.w700,
                                           ),
@@ -350,6 +351,9 @@ class _TinderCardState extends State<TinderCard> {
                                                   fontSize: 20),
                                             )
                                           ])),
+                                ),
+                                SizedBox(
+                                  width: 4,
                                 ),
 
                                 widget.users[indexer].verified == 1 &&
@@ -394,6 +398,7 @@ class _TinderCardState extends State<TinderCard> {
                                 fontWeight: FontWeight.w500,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
+                                color: textPrimary,
                               ),
                             )
                             // CircleAvatar(
@@ -435,6 +440,7 @@ class _TinderCardState extends State<TinderCard> {
                                 text: "Suggested account",
                                 size: 12,
                                 fontWeight: FontWeight.w500,
+                                color: textPrimary,
                               )
                               // SvgPicture.asset("assets/icon/location.svg"),
                               // const SizedBox(
@@ -456,18 +462,19 @@ class _TinderCardState extends State<TinderCard> {
                 Align(
                   alignment: Alignment.topRight,
                   child: Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.only(top: 8, right: 12),
                     child: InkWell(
                       onTap: () => filterAdressModals(context),
                       child: Container(
                         height: 40,
                         width: 40,
                         decoration: BoxDecoration(
-                            color: HexColor(primaryColor),
-                            shape: BoxShape.circle),
-                        child: Icon(
-                          Icons.filter_list_alt,
-                          color: Colors.white,
+                            color: backgroundSecondary, shape: BoxShape.circle),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: SvgPicture.asset(
+                            "assets/icon/filter.svg",
+                          ),
                         ),
                       ),
                     ),
@@ -520,12 +527,66 @@ class _TinderCardState extends State<TinderCard> {
                         alignment: const Alignment(-0.3, 0),
                         image: CachedNetworkImageProvider(image),
                         fit: BoxFit.cover)),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0),
-                  child: Container(
-                    decoration:
-                        BoxDecoration(color: Colors.white.withOpacity(0.0)),
-                  ),
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    SizedBox(
+                      // height: Get.height,
+                      // width: Get.width,
+                      child: CachedNetworkImage(
+                        imageUrl: image,
+                        fit: BoxFit.cover,
+                        progressIndicatorBuilder:
+                            (context, url, downloadProgress) =>
+                                Shimmer.fromColors(
+                                    baseColor: HexColor(backgroundColor),
+                                    highlightColor: Colors.grey.withOpacity(.2),
+                                    period: Duration(seconds: 1),
+                                    child: Container(
+                                      color: HexColor(backgroundColor),
+                                    )),
+                        errorWidget: (context, url, error) =>
+                            CachedNetworkImage(
+                          imageUrl: url,
+                          fit: BoxFit.cover,
+                          progressIndicatorBuilder: (context, url,
+                                  downloadProgress) =>
+                              Shimmer.fromColors(
+                                  baseColor: HexColor(backgroundColor),
+                                  highlightColor: Colors.grey.withOpacity(.2),
+                                  period: Duration(seconds: 1),
+                                  child: Container(
+                                    color: HexColor(backgroundColor),
+                                  )),
+                          errorWidget: (context, url, error) =>
+                              CachedNetworkImage(
+                                  imageUrl: url,
+                                  fit: BoxFit.cover,
+                                  progressIndicatorBuilder: (context, url,
+                                          downloadProgress) =>
+                                      Shimmer.fromColors(
+                                          baseColor: HexColor(backgroundColor),
+                                          highlightColor:
+                                              Colors.grey.withOpacity(.2),
+                                          period: Duration(seconds: 1),
+                                          child: Container(
+                                            color: HexColor(backgroundColor),
+                                          )),
+                                  errorWidget: (context, url, error) =>
+                                      SizedBox()),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.0)),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               Container(
@@ -538,8 +599,10 @@ class _TinderCardState extends State<TinderCard> {
               show && username == widget.users[indexer].username
                   ? Align(
                       alignment: Alignment.topCenter,
-                      child:
-                          SvgPicture.asset("assets/icon/slide_following.svg"),
+                      child: SvgPicture.asset(
+                        "assets/icon/slide_following.svg",
+                        color: Colors.green,
+                      ),
                     )
                   : const SizedBox.shrink()
             ],
@@ -561,8 +624,8 @@ class _TinderCardState extends State<TinderCard> {
                             width: width,
                             child: Card(
                               color: Colors.transparent,
-                              shadowColor: HexColor(primaryColor),
-                              elevation: 20,
+                              shadowColor: backgroundSecondary,
+                              elevation: 10,
                               child: ProfileActionButtonNotThisUsers(
                                 icon: "assets/icon/follow.svg",
                                 isSwipe: true,
@@ -600,14 +663,14 @@ class _TinderCardState extends State<TinderCard> {
                   alignment: Alignment.bottomCenter,
                   child: Padding(
                       padding: const EdgeInsets.all(1.0),
-                      child: AnimatedContainer(
-                        duration: Duration(seconds: 1),
+                      child: Container(
+                        //  duration: Duration(seconds: 1),
                         height: height,
                         width: width,
                         child: Card(
                           color: Colors.transparent,
-                          shadowColor: HexColor(primaryColor),
-                          elevation: 20,
+                          shadowColor: backgroundSecondary,
+                          elevation: 10,
                           child: ProfileActionButtonNotThisUsers(
                             icon: "assets/icon/diamond.svg",
                             isSwipe: true,

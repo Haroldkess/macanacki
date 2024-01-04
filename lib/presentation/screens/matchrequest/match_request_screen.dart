@@ -32,7 +32,7 @@ class MatchRequestScreen extends StatelessWidget {
     ChatWare myChat = context.watch<ChatWare>();
     return SafeArea(
       child: Scaffold(
-        backgroundColor: HexColor(backgroundColor),
+        backgroundColor: backgroundSecondary,
         body: Stack(
           children: [
             SingleChildScrollView(
@@ -60,8 +60,8 @@ class MatchRequestScreen extends StatelessWidget {
                                   child: RichText(
                                       text: TextSpan(
                                           text: userName ?? "",
-                                          style: GoogleFonts.leagueSpartan(
-                                            color: HexColor(darkColor),
+                                          style: GoogleFonts.roboto(
+                                            color: textWhite,
                                             fontSize: 20,
                                             fontWeight: FontWeight.w700,
                                           ),
@@ -115,6 +115,7 @@ class MatchRequestScreen extends StatelessWidget {
                                         : "online",
                                     size: 12,
                                     fontWeight: FontWeight.w500,
+                                    color: textPrimary,
                                   )
                                 ],
                               ),
@@ -147,15 +148,15 @@ class MatchRequestScreen extends StatelessWidget {
                     height: 58,
                     width: 280,
                     child: stream.loadStatus
-                        ? Loader(color: HexColor(primaryColor))
+                        ? Loader(color: textWhite)
                         : AppButton(
                             width: 280,
                             height: 58,
-                            color: primaryColor,
+                            color: backgroundColor,
                             text: stream.followIds.contains(id)
                                 ? "UnFollow"
                                 : "Follow Back",
-                            backColor: primaryColor,
+                            backColor: backgroundColor,
                             onTap: () => followAction(context, userName!, id),
                             curves: 37,
                             textColor: "#FFFFFF"),
@@ -198,14 +199,14 @@ class MatchRequestScreen extends StatelessWidget {
                         child: Container(
                           decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: HexColor("#FFFFFF"),
+                              color: HexColor("#000000"),
                               border: Border.all(
                                   width: 1.0,
-                                  color: HexColor("#FFFFFF"),
+                                  color: HexColor("#000000"),
                                   style: BorderStyle.solid)),
                           child: Icon(
                             Icons.clear,
-                            color: HexColor("#8B8B8B").withOpacity(.6),
+                            color: HexColor("#FFFFFF").withOpacity(.6),
                           ),
                         ),
                       ),

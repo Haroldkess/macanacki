@@ -38,19 +38,25 @@ class ProfileActionButtonNotThisUsers extends StatelessWidget {
       onTap: onClick,
       child: Card(
         elevation: 10,
+        color: Colors.grey.shade900,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(80),
           //set border radius more than 50% of height and width to make circle
         ),
         child: Container(
-          decoration: BoxDecoration(shape: BoxShape.circle),
+          decoration:
+              BoxDecoration(shape: BoxShape.circle, color: backgroundSecondary),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: SvgPicture.asset(
               icon,
               height: isSwipe ? 22 : null,
               width: isSwipe ? 22 : null,
-              color: color == null ? null : HexColor(color!),
+              color: color == null
+                  ? null
+                  : primaryColor == primaryColor
+                      ? textPrimary
+                      : HexColor(color!),
             ),
           ),
         ),
@@ -1505,7 +1511,7 @@ class UserProfileActionsTest extends StatelessWidget {
                                       data.phone ?? "");
                                 }
                               },
-                              color: "#FFC1D6",
+                              color: "#C0C0C0",
                             ),
                             const SizedBox(
                               height: 5,
@@ -1589,7 +1595,7 @@ class UserProfileActionsTest extends StatelessWidget {
                       chatWareStream.loadStatus
                           ? Padding(
                               padding: const EdgeInsets.only(top: 8.0),
-                              child: Loader(color: HexColor(primaryColor)),
+                              child: Loader(color: textWhite),
                             )
                           : ProfileActionButtonNotThisUsers(
                               isSwipe: false,
@@ -1793,7 +1799,7 @@ class UserProfileActionsTest extends StatelessWidget {
                                 Uri.parse(url));
                           }
                         },
-                        color: "#FFC1D6",
+                        color: "#C0C0C0",
                       ),
                       const SizedBox(
                         height: 5,
@@ -1822,7 +1828,9 @@ class UserProfileActionsTest extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         ProfileActionButtonNotThisUsers(
-                          icon: "assets/icon/follow.svg",
+                          icon: !stream.followIds.contains(data.id)
+                              ? "assets/icon/follow.svg"
+                              : "assets/icon/unfollow.svg",
                           isSwipe: false,
                           onClick: () async {
                             await followAction(
@@ -1874,7 +1882,7 @@ class UserProfileActionsTest extends StatelessWidget {
                       chatWareStream.loadStatus
                           ? Padding(
                               padding: const EdgeInsets.only(top: 8.0),
-                              child: Loader(color: HexColor(primaryColor)),
+                              child: Loader(color: textWhite),
                             )
                           : ProfileActionButtonNotThisUsers(
                               isSwipe: false,
@@ -2026,7 +2034,7 @@ class UserProfileActionsTest extends StatelessWidget {
                                   // ignore: use_build_context_synchronously
                                 }
                               },
-                              color: "#FFC1D6",
+                              color: "#C0C0C0",
                             ),
                       const SizedBox(
                         height: 5,

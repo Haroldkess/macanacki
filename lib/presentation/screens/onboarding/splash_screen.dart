@@ -20,10 +20,19 @@ class _SplashState extends State<Splash> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-    //  backgroundColor: HexColor(primaryColor),
+      //  backgroundColor: HexColor(primaryColor),
       body: Center(
-        child: SvgPicture.asset("assets/icon/mac-logo.svg",
-             height: 200, width: 200),
+        child: SizedBox(
+          // height: 200,
+          //  width: 200,
+          child: SvgPicture.asset(
+            "assets/icon/logo1.svg",
+            color: textWhite,
+            // "assets/icon/mac-logo.svg",
+            //height: 200,
+            // width: 200
+          ),
+        ),
       ),
     );
   }

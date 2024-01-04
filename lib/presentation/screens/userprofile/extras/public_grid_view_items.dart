@@ -4,12 +4,14 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:lottie/lottie.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
 import 'package:macanacki/presentation/widgets/debug_emitter.dart';
 import 'package:macanacki/presentation/widgets/loader.dart';
 import 'package:numeral/numeral.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../../../../model/feed_post_model.dart';
 import 'package:path_provider/path_provider.dart';
@@ -112,6 +114,48 @@ class _PublicGridViewItemsState extends State<PublicGridViewItems> {
         child: Stack(
           alignment: Alignment.center,
           children: [
+            CachedNetworkImage(
+              imageUrl: widget.data.media!.first.contains(".mp4") ||
+                      widget.data.media!.first.contains(".mp3") ||
+                      !widget.data.media!.first.contains("http")
+                  ? widget.data.thumbnails!.first ?? ""
+                  : widget.data.media!.first,
+              fit: BoxFit.cover,
+              height: Get.height,
+              width: Get.width,
+              progressIndicatorBuilder: (context, url, downloadProgress) =>
+                  Shimmer.fromColors(
+                      baseColor: HexColor(backgroundColor),
+                      highlightColor: Colors.grey.withOpacity(.2),
+                      period: Duration(seconds: 1),
+                      child: Container(
+                        color: HexColor(backgroundColor),
+                      )),
+              errorWidget: (context, url, error) => CachedNetworkImage(
+                imageUrl: url,
+                fit: BoxFit.cover,
+                progressIndicatorBuilder: (context, url, downloadProgress) =>
+                    Shimmer.fromColors(
+                        baseColor: HexColor(backgroundColor),
+                        highlightColor: Colors.grey.withOpacity(.2),
+                        period: Duration(seconds: 1),
+                        child: Container(
+                          color: HexColor(backgroundColor),
+                        )),
+                errorWidget: (context, url, error) => CachedNetworkImage(
+                    imageUrl: url,
+                    fit: BoxFit.cover,
+                    progressIndicatorBuilder:
+                        (context, url, downloadProgress) => Shimmer.fromColors(
+                            baseColor: HexColor(backgroundColor),
+                            highlightColor: Colors.grey.withOpacity(.2),
+                            period: Duration(seconds: 1),
+                            child: Container(
+                              color: HexColor(backgroundColor),
+                            )),
+                    errorWidget: (context, url, error) => SizedBox()),
+              ),
+            ),
             widget.data.media!.first.contains(".mp4")
                 ? Align(
                     alignment: Alignment.center,
@@ -134,6 +178,29 @@ class _PublicGridViewItemsState extends State<PublicGridViewItems> {
                         ),
                       )
                     : const SizedBox.shrink(),
+            Container(
+              height: Get.height,
+              width: Get.width,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.black.withOpacity(.0),
+                      Colors.black.withOpacity(.0),
+                      Colors.black.withOpacity(.0),
+                      Colors.black.withOpacity(.1),
+                      Colors.black.withOpacity(.4),
+                    ],
+                    stops: [
+                      0.0,
+                      0.1,
+                      0.3,
+                      0.8,
+                      0.9
+                    ]),
+              ),
+            ),
             Positioned(
                 child: Align(
               alignment: Alignment.bottomLeft,
@@ -142,7 +209,7 @@ class _PublicGridViewItemsState extends State<PublicGridViewItems> {
                 child: Row(
                   children: [
                     SvgPicture.asset(
-                      "assets/icon/view.svg",
+                      "assets/icon/bar.svg",
                       color: Colors.white,
                       height: 10,
                       //   width: 10,
@@ -154,7 +221,7 @@ class _PublicGridViewItemsState extends State<PublicGridViewItems> {
                             .format(fractionDigits: 1),
                         fontWeight: FontWeight.w600,
                         size: 12,
-                        color: HexColor(backgroundColor),
+                        color: textWhite,
                       ),
                     ),
                   ],

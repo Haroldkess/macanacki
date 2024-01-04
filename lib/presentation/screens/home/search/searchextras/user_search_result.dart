@@ -20,6 +20,7 @@ class UserGlobalResult extends StatelessWidget {
         ? const NoSearchFound()
         : ListView.builder(
             itemCount: stream.userFound.length,
+            padding: EdgeInsets.only(top: 5),
             itemBuilder: (context, index) {
               UserSearchData searchData = stream.userFound[index];
               return Padding(

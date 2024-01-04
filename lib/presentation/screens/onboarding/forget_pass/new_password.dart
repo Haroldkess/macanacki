@@ -120,7 +120,7 @@ class _ResetPassScreenState extends State<ResetPassScreen> {
                               size: 20,
                               maxLines: 3,
                               overflow: TextOverflow.ellipsis,
-                              color: HexColor(backgroundColor),
+                              color: textWhite,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -138,7 +138,7 @@ class _ResetPassScreenState extends State<ResetPassScreen> {
                               size: 12,
                               maxLines: 3,
                               overflow: TextOverflow.ellipsis,
-                              color: HexColor(backgroundColor),
+                              color: textWhite,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -156,7 +156,7 @@ class _ResetPassScreenState extends State<ResetPassScreen> {
                                   AppText(
                                     text: "Otp",
                                     size: 14,
-                                    color: HexColor(backgroundColor),
+                                    color: textWhite,
                                     fontWeight: FontWeight.w400,
                                   ),
                                 ],
@@ -225,7 +225,7 @@ class _ResetPassScreenState extends State<ResetPassScreen> {
                                   AppText(
                                     text: "Password",
                                     size: 14,
-                                    color: HexColor(backgroundColor),
+                                    color: textWhite,
                                     fontWeight: FontWeight.w400,
                                   ),
                                 ],
@@ -283,18 +283,16 @@ class _ResetPassScreenState extends State<ResetPassScreen> {
                                                   }
                                                 },
                                                 icon: Icon(
-                                                    hide1 == false
-                                                        ? Icons
-                                                            .hide_source_outlined
-                                                        : Icons
-                                                            .remove_red_eye_outlined,
-                                                    size: 13,
-                                                    color: Colors.black,
-                                                    // color:
-                                                    //     HexColor('#F5F2F9')
-                                                        
-                                                        
-                                                        )),
+                                                  hide1 == false
+                                                      ? Icons
+                                                          .hide_source_outlined
+                                                      : Icons
+                                                          .remove_red_eye_outlined,
+                                                  size: 13,
+                                                  color: Colors.black,
+                                                  // color:
+                                                  //     HexColor('#F5F2F9')
+                                                )),
                                           ],
                                         ),
                                         enabledBorder: InputBorder.none,
@@ -313,7 +311,7 @@ class _ResetPassScreenState extends State<ResetPassScreen> {
                                   AppText(
                                     text: "Confirm Password",
                                     size: 14,
-                                    color: HexColor(backgroundColor),
+                                    color: textWhite,
                                     fontWeight: FontWeight.w400,
                                   ),
                                 ],
@@ -379,9 +377,7 @@ class _ResetPassScreenState extends State<ResetPassScreen> {
                                                     size: 13,
                                                     // color:
                                                     //     HexColor('#F5F2F9')
-                                                    color: Colors.black
-                                                        
-                                                        )),
+                                                    color: Colors.black)),
                                           ],
                                         ),
                                         enabledBorder: InputBorder.none,
@@ -402,11 +398,11 @@ class _ResetPassScreenState extends State<ResetPassScreen> {
                           : AppButton(
                               width: 0.8,
                               height: 0.06,
-                              color: backgroundColor,
+                              color: "#FFFFFF",
                               text: "Continue",
-                              backColor: backgroundColor,
+                              backColor: "#FFFFFF",
                               curves: buttonCurves * 5,
-                              textColor: "#000000",
+                              textColor: backgroundColor,
                               onTap: () {
                                 _submit(context);
                                 // PageRouting.pushToPage(context, const TabScreen());

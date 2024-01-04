@@ -13,6 +13,7 @@ durationOptionModal(BuildContext context) async {
   return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      backgroundColor: HexColor(backgroundColor),
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (context) => Padding(
@@ -30,7 +31,7 @@ durationOptionModal(BuildContext context) async {
                       children: [
                         AppText(
                           text: "Select Duration",
-                          color: HexColor(darkColor),
+                          color: textWhite,
                           size: 16,
                           fontWeight: FontWeight.w700,
                         ),
@@ -45,8 +46,8 @@ durationOptionModal(BuildContext context) async {
                     // mainAxisSize: MainAxisSize.min,
                     children: duration
                         .map((e) => InkWell(
-                              onTap: () async{
-                                  Provider.of<AdsWare>(context, listen: false)
+                              onTap: () async {
+                                Provider.of<AdsWare>(context, listen: false)
                                     .addDuration(e);
                                 PageRouting.popToPage(context);
                               },
@@ -59,7 +60,7 @@ durationOptionModal(BuildContext context) async {
                                     ),
                                     AppText(
                                       text: e,
-                                      color: HexColor(darkColor),
+                                      color: textPrimary,
                                       size: 14,
                                       fontWeight: FontWeight.w600,
                                     ),

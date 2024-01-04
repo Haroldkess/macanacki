@@ -20,7 +20,8 @@ class AppText extends StatelessWidget {
       this.fontWeight,
       this.align,
       this.letterSpacing,
-      this.color, this.size})
+      this.color,
+      this.size})
       : super(key: key);
 
   @override
@@ -31,15 +32,55 @@ class AppText extends StatelessWidget {
       textScaleFactor: scaleFactor,
       overflow: overflow,
       textAlign: align,
-      style: GoogleFonts.leagueSpartan(
+      style: GoogleFonts.roboto(
           textStyle: TextStyle(
-        fontWeight: fontWeight,
-        color: color,
-        decorationStyle: TextDecorationStyle.solid,
-        fontSize: size,
-        letterSpacing: letterSpacing
-        
-      )),
+              fontWeight: fontWeight,
+              color: color,
+              decorationStyle: TextDecorationStyle.solid,
+              fontSize: size,
+              letterSpacing: letterSpacing)),
+    );
+  }
+}
+
+class ChatAppText extends StatelessWidget {
+  String text;
+  int? maxLines;
+  TextOverflow? overflow;
+  double? scaleFactor;
+  FontWeight? fontWeight;
+  Color? color;
+  TextAlign? align;
+  double? letterSpacing;
+  double? size;
+  ChatAppText(
+      {Key? key,
+      required this.text,
+      this.maxLines,
+      this.overflow,
+      this.scaleFactor,
+      this.fontWeight,
+      this.align,
+      this.letterSpacing,
+      this.color,
+      this.size})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      maxLines: maxLines,
+      textScaleFactor: scaleFactor,
+      overflow: overflow,
+      textAlign: align,
+      style: GoogleFonts.ptSans(
+          textStyle: TextStyle(
+              fontWeight: fontWeight,
+              color: color,
+              decorationStyle: TextDecorationStyle.solid,
+              fontSize: size! + 3,
+              letterSpacing: letterSpacing)),
     );
   }
 }

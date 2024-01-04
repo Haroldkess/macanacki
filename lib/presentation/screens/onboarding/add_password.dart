@@ -119,7 +119,7 @@ class _AddPasswordScreenState extends State<AddPasswordScreen> {
                               size: 20,
                               maxLines: 3,
                               overflow: TextOverflow.ellipsis,
-                              color: HexColor(backgroundColor),
+                              color: textWhite,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -137,7 +137,7 @@ class _AddPasswordScreenState extends State<AddPasswordScreen> {
                               size: 12,
                               maxLines: 3,
                               overflow: TextOverflow.ellipsis,
-                              color: HexColor(backgroundColor),
+                              color: textWhite,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -155,7 +155,7 @@ class _AddPasswordScreenState extends State<AddPasswordScreen> {
                                   AppText(
                                     text: "Password",
                                     size: 14,
-                                    color: HexColor(backgroundColor),
+                                    color: textWhite,
                                     fontWeight: FontWeight.w400,
                                   ),
                                 ],
@@ -239,7 +239,7 @@ class _AddPasswordScreenState extends State<AddPasswordScreen> {
                                   AppText(
                                     text: "Confirm Password",
                                     size: 14,
-                                    color: HexColor(backgroundColor),
+                                    color: textWhite,
                                     fontWeight: FontWeight.w400,
                                   ),
                                 ],
@@ -325,9 +325,9 @@ class _AddPasswordScreenState extends State<AddPasswordScreen> {
                           : AppButton(
                               width: 0.8,
                               height: 0.06,
-                              color: backgroundColor,
+                              color: "#ffffff",
                               text: "Continue",
-                              backColor: backgroundColor,
+                              backColor: "#ffffff",
                               curves: buttonCurves * 5,
                               textColor: "#000000",
                               onTap: () {

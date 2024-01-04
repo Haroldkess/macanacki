@@ -59,13 +59,14 @@ class _SelectGenderState extends State<SelectGender> {
                           align: TextAlign.center,
                           size: 30,
                           fontWeight: FontWeight.w700,
+                          color: textWhite,
                         )),
                   ],
                 ),
               ),
             ),
             watch.loadStatus
-                ? Loader(color: HexColor(primaryColor))
+                ? Loader(color: textWhite)
                 : Expanded(
                     child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -79,7 +80,7 @@ class _SelectGenderState extends State<SelectGender> {
                                     child: OutlinedButton(
                                         style: OutlinedButton.styleFrom(
                                             backgroundColor: e.selected!
-                                                ? HexColor(primaryColor)
+                                                ? secondaryColor
                                                 : null,
                                             fixedSize: const Size(169, 48),
                                             shape: RoundedRectangleBorder(
@@ -88,7 +89,7 @@ class _SelectGenderState extends State<SelectGender> {
                                             ),
                                             side: BorderSide(
                                                 color: e.selected!
-                                                    ? HexColor(primaryColor)
+                                                    ? secondaryColor
                                                     : HexColor('#979797'),
                                                 width: 1.0,
                                                 style: BorderStyle.solid)),
@@ -109,7 +110,7 @@ class _SelectGenderState extends State<SelectGender> {
                                               text: e.name!,
                                               scaleFactor: 0.8,
                                               color: e.selected!
-                                                  ? HexColor(backgroundColor)
+                                                  ? textWhite
                                                   : HexColor('#979797'),
                                               fontWeight: FontWeight.w500,
                                             ),
@@ -121,8 +122,7 @@ class _SelectGenderState extends State<SelectGender> {
                                                     child: Icon(
                                                       Icons.done,
                                                       size: 20,
-                                                      color: HexColor(
-                                                          primaryColor),
+                                                      color: textWhite,
                                                     ),
                                                   )
                                                 : const SizedBox.shrink()
@@ -135,9 +135,9 @@ class _SelectGenderState extends State<SelectGender> {
                         child: AppButton(
                             width: 0.8,
                             height: 0.06,
-                            color: primaryColor,
+                            color: "#FFFFFF",
                             text: "Continue",
-                            backColor: primaryColor,
+                            backColor: "#FFFFFF",
                             curves: buttonCurves * 5,
                             textColor: backgroundColor,
                             onTap: () async {

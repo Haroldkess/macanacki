@@ -18,7 +18,7 @@ class NotificationScreen extends StatelessWidget {
         elevation: 0,
         title: AppText(
           text: "Notifications",
-          color: HexColor(darkColor),
+          color: textWhite,
           size: 24,
           fontWeight: FontWeight.w700,
         ),

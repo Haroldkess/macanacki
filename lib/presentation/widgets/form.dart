@@ -17,6 +17,7 @@ class AppForm extends StatefulWidget {
   TextEditingController? controller;
   TextInputType? textInputType;
   int? input;
+  Color? textColor;
   final GlobalKey<FormFieldState>? formFieldKey;
 
   AppForm(
@@ -25,6 +26,7 @@ class AppForm extends StatefulWidget {
       this.hintColor,
       this.suffix,
       this.prefix,
+      this.textColor,
       this.backColor,
       this.borderRad,
       this.height,
@@ -81,7 +83,9 @@ class _AppFormState extends State<AppForm> {
               // }
             },
             style: GoogleFonts.overpass(
-                color: Colors.black, fontSize: 16, fontWeight: FontWeight.w600),
+                color: widget.textColor ?? Colors.black,
+                fontSize: 16,
+                fontWeight: FontWeight.w600),
             decoration: InputDecoration(
               counterStyle: TextStyle(),
               contentPadding: widget.input != null
@@ -100,6 +104,223 @@ class _AppFormState extends State<AppForm> {
               border: UnderlineInputBorder(
                   borderRadius: BorderRadius.circular(2.0),
                   borderSide: const BorderSide(color: Colors.transparent)),
+              // focusedBorder: const UnderlineInputBorder(
+              //     borderSide: BorderSide(color: Colors.transparent)),
+            )),
+      ),
+    );
+  }
+}
+
+class AppFormWithdraw extends StatefulWidget {
+  Color? hintColor;
+  String? hint;
+  Widget? suffix;
+  Color? backColor;
+  double? borderRad;
+  double? height;
+  double? fontSize;
+  Widget? prefix;
+  bool? enable;
+  TextEditingController? controller;
+  TextInputType? textInputType;
+  int? input;
+  final GlobalKey<FormFieldState>? formFieldKey;
+
+  AppFormWithdraw(
+      {super.key,
+      this.hint,
+      this.hintColor,
+      this.suffix,
+      this.prefix,
+      this.backColor,
+      this.borderRad,
+      this.height,
+      this.fontSize,
+      this.controller,
+      this.input,
+      this.textInputType,
+      this.enable,
+      this.formFieldKey});
+
+  @override
+  State<AppFormWithdraw> createState() => _AppFormWithdrawState();
+}
+
+class _AppFormWithdrawState extends State<AppFormWithdraw> {
+  bool validated = false;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: validated ? 60 : widget.height,
+      //width: 383,
+      decoration: BoxDecoration(
+          //  color: widget.backColor,
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.all(Radius.circular(widget.borderRad!)),
+          border: widget.enable == null || widget.enable!
+              ? null
+              : Border.all(
+                  style: BorderStyle.solid, color: Colors.black, width: 2)),
+      child: Center(
+        child: TextFormField(
+            key: widget.formFieldKey == null ? null : widget.formFieldKey!,
+            controller: widget.controller,
+            keyboardType: widget.textInputType,
+            //scrollPadding: EdgeInsets.only(left: 10, right: 10),
+            maxLength: widget.input,
+            cursorColor: Colors.black,
+            enabled: widget.enable ?? true,
+            // validator: (value) {
+            //   if (value == null || value.isEmpty) {
+            //     setState(() {
+            //       validated = true;
+            //     });
+            //     return "This field is required";
+            //   } else {
+            //     setState(() {
+            //       validated = false;
+            //     });
+            //   }
+            //   return null;
+            // },
+            onChanged: (val) {
+              // if (widget.hint == "Enter pickup address") {
+              //   PlacesController.getPlaces(context, val);
+              // }
+            },
+            style: GoogleFonts.roboto(
+                color: HexColor(backgroundColor),
+                fontSize: 16,
+                fontWeight: FontWeight.w600),
+            decoration: InputDecoration(
+              counterStyle: TextStyle(),
+              contentPadding: widget.input != null
+                  ? EdgeInsets.only(top: 20, left: 10, right: 10)
+                  : EdgeInsets.only(top: 18, left: 10, right: 10),
+              hintText: " ${widget.hint}",
+              hintStyle: GoogleFonts.roboto(
+                  color: widget.hintColor, fontSize: widget.fontSize),
+              suffixIcon: widget.suffix,
+              prefixIcon: widget.prefix,
+              errorMaxLines: 1,
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: backgroundSecondary, width: 2.0),
+                borderRadius: BorderRadius.zero,
+              ),
+
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(2.0),
+                  borderSide: BorderSide(color: backgroundSecondary)),
+              // focusedBorder: const UnderlineInputBorder(
+              //     borderSide: BorderSide(color: Colors.transparent)),
+            )),
+      ),
+    );
+  }
+}
+
+class AppFormAccount extends StatefulWidget {
+  Color? hintColor;
+  String? hint;
+  Widget? suffix;
+  Color? backColor;
+  double? borderRad;
+  double? height;
+  double? fontSize;
+  Widget? prefix;
+  bool? enable;
+  TextEditingController? controller;
+  TextInputType? textInputType;
+  int? input;
+  final GlobalKey<FormFieldState>? formFieldKey;
+
+  AppFormAccount(
+      {super.key,
+      this.hint,
+      this.hintColor,
+      this.suffix,
+      this.prefix,
+      this.backColor,
+      this.borderRad,
+      this.height,
+      this.fontSize,
+      this.controller,
+      this.input,
+      this.textInputType,
+      this.enable,
+      this.formFieldKey});
+
+  @override
+  State<AppFormAccount> createState() => _AppFormAccountState();
+}
+
+class _AppFormAccountState extends State<AppFormAccount> {
+  bool validated = false;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: validated ? 60 : widget.height,
+      //width: 383,
+      decoration: BoxDecoration(
+          //  color: widget.backColor,
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.all(Radius.circular(widget.borderRad!)),
+          border: widget.enable == null || widget.enable!
+              ? Border.all(
+                  style: BorderStyle.solid, color: textPrimary, width: 2)
+              : Border.all(
+                  style: BorderStyle.solid, color: textPrimary, width: 2)),
+      child: Center(
+        child: TextFormField(
+            key: widget.formFieldKey == null ? null : widget.formFieldKey!,
+            controller: widget.controller,
+            keyboardType: widget.textInputType,
+            //scrollPadding: EdgeInsets.only(left: 10, right: 10),
+            maxLength: widget.input,
+            cursorColor: textPrimary,
+            enabled: widget.enable ?? true,
+            // validator: (value) {
+            //   if (value == null || value.isEmpty) {
+            //     setState(() {
+            //       validated = true;
+            //     });
+            //     return "This field is required";
+            //   } else {
+            //     setState(() {
+            //       validated = false;
+            //     });
+            //   }
+            //   return null;
+            // },
+            onChanged: (val) {
+              // if (widget.hint == "Enter pickup address") {
+              //   PlacesController.getPlaces(context, val);
+              // }
+            },
+            style: GoogleFonts.roboto(
+                color: widget.hintColor,
+                fontSize: 16,
+                fontWeight: FontWeight.w600),
+            decoration: InputDecoration(
+              counterStyle: TextStyle(),
+              contentPadding: widget.input != null
+                  ? EdgeInsets.only(top: 20, left: 10, right: 10)
+                  : EdgeInsets.only(top: 18, left: 10, right: 10),
+              hintText: " ${widget.hint}",
+              hintStyle: GoogleFonts.roboto(
+                  color: widget.hintColor, fontSize: widget.fontSize),
+              suffixIcon: widget.suffix,
+              prefixIcon: widget.prefix,
+              errorMaxLines: 1,
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: textPrimary, width: 2.0),
+                //    borderRadius: BorderRadius.zero,
+              ),
+
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(2.0),
+                  borderSide: BorderSide(color: textPrimary, width: 1.0)),
               // focusedBorder: const UnderlineInputBorder(
               //     borderSide: BorderSide(color: Colors.transparent)),
             )),
@@ -134,7 +355,7 @@ class AppFormAmount extends StatefulWidget {
       this.backColor,
       this.borderRad,
       required this.max,
-       required this.min,
+      required this.min,
       this.height,
       this.fontSize,
       this.controller,

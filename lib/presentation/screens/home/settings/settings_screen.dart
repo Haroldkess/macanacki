@@ -33,20 +33,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: AppText(
-          text: 'Settings',
-          fontWeight: FontWeight.w400,
-          size: 24,
-          color: Colors.black,
-        ),
+            text: 'Settings',
+            fontWeight: FontWeight.w400,
+            size: 24,
+            color: textWhite),
         centerTitle: true,
         backgroundColor: HexColor(backgroundColor),
         elevation: 0,
-        leading: const BackButton(color: Colors.black),
+        leading: BackButton(color: textWhite),
       ),
       body: Container(
         height: height,
         width: width,
-        color: HexColor("#F5F2F9"),
+        color: backgroundSecondary,
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),

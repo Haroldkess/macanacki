@@ -70,18 +70,18 @@ class _PromoteScreenState extends State<PromoteScreen> {
     FeedPostWare feed = context.watch<FeedPostWare>();
     return SafeArea(
       child: Scaffold(
-        backgroundColor: HexColor("#F5F2F9"),
+        backgroundColor: backgroundSecondary,
         appBar: AppBar(
           title: AppText(
             text: 'Preview',
             fontWeight: FontWeight.w500,
             size: 22,
-            color: Colors.black,
+            color: textWhite,
           ),
           centerTitle: true,
           backgroundColor: HexColor(backgroundColor),
           elevation: 0,
-          leading: BackButton(color: Colors.black),
+          leading: BackButton(color: textWhite),
         ),
         body: SingleChildScrollView(
             physics: BouncingScrollPhysics(),
@@ -230,13 +230,13 @@ class _PromoteScreenState extends State<PromoteScreen> {
                             });
                           }
                         },
-                        color: "#F94C84",
+                        color: "#FFFFFF",
                       ),
                       const SizedBox(
                         height: 10,
                       ),
                       AppText(
-                        text: 'select post',
+                        text: 'Select post',
                         fontWeight: FontWeight.w500,
                         size: 16,
                         color: HexColor("#797979"),
@@ -249,8 +249,7 @@ class _PromoteScreenState extends State<PromoteScreen> {
                   Row(
                     children: [
                       Checkbox(
-                          fillColor:
-                              MaterialStatePropertyAll(HexColor(primaryColor)),
+                          fillColor: MaterialStatePropertyAll(Colors.green),
                           value: iAgree,
                           onChanged: ((value) {
                             setState(() {
@@ -265,20 +264,20 @@ class _PromoteScreenState extends State<PromoteScreen> {
                         child: RichText(
                           text: TextSpan(
                               text: "I consent to the use of MacaNacki ",
-                              style: GoogleFonts.leagueSpartan(
+                              style: GoogleFonts.roboto(
                                   textStyle: TextStyle(
                                       fontWeight: FontWeight.w400,
-                                      color: HexColor(darkColor),
+                                      color: textWhite,
                                       decorationStyle:
                                           TextDecorationStyle.solid,
                                       fontSize: 12)),
                               children: [
                                 TextSpan(
                                   text: "Terms of Use",
-                                  style: GoogleFonts.leagueSpartan(
+                                  style: GoogleFonts.roboto(
                                       textStyle: TextStyle(
                                           fontWeight: FontWeight.w400,
-                                          color: HexColor(primaryColor),
+                                          color: Colors.green,
                                           decorationStyle:
                                               TextDecorationStyle.solid,
                                           fontSize: 12)),
@@ -294,7 +293,7 @@ class _PromoteScreenState extends State<PromoteScreen> {
                                   style: GoogleFonts.leagueSpartan(
                                       textStyle: TextStyle(
                                           fontWeight: FontWeight.w400,
-                                          color: HexColor(darkColor),
+                                          color: textWhite,
                                           decorationStyle:
                                               TextDecorationStyle.solid,
                                           fontSize: 12)),
@@ -304,7 +303,7 @@ class _PromoteScreenState extends State<PromoteScreen> {
                                   style: GoogleFonts.leagueSpartan(
                                       textStyle: TextStyle(
                                           fontWeight: FontWeight.w400,
-                                          color: HexColor(primaryColor),
+                                          color: Colors.green,
                                           decorationStyle:
                                               TextDecorationStyle.solid,
                                           fontSize: 12)),
@@ -328,16 +327,17 @@ class _PromoteScreenState extends State<PromoteScreen> {
                       : AppButton(
                           width: 0.9,
                           height: 0.06,
-                          color: primaryColor,
+                          color: backgroundColor,
                           text: "Continue",
-                          backColor: primaryColor,
+                          backColor: backgroundColor,
                           curves: buttonCurves * 5,
-                          textColor: backgroundColor,
+                          textColor: "#FFFFFF",
                           onTap: () async {
                             if (widget.postId == null) {
                               if (post == null) {
                                 showToast2(context,
-                                    "Please select the post you want to promote");
+                                    "Please select the post you want to promote",
+                                    isError: true);
                                 return;
                               } else {
                                 _submit(context, post!.id!);
@@ -422,13 +422,13 @@ class AdsAction extends StatelessWidget {
                         children: [
                           AppText(
                             text: name,
-                            color: HexColor("#0C0C0C"),
+                            color: textWhite,
                             size: 16,
                             fontWeight: FontWeight.w500,
                           ),
                           AppText(
                             text: SubName,
-                            color: HexColor("#0C0C0C"),
+                            color: textPrimary,
                             size: 13,
                             fontWeight: FontWeight.w400,
                           ),
@@ -456,7 +456,7 @@ class AdsAction extends StatelessWidget {
                           children: [
                             AppText(
                               text: title,
-                              color: HexColor("#0C0C0C"),
+                              color: textWhite,
                               size: 16,
                               fontWeight: FontWeight.w500,
                             ),
@@ -465,7 +465,7 @@ class AdsAction extends StatelessWidget {
                             ),
                             AppText(
                               text: subTitle,
-                              color: HexColor("#818181"),
+                              color: textPrimary,
                               size: 13,
                               fontWeight: FontWeight.w400,
                             )
@@ -474,7 +474,10 @@ class AdsAction extends StatelessWidget {
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            SvgPicture.asset("assets/icon/fowardarrow.svg"),
+                            SvgPicture.asset(
+                              "assets/icon/fowardarrow.svg",
+                              color: textPrimary,
+                            ),
                             SizedBox(
                               width: 10,
                             )

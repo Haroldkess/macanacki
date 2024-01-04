@@ -157,5 +157,6 @@ flutter:
   assets:
     - assets/pic/
     - assets/icon/
+    - assets/sound/
     - secret.env
 

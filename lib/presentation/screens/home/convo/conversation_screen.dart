@@ -127,12 +127,31 @@ class _ConversationScreenState extends State<ConversationScreen> {
             elevation: 0,
             title: AppText(
               text: "Conversations",
-              color: HexColor(darkColor),
+              color: textWhite,
               size: 24,
               fontWeight: FontWeight.w700,
             ),
             actions: [
-              SvgPicture.asset("assets/icon/new.svg"),
+              InkWell(
+                onTap: () {
+                  PageRouting.pushToPage(context, SwipeCardScreen());
+                },
+                child: Container(
+                  height: 50,
+                  width: 50,
+                  child: Stack(
+                    alignment: Alignment.centerRight,
+                    children: [
+                      SvgPicture.asset(
+                        "assets/icon/new.svg",
+                        color: textPrimary,
+                        height: 25,
+                        width: 25,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
               const SizedBox(
                 width: 15,
               )
@@ -152,13 +171,13 @@ class _ConversationScreenState extends State<ConversationScreen> {
               enablePullUp: true,
 
               header: WaterDropHeader(
-                waterDropColor: HexColor(primaryColor),
+                waterDropColor: textPrimary,
                 refresh: CircleAvatar(
                   radius: 5,
                   backgroundColor: Colors.transparent,
                   child: CircularProgressIndicator(
                     valueColor:
-                        AlwaysStoppedAnimation<Color?>(HexColor(primaryColor)),
+                        AlwaysStoppedAnimation<Color?>(backgroundSecondary),
                   ),
                 ),
               ),
@@ -213,7 +232,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                               AppText(
                                 text: "Messages",
                                 fontWeight: FontWeight.w600,
-                                color: HexColor(darkColor),
+                                color: textPrimary,
                                 size: 17,
                               ),
                               const SizedBox(
@@ -260,7 +279,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                                 text: "Start a conversation",
                                                 backColor: primaryColor,
                                                 curves: buttonCurves * 5,
-                                                textColor: backgroundColor,
+                                                textColor: "#FFFFF",
                                                 onTap: () async {
                                                   // await FeedPostController.getFeedPostController(
                                                   //     context, 1, false);

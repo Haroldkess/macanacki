@@ -44,7 +44,8 @@ class PublicFollowTile extends StatelessWidget {
       child: Container(
         height: 100,
         decoration: BoxDecoration(
-            color: Colors.white, borderRadius: BorderRadius.circular(5)),
+            color: HexColor(backgroundColor),
+            borderRadius: BorderRadius.circular(5)),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(
@@ -69,10 +70,10 @@ class PublicFollowTile extends StatelessWidget {
                                 maxLines: 2,
                                 text: TextSpan(
                                     text: "${data.username}",
-                                    style: GoogleFonts.leagueSpartan(
-                                        textStyle: const TextStyle(
+                                    style: GoogleFonts.roboto(
+                                        textStyle: TextStyle(
                                             fontWeight: FontWeight.w700,
-                                            color: Colors.black,
+                                            color: textWhite,
                                             decorationStyle:
                                                 TextDecorationStyle.solid,
                                             fontSize: 13)),
@@ -99,6 +100,9 @@ class PublicFollowTile extends StatelessWidget {
                                       // )
                                     ])),
                           ),
+                          SizedBox(
+                            width: 4,
+                          ),
                           data.verified == 1 && data.activePlan == sub
                               ? SvgPicture.asset("assets/icon/badge.svg",
                                   height: 15, width: 15)
@@ -109,12 +113,13 @@ class PublicFollowTile extends StatelessWidget {
                         height: 10,
                       ),
                       AppText(
-                        text:
-                            "${Numeral(data.noOfFollowers!).format()} followers",
-                        fontWeight: FontWeight.w500,
-                        size: 10,
-                        color: HexColor("#0597FF"),
-                      ),
+                          text:
+                              "${Numeral(data.noOfFollowers!).format()} followers",
+                          fontWeight: FontWeight.w500,
+                          size: 10,
+                          color: secondaryColor
+                          //  color: HexColor("#0597FF"),
+                          ),
                     ],
                   ),
                 ],
@@ -127,13 +132,13 @@ class PublicFollowTile extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            InkWell(
-                                onTap: () {
-                                  followAction(context);
-                                },
-                                child: !stream.followIds.contains(data.id!)
-                                    ? followCardButton("Follow", true)
-                                    : unfollowCardButton("Unfollow")),
+                            // InkWell(
+                            //     onTap: () {
+                            //       followAction(context);
+                            //     },
+                            //     child: !stream.followIds.contains(data.id!)
+                            //         ? followCardButton("Follow", true)
+                            //         : unfollowCardButton("Unfollow")),
                           ],
                         ),
                       ),
@@ -163,7 +168,7 @@ class PublicFollowTile extends StatelessWidget {
         HexagonWidget.pointy(
           width: w,
           elevation: 2.0,
-          color: Colors.white,
+          color: textPrimary,
           cornerRadius: 20.0,
           child: AspectRatio(
             aspectRatio: HexagonType.POINTY.ratio,

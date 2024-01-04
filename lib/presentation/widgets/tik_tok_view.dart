@@ -25,6 +25,7 @@ import '../../model/feed_post_model.dart';
 import '../../services/controllers/url_launch_controller.dart';
 import '../screens/home/diamond/diamond_modal/download_modal.dart';
 import '../uiproviders/screen/comment_provider.dart';
+import '../uiproviders/screen/tab_provider.dart';
 import 'feed_views/new_action_design.dart';
 import 'option_modal.dart';
 
@@ -91,7 +92,7 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
 
     animation = ColorTween(
       begin: Colors.transparent,
-      end: HexColor(primaryColor).withOpacity(.8),
+      end: Colors.red.withOpacity(.8),
     ).animate(controller);
 
     if (widget.media.length < 2) {
@@ -136,6 +137,7 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     ActionWare action = Provider.of<ActionWare>(context, listen: false);
+    TabProvider stream = context.watch<TabProvider>();
     // print(widget.data.media!.first);
     return GestureDetector(
       onDoubleTap: () async {
@@ -180,7 +182,9 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
                     widget.nextImage == null ? 0 : widget.nextImage!.length,
                     (index) => Container(
                       height: 5,
+                      color: Colors.black,
                       child: CachedNetworkImage(
+                          color: Colors.black,
                           imageUrl: widget.nextImage![index] ?? ""),
                     ),
                   ),
@@ -192,9 +196,11 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
                     widget.thumbails == null ? 0 : widget.thumbails.length,
                     (index) => Container(
                       height: 5,
+                      color: Colors.black,
                       child: widget.thumbails[index] == null
                           ? SizedBox.shrink()
                           : CachedNetworkImage(
+                              color: Colors.black,
                               imageUrl: widget.thumbails[index] ?? ""),
                     ),
                   ),
@@ -208,7 +214,17 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
                 Expanded(
                     child: LayoutBuilder(
                         builder: (_, constraints) => widget.media.length < 2
-                            ? SinglePost(
+                            ?
+                            // MultiplePost(
+                            //     media: [widget.media.first],
+                            //     constraints: constraints,
+                            //     data: widget.data,
+                            //     isHome: widget.isHome,
+                            //     thumbLinks: widget.urls,
+                            //     isInView: widget.isInView,
+                            //   )
+
+                            SinglePost(
                                 media: widget.media.first,
                                 shouldPlay: true,
                                 constraints: constraints,
@@ -235,7 +251,7 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
             alignment: Alignment.topCenter,
             child: Padding(
               padding: EdgeInsets.only(
-                  right: 10, left: widget.isFriends ? 0 : 10, top: 30),
+                  right: 10, left: widget.isFriends ? 0 : 10, top: 18),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -278,20 +294,60 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
                                 width: 25,
                                 child: SvgPicture.asset(
                                   "assets/icon/d.svg",
-                                  color: HexColor(backgroundColor),
+                                  color: textPrimary,
                                 ),
                               )),
                     ],
                   ),
-                  GestureDetector(
+                  widget.media.length > 1
+                      ? Expanded(
+                          //  width: 200,
+                          //color: Colors.transparent,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              ...widget.media.map((e) => Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 1),
+                                    child: CircleAvatar(
+                                      backgroundColor: e.replaceAll(
+                                                  '\\', '/') ==
+                                              stream.image.replaceAll('\\', '/')
+                                          ? Colors.green
+                                          : HexColor("#6A6A6A"),
+                                      radius: 3,
+                                      //   width: 25,
+                                      //   height: 3,
+                                    ),
+                                  ))
+                            ],
+                          ),
+                        )
+                      : SizedBox.shrink(),
+                  InkWell(
                       onTap: () => optionModal(context, widget.urls,
                           widget.data.user!.id, widget.data.id, widget.data),
                       child: Container(
-                        height: 20,
-                        width: 20,
-                        child: SvgPicture.asset(
-                          "assets/icon/new_option.svg",
-                          color: HexColor(backgroundColor),
+                        //   color: Colors.amber,
+                        child: Stack(
+                          alignment: Alignment.centerRight,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(right: 5),
+                              child: Container(
+                                height: 20,
+                                width: 20,
+                                child: SvgPicture.asset(
+                                  "assets/icon/more.svg",
+                                  color: textPrimary,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 30,
+                              width: 40,
+                            )
+                          ],
                         ),
                       )),
                 ],
@@ -299,7 +355,7 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
             ),
           ),
           Positioned(
-            bottom: 1,
+            bottom: 0,
             child: Align(
                 alignment: Alignment.bottomLeft,
                 child: NewDesignTest(
@@ -312,25 +368,25 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
                   extended: false,
                 )),
           ),
-          widget.data.promoted == "yes"
-              ? Positioned(
-                  bottom: 100,
-                  left: 0,
-                  child: Align(
-                      alignment: Alignment.bottomLeft,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          AdsDisplay(
-                            sponsored: true,
-                            //  color: HexColor('#00B074'),
-                            color: Colors.transparent,
-                            title: 'Sponsored Ad',
-                          ),
-                        ],
-                      )),
-                )
-              : SizedBox.shrink(),
+          // widget.data.promoted == "yes"
+          //     ? Positioned(
+          //         bottom: 100,
+          //         left: 0,
+          //         child: Align(
+          //             alignment: Alignment.bottomLeft,
+          //             child: Column(
+          //               crossAxisAlignment: CrossAxisAlignment.start,
+          //               children: [
+          //                 AdsDisplay(
+          //                   sponsored: true,
+          //                   //  color: HexColor('#00B074'),
+          //                   color: Colors.transparent,
+          //                   title: 'Sponsored Ad',
+          //                 ),
+          //               ],
+          //             )),
+          //       )
+          //     : SizedBox.shrink(),
           widget.page == "user"
               ? Positioned(
                   bottom: 120,
@@ -424,7 +480,7 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
                               width: double.infinity,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.zero,
-                                  color: HexColor("#00B074")),
+                                  color: Colors.white),
                               child: Padding(
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 10),
@@ -433,7 +489,7 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
                                   children: [
                                     AppText(
                                       text: widget.data.button!,
-                                      color: Colors.white,
+                                      color: HexColor(backgroundColor),
                                       fontWeight: FontWeight.w500,
                                       size: 12,
                                     ),

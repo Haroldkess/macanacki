@@ -72,34 +72,34 @@ class MultiplePost extends StatelessWidget {
             );
           },
         ),
-        Align(
-          alignment: Alignment.topCenter,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              const SizedBox(
-                height: 100,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ...media!.map((e) => Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                        child: CircleAvatar(
-                          backgroundColor: e.replaceAll('\\', '/') ==
-                                  stream.image.replaceAll('\\', '/')
-                              ? HexColor(primaryColor)
-                              : HexColor("#6A6A6A"),
-                          radius: 3,
-                          //   width: 25,
-                          //   height: 3,
-                        ),
-                      ))
-                ],
-              ),
-            ],
-          ),
-        )
+        // Align(
+        //   alignment: Alignment.topCenter,
+        //   child: Column(
+        //     mainAxisAlignment: MainAxisAlignment.start,
+        //     children: [
+        //       const SizedBox(
+        //         height: 40,
+        //       ),
+        //       Row(
+        //         mainAxisAlignment: MainAxisAlignment.center,
+        //         children: [
+        //           ...media!.map((e) => Padding(
+        //                 padding: const EdgeInsets.symmetric(horizontal: 5),
+        //                 child: CircleAvatar(
+        //                   backgroundColor: e.replaceAll('\\', '/') ==
+        //                           stream.image.replaceAll('\\', '/')
+        //                       ? Colors.green
+        //                       : HexColor("#6A6A6A"),
+        //                   radius: 3,
+        //                   //   width: 25,
+        //                   //   height: 3,
+        //                 ),
+        //               ))
+        //         ],
+        //       ),
+        //     ],
+        //   ),
+        // )
       ],
     );
   }
@@ -180,7 +180,15 @@ class _MultipleViewState extends State<MultipleView> {
                 decoration: BoxDecoration(color: Colors.black),
               ),
               Padding(
-                padding: const EdgeInsets.only(bottom: 0),
+                padding: EdgeInsets.only(
+                    bottom: widget.data.btnLink != null &&
+                            widget.data.button != null
+                        ? widget.data.description!.isNotEmpty
+                            ? 70
+                            : 40
+                        : widget.data.description!.isNotEmpty
+                            ? 40
+                            : 40),
                 child: GestureDetector(
                   onTap: () {
                     PageRouting.pushToPage(
@@ -192,24 +200,30 @@ class _MultipleViewState extends State<MultipleView> {
                             index: widget.index));
                   },
                   child: Container(
-                    height: 330,
+                    height: widget.data.btnLink != null &&
+                            widget.data.button != null
+                        ? 380
+                        : widget.data.description!.isEmpty
+                            ? 430
+                            : 400,
                     width: double.infinity,
-                    //   color: Colors.amber,
+                    //  color: Colors.amber,
                     child: CachedNetworkImage(
                       imageUrl: widget.media!.replaceAll('\\', '/'),
                       imageBuilder: (context, imageProvider) => Container(
                         width: width,
                         height: height,
                         decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
                             image: DecorationImage(
-                          image: imageProvider,
-                          fit: BoxFit.fitWidth,
-                        )),
+                              image: imageProvider,
+                              fit: BoxFit.fitWidth,
+                            )),
                       ),
                       progressIndicatorBuilder:
                           (context, url, downloadProgress) => Center(
                               child: Loader(
-                        color: HexColor(primaryColor),
+                        color: textWhite,
                       )),
                       errorWidget: (context, url, error) => CachedNetworkImage(
                           imageUrl: widget.media!.replaceAll('\\', '/'),
@@ -217,15 +231,16 @@ class _MultipleViewState extends State<MultipleView> {
                                 width: width,
                                 height: height,
                                 decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15),
                                     image: DecorationImage(
-                                  image: imageProvider,
-                                  fit: BoxFit.fitWidth,
-                                )),
+                                      image: imageProvider,
+                                      fit: BoxFit.fitWidth,
+                                    )),
                               ),
                           progressIndicatorBuilder:
                               (context, url, downloadProgress) => Center(
                                       child: Loader(
-                                    color: HexColor(primaryColor),
+                                    color: textWhite,
                                   )),
                           errorWidget: (context, url, error) {
                             return SizedBox();

@@ -19,10 +19,6 @@ class ProfileImageAndName extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var height = MediaQuery.of(context).size.height;
-    var width = MediaQuery.of(context).size.width;
-    var size = MediaQuery.of(context).size;
-    var padding = 8.0;
     var w = 100.0;
     UserProfileWare stream = context.watch<UserProfileWare>();
     return Column(
@@ -43,64 +39,87 @@ class ProfileImageAndName extends StatelessWidget {
                     ));
           },
           child: Stack(
+            alignment: Alignment.bottomCenter,
             children: [
-              HexagonWidget.pointy(
-                width: w,
-                elevation: 10.0,
-                color: Colors.white,
-                cornerRadius: 20.0,
-                child: AspectRatio(
-                  aspectRatio: HexagonType.POINTY.ratio,
-                  // child: Image.asset(
-                  //   'assets/tram.jpg',
-                  //   fit: BoxFit.fitWidth,
-                  // ),
-                ),
-              ),
-              HexagonWidget.pointy(
-                width: w,
-                elevation: 10.0,
-                color: HexColor("#5F5F5F"),
-                padding: 10,
-                cornerRadius: 20.0,
-                child: AspectRatio(
-                    aspectRatio: HexagonType.POINTY.ratio,
-                    child: Center(
-                      child: CachedNetworkImage(
-                        imageUrl: stream.userProfileModel.profilephoto ?? "",
-                        progressIndicatorBuilder:
-                            (context, url, downloadProgress) => Center(
-                                child: Loader(
-                          color: HexColor(primaryColor),
-                        )),
-                        errorWidget: (context, url, error) =>
-                            CachedNetworkImage(
-                          imageUrl: stream.userProfileModel.profilephoto ?? "",
-                          progressIndicatorBuilder:
-                              (context, url, downloadProgress) => Center(
-                                  child: Loader(
-                            color: HexColor(primaryColor),
-                          )),
-                          errorWidget: (context, url, error) =>
-                              CachedNetworkImage(
-                                  imageUrl:
-                                      stream.userProfileModel.profilephoto ??
+              Stack(
+                children: [
+                  HexagonWidget.pointy(
+                    width: w,
+                    elevation: 10.0,
+                    color: HexColor("#C0C0C0").withOpacity(.4),
+                    cornerRadius: 15.0,
+                    child: AspectRatio(
+                      aspectRatio: HexagonType.POINTY.ratio,
+                      // child: Image.asset(
+                      //   'assets/tram.jpg',
+                      //   fit: BoxFit.fitWidth,
+                      // ),
+                    ),
+                  ),
+                  HexagonWidget.pointy(
+                    width: w,
+                    elevation: 10.0,
+                    color: Colors.black,
+                    padding: 2,
+                    cornerRadius: 20.0,
+                    child: AspectRatio(
+                        aspectRatio: HexagonType.POINTY.ratio,
+                        child: Center(
+                          child: CachedNetworkImage(
+                            imageUrl:
+                                stream.userProfileModel.profilephoto ?? "",
+                            fit: BoxFit.cover,
+                            progressIndicatorBuilder:
+                                (context, url, downloadProgress) => Center(
+                                    child: Loader(
+                              color: textWhite,
+                            )),
+                            errorWidget: (context, url, error) =>
+                                CachedNetworkImage(
+                              imageUrl:
+                                  stream.userProfileModel.profilephoto ?? "",
+                              fit: BoxFit.cover,
+                              progressIndicatorBuilder:
+                                  (context, url, downloadProgress) => Center(
+                                      child: Loader(
+                                color: textWhite,
+                              )),
+                              errorWidget: (context, url, error) =>
+                                  CachedNetworkImage(
+                                      imageUrl: stream
+                                              .userProfileModel.profilephoto ??
                                           "",
-                                  progressIndicatorBuilder:
-                                      (context, url, downloadProgress) =>
-                                          Center(
-                                              child: Loader(
-                                            color: HexColor(primaryColor),
-                                          )),
-                                  errorWidget: (context, url, error) =>
-                                      SizedBox()),
-                        ),
-                      ),
-
-                      // Image.network(
-                      //     stream.userProfileModel.profilephoto ?? "")
-                    )),
+                                      fit: BoxFit.cover,
+                                      progressIndicatorBuilder:
+                                          (context, url, downloadProgress) =>
+                                              Center(
+                                                  child: Loader(
+                                                color: textWhite,
+                                              )),
+                                      errorWidget: (context, url, error) =>
+                                          SizedBox()),
+                            ),
+                          ),
+                        )),
+                  ),
+                ],
               ),
+              Positioned(
+                bottom: 10,
+                right: w * 2 / 1.5,
+                child: CircleAvatar(
+                  radius: 13,
+                  backgroundColor: Colors.black,
+                  child: CircleAvatar(
+                    backgroundColor: Colors.transparent,
+                    radius: 10,
+                    child: SvgPicture.asset(
+                      "assets/icon/add_profile.svg",
+                      color: Colors.green,
+                    ),
+                  ),
+                ),
+              )
             ],
           ),
         ),
@@ -120,8 +139,10 @@ class ProfileImageAndName extends StatelessWidget {
                     Container(
                       constraints: BoxConstraints(maxWidth: 210),
                       child: AppText(
+                        // text: "Kelt",
                         text: "${stream.userProfileModel.username}",
-                        color: HexColor(darkColor),
+                        color: Colors.white.withOpacity(.6),
+                        // color: HexColor(darkColor),
                         size: 16,
                         letterSpacing: 0.0,
                         fontWeight: FontWeight.w800,
@@ -133,6 +154,10 @@ class ProfileImageAndName extends StatelessWidget {
                                 ? TextOverflow.ellipsis
                                 : TextOverflow.fade,
                       ),
+                    ),
+
+                    SizedBox(
+                      width: 4,
                     ),
                     stream.userProfileModel.verified == 1 &&
                             stream.userProfileModel.activePlan != sub
@@ -207,7 +232,7 @@ class ProfileImageAndNameShimmer extends StatelessWidget {
         ),
         Container(
           color: baseColor.withOpacity(.3),
-          width: 200,
+          // width: 200,
           height: stream.loadStatus ? 30 : null,
           child: stream.loadStatus
               ? const SizedBox.shrink()

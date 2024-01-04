@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexagon/hexagon.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:macanacki/presentation/screens/home/convo/chat/chatextra/chat_field.dart';
 import 'package:macanacki/presentation/screens/home/convo/chat/chatextra/chat_grid.dart';
 import 'package:macanacki/presentation/screens/home/convo/chat/chatextra/option_menu.dart';
@@ -23,12 +24,15 @@ import '../../../../../services/temps/temps_id.dart';
 import '../../../../allNavigation.dart';
 import '../../../../constants/colors.dart';
 import '../../../../uiproviders/screen/tab_provider.dart';
+import '../../../../widgets/avatar.dart';
 import '../../../../widgets/hexagon_avatar.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:macanacki/services/api_url.dart';
 import '../../../userprofile/testing_profile.dart';
 import '../../../userprofile/user_profile_screen.dart';
 import '../../profile/profile_screen.dart';
+import 'package:just_audio_background/just_audio_background.dart';
+import 'package:audio_session/audio_session.dart';
 
 class ChatScreen extends StatefulWidget {
   ChatData user;
@@ -55,12 +59,30 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   ScrollController? controiller = ScrollController();
   TextEditingController msgController = TextEditingController();
-
+  final player = AudioPlayer();
   int? verify = 0;
   bool showForm = false;
   String? toId;
+  Future<void> _init() async {
+    // Inform the operating system of our app's audio attributes etc.
+    // We pick a reasonable default for an app that plays speech.
+
+    // Try to load audio from a source and catch any errors.
+    try {
+      await player.setAsset(
+        "assets/sound/send0.mp3",
+      );
+      player.play();
+
+      setState(() {});
+    } catch (e) {
+      print("Error loading audio source: $e");
+    }
+  }
+
   @override
   void initState() {
+    // _init();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       if (PersistentNavController.instance.hide.value == false) {
         PersistentNavController.instance.toggleHide();
@@ -177,6 +199,7 @@ class _ChatScreenState extends State<ChatScreen> {
   void dispose() {
     // socket!.disconnect();
     // socket!.dispose();
+    player.dispose();
 
     super.dispose();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -257,7 +280,7 @@ class _ChatScreenState extends State<ChatScreen> {
       },
       child: SafeArea(
         child: Scaffold(
-          backgroundColor: HexColor("#F5F2F9"),
+          backgroundColor: HexColor(backgroundColor),
           appBar: AppBar(
             backgroundColor: HexColor(backgroundColor),
             automaticallyImplyLeading: false,
@@ -289,51 +312,66 @@ class _ChatScreenState extends State<ChatScreen> {
                       Stack(
                         alignment: Alignment.center,
                         children: [
-                          HexagonWidget.pointy(
-                            width: w + 4.0,
-                            elevation: 3.0,
-                            color: Colors.white,
-                            cornerRadius: 7.0,
-                            child: AspectRatio(
-                              aspectRatio: HexagonType.POINTY.ratio,
-                              // child: Image.asset(
-                              //   'assets/tram.jpg',
-                              //   fit: BoxFit.fitWidth,
-                              // ),
-                            ),
-                          ),
                           widget.user.conversations!.isEmpty
-                              ? HexagonAvatar(
-                                  url: widget.user.userTwoProfilePhoto == null
+                              ? Avatar(
+                                  radius: 15,
+                                  image: widget.user.userTwoProfilePhoto == null
                                       ? widget.dp!
                                       : widget.user.userTwoProfilePhoto!,
-                                  w: w + 4)
-                              : HexagonAvatar(
-                                  url: widget.user.conversations!.last.sender ==
-                                          stream.userName
-                                      ? widget.user.userTwoProfilePhoto!
-                                      : widget.user.userOneProfilePhoto!,
-                                  w: w + 4),
+                                )
+                              : Avatar(
+                                  radius: 15,
+                                  image:
+                                      widget.user.conversations!.last.sender ==
+                                              stream.userName
+                                          ? widget.user.userTwoProfilePhoto!
+                                          : widget.user.userOneProfilePhoto!,
+                                ),
+                          // HexagonWidget.pointy(
+                          //   width: w + 4.0,
+                          //   elevation: 3.0,
+                          //   color: backgroundSecondary,
+                          //   cornerRadius: 7.0,
+                          //   child: AspectRatio(
+                          //     aspectRatio: HexagonType.POINTY.ratio,
+                          //     // child: Image.asset(
+                          //     //   'assets/tram.jpg',
+                          //     //   fit: BoxFit.fitWidth,
+                          //     // ),
+                          //   ),
+                          // ),
+                          // widget.user.conversations!.isEmpty
+                          //     ? HexagonAvatar(
+                          //         url: widget.user.userTwoProfilePhoto == null
+                          //             ? widget.dp!
+                          //             : widget.user.userTwoProfilePhoto!,
+                          //         w: w + 4)
+                          //     : HexagonAvatar(
+                          //         url: widget.user.conversations!.last.sender ==
+                          //                 stream.userName
+                          //             ? widget.user.userTwoProfilePhoto!
+                          //             : widget.user.userOneProfilePhoto!,
+                          //         w: w + 4),
                         ],
                       ),
-                      Positioned(
-                        right: 1.1,
-                        top: 0.0,
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 0, bottom: 0),
-                          child: CircleAvatar(
-                            radius: 5,
-                            backgroundColor: myChat.allSocketUsers
-                                    .where((element) =>
-                                        element.userId.toString() ==
-                                        id.toString())
-                                    .toList()
-                                    .isNotEmpty
-                                ? Colors.green
-                                : Colors.red,
-                          ),
-                        ),
-                      )
+                      // Positioned(
+                      //   right: 1.1,
+                      //   top: 0.0,
+                      //   child: Padding(
+                      //     padding: const EdgeInsets.only(right: 0, bottom: 0),
+                      //     child: CircleAvatar(
+                      //       radius: 5,
+                      //       backgroundColor: myChat.allSocketUsers
+                      //               .where((element) =>
+                      //                   element.userId.toString() ==
+                      //                   id.toString())
+                      //               .toList()
+                      //               .isNotEmpty
+                      //           ? Colors.green
+                      //           : Colors.red,
+                      //     ),
+                      //   ),
+                      // )
                     ],
                   ),
                   const SizedBox(
@@ -354,8 +392,8 @@ class _ChatScreenState extends State<ChatScreen> {
                                         ? "${widget.user.userTwo}"
                                         : "${widget.user.userOne} ",
 
-                                    style: GoogleFonts.leagueSpartan(
-                                      color: HexColor(darkColor),
+                                    style: GoogleFonts.roboto(
+                                      color: textWhite,
                                       fontSize: 15,
                                       fontWeight: FontWeight.w500,
                                     ),
@@ -390,8 +428,8 @@ class _ChatScreenState extends State<ChatScreen> {
                                   text: TextSpan(
                                     text: "${widget.user.userTwo} ",
 
-                                    style: GoogleFonts.leagueSpartan(
-                                      color: HexColor(darkColor),
+                                    style: GoogleFonts.roboto(
+                                      color: textWhite,
                                       fontSize: 15,
                                       fontWeight: FontWeight.w500,
                                     ),
@@ -428,7 +466,7 @@ class _ChatScreenState extends State<ChatScreen> {
             // ),
             centerTitle: true,
             leading: BackButton(
-              color: HexColor("#322929"),
+              color: textPrimary,
               onPressed: () async {
                 ChatWare ware = Provider.of<ChatWare>(context, listen: false);
                 setState(() {
@@ -456,7 +494,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             style: BorderStyle.solid)),
                     child: SvgPicture.asset(
                       "assets/icon/options.svg",
-                      color: HexColor(darkColor),
+                      color: textPrimary,
                     ),
                   ),
                 ),
@@ -467,7 +505,7 @@ class _ChatScreenState extends State<ChatScreen> {
               stream: null,
               builder: (context, snapshot) {
                 return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  padding: const EdgeInsets.symmetric(horizontal: 0),
                   child: Stack(
                     children: [
                       Align(
@@ -486,41 +524,44 @@ class _ChatScreenState extends State<ChatScreen> {
                           ),
                         ),
                       ),
-                      Align(
-                        alignment: Alignment.center,
-                        child: widget.user.conversations!.isEmpty
-                            ? ChatList(
-                                chat: widget.chat,
-                                me: myAccount.userProfileModel.username,
-                                myUserId:
-                                    myAccount.userProfileModel.id.toString(),
-                                to: widget.otherUser!.username,
-                                toUserId: widget.otherUser!.id.toString(),
-                                controller: controiller!,
-                                isHome: widget.isHome,
-                                user: widget.user,
-                              )
-                            : ChatList(
-                                chat: widget.chat,
-                                me: widget.user.conversations!.last.sender ==
-                                        stream.userName
-                                    ? widget.user.userOne!
-                                    : widget.user.userTwo!,
-                                myUserId:
-                                    myAccount.userProfileModel.id.toString(),
-                                to: widget.user.conversations!.last.sender ==
-                                        stream.userName
-                                    ? widget.user.userTwo
-                                    : widget.user.userOne,
-                                toUserId:
-                                    widget.user.conversations!.last.sender ==
-                                            stream.userName
-                                        ? widget.user.userTwoId.toString()
-                                        : widget.user.userOneId.toString(),
-                                controller: controiller!,
-                                isHome: widget.isHome,
-                                user: widget.user,
-                              ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: widget.user.conversations!.isEmpty
+                              ? ChatList(
+                                  chat: widget.chat,
+                                  me: myAccount.userProfileModel.username,
+                                  myUserId:
+                                      myAccount.userProfileModel.id.toString(),
+                                  to: widget.otherUser!.username,
+                                  toUserId: widget.otherUser!.id.toString(),
+                                  controller: controiller!,
+                                  isHome: widget.isHome,
+                                  user: widget.user,
+                                )
+                              : ChatList(
+                                  chat: widget.chat,
+                                  me: widget.user.conversations!.last.sender ==
+                                          stream.userName
+                                      ? widget.user.userOne!
+                                      : widget.user.userTwo!,
+                                  myUserId:
+                                      myAccount.userProfileModel.id.toString(),
+                                  to: widget.user.conversations!.last.sender ==
+                                          stream.userName
+                                      ? widget.user.userTwo
+                                      : widget.user.userOne,
+                                  toUserId:
+                                      widget.user.conversations!.last.sender ==
+                                              stream.userName
+                                          ? widget.user.userTwoId.toString()
+                                          : widget.user.userOneId.toString(),
+                                  controller: controiller!,
+                                  isHome: widget.isHome,
+                                  user: widget.user,
+                                ),
+                        ),
                       ),
                       Align(
                           alignment: Alignment.bottomCenter,
@@ -533,10 +574,11 @@ class _ChatScreenState extends State<ChatScreen> {
                                   socket: myChat.socket == null
                                       ? null
                                       : myChat.socket!,
-                                  toId: widget.otherUser!.id!.toString()
+                                  toId: widget.otherUser!.id!.toString(),
+                                  player: player,
 
                                   //  val: controiller!.position.maxScrollExtent,
-                                  )
+                                )
                               : ChatForm(
                                   controller: controiller!,
                                   msgController: msgController,
@@ -554,6 +596,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                               stream.userName
                                           ? widget.user.userTwoId.toString()
                                           : widget.user.userOneId.toString(),
+                                  player: player,
                                   //  val: controiller!.position.maxScrollExtent,
                                 ))
                     ],

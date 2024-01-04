@@ -1,4 +1,4 @@
-import 'package:fl_toast/fl_toast.dart';
+import 'package:fl_toast/fl_toast.dart' hide Toast;
 import 'package:flutter/material.dart';
 // import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -36,11 +36,10 @@ Future<void> showToast(
 
 showToast2(BuildContext context, String message, {bool isError = false}) async {
   await showStyledToast(
-    
-  child:    SizedBox(
+      child: SizedBox(
         width: MediaQuery.of(context).size.width * 0.9,
         child: Material(
-          color: isError ? Colors.white : HexColor(primaryColor),
+          color: isError ? HexColor(backgroundColor) : Colors.green,
           elevation: 10,
           borderRadius: BorderRadius.circular(10),
           child: Padding(
@@ -66,12 +65,11 @@ showToast2(BuildContext context, String message, {bool isError = false}) async {
                           height: 32,
                           width: 32,
                           decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: HexColor(backgroundColor)),
+                              shape: BoxShape.circle, color: secondaryColor),
                           child: Center(
                               child: SvgPicture.asset(
-                            'assets/icon/crown.svg',
-                            color: HexColor(primaryColor),
+                            'assets/icon/logo2.svg',
+                            color: textWhite,
                           )),
                         ),
                 ),
@@ -86,17 +84,15 @@ showToast2(BuildContext context, String message, {bool isError = false}) async {
           ),
         ),
       ),
-     
-  context: context,
-  alignment: Alignment.topCenter,
-  backgroundColor: Colors.transparent,
-  animationBuilder: (context, animation, child) {
-    return ScaleTransition(
-      scale: animation,
-      child: child,
-    );
-  }
-);
+      context: context,
+      alignment: Alignment.topCenter,
+      backgroundColor: Colors.transparent,
+      animationBuilder: (context, animation, child) {
+        return ScaleTransition(
+          scale: animation,
+          child: child,
+        );
+      });
 
   // showToastWidget(
   //     SizedBox(
@@ -148,8 +144,7 @@ showToast2(BuildContext context, String message, {bool isError = false}) async {
   //         ),
   //       ),
   //     ),
-     
-     
+
   //     animation: StyledToastAnimation.slideFromTop,
   //     duration: const Duration(seconds: 4),
   //     position:
@@ -158,11 +153,19 @@ showToast2(BuildContext context, String message, {bool isError = false}) async {
   //     context: context);
 }
 
+Future<void> showToastLater(msg) async {
+  await Fluttertoast.showToast(
+      msg: msg,
+      textColor: HexColor(backgroundColor),
+      gravity: ToastGravity.TOP,
+      backgroundColor: HexColor(primaryColor));
+}
 
-Future<void> showToastLater (msg) async {
-   await Fluttertoast.showToast(
-              msg: msg,
-              textColor: HexColor(backgroundColor),
-              gravity: ToastGravity.TOP,
-              backgroundColor: HexColor(primaryColor));
+Future<void> showToastNew(msg) async {
+  await Fluttertoast.showToast(
+      msg: msg,
+      textColor: textPrimary,
+      gravity: ToastGravity.TOP,
+      toastLength: Toast.LENGTH_LONG,
+      backgroundColor: HexColor(backgroundColor));
 }

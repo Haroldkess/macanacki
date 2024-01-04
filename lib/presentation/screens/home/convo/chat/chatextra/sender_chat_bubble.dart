@@ -29,67 +29,86 @@ class SenderBubble extends StatelessWidget {
 
     return Padding(
       padding: EdgeInsets.only(bottom: 5.0, left: 35.0, right: 0.0, top: 0),
-      child: Column(
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Container(
-            //  height: 53,
-            width: MediaQuery.of(context).size.width * 0.8,
-            alignment: Alignment.topLeft,
-            decoration: BoxDecoration(
-                color: HexColor(primaryColor).withOpacity(.7),
-                shape: BoxShape.rectangle,
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(10),
-                  topRight: Radius.circular(10),
-                  bottomLeft: Radius.circular(10),
-                )),
-            child: Padding(
-              padding: EdgeInsets.all(15),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  chat.media != null
-                      ? Container(
-                          height: 200,
-                          width: MediaQuery.of(context).size.width * 0.7,
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  image:
-                                      CachedNetworkImageProvider(chat.media!))),
-                        )
-                      : const SizedBox.shrink(),
-                  AppText(
-                    text: chat.body!,
-                    color: HexColor(backgroundColor),
-                    size: 14,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 0.2,
+          Stack(
+            children: [
+              Container(
+                //  height: 53,
+                constraints: BoxConstraints(
+                    //  maxWidth: MediaQuery.of(context).size.width * .8,
+                    minWidth: MediaQuery.of(context).size.width * .3),
+                alignment: Alignment.topLeft,
+                decoration: BoxDecoration(
+                    color: backgroundSecondary,
+                    shape: BoxShape.rectangle,
+                    borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(8),
+                        topRight: Radius.circular(8),
+                        bottomLeft: Radius.circular(8),
+                        bottomRight: Radius.elliptical(5, 30))),
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      left: 15.0, right: 15, top: 5, bottom: 15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      chat.media != null
+                          ? Container(
+                              height: 200,
+                              width: MediaQuery.of(context).size.width * 0.7,
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                      image: CachedNetworkImageProvider(
+                                          chat.media!))),
+                            )
+                          : const SizedBox.shrink(),
+                      ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxWidth: MediaQuery.of(context).size.width * .7,
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 5),
+                          child: ChatAppText(
+                            text: chat.body!,
+                            color: textWhite,
+                            size: 14,
+                            fontWeight: FontWeight.w400,
+                            letterSpacing: 0.2,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(
-              right: 15,
-              top: 5,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                AppText(
-                  text: Operations.times(chat.createdAt!).toString(),
-                  color: HexColor("#C0C0C0"),
-                  size: 12,
                 ),
-                SvgPicture.asset(
-                  "assets/icon/done.svg",
-                  width: 20,
-                  height: 12,
-                )
-              ],
-            ),
-          )
+              ),
+              Positioned(
+                bottom: 5,
+                right: 10,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    AppText(
+                      text: Operations.times(chat.createdAt!).toString(),
+                      color: HexColor("#C0C0C0"),
+                      size: 10,
+                    ),
+                    CircleAvatar(
+                      backgroundColor: Colors.green,
+                      radius: 5,
+                      child: Icon(
+                        Icons.done,
+                        size: 8,
+                        color: Colors.white,
+                      ),
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
         ],
       ),
     );

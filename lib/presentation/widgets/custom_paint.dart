@@ -6,7 +6,7 @@ class RPSCustomPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     Paint paint0 = Paint()
-      ..color = HexColor(primaryColor)
+      ..color = secondaryColor
       ..style = PaintingStyle.fill
       ..strokeWidth = 1;
 

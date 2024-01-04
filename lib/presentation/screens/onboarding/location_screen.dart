@@ -64,6 +64,7 @@ class _SelectLocationState extends State<SelectLocation> {
                           align: TextAlign.center,
                           size: 30,
                           fontWeight: FontWeight.w700,
+                          color: textWhite,
                         )),
                   ],
                 ),
@@ -109,9 +110,9 @@ class _SelectLocationState extends State<SelectLocation> {
                     child: AppButton(
                         width: 0.8,
                         height: 0.06,
-                        color: primaryColor,
+                        color: "#ffffff",
                         text: "Continue",
-                        backColor: primaryColor,
+                        backColor: "#ffffff",
                         curves: buttonCurves * 5,
                         textColor: backgroundColor,
                         onTap: () async {

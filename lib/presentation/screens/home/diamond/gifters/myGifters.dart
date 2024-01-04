@@ -34,7 +34,7 @@ class _MyGiftersState extends State<MyGifters> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: HexColor("#F5F2F9"),
+        backgroundColor: backgroundSecondary,
         appBar: AppBar(
           bottom: PreferredSize(
             preferredSize: Size(0, 20),
@@ -53,8 +53,9 @@ class _MyGiftersState extends State<MyGifters> {
                       height: 46,
                       //width: 383,
                       decoration: BoxDecoration(
-                          color: HexColor(backgroundColor),
+                          //  color: backgroundSecondary,
                           shape: BoxShape.rectangle,
+                          border: Border.all(color: backgroundSecondary),
                           borderRadius:
                               const BorderRadius.all(Radius.circular(8.0))),
                       child: TextFormField(
@@ -62,10 +63,15 @@ class _MyGiftersState extends State<MyGifters> {
                         onChanged: (val) {
                           setState(() {});
                         },
+                        style: GoogleFonts.roboto(
+                          color: textPrimary,
+                        ),
+                        cursorColor: textPrimary,
                         decoration: InputDecoration(
-                          hintText: " Search",
-                          hintStyle: GoogleFonts.leagueSpartan(
-                              color: HexColor("#C0C0C0"), fontSize: 14),
+                          hintText: "Search",
+                          contentPadding: EdgeInsets.only(left: 8),
+                          hintStyle: GoogleFonts.roboto(
+                              color: textPrimary, fontSize: 14),
                           border: UnderlineInputBorder(
                               borderRadius: BorderRadius.circular(2.0),
                               borderSide:
@@ -88,21 +94,21 @@ class _MyGiftersState extends State<MyGifters> {
           ),
           title: AppText(
             text: "My Gifters",
-            color: Colors.black,
+            color: textWhite,
             size: 24,
             fontWeight: FontWeight.w800,
             letterSpacing: -0.21,
           ),
           centerTitle: true,
-          leading: const BackButton(color: Colors.black),
+          leading: BackButton(color: textWhite),
           elevation: 0,
           backgroundColor: HexColor(backgroundColor),
           toolbarHeight: 110,
         ),
         body: GiftWare.instance.loadGifters.value
-            ? Center(child: Loader(color: HexColor(primaryColor)))
+            ? Center(child: Loader(color: textPrimary))
             : ObxValue(
-                (history) => history.value.data!.isEmpty
+                (history) => history.value.data == null
                     ? Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -112,7 +118,7 @@ class _MyGiftersState extends State<MyGifters> {
                               "assets/icon/diamond.svg",
                               height: 30,
                               width: 30,
-                            //  color: HexColor(primaryColor),
+                              //  color: HexColor(primaryColor),
                             ),
                             const SizedBox(
                               height: 20,
@@ -120,36 +126,61 @@ class _MyGiftersState extends State<MyGifters> {
                             AppText(
                               text: "Oops you have no Gifter yet",
                               fontWeight: FontWeight.w400,
+                              color: textPrimary,
                             )
                           ],
                         ),
                       )
-                    : StreamBuilder(
-                        stream: null,
-                        builder: (context, snapshot) {
-                          List<GifterInfo> searched = history
-                                  .value.data!.isEmpty
-                              ? history.value.data!
-                              : history.value.data!.where((element) {
-                                  return element.sender!.username!
-                                      .toLowerCase()
-                                      .contains(searchText.text.toLowerCase());
-                                }).toList();
-
-                          return ListView.builder(
-                            itemCount: searched.length,
-                            itemBuilder: (context, index) {
-                              GifterInfo gifter = searched[index];
-                              return Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 10, horizontal: 10),
-                                child: GifterView(
-                                  data: gifter,
+                    : history.value.data!.isEmpty
+                        ? Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SvgPicture.asset(
+                                  "assets/icon/diamond.svg",
+                                  height: 30,
+                                  width: 30,
+                                  //  color: HexColor(primaryColor),
                                 ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                AppText(
+                                  text: "Oops you have no Gifter yet",
+                                  fontWeight: FontWeight.w400,
+                                  color: textPrimary,
+                                )
+                              ],
+                            ),
+                          )
+                        : StreamBuilder(
+                            stream: null,
+                            builder: (context, snapshot) {
+                              List<GifterInfo> searched = history
+                                      .value.data!.isEmpty
+                                  ? history.value.data!
+                                  : history.value.data!.where((element) {
+                                      return element.sender!.username!
+                                          .toLowerCase()
+                                          .contains(
+                                              searchText.text.toLowerCase());
+                                    }).toList();
+
+                              return ListView.builder(
+                                itemCount: searched.length,
+                                itemBuilder: (context, index) {
+                                  GifterInfo gifter = searched[index];
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 10, horizontal: 10),
+                                    child: GifterView(
+                                      data: gifter,
+                                    ),
+                                  );
+                                },
                               );
-                            },
-                          );
-                        }),
+                            }),
                 GiftWare.instance.gifterHistory));
   }
 }

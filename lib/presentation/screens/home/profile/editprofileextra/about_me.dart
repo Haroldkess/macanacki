@@ -20,7 +20,7 @@ class EditAboutMe extends StatelessWidget {
                 text: "About Me",
                 fontWeight: FontWeight.w600,
                 size: 17,
-                color: HexColor("#0C0C0C"),
+                color: textPrimary,
               )
             ],
           ),
@@ -38,11 +38,11 @@ class EditAboutMe extends StatelessWidget {
             child: TextFormField(
               controller: about,
               maxLength: 120,
-              cursorColor: HexColor(primaryColor),
+              cursorColor: textPrimary,
               keyboardType: TextInputType.text,
               maxLines: null,
-              style: GoogleFonts.overpass(
-                color: Colors.black,
+              style: GoogleFonts.roboto(
+                color: textPrimary,
                 fontSize: 13,
                 fontWeight: FontWeight.w400,
                 decoration: TextDecoration.none,
@@ -50,8 +50,8 @@ class EditAboutMe extends StatelessWidget {
               ),
               decoration: InputDecoration(
                 hintText: "     Say something about yourself...",
-                hintStyle: GoogleFonts.overpass(
-                    color: HexColor("#8B8B8B"),
+                hintStyle: GoogleFonts.roboto(
+                    color: textPrimary,
                     fontSize: 14,
                     fontWeight: FontWeight.w400),
                 suffixIcon: null,

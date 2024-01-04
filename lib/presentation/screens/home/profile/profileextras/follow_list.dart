@@ -112,10 +112,10 @@ class _FollowFollowingListState extends State<FollowFollowingList> {
               );
             },
             newPageProgressIndicatorBuilder: (context) {
-              return Loader(color: HexColor(primaryColor));
+              return Loader(color: textWhite);
             },
             firstPageProgressIndicatorBuilder: (context) {
-              return Loader(color: HexColor(primaryColor));
+              return Loader(color: textWhite);
             },
             noItemsFoundIndicatorBuilder: (context) {
               return Center(
@@ -127,7 +127,7 @@ class _FollowFollowingListState extends State<FollowFollowingList> {
                       "assets/icon/crown.svg",
                       height: 30,
                       width: 30,
-                      color: HexColor(primaryColor),
+                      color: Colors.red,
                     ),
                     const SizedBox(
                       height: 20,
@@ -135,6 +135,7 @@ class _FollowFollowingListState extends State<FollowFollowingList> {
                     AppText(
                       text: "Oops you have no ${widget.what}",
                       fontWeight: FontWeight.w400,
+                      color: textPrimary,
                     )
                   ],
                 ),

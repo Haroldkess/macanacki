@@ -9,6 +9,7 @@ chatOptionModal(BuildContext context) async {
   return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      backgroundColor: backgroundSecondary,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (context) => Padding(
@@ -28,7 +29,7 @@ chatOptionModal(BuildContext context) async {
                                 padding: const EdgeInsets.only(top: 15.0),
                                 child: AppText(
                                   text: e.name,
-                                  color: HexColor(darkColor),
+                                  color: textPrimary,
                                   size: 16,
                                   fontWeight: FontWeight.w400,
                                 ),

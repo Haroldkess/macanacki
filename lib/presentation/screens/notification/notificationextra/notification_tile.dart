@@ -25,7 +25,6 @@ class NotificationTile extends StatelessWidget {
     return ListTile(
       onTap: () async {
         if (item.type == "follow") {
-        
           PageRouting.pushToPage(
               context,
               MatchRequestScreen(
@@ -37,8 +36,10 @@ class NotificationTile extends StatelessWidget {
       },
       leading: item.picture == null
           ? SvgPicture.asset(
-              "assets/icon/crown.svg",
-              color: HexColor(primaryColor),
+              "assets/icon/logo2.svg",
+              color: HexColor("#FFFFFF"),
+              height: 30,
+              width: 30,
             )
           : SizedBox(
               width: 30,
@@ -65,38 +66,34 @@ class NotificationTile extends StatelessWidget {
             ),
       title: AppText(
         text: item.title!,
-        color: HexColor("#222222"),
+        color: textWhite,
         size: 14,
         fontWeight: FontWeight.w700,
       ),
       subtitle: AppText(
         text: item.body!,
-        color: HexColor("#8B8B8B"),
+        color: textPrimary,
         size: 12,
         fontWeight: FontWeight.w500,
       ),
-      trailing: Container(
-        height: 60,
-        //color: Colors.amber,
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 8.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              // item.isRequest || item.isVerify
-              //     ? const SizedBox.shrink()
-              //     : Icon(
-              //         Icons.more_horiz,
-              //         color: HexColor(darkColor),
-              //       ),
-              AppText(
-                text: timeago.format(item.createdAt!),
-                size: 10,
-                fontWeight: FontWeight.w500,
-                color: HexColor("#222222"),
-              )
-            ],
-          ),
+      trailing: Padding(
+        padding: const EdgeInsets.only(bottom: 10.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            // item.isRequest || item.isVerify
+            //     ? const SizedBox.shrink()
+            //     : Icon(
+            //         Icons.more_horiz,
+            //         color: HexColor(darkColor),
+            //       ),
+            AppText(
+              text: timeago.format(item.createdAt!),
+              size: 10,
+              fontWeight: FontWeight.w500,
+              color: textPrimary,
+            )
+          ],
         ),
       ),
     );

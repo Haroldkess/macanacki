@@ -277,54 +277,55 @@ class _ExtraProfileState extends State<ExtraProfile>
                 SliverAppBar(
                   automaticallyImplyLeading: true,
                   leading: BackButton(color: Colors.black),
-                  title: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      // myIcon("assets/icon/macanackiicon.svg", primaryColor, 16.52,
-                      //     70, false),
-                      InkWell(
-                        onTap: () => PageRouting.pushToPage(
-                            context, const NotificationScreen()),
-                        child: Stack(
-                          children: [
-                            SvgPicture.asset(
-                              "assets/icon/notification.svg",
-                            ),
-                            notify.readAll
-                                ? SizedBox.shrink()
-                                : Positioned(
-                                    right: 5,
-                                    child: Align(
-                                      alignment: Alignment.topCenter,
-                                      child: Container(
-                                        height: 10,
-                                        width: 10,
-                                        decoration: const BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: Colors.red),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(0.0),
-                                          child: Center(
-                                            child: AppText(
-                                              text: notify.notifyData.length > 9
-                                                  ? ""
-                                                  : "",
-                                              size: 8,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                          ],
-                        ),
+                  // title: Row(
+                  //   mainAxisAlignment: MainAxisAlignment.end,
+                  //   children: [
+                  //     // myIcon("assets/icon/macanackiicon.svg", primaryColor, 16.52,
+                  //     //     70, false),
+                  //     InkWell(
+                  //       onTap: () => PageRouting.pushToPage(
+                  //           context, const NotificationScreen()),
+                  //       child: Stack(
+                  //         children: [
+                  //           SvgPicture.asset(
+                  //             "assets/icon/notification.svg",
+                  //           ),
+                  //           notify.readAll
+                  //               ? SizedBox.shrink()
+                  //               : Positioned(
+                  //                   right: 5,
+                  //                   child: Align(
+                  //                     alignment: Alignment.topCenter,
+                  //                     child: Container(
+                  //                       height: 10,
+                  //                       width: 10,
+                  //                       decoration: const BoxDecoration(
+                  //                           shape: BoxShape.circle,
+                  //                           color: Colors.red),
+                  //                       child: Padding(
+                  //                         padding: const EdgeInsets.all(0.0),
+                  //                         child: Center(
+                  //                           child: AppText(
+                  //                             text: notify.notifyData.length > 9
+                  //                                 ? ""
+                  //                                 : "",
+                  //                             size: 8,
+                  //                             fontWeight: FontWeight.bold,
+                  //                           ),
+                  //                         ),
+                  //                       ),
+                  //                     ),
+                  //                   ),
+                  //                 )
+                  //         ],
+                  //       ),
 
-                        // myIcon("assets/icon/notification.svg", "#828282",
-                        //     19.13, 17.31, true),
-                      ),
-                    ],
-                  ),
+                  //       // myIcon("assets/icon/notification.svg", "#828282",
+                  //       //     19.13, 17.31, true),
+                  //     ),
+                  //   ],
+                  // ),
+
                   // floating: true,
                   pinned: true,
                   backgroundColor: HexColor("#F5F2F9"),

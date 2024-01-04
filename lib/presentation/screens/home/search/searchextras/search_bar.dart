@@ -23,13 +23,17 @@ class GlobalSearchBar extends StatelessWidget {
       decoration: BoxDecoration(
           color: HexColor(backgroundColor),
           shape: BoxShape.rectangle,
+          border: Border.all(color: backgroundSecondary),
           borderRadius: const BorderRadius.all(Radius.circular(8.0))),
       child: TextFormField(
         controller: x,
-        cursorColor: HexColor(primaryColor),
+        cursorColor: backgroundSecondary,
         enableSuggestions: false,
         autocorrect: false,
         autofocus: true,
+        style: GoogleFonts.roboto(
+          color: textPrimary,
+        ),
         onChanged: (value) async {
           // if (value.isEmpty) {
           //   return;
@@ -49,16 +53,16 @@ class GlobalSearchBar extends StatelessWidget {
         },
         decoration: InputDecoration(
           hintText: " Search",
-          hintStyle: GoogleFonts.leagueSpartan(
-              color: HexColor("#C0C0C0"), fontSize: 14),
+          hintStyle: GoogleFonts.roboto(color: textPrimary, fontSize: 14),
           border: InputBorder.none,
+          contentPadding: EdgeInsets.symmetric(horizontal: 8),
           enabledBorder: InputBorder.none,
           disabledBorder: UnderlineInputBorder(
               borderRadius: BorderRadius.circular(2.0),
               borderSide: BorderSide(color: HexColor("#F5F2F9"))),
           focusedBorder: UnderlineInputBorder(
               borderRadius: BorderRadius.circular(2.0),
-              borderSide: BorderSide(color: HexColor(primaryColor))),
+              borderSide: BorderSide(color: Colors.transparent)),
         ),
       ),
     );
@@ -78,6 +82,7 @@ class GlobalSearchBarHolder extends StatelessWidget {
       decoration: BoxDecoration(
           color: HexColor(backgroundColor),
           shape: BoxShape.rectangle,
+          border: Border.all(color: backgroundSecondary),
           borderRadius: const BorderRadius.all(Radius.circular(8.0))),
       child: TextFormField(
         //   controller: x,
@@ -102,14 +107,13 @@ class GlobalSearchBarHolder extends StatelessWidget {
           emitter("submitted");
         },
         decoration: InputDecoration(
-          hintText: " Search",
-          hintStyle: GoogleFonts.leagueSpartan(
-              color: HexColor("#C0C0C0"), fontSize: 14),
+          hintText: "   Search",
+          hintStyle: GoogleFonts.roboto(color: textPrimary, fontSize: 14),
           border: InputBorder.none,
           enabledBorder: InputBorder.none,
           disabledBorder: UnderlineInputBorder(
               borderRadius: BorderRadius.circular(2.0),
-              borderSide: BorderSide(color: HexColor("#F5F2F9"))),
+              borderSide: BorderSide(color: Colors.transparent)),
           focusedBorder: UnderlineInputBorder(
               borderRadius: BorderRadius.circular(2.0),
               borderSide: BorderSide(color: HexColor(primaryColor))),

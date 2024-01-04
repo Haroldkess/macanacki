@@ -67,7 +67,7 @@ class _PublicUserFollowerFollowingScreenState
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: HexColor("#F5F2F9"),
+        backgroundColor: backgroundSecondary,
         appBar: AppBar(
           bottom: PreferredSize(
             preferredSize: Size(0, 20),
@@ -102,12 +102,12 @@ class _PublicUserFollowerFollowingScreenState
             text: widget.isFollowing
                 ? "Following ${widget.title}"
                 : "${widget.title} Followers",
-            color: Colors.black,
+            color: textWhite,
             size: 14,
             fontWeight: FontWeight.w700,
           ),
           centerTitle: true,
-          leading: const BackButton(color: Colors.black),
+          leading: BackButton(color: textWhite),
           elevation: 0,
           backgroundColor: HexColor(backgroundColor),
           toolbarHeight: 110,

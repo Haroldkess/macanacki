@@ -60,6 +60,7 @@ class _SelectUserNameState extends State<SelectUserName> {
                             align: TextAlign.start,
                             size: 30,
                             fontWeight: FontWeight.w700,
+                            color: textWhite,
                           ))
                     ],
                   ),
@@ -72,7 +73,7 @@ class _SelectUserNameState extends State<SelectUserName> {
                       AppText(
                         text: "User Name",
                         size: 14,
-                        color: HexColor(darkColor),
+                        color: textWhite,
                         fontWeight: FontWeight.w400,
                       ),
                     ],
@@ -84,15 +85,15 @@ class _SelectUserNameState extends State<SelectUserName> {
                     decoration: BoxDecoration(
                         color: HexColor('#F5F2F9'),
                         shape: BoxShape.rectangle,
-                        border: Border.all(color: HexColor(primaryColor)),
+                        border: Border.all(color: backgroundSecondary),
                         borderRadius:
                             const BorderRadius.all(Radius.circular(8.0))),
                     child: Form(
                       key: _formKey,
                       child: TextFormField(
                         controller: userName,
-                        cursorColor: HexColor(primaryColor),
-                        style: GoogleFonts.leagueSpartan(
+                        cursorColor: HexColor(darkColor),
+                        style: GoogleFonts.roboto(
                           color: HexColor(darkColor),
                           fontSize: 16,
                         ),
@@ -129,7 +130,7 @@ class _SelectUserNameState extends State<SelectUserName> {
                           contentPadding:
                               const EdgeInsets.only(left: 20, top: 17),
                           hintText: "Enter your User name here",
-                          hintStyle: GoogleFonts.leagueSpartan(
+                          hintStyle: GoogleFonts.roboto(
                               color: HexColor('#C0C0C0'), fontSize: 16),
                           border: InputBorder.none,
                           enabledBorder: InputBorder.none,
@@ -159,8 +160,7 @@ class _SelectUserNameState extends State<SelectUserName> {
                   Row(
                     children: [
                       Checkbox(
-                          fillColor:
-                              MaterialStatePropertyAll(HexColor(primaryColor)),
+                          fillColor: MaterialStatePropertyAll(secondaryColor),
                           value: iAgree,
                           onChanged: ((value) {
                             setState(() {
@@ -178,7 +178,7 @@ class _SelectUserNameState extends State<SelectUserName> {
                               style: GoogleFonts.leagueSpartan(
                                   textStyle: TextStyle(
                                       fontWeight: FontWeight.w400,
-                                      color: HexColor(darkColor),
+                                      color: textPrimary,
                                       decorationStyle:
                                           TextDecorationStyle.solid,
                                       fontSize: 12)),
@@ -188,7 +188,7 @@ class _SelectUserNameState extends State<SelectUserName> {
                                   style: GoogleFonts.leagueSpartan(
                                       textStyle: TextStyle(
                                           fontWeight: FontWeight.w400,
-                                          color: HexColor(primaryColor),
+                                          color: secondaryColor,
                                           decorationStyle:
                                               TextDecorationStyle.solid,
                                           fontSize: 12)),
@@ -204,7 +204,7 @@ class _SelectUserNameState extends State<SelectUserName> {
                                   style: GoogleFonts.leagueSpartan(
                                       textStyle: TextStyle(
                                           fontWeight: FontWeight.w400,
-                                          color: HexColor(darkColor),
+                                          color: textPrimary,
                                           decorationStyle:
                                               TextDecorationStyle.solid,
                                           fontSize: 12)),
@@ -214,7 +214,7 @@ class _SelectUserNameState extends State<SelectUserName> {
                                   style: GoogleFonts.leagueSpartan(
                                       textStyle: TextStyle(
                                           fontWeight: FontWeight.w400,
-                                          color: HexColor(primaryColor),
+                                          color: secondaryColor,
                                           decorationStyle:
                                               TextDecorationStyle.solid,
                                           fontSize: 12)),
@@ -228,20 +228,19 @@ class _SelectUserNameState extends State<SelectUserName> {
                               ]),
                         ),
                       ),
-                  
                     ],
                   ),
                   const SizedBox(
                     height: 32,
                   ),
                   stream.loadStatus2
-                      ? Loader(color: HexColor(primaryColor))
+                      ? Loader(color: textWhite)
                       : AppButton(
                           width: 0.9,
                           height: 0.06,
-                          color: typing ? primaryColor : "#AEAEAE",
+                          color: typing ? "#ffffff" : "#AEAEAE",
                           text: "Continue",
-                          backColor: typing ? primaryColor : "#AEAEAE",
+                          backColor: typing ? "#ffffff" : "#AEAEAE",
                           curves: buttonCurves * 5,
                           textColor: backgroundColor,
                           onTap: () async {
@@ -256,12 +255,10 @@ class _SelectUserNameState extends State<SelectUserName> {
                               showToast(
                                   context,
                                   "Please consent to the terms of use",
-                                  HexColor(primaryColor));
+                                  Colors.red);
                             }
                             //  PageRouting.pushToPage(context, const SelectGender());
                           })
-              
-              
                 ],
               )
             ],

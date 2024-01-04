@@ -277,7 +277,7 @@ class _UserTikTokViewState extends State<UserTikTokView>
           //       urls: widget.urls,
           //     )),
           Padding(
-            padding: const EdgeInsets.only(top: 20),
+            padding: const EdgeInsets.only(top: 0),
             child: Align(
               alignment: Alignment.topCenter,
               child: Row(
@@ -303,11 +303,14 @@ class _UserTikTokViewState extends State<UserTikTokView>
 
                   Row(
                     children: [
-                      IconButton(
-                          onPressed: () => PageRouting.popToPage(context),
-                          icon: const Icon(
-                            Icons.arrow_back_ios,
-                            color: Colors.white,
+                      InkWell(
+                          onTap: () => PageRouting.popToPage(context),
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 7),
+                            child: const Icon(
+                              Icons.arrow_back_ios,
+                              color: Colors.white,
+                            ),
                           )),
                       // SizedBox(
                       //   width: 2,
@@ -404,22 +407,53 @@ class _UserTikTokViewState extends State<UserTikTokView>
                                 width: 25,
                                 child: SvgPicture.asset(
                                   "assets/icon/d.svg",
-                                  color: HexColor(backgroundColor),
+                                  color: textPrimary,
                                 ),
                               )),
                     ],
                   ),
+
+                  widget.media.length > 1
+                      ? Expanded(
+                          //  width: 200,
+                          //color: Colors.transparent,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              ...widget.media.map((e) => Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 1),
+                                    child: CircleAvatar(
+                                      backgroundColor: e.replaceAll(
+                                                  '\\', '/') ==
+                                              tabs.image.replaceAll('\\', '/')
+                                          ? Colors.green
+                                          : HexColor("#6A6A6A"),
+                                      radius: 3,
+                                      //   width: 25,
+                                      //   height: 3,
+                                    ),
+                                  ))
+                            ],
+                          ),
+                        )
+                      : SizedBox.shrink(),
 
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 28),
                     child: InkWell(
                         onTap: () => optionModal(context, widget.urls,
                             widget.data.user!.id, widget.data.id, widget.data),
-                        child: SvgPicture.asset(
-                          "assets/icon/new_option.svg",
-                          height: 15,
-                          width: 20,
-                          color: HexColor(backgroundColor),
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 5),
+                          child: Container(
+                            height: 20,
+                            width: 20,
+                            child: SvgPicture.asset(
+                              "assets/icon/more.svg",
+                              color: textPrimary,
+                            ),
+                          ),
                         )),
                   ),
                 ],
@@ -427,7 +461,7 @@ class _UserTikTokViewState extends State<UserTikTokView>
             ),
           ),
           Positioned(
-            bottom: 1,
+            bottom: 0,
             child: Align(
                 alignment: Alignment.bottomLeft,
                 child: NewDesignTest(
@@ -448,33 +482,33 @@ class _UserTikTokViewState extends State<UserTikTokView>
                 //   ),
                 ),
           ),
-          widget.data.promoted == "yes"
-              ? Positioned(
-                  bottom: 100,
-                  left: 0,
-                  child: Align(
-                      alignment: Alignment.bottomLeft,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // AdsDisplay(
-                          //   sponsored: false,
-                          //   color: HexColor('#00B074'),
-                          //   title: '\$10.000.00',
-                          // ),
-                          // SizedBox(
-                          //   height: 10,
-                          // ),
-                          AdsDisplay(
-                            sponsored: true,
-                            //  color: HexColor('#00B074'),
-                            color: Colors.transparent,
-                            title: 'Sponsored Ad',
-                          ),
-                        ],
-                      )),
-                )
-              : SizedBox.shrink(),
+          // widget.data.promoted == "yes"
+          //     ? Positioned(
+          //         bottom: 100,
+          //         left: 0,
+          //         child: Align(
+          //             alignment: Alignment.bottomLeft,
+          //             child: Column(
+          //               crossAxisAlignment: CrossAxisAlignment.start,
+          //               children: [
+          //                 // AdsDisplay(
+          //                 //   sponsored: false,
+          //                 //   color: HexColor('#00B074'),
+          //                 //   title: '\$10.000.00',
+          //                 // ),
+          //                 // SizedBox(
+          //                 //   height: 10,
+          //                 // ),
+          //                 AdsDisplay(
+          //                   sponsored: true,
+          //                   //  color: HexColor('#00B074'),
+          //                   color: Colors.transparent,
+          //                   title: 'Sponsored Ad',
+          //                 ),
+          //               ],
+          //             )),
+          //       )
+          //     : SizedBox.shrink(),
           widget.page == "user"
               ? Positioned(
                   bottom: 150,
@@ -577,8 +611,9 @@ class _UserTikTokViewState extends State<UserTikTokView>
                               height: 35,
                               width: double.infinity,
                               decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.zero,
-                                  color: HexColor("#00B074")),
+                                borderRadius: BorderRadius.zero,
+                                color: Colors.white,
+                              ),
                               child: Padding(
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 10),
@@ -587,7 +622,7 @@ class _UserTikTokViewState extends State<UserTikTokView>
                                   children: [
                                     AppText(
                                       text: widget.data.button!,
-                                      color: Colors.white,
+                                      color: HexColor(backgroundColor),
                                       fontWeight: FontWeight.w500,
                                       size: 12,
                                     ),

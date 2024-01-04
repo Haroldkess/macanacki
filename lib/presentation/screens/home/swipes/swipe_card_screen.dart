@@ -55,56 +55,9 @@ class _SwipeCardScreenState extends State<SwipeCardScreen> {
           appBar: AppBar(
               backgroundColor: HexColor(backgroundColor),
               elevation: 0,
+              automaticallyImplyLeading: false,
               actions: [],
-              title: MenuCategory()
-
-              //  Row(
-              //   mainAxisAlignment: MainAxisAlignment.end,
-              //   children: [
-              //     // myIcon("assets/icon/macanackiicon.svg", primaryColor, 16.52,
-              //     //     70, false),
-              //     // InkWell(
-              //     //   onTap: () =>
-              //     //       PageRouting.pushToPage(context, const NotificationScreen()),
-              //     //   child: Stack(
-              //     //     children: [
-              //     //       SvgPicture.asset(
-              //     //         "assets/icon/notification.svg",
-              //     //       ),
-              //     //       Positioned(
-              //     //         right: 0,
-              //     //         child: Align(
-              //     //           alignment: Alignment.topRight,
-              //     //           child: Container(
-              //     //             height: 15,
-              //     //             width: 20,
-              //     //             decoration: const BoxDecoration(
-              //     //                 shape: BoxShape.circle, color: Colors.red),
-              //     //             child: Padding(
-              //     //               padding: const EdgeInsets.all(2.0),
-              //     //               child: Center(
-              //     //                 child: AppText(
-              //     //                   text: notify.notifyData.length > 9
-              //     //                       ? "9+"
-              //     //                       : notify.notifyData.length.toString(),
-              //     //                   size: 8,
-              //     //                   fontWeight: FontWeight.bold,
-              //     //                 ),
-              //     //               ),
-              //     //             ),
-              //     //           ),
-              //     //         ),
-              //     //       )
-              //     //     ],
-              //     //   ),
-
-              //     //   // myIcon("assets/icon/notification.svg", "#828282",
-              //     //   //     19.13, 17.31, true),
-              //     // ),
-              //   ],
-              // ),
-
-              ),
+              title: MenuCategory()),
           body: GestureDetector(
             behavior: HitTestBehavior.opaque,
             onPanDown: (_) {
@@ -140,7 +93,7 @@ class _SwipeCardScreenState extends State<SwipeCardScreen> {
                 Icon(
                   Icons.person_off_outlined,
                   size: 30,
-                  color: HexColor(primaryColor),
+                  color: Colors.red,
                 ),
                 SizedBox(
                   height: 10,
@@ -150,7 +103,7 @@ class _SwipeCardScreenState extends State<SwipeCardScreen> {
                     text: "No ${swipe.filterName} user found",
                     size: 14,
                     fontWeight: FontWeight.w600,
-                    color: Colors.black38,
+                    color: textWhite,
                   ),
                 )
               ],
@@ -160,32 +113,28 @@ class _SwipeCardScreenState extends State<SwipeCardScreen> {
   }
 }
 
-List<String> cat = [
-  "Verified",
-  "Women",
-  "Men",
-  "Business",
-];
-
 class MenuCategory extends StatelessWidget {
   const MenuCategory({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        physics: BouncingScrollPhysics(),
-        child: Row(
+    List<String> cat = [
+      "Verified",
+      "Women",
+      "Men",
+    ];
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Row(
           children: [
-            Row(
-              children: [
-                ...cat.map((e) => CategoryView(
-                      name: e,
-                    ))
-              ],
-            )
+            ...cat.map((e) => CategoryView(
+                  name: e,
+                ))
           ],
-        ));
+        )
+      ],
+    );
   }
 }
 
@@ -222,11 +171,11 @@ class CategoryView extends StatelessWidget {
           width: 85,
           decoration: BoxDecoration(
               color: swipe.filterName.toLowerCase() == name.toLowerCase()
-                  ? HexColor(primaryColor)
+                  ? backgroundSecondary
                   : HexColor(backgroundColor),
               border: Border.all(
                 color: swipe.filterName.toLowerCase() == name.toLowerCase()
-                    ? HexColor(primaryColor)
+                    ? Colors.grey
                     : HexColor("#EBEBEB"),
               ),
               borderRadius: BorderRadius.circular(50)),
@@ -236,22 +185,27 @@ class CategoryView extends StatelessWidget {
                     ? MainAxisAlignment.spaceBetween
                     : MainAxisAlignment.center,
             children: [
+              swipe.filterName.toLowerCase() == name.toLowerCase()
+                  ? SizedBox(
+                      width: 3,
+                    )
+                  : SizedBox.shrink(),
               AppText(
                 text: name,
                 color: swipe.filterName.toLowerCase() == name.toLowerCase()
-                    ? HexColor(backgroundColor)
+                    ? textPrimary
                     : HexColor("#979797"),
                 size: 12,
                 fontWeight: FontWeight.w400,
               ),
               swipe.filterName.toLowerCase() == name.toLowerCase()
                   ? CircleAvatar(
-                      backgroundColor: HexColor(backgroundColor),
+                      backgroundColor: Colors.green,
                       radius: 7,
                       child: Icon(
                         Icons.done,
                         size: 10,
-                        color: HexColor(primaryColor),
+                        color: Colors.white,
                       ),
                     )
                   : SizedBox.shrink()

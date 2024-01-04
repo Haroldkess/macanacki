@@ -21,17 +21,15 @@ class DiamondBalanceScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: HexColor("#F5F2F9"),
+        backgroundColor: backgroundSecondary,
         appBar: AppBar(
           backgroundColor: HexColor(backgroundColor),
           elevation: 0,
-          leading: BackButton(
-            color: Colors.black,
-          ),
+          leading: BackButton(color: textWhite),
           centerTitle: true,
           title: AppText(
             text: "Balance",
-            color: Colors.black,
+            color: textWhite,
             size: 24,
           ),
         ),
@@ -73,7 +71,7 @@ class DiamondBalanceScreen extends StatelessWidget {
                             child: Center(
                               child: SvgPicture.asset(
                                 "assets/icon/follow.svg",
-                                color: HexColor(primaryColor),
+                                color: HexColor(backgroundColor),
                                 height: 25,
                                 width: 25,
                               ),
@@ -87,6 +85,7 @@ class DiamondBalanceScreen extends StatelessWidget {
                           text: "My Gifters",
                           size: 12,
                           fontWeight: FontWeight.w400,
+                          color: textPrimary,
                         ),
                       ],
                     )
@@ -108,7 +107,7 @@ class BalanceCard extends StatelessWidget {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Container(
-      height: 100,
+      height: 70,
       width: size.width * 0.9,
       decoration: BoxDecoration(
           color: HexColor("#C0C0C0"), borderRadius: BorderRadius.circular(12)),
@@ -129,11 +128,42 @@ class BalanceCard extends StatelessWidget {
                     const SizedBox(
                       width: 3,
                     ),
-                    AppText(
-                      text:
-                          Operations.convertToCurrency("${balance.value.data}"),
-                      size: 24,
-                      fontWeight: FontWeight.w400,
+                    Row(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                              color: HexColor(backgroundColor),
+                              borderRadius: BorderRadius.circular(8)),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 5, vertical: 5),
+                            child: AppText(
+                              text: Operations.convertToCurrency(
+                                  int.tryParse(balance.value.data.toString())! <
+                                          1
+                                      ? "0.00"
+                                      : "${balance.value.data}"),
+                              size: 18,
+                              fontWeight: FontWeight.w400,
+                              color: textWhite,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 3,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            showToastNew(
+                                "This is the number of diamonds bought");
+                          },
+                          child: Icon(
+                            Icons.info_outline,
+                            color: HexColor(backgroundColor),
+                            size: 18,
+                          ),
+                        )
+                      ],
                     ),
                   ],
                 ),
@@ -147,7 +177,7 @@ class BalanceCard extends StatelessWidget {
                         padding: const EdgeInsets.all(8.0),
                         child: Icon(
                           Icons.add,
-                          color: HexColor(primaryColor),
+                          color: HexColor(backgroundColor),
                         )),
                   ),
                 )
@@ -183,18 +213,47 @@ class RevenueCard extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      AppText(
-                        text: "Diamond Revenue",
-                        size: 16,
-                        fontWeight: FontWeight.w400,
+                      Row(
+                        children: [
+                          AppText(
+                            text: "Diamond Revenue ",
+                            size: 20,
+                            fontWeight: FontWeight.w400,
+                            letterSpacing: 0.0,
+                          ),
+                          InkWell(
+                            onTap: () {
+                              showToastNew(
+                                  "This is the value of diamond received");
+                            },
+                            child: Icon(
+                              Icons.info_outline,
+                              color: HexColor(backgroundColor),
+                              size: 18,
+                            ),
+                          )
+                          // IconButton(
+                          //     onPressed: () {},
+                          //     icon: )
+                        ],
                       ),
                       Padding(
                         padding: const EdgeInsets.only(right: 20),
-                        child: AppText(
-                          text:
-                              "\$${Operations.convertToCurrency(((num.tryParse(giftValue.value.data.toString())! / 50) / 2).toString())}",
-                          size: 16,
-                          fontWeight: FontWeight.w500,
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: HexColor(backgroundColor),
+                              borderRadius: BorderRadius.circular(8)),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 5, vertical: 5),
+                            child: AppText(
+                              text:
+                                  "\$${Operations.convertToCurrency(((num.tryParse(giftValue.value.data.toString())! / 50) / 2).toString())}",
+                              size: 17,
+                              fontWeight: FontWeight.w500,
+                              color: textWhite,
+                            ),
+                          ),
                         ),
                       ),
                     ],
@@ -222,7 +281,7 @@ class RevenueCard extends StatelessWidget {
                         padding: const EdgeInsets.all(8.0),
                         child: Icon(
                           Icons.remove,
-                          color: HexColor(primaryColor),
+                          color: HexColor(backgroundColor),
                         )),
                   ),
                 ),

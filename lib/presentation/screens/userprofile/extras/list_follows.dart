@@ -108,10 +108,10 @@ class _PublicFollowFollowingListState extends State<PublicFollowFollowingList> {
           );
         },
         newPageProgressIndicatorBuilder: (context) {
-          return Loader(color: HexColor(primaryColor));
+          return Loader(color: textWhite);
         },
         firstPageProgressIndicatorBuilder: (context) {
-          return Loader(color: HexColor(primaryColor));
+          return Loader(color: textWhite);
         },
         noItemsFoundIndicatorBuilder: (context) {
           return Center(
@@ -123,12 +123,15 @@ class _PublicFollowFollowingListState extends State<PublicFollowFollowingList> {
                   "assets/icon/crown.svg",
                   height: 30,
                   width: 30,
-                  color: HexColor(primaryColor),
+                  color: Colors.red,
                 ),
                 const SizedBox(
                   height: 20,
                 ),
-                AppText(text: "User has no ${widget.what}")
+                AppText(
+                  text: "User has no ${widget.what}",
+                  color: textPrimary,
+                )
               ],
             ),
           );

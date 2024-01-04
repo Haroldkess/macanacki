@@ -157,7 +157,7 @@ class _ChatListState extends State<ChatList> {
                   height: 67,
                   width: 326,
                   decoration: BoxDecoration(
-                    color: HexColor("#F0ECF6"),
+                    color: backgroundSecondary,
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: Row(
@@ -170,7 +170,10 @@ class _ChatListState extends State<ChatList> {
                           children: [
                             Padding(
                               padding: const EdgeInsets.only(bottom: 15),
-                              child: SvgPicture.asset('assets/icon/lock.svg'),
+                              child: SvgPicture.asset(
+                                'assets/icon/lock.svg',
+                                color: textPrimary,
+                              ),
                             ),
                           ],
                         ),
@@ -180,7 +183,7 @@ class _ChatListState extends State<ChatList> {
                           padding: const EdgeInsets.only(right: 10),
                           child: AppText(
                               size: 12,
-                              color: HexColor("#8B8B8B"),
+                              color: textWhite,
                               fontWeight: FontWeight.w400,
                               text:
                                   "Messsages here are end-to-end encrypted. No one outside of this chat, not even the developers can read them. "),

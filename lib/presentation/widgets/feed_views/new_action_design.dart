@@ -29,6 +29,7 @@ import '../../screens/userprofile/testing_profile.dart';
 import '../../screens/userprofile/user_profile_screen.dart';
 import '../../uiproviders/screen/comment_provider.dart';
 import '../../uiproviders/screen/tab_provider.dart';
+import '../ads_display.dart';
 import '../comment_modal.dart';
 import '../hexagon_avatar.dart';
 import '../text.dart';
@@ -83,10 +84,6 @@ class _NewDesignTestState extends State<NewDesignTest> {
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
-    var size = MediaQuery.of(context).size;
-    var padding = 8.0;
-    //_checkIfLikedBefore();
-    var w = 30.0;
     UserProfileWare user = Provider.of<UserProfileWare>(context, listen: false);
     ActionWare stream = context.watch<ActionWare>();
     ActionWare action = Provider.of<ActionWare>(context, listen: false);
@@ -97,8 +94,12 @@ class _NewDesignTestState extends State<NewDesignTest> {
         height: showMore
             ? height / 1.4
             : widget.data.user!.gender == "Business"
-                ? 124
-                : 124,
+                ? widget.data.btnLink != null && widget.data.button != null
+                    ? 130
+                    : 124
+                : widget.data.btnLink != null && widget.data.button != null
+                    ? 130
+                    : 124,
         width: width,
         decoration: BoxDecoration(
           //    backgroundBlendMode: BlendMode.colorDodge,
@@ -195,14 +196,14 @@ class _NewDesignTestState extends State<NewDesignTest> {
                                         child: AppText(
                                           text: widget.data.user!.username!,
                                           size: 16,
-                                          fontWeight: FontWeight.w700,
+                                          fontWeight: FontWeight.w400,
                                           maxLines: 1,
                                           overflow: widget.data.user!.username!
                                                       .length >
                                                   20
                                               ? TextOverflow.ellipsis
                                               : TextOverflow.ellipsis,
-                                          color: HexColor(backgroundColor),
+                                          color: textWhite,
                                         ),
                                       ),
                                       widget.data.user!.verified == 1 &&
@@ -225,15 +226,23 @@ class _NewDesignTestState extends State<NewDesignTest> {
                                           maxWidth: 139,
                                         ),
                                         //   color: Colors.amber,
-                                        child: AppText(
-                                          text: Operations.feedTimes(
-                                              widget.data.createdAt!),
-                                          size: 12,
-                                          fontWeight: FontWeight.w400,
-                                          maxLines: 1,
-                                          color: HexColor(backgroundColor)
-                                              .withOpacity(.6),
-                                        ),
+                                        child: widget.data.promoted == "yes"
+                                            ? AppText(
+                                                text: 'Sponsored Ad',
+                                                color: textPrimary,
+                                                size: 10,
+                                                fontWeight: FontWeight.w600,
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                              )
+                                            : AppText(
+                                                text: Operations.feedTimes(
+                                                    widget.data.createdAt!),
+                                                size: 12,
+                                                fontWeight: FontWeight.w400,
+                                                maxLines: 1,
+                                                color: textPrimary,
+                                              ),
                                       ),
                                     ],
                                   ),
@@ -344,87 +353,92 @@ class _NewDesignTestState extends State<NewDesignTest> {
                   )
                 ],
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 36, top: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      //   width: width * 0.5,
-                      constraints: BoxConstraints(maxWidth: width * 0.85),
-                      child: SingleChildScrollView(
-                        child: RichText(
-                            textAlign: TextAlign.start,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: showMore ? 50 : 2,
-                            text: TextSpan(
-                                text: widget.data.description!.length >=
-                                            seeMoreVal &&
-                                        showMore == false
-                                    ? widget.data.description!
-                                        .substring(0, seeMoreVal - 5)
-                                    : widget.data.description!,
-                                style: GoogleFonts.leagueSpartan(
-                                    textStyle: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  color: HexColor(backgroundColor)
-                                      .withOpacity(0.9),
-                                  decorationStyle: TextDecorationStyle.solid,
-                                  fontSize: 12,
-                                  fontFamily: '',
-                                )),
-                                recognizer: tapGestureRecognizer
-                                  ..onTap = () async {
-                                    //    print("object");
-                                    if (showMore) {
-                                      setState(() {
-                                        showMore = false;
-                                      });
-                                    } else {
-                                      setState(() {
-                                        showMore = true;
-                                      });
-                                    }
-                                  },
-                                children: [
-                                  widget.data.description!.length < seeMoreVal
-                                      ? const TextSpan(text: "")
-                                      : TextSpan(
-                                          text:
-                                              showMore ? " less" : " see more",
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color: HexColor(backgroundColor),
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                          recognizer: tapGestureRecognizer
-                                            ..onTap = () async {
-                                              //    print("object");
-                                              if (showMore) {
-                                                setState(() {
-                                                  showMore = false;
-                                                });
-                                              } else {
-                                                setState(() {
-                                                  showMore = true;
-                                                });
-                                              }
-                                            },
-                                        )
-                                ])),
+              widget.data.description!.isEmpty
+                  ? SizedBox.shrink()
+                  : Padding(
+                      padding: const EdgeInsets.only(left: 36, top: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            //   width: width * 0.5,
+                            constraints: BoxConstraints(maxWidth: width * 0.85),
+                            child: SingleChildScrollView(
+                              child: RichText(
+                                  textAlign: TextAlign.start,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: showMore ? 50 : 2,
+                                  text: TextSpan(
+                                      text: widget.data.description!.length >=
+                                                  seeMoreVal &&
+                                              showMore == false
+                                          ? widget.data.description!
+                                              .substring(0, seeMoreVal - 5)
+                                          : widget.data.description!,
+                                      style: GoogleFonts.roboto(
+                                          textStyle: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white.withOpacity(.8),
+                                        decorationStyle:
+                                            TextDecorationStyle.solid,
+                                        fontSize: 12,
+                                        fontFamily: '',
+                                      )),
+                                      recognizer: tapGestureRecognizer
+                                        ..onTap = () async {
+                                          //    print("object");
+                                          if (showMore) {
+                                            setState(() {
+                                              showMore = false;
+                                            });
+                                          } else {
+                                            setState(() {
+                                              showMore = true;
+                                            });
+                                          }
+                                        },
+                                      children: [
+                                        widget.data.description!.length <
+                                                seeMoreVal
+                                            ? const TextSpan(text: "")
+                                            : TextSpan(
+                                                text: showMore
+                                                    ? " less"
+                                                    : " see more",
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  color: Colors.white
+                                                      .withOpacity(.8),
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                                recognizer: tapGestureRecognizer
+                                                  ..onTap = () async {
+                                                    //    print("object");
+                                                    if (showMore) {
+                                                      setState(() {
+                                                        showMore = false;
+                                                      });
+                                                    } else {
+                                                      setState(() {
+                                                        showMore = true;
+                                                      });
+                                                    }
+                                                  },
+                                              )
+                                      ])),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
-              ),
               SizedBox(
-                height: widget.data.user!.gender == "Business" ? 10 : 10,
+                height: widget.data.user!.gender == "Business" ? 0 : 0,
               ),
               SizedBox(
                 height:
                     widget.data.btnLink != null && widget.data.button != null
-                        ? 40
+                        ? 50
                         : 10,
               ),
             ],
@@ -446,8 +460,7 @@ class _NewDesignTestState extends State<NewDesignTest> {
             height: 40,
             decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border:
-                    Border.all(color: HexColor(backgroundColor), width: 0.5)),
+                border: Border.all(color: textPrimary, width: 0.5)),
             child: Center(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -456,7 +469,7 @@ class _NewDesignTestState extends State<NewDesignTest> {
                     svgPath,
                     height: 18,
                     width: 18,
-                    color: HexColor(hexString),
+                    color: textPrimary,
                   ),
                 ),
               ),
@@ -476,7 +489,7 @@ class _NewDesignTestState extends State<NewDesignTest> {
               size: 14,
               align: TextAlign.center,
               fontWeight: FontWeight.w500,
-              color: HexColor(backgroundColor),
+              color: textWhite,
             ),
           ),
         )
@@ -568,7 +581,7 @@ class _NewDesignTestState extends State<NewDesignTest> {
           ),
           padding:
               EdgeInsets.only(right: 10, top: likedBefore ? 0 : 0, bottom: 0),
-          likeCount: int.tryParse(Numeral(likes).format(fractionDigits: 1)),
+          likeCount: int.tryParse(likes.toString()),
           likeBuilder: (bool isLiked) {
             return isLiked
                 ? Container(
@@ -576,14 +589,13 @@ class _NewDesignTestState extends State<NewDesignTest> {
                     height: 40,
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        border: Border.all(
-                            color: HexColor(backgroundColor), width: 0.5)),
+                        border: Border.all(color: textPrimary, width: 0.5)),
                     child: Center(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Icon(
                           Icons.favorite,
-                          color: HexColor(primaryColor),
+                          color: Colors.redAccent,
                           size: 21,
                         ),
                       ),
@@ -594,14 +606,13 @@ class _NewDesignTestState extends State<NewDesignTest> {
                     height: 40,
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        border: Border.all(
-                            color: HexColor(backgroundColor), width: 0.5)),
+                        border: Border.all(color: textPrimary, width: 0.5)),
                     child: Center(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: SvgPicture.asset(
                           "assets/icon/hert.svg",
-                          color: HexColor(backgroundColor),
+                          color: textPrimary,
                           height: 16,
                           width: 16,
                         ),
@@ -852,10 +863,10 @@ class _VideoUserState extends State<VideoUser> {
                                                               .ellipsis
                                                           : TextOverflow
                                                               .ellipsis,
-                                                      color: HexColor(
-                                                          backgroundColor),
+                                                      color: textWhite,
                                                     ),
                                                   ),
+                                                  SizedBox(width: 4),
                                                   widget.data.user!.verified ==
                                                               1 &&
                                                           widget.data.user!
@@ -908,9 +919,7 @@ class _VideoUserState extends State<VideoUser> {
                                                       fontWeight:
                                                           FontWeight.w400,
                                                       maxLines: 1,
-                                                      color: HexColor(
-                                                              backgroundColor)
-                                                          .withOpacity(.6),
+                                                      color: textPrimary,
                                                     ),
                                                   ),
                                                 ],
@@ -957,13 +966,10 @@ class _VideoUserState extends State<VideoUser> {
                                                               0, seeMoreVal - 3)
                                                       : widget
                                                           .data.description!,
-                                                  style:
-                                                      GoogleFonts.leagueSpartan(
-                                                          textStyle: TextStyle(
+                                                  style: GoogleFonts.roboto(
+                                                      textStyle: TextStyle(
                                                     fontWeight: FontWeight.w600,
-                                                    color: HexColor(
-                                                            backgroundColor)
-                                                        .withOpacity(0.9),
+                                                    color: textPrimary,
                                                     decorationStyle:
                                                         TextDecorationStyle
                                                             .solid,

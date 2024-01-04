@@ -45,7 +45,7 @@ class _FeedHomeState extends State<FeedHome>
 
     return RefreshIndicator(
         onRefresh: () => callFeedPost(true),
-        backgroundColor:HexColor(primaryColor),
+        backgroundColor: textPrimary,
         color: HexColor(backgroundColor),
         triggerMode: RefreshIndicatorTriggerMode.anywhere,
         strokeWidth: 2,

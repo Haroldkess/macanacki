@@ -82,7 +82,7 @@ class _EmailOtpState extends State<EmailOtp> {
                         fontWeight: FontWeight.w700,
                         size: 25,
                         align: TextAlign.center,
-                        color: HexColor(backgroundColor),
+                        color: textWhite,
                       )
                     ],
                   )),
@@ -104,7 +104,7 @@ class _EmailOtpState extends State<EmailOtp> {
                                 size: 12,
                                 maxLines: 3,
                                 overflow: TextOverflow.ellipsis,
-                                color: HexColor(backgroundColor),
+                                color: textWhite,
                                 fontWeight: FontWeight.w400,
                               ),
                             ),
@@ -118,7 +118,7 @@ class _EmailOtpState extends State<EmailOtp> {
                             AppText(
                               text: "OTP",
                               size: 14,
-                              color: HexColor(backgroundColor),
+                              color: textWhite,
                               fontWeight: FontWeight.w400,
                             ),
                           ],
@@ -137,9 +137,9 @@ class _EmailOtpState extends State<EmailOtp> {
                             : AppButton(
                                 width: 0.8,
                                 height: 0.06,
-                                color: backgroundColor,
+                                color: "#FFFFFF",
                                 text: "Continue",
-                                backColor: backgroundColor,
+                                backColor: "#FFFFFF",
                                 curves: buttonCurves * 5,
                                 textColor: "#000000",
                                 onTap: () {
@@ -164,7 +164,7 @@ class _EmailOtpState extends State<EmailOtp> {
                           onTap: () => resend(context, widget.email),
                           child: AppText(
                             text: "  Resend",
-                            color: HexColor(backgroundColor),
+                            color: textWhite,
                             fontWeight: FontWeight.w600,
                           ),
                         )
@@ -187,7 +187,7 @@ class _EmailOtpState extends State<EmailOtp> {
                                   context, const LoginScreen()),
                               child: AppText(
                                 text: "Switch Account",
-                                color: HexColor(backgroundColor),
+                                color: textWhite,
                               ),
                             )
                           ],

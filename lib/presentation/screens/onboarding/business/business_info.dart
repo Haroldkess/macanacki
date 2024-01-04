@@ -51,7 +51,7 @@ class _BusinessInfoState extends State<BusinessInfo> {
     CreatePostWare picked = context.watch<CreatePostWare>();
     RegisterationWare stream = context.watch<RegisterationWare>();
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: backgroundSecondary,
       body: ListView(children: [
         const SizedBox(
           height: 50,
@@ -61,7 +61,7 @@ class _BusinessInfoState extends State<BusinessInfo> {
           child: AppText(
             text: "Verify Business",
             size: 30,
-            color: HexColor("#222222"),
+            color: textWhite,
             fontWeight: FontWeight.w700,
           ),
         ),
@@ -110,7 +110,7 @@ class _BusinessInfoState extends State<BusinessInfo> {
               Padding(
                 padding: const EdgeInsets.only(bottom: 4),
                 child: Checkbox(
-                    fillColor: MaterialStatePropertyAll(HexColor(primaryColor)),
+                    fillColor: MaterialStatePropertyAll(secondaryColor),
                     value: iAgree,
                     onChanged: ((value) {
                       setState(() {
@@ -129,7 +129,7 @@ class _BusinessInfoState extends State<BusinessInfo> {
                         style: GoogleFonts.leagueSpartan(
                             textStyle: TextStyle(
                                 fontWeight: FontWeight.w700,
-                                color: HexColor(darkColor),
+                                color: textPrimary,
                                 decorationStyle: TextDecorationStyle.solid,
                                 fontSize: 12)),
                       ),
@@ -143,7 +143,7 @@ class _BusinessInfoState extends State<BusinessInfo> {
                           style: GoogleFonts.leagueSpartan(
                               textStyle: TextStyle(
                                   fontWeight: FontWeight.w400,
-                                  color: HexColor("#606060"),
+                                  color: textPrimary,
                                   decorationStyle: TextDecorationStyle.solid,
                                   fontSize: 8)),
                         ),
@@ -167,7 +167,7 @@ class _BusinessInfoState extends State<BusinessInfo> {
                   AppText(
                     text: "Country of Registration",
                     size: 12,
-                    color: HexColor("#222222"),
+                    color: textWhite,
                     fontWeight: FontWeight.w400,
                   ),
                 ],
@@ -215,8 +215,6 @@ class _BusinessInfoState extends State<BusinessInfo> {
                       ),
                     ),
                   );
-                
-                
                 },
                 child: Container(
                   height: 51,
@@ -234,7 +232,7 @@ class _BusinessInfoState extends State<BusinessInfo> {
                             text: choosenCountry.isEmpty
                                 ? "Choose country of registration"
                                 : choosenCountry,
-                            color: HexColor('#C0C0C0'),
+                            color: backgroundSecondarySwatch,
                             size: 12),
                       ),
                       Padding(
@@ -258,9 +256,6 @@ class _BusinessInfoState extends State<BusinessInfo> {
           title: "Business Registration Number",
           hint: "E.g. RC, BN etc",
           controller: businessRegNumber,
-        ),
-        const SizedBox(
-          height: 20,
         ),
         const SizedBox(
           height: 20,
@@ -291,7 +286,7 @@ class _BusinessInfoState extends State<BusinessInfo> {
             text:
                 "Please upload supporting documents to show proof of business registration",
             size: 12,
-            color: HexColor("#5F5F5F"),
+            color: textPrimary,
             fontWeight: FontWeight.w400,
           ),
         ),
@@ -318,14 +313,17 @@ class _BusinessInfoState extends State<BusinessInfo> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SvgPicture.asset("assets/icon/upload2.svg"),
+                        SvgPicture.asset(
+                          "assets/icon/upload2.svg",
+                          color: textPrimary,
+                        ),
                         const SizedBox(width: 15),
                         AppText(
                           text: picked.idBusiness != null
                               ? basename(picked.idBusiness!.path)
                               : "Upload means of Identification",
                           size: 12,
-                          color: HexColor("#B3B3B3"),
+                          color: textPrimary,
                           fontWeight: FontWeight.w400,
                         ),
                       ],
@@ -338,13 +336,13 @@ class _BusinessInfoState extends State<BusinessInfo> {
           height: 50,
         ),
         stream.loadBus
-            ? Loader(color: HexColor(primaryColor))
+            ? Loader(color: textWhite)
             : AppButton(
                 width: 0.8,
                 height: 0.06,
-                color: backgroundColor,
+                color: "#ffffff",
                 text: "Continue",
-                backColor: primaryColor,
+                backColor: "#ffffff",
                 curves: buttonCurves * 5,
                 textColor: backgroundColor,
                 onTap: () async {
@@ -384,23 +382,20 @@ class _BusinessInfoState extends State<BusinessInfo> {
         evidence: picked.idBusiness,
         isReg: "is_registered",
       );
-      if(widget.action == "both"){
-            await user
-          .saveBusinessInfoOnly(registerBusinessModel)
-          .whenComplete(() => PageRouting.pushToPage(
-              context,
-               SubscriptionPlansBusiness(
-                isBusiness: true,
-                isSubmiting: widget.action,
-              )));
-
-      }else if (widget.action == "upload"){
-            await user
-          .saveBusinessInfoOnly(registerBusinessModel)
-          .whenComplete(() => VerifyController.business(context, true));
-
+      if (widget.action == "both") {
+        await user
+            .saveBusinessInfoOnly(registerBusinessModel)
+            .whenComplete(() => PageRouting.pushToPage(
+                context,
+                SubscriptionPlansBusiness(
+                  isBusiness: true,
+                  isSubmiting: widget.action,
+                )));
+      } else if (widget.action == "upload") {
+        await user
+            .saveBusinessInfoOnly(registerBusinessModel)
+            .whenComplete(() => VerifyController.business(context, true));
       }
-  
 
       // PageRouting.pushToPage(
       //     context,
@@ -441,7 +436,7 @@ class BusinessForm extends StatelessWidget {
               AppText(
                 text: title ?? "",
                 size: 12,
-                color: HexColor("#222222"),
+                color: textWhite,
                 fontWeight: FontWeight.w400,
               ),
             ],
@@ -451,14 +446,14 @@ class BusinessForm extends StatelessWidget {
           ),
           Container(
             decoration: BoxDecoration(
-                color: HexColor('#F5F2F9'),
+                color: HexColor(backgroundColor),
                 shape: BoxShape.rectangle,
                 borderRadius: const BorderRadius.all(Radius.circular(8.0))),
             child: Form(
               key: formKey,
               child: TextFormField(
                 controller: controller,
-                cursorColor: HexColor(primaryColor),
+                cursorColor: textWhite,
                 validator: isEmail != true
                     ? null
                     : (value) {
@@ -467,14 +462,14 @@ class BusinessForm extends StatelessWidget {
                             : "Enter a valid email";
                       },
                 keyboardType: isNumber == true ? TextInputType.number : null,
-                style: GoogleFonts.leagueSpartan(
-                  color: Colors.black,
+                style: GoogleFonts.roboto(
+                  color: textWhite,
                   fontSize: 14,
                 ),
                 decoration: InputDecoration(
                   contentPadding: const EdgeInsets.only(left: 20),
                   hintText: "$hint",
-                  hintStyle: GoogleFonts.leagueSpartan(
+                  hintStyle: GoogleFonts.roboto(
                       color: HexColor('#C0C0C0'), fontSize: 12),
                   border: InputBorder.none,
                   enabledBorder: InputBorder.none,
