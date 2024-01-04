@@ -4,6 +4,7 @@ import 'package:macanacki/model/public_profile_model.dart';
 import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
+import 'package:macanacki/preload/preload_controller.dart';
 import 'package:macanacki/presentation/constants/params.dart';
 import 'package:macanacki/services/backoffice/user_profile_office.dart';
 import 'package:macanacki/services/middleware/video/video_ware.dart';
@@ -360,6 +361,7 @@ class UserProfileWare extends ChangeNotifier {
   Future<bool> getUserPublicPostFromApi({required String username}) async {
     late bool isSuccessful;
     if (loading == true || _isLastPage == true) return false;
+    final preloadController = PreloadController.to;
 
     try {
       updateLoading(true);
@@ -375,7 +377,9 @@ class UserProfileWare extends ChangeNotifier {
         int recordCount = jsonData['record_count'];
         List<PublicUserPost> newItems = [];
         for (final x in jsonData['data']) {
-          newItems.add(PublicUserPost.fromJson(x));
+          final p = PublicUserPost.fromJson(x);
+          preloadController.addPreload(id: p.id!, vod: p.vod!);
+          newItems.add(p);
         }
 
         updateAllPublicUserPostData(newItems);

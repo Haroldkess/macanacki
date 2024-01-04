@@ -3,6 +3,7 @@ import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:macanacki/preload/preload_controller.dart';
 import 'package:macanacki/presentation/widgets/text.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
@@ -594,7 +595,9 @@ class VideoWareHome extends GetxController {
 
     List<FeedPost> _moreFeedPosts = [];
 
+
     try {
+      final preloadController = PreloadController.to;
       http.Response? response = await getVideoPost(pageNum).whenComplete(
           () => emitter("user feed video post  data gotten successfully"));
       if (response == null) {
@@ -607,6 +610,13 @@ class VideoWareHome extends GetxController {
 
         var incomingData = FeedData.fromJson(jsonData["data"]);
         feedData.value = incomingData;
+
+        // Martins
+        if(incomingData.data != null){
+          for (var element in incomingData.data!) {
+            preloadController.addPreload(id: element.id!, vod: element.vod!);
+          }
+        }
         //  _feedData.data!.shuffle();
         //emitter(pageNum.toString());
 
@@ -730,6 +740,7 @@ class VideoWareHome extends GetxController {
     log("getting video posts");
 
     try {
+      final preloadController = PreloadController.to;
       http.Response? response = await getVideo(id).whenComplete(
           () => emitter(" SINGLE video post data gotten successfully"));
       if (response == null) {
@@ -738,6 +749,12 @@ class VideoWareHome extends GetxController {
         var jsonData = jsonDecode(response.body);
 
         var incomingData = FeedData.fromJson(jsonData["data"]);
+        // Martins
+        if(incomingData.data != null){
+          for (var element in incomingData.data!) {
+            preloadController.addPreload(id: element.id!, vod: element.vod!);
+          }
+        }
 
         feedData.value = incomingData;
         // Rx<FeedPost>? data = feedData.value.data.f;

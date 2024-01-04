@@ -18,6 +18,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:macanacki/config/pay_ext.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
 import 'package:macanacki/presentation/operations_ext.dart';
+import 'package:macanacki/presentation/screens/chewie_demo.dart';
 import 'package:macanacki/presentation/screens/home/profile/profileextras/profile_info.dart';
 import 'package:macanacki/presentation/screens/home/profile/profileextras/profile_post_grid.dart';
 import 'package:macanacki/presentation/screens/home/profile/promote_post/promote_screen.dart';
@@ -182,6 +183,12 @@ class _ProfileScreenState extends State<ProfileScreen>
       drawer: DrawerSide(
         scafKey: key,
       ),
+      // floatingActionButton: FloatingActionButton(onPressed: (){
+      //   Navigator.push(
+      //     context,
+      //     MaterialPageRoute(builder: (context) => ChewieDemo()),
+      //   );
+      // }),
 
       body: GestureDetector(
         behavior: HitTestBehavior.opaque,

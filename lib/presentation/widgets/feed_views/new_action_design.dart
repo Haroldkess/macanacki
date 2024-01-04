@@ -10,6 +10,7 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:like_button/like_button.dart';
 import 'package:lottie/lottie.dart';
+import 'package:macanacki/preload/preload_controller.dart';
 import 'package:macanacki/presentation/constants/params.dart';
 import 'package:macanacki/services/middleware/user_profile_ware.dart';
 import 'package:numeral/numeral.dart';
@@ -186,35 +187,53 @@ class _NewDesignTestState extends State<NewDesignTest> {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Row(
-                                    children: [
-                                      Container(
-                                        constraints: const BoxConstraints(
-                                          maxWidth: 139,
+                                  GestureDetector(
+                                    onTap: () {
+                                      if (widget.data.user!.username! ==
+                                          user.userProfileModel.username) {
+                                        return;
+                                      }
+                                      PageRouting.pushToPage(
+                                          context,
+                                          TestProfile(
+                                            username:
+                                                widget.data.user!.username!,
+                                            extended: true,
+                                            page: widget.page,
+                                          ));
+                                      PreloadController.to
+                                          .pausePreloadById(widget.data.id!);
+                                    },
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          constraints: const BoxConstraints(
+                                            maxWidth: 139,
+                                          ),
+                                          //   color: Colors.amber,
+                                          child: AppText(
+                                            text: widget.data.user!.username!,
+                                            size: 16,
+                                            fontWeight: FontWeight.w400,
+                                            maxLines: 1,
+                                            overflow: widget.data.user!
+                                                        .username!.length >
+                                                    20
+                                                ? TextOverflow.ellipsis
+                                                : TextOverflow.ellipsis,
+                                            color: textWhite,
+                                          ),
                                         ),
-                                        //   color: Colors.amber,
-                                        child: AppText(
-                                          text: widget.data.user!.username!,
-                                          size: 16,
-                                          fontWeight: FontWeight.w400,
-                                          maxLines: 1,
-                                          overflow: widget.data.user!.username!
-                                                      .length >
-                                                  20
-                                              ? TextOverflow.ellipsis
-                                              : TextOverflow.ellipsis,
-                                          color: textWhite,
-                                        ),
-                                      ),
-                                      widget.data.user!.verified == 1 &&
-                                              widget.data.user!.activePlan !=
-                                                  sub
-                                          ? SvgPicture.asset(
-                                              "assets/icon/badge.svg",
-                                              height: 13,
-                                              width: 13)
-                                          : const SizedBox.shrink()
-                                    ],
+                                        widget.data.user!.verified == 1 &&
+                                                widget.data.user!.activePlan !=
+                                                    sub
+                                            ? SvgPicture.asset(
+                                                "assets/icon/badge.svg",
+                                                height: 13,
+                                                width: 13)
+                                            : const SizedBox.shrink()
+                                      ],
+                                    ),
                                   ),
                                   SizedBox(
                                     height: 3,
@@ -675,7 +694,7 @@ class _VideoUserState extends State<VideoUser> {
   TapGestureRecognizer tapGestureRecognizer = TapGestureRecognizer();
   String test =
       "Users description will appear here eg. Video description here. description should be two lines before...see moreUsers description will appear here eg. Video description here. description should be two lines before...see more";
-
+  final preloadController = PreloadController.to;
   @override
   void initState() {
     super.initState();
@@ -761,6 +780,7 @@ class _VideoUserState extends State<VideoUser> {
                                   children: [
                                     GestureDetector(
                                       onTap: () async {
+                                        print(" ******** Marto XX 1");
                                         TabProvider action =
                                             Provider.of<TabProvider>(context,
                                                 listen: false);
@@ -771,9 +791,9 @@ class _VideoUserState extends State<VideoUser> {
                                           }
                                         }
 
-                                        if (widget.isVideo == true) {
-                                          widget.controller!.pause();
-                                        }
+                                        // if (widget.isVideo == true) {
+                                        //   widget.controller!.pause();
+                                        // }
 
                                         if (widget.data.user!.username! ==
                                             user.userProfileModel.username) {
@@ -800,6 +820,9 @@ class _VideoUserState extends State<VideoUser> {
                                                 extended: true,
                                                 page: widget.page,
                                               ));
+                                          preloadController.pausePreloadById(
+                                              widget.data.id!);
+                                          print(" ******** Marto XX 2");
                                         }
                                       },
                                       child: Row(
@@ -979,6 +1002,8 @@ class _VideoUserState extends State<VideoUser> {
                                                   recognizer:
                                                       tapGestureRecognizer
                                                         ..onTap = () async {
+                                                          print(
+                                                              "---------- Marto 222");
                                                           //    print("object");
                                                           if (showMore) {
                                                             setState(() {
@@ -1012,6 +1037,8 @@ class _VideoUserState extends State<VideoUser> {
                                                                 tapGestureRecognizer
                                                                   ..onTap =
                                                                       () async {
+                                                                    print(
+                                                                        "---------- Marto");
                                                                     //    print("object");
                                                                     if (showMore) {
                                                                       setState(

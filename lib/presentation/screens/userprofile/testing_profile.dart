@@ -15,6 +15,7 @@ import 'package:http/http.dart' as http;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:macanacki/preload/preload_controller.dart';
 import 'package:macanacki/presentation/screens/userprofile/extras/test_profle_view.dart';
 import 'package:macanacki/presentation/uiproviders/screen/tab_provider.dart';
 import 'package:macanacki/presentation/widgets/debug_emitter.dart';
@@ -772,6 +773,7 @@ class _TestProfileState extends State<TestProfile>
   Future<bool> getUserPublicPostFromApi({required String username}) async {
     late bool isSuccessful;
     if (loading == true || isLastPage == true) return false;
+    final preloadController = PreloadController.to;
 
     try {
       updateLoading(true);
@@ -787,7 +789,10 @@ class _TestProfileState extends State<TestProfile>
         int recordCount = jsonData['record_count'];
         List<PublicUserPost> newItems = [];
         for (final x in jsonData['data']) {
-          newItems.add(PublicUserPost.fromJson(x));
+          final p = PublicUserPost.fromJson(x);
+
+         preloadController.addPreload(id: p.id!, vod: p.vod!);
+          newItems.add(p);
         }
 
         updateAllPublicUserPostData(newItems);

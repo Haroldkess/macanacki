@@ -77,7 +77,7 @@ class _VideoTrimmerState extends State<VideoTrimmer> {
               durationStyle: DurationStyle.FORMAT_MM_SS,
               type: ViewerType.auto,
               viewerWidth: MediaQuery.of(context).size.width,
-              maxVideoLength: const Duration(seconds: 90),
+              maxVideoLength: const Duration(seconds: 30),
               onChangeStart: (value) => ware.updateStartValue(value),
               onChangeEnd: (value) => ware.updateEndValue(value),
               onChangePlaybackState: (value) => ware.updateIsPlaying(value)),
@@ -257,7 +257,7 @@ class _VideoTrimmerState extends State<VideoTrimmer> {
               decoration: BoxDecoration(
                   color: const Color(0xffF5F5F5).withOpacity(0.07),
                   shape: BoxShape.circle),
-              child: Text('90',
+              child: Text('30',
                   style: GoogleFonts.leagueSpartan(
                       textStyle: const TextStyle(
                     fontWeight: FontWeight.w600,
