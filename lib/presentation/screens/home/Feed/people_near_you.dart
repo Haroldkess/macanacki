@@ -26,9 +26,12 @@ import '../../../uiproviders/screen/find_people_provider.dart';
 import '../../../uiproviders/screen/tab_provider.dart';
 import '../../../widgets/buttons.dart';
 import '../../../widgets/debug_emitter.dart';
+import '../profile/buy_followers/profile_ad_screen.dart';
 
 class PeopleHome extends StatefulWidget {
-  const PeopleHome({super.key});
+  final bool? isHomeGrid;
+  final int? index;
+  const PeopleHome({super.key, this.isHomeGrid, this.index});
 
   @override
   State<PeopleHome> createState() => _PeopleHomeState();
@@ -42,8 +45,8 @@ class _PeopleHomeState extends State<PeopleHome> {
     FeedPostWare stream = context.watch<FeedPostWare>();
     FeedPostWare provide = Provider.of<FeedPostWare>(context, listen: false);
 //    controller = PageController(initialPage: stream.index, keepPage: true);
-    PreloadPageController controller =
-        PreloadPageController(initialPage: stream.index, keepPage: true);
+    PreloadPageController controller = PreloadPageController(
+        initialPage: widget.index ?? stream.index, keepPage: true);
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
@@ -111,9 +114,21 @@ class _PeopleHomeState extends State<PeopleHome> {
                     data: post,
                     isFriends: false,
                     nextImage: [
-                      post2 == null ? null : post2.media!.first,
-                      post3 == null ? null : post3.media!.first,
-                      post4 == null ? null : post4.media!.first
+                      post2 == null
+                          ? null
+                          : post2.media!.isEmpty
+                              ? null
+                              : post2.media!.first,
+                      post3 == null
+                          ? null
+                          : post3.media!.isEmpty
+                              ? null
+                              : post3.media!.first,
+                      post4 == null
+                          ? null
+                          : post4.media!.isEmpty
+                              ? null
+                              : post4.media!.first
                     ],
                     page: "feed",
                     feedPosts: stream.feedPosts,
@@ -239,6 +254,7 @@ class _PeopleHomeState extends State<PeopleHome> {
   Future paginateFeed(BuildContext context) async {
     emitter("Pageinating");
     FeedPostWare provide = Provider.of<FeedPostWare>(context, listen: false);
+    TabProvider tab = Provider.of<TabProvider>(context, listen: false);
 
     ///  provide.indexChange(index);
 
@@ -257,7 +273,8 @@ class _PeopleHomeState extends State<PeopleHome> {
       if (provide.loadStatus) {
         return;
       }
-      await FeedPostController.getFeedPostController(context, pageNum + 1, true)
+      await FeedPostController.getFeedPostController(
+              context, pageNum + 1, true, tab.filterNameHome)
           .whenComplete(() => emitter("paginated"));
     }
   }

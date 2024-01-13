@@ -148,7 +148,12 @@ class SinglePost extends StatelessWidget {
                   }
                 },
                 child: Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
+                  padding: EdgeInsets.only(
+                      bottom: data.btnLink != null && data.button != null
+                          ? 80
+                          : data.description!.isEmpty
+                              ? 10
+                              : 40),
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
@@ -156,15 +161,64 @@ class SinglePost extends StatelessWidget {
                           height: 350,
                           width: double.infinity,
                           child: Container(
-                            height: 350,
+                            // height: 350,
+                            height: data.btnLink != null && data.button != null
+                                ? 380
+                                : data.description!.isEmpty
+                                    ? 430
+                                    : 410,
                             width: double.infinity,
                             decoration: BoxDecoration(
-                                color: Colors.black,
-                                image: DecorationImage(
-                                  image: CachedNetworkImageProvider(
-                                      data.thumbnails!.first ?? ""),
-                                  fit: BoxFit.cover,
-                                )),
+                              color: Colors.black,
+                              //   borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: CachedNetworkImage(
+                                imageUrl: data.thumbnails!.isEmpty
+                                    ? ""
+                                    : data.thumbnails!.first ?? "",
+                                fit: BoxFit.fitWidth,
+                                imageBuilder: (context, imageProvider) =>
+                                    Container(
+                                      width: width,
+                                      height: height,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                          image: DecorationImage(
+                                            image: imageProvider,
+                                            fit: BoxFit.fitWidth,
+                                          )),
+                                    ),
+                                progressIndicatorBuilder:
+                                    (context, url, downloadProgress) => Center(
+                                            child: Loader(
+                                          color: textWhite,
+                                        )),
+                                errorWidget: (context, url, error) {
+                                  return CachedNetworkImage(
+                                      imageUrl: data.thumbnails!.isEmpty
+                                          ? ""
+                                          : data.thumbnails!.first ?? "",
+                                      imageBuilder: (context, imageProvider) =>
+                                          Container(
+                                            width: width,
+                                            height: height,
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(15),
+                                                image: DecorationImage(
+                                                  image: imageProvider,
+                                                  fit: BoxFit.fitWidth,
+                                                )),
+                                          ),
+                                      progressIndicatorBuilder: (context, url,
+                                              downloadProgress) =>
+                                          Center(
+                                              child: Loader(color: textWhite)),
+                                      errorWidget: (context, url, error) {
+                                        return SizedBox();
+                                      });
+                                }),
                           )),
                       PlayAnimationBuilder<double>(
                           tween: Tween(begin: 10.0, end: 50.0), // set tween

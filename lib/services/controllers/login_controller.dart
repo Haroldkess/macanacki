@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -32,9 +33,11 @@ import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../main.dart';
 import '../../model/gender_model.dart';
 import '../../presentation/constants/params.dart';
 import '../../presentation/screens/onboarding/business/sub_plan.dart';
+import '../../presentation/uiproviders/screen/tab_provider.dart';
 import '../../presentation/widgets/debug_emitter.dart';
 import '../middleware/user_profile_ware.dart';
 
@@ -120,9 +123,7 @@ class LoginController {
 
       try {
         PayExt.loginUser();
-      }catch(e){
-
-      }
+      } catch (e) {}
 
       await callFeedPost(context);
       emitter("removing all previous screens");
@@ -174,6 +175,7 @@ class LoginController {
 
       FirebaseMessaging.onMessage.listen((RemoteMessage? message) {
         // For displaying the notification as an overlay
+        print(message!.notification!.toMap());
         if (message == null) return;
         if (message.notification == null) return;
         if (message.notification != null) {
@@ -186,11 +188,13 @@ class LoginController {
                     height: 40,
                     width: 40,
                     decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: Colors.black,
                         shape: BoxShape.circle,
                         image: DecorationImage(
-                            fit: BoxFit.contain,
-                            image: CachedNetworkImageProvider(url))),
+                            fit: BoxFit.cover,
+                            image: CachedNetworkImageProvider(
+                              url,
+                            ))),
                   ),
                   SizedBox(
                     width: 5,
@@ -221,7 +225,7 @@ class LoginController {
                       padding: const EdgeInsets.symmetric(vertical: 5),
                       child: AppText(
                           text: message.notification!.body!,
-                          color: Colors.black,
+                          color: textWhite,
                           fontWeight: FontWeight.bold,
                           maxLines: 5,
                           overflow: TextOverflow.ellipsis,
@@ -234,13 +238,10 @@ class LoginController {
                   const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
               // ignore: deprecated_member_use
               slideDismiss: true,
-              subtitle: AppText(
-                text: "",
-                color: HexColor(primaryColor),
-              ),
+
               elevation: 0,
-              background: Colors.white,
-              duration: const Duration(seconds: 5),
+              background: HexColor(backgroundColor),
+              duration: const Duration(seconds: 3),
             );
 
             // showToast2(context,
@@ -249,12 +250,46 @@ class LoginController {
           }
         }
       });
+      // FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      //   // Handle the incoming message when the app is in the background or terminated
+      //   handleNotification(message.data);
+      // });
     } else if (settings.authorizationStatus ==
         AuthorizationStatus.provisional) {
       emitter("user granteed provitional access");
     } else {
       emitter("user denied access");
     }
+  }
+
+  static void handleNotification(Map<String, dynamic> data) {
+//    log("data =>  " + data.toString());
+
+    ///Extract custom data
+    String notificationType = data['notification_type'];
+    String targetPage = data['target_page'];
+    log("Notification type =>  " + notificationType);
+    log("Target page =>  " + targetPage);
+
+    // Navigate based on notification type
+    if (notificationType == 'post') {
+      // Navigate to a specific page
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        navigatorKey.currentState?.pushNamed('/post', arguments: targetPage);
+      });
+    } else if (notificationType == "user") {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        navigatorKey.currentState?.pushNamed('/profile', arguments: targetPage);
+      });
+    } else if (notificationType == "chat") {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        PersistentNavController.instance.changePersistentTabIndex();
+      });
+    }
+
+    //   //  Navigator.pushNamed(context, '/$targetPage');
+    //   //Get.toNamed(page, preventDuplicates: true);
+    // }
   }
 
   static Future<String> getToken() async {

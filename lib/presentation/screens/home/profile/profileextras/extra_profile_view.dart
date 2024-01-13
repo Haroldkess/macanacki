@@ -66,7 +66,7 @@ class _ProfilePostGridLoaderState extends State<ProfilePostGridLoader> {
       shrinkWrap: true,
       physics: const ScrollPhysics(),
       primary: false,
-      padding: const EdgeInsets.all(5),
+      padding: const EdgeInsets.all(0),
       itemCount: test.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3,
@@ -76,12 +76,12 @@ class _ProfilePostGridLoaderState extends State<ProfilePostGridLoader> {
       itemBuilder: (BuildContext context, int index) {
         String img = test[index];
         return Shimmer.fromColors(
-          baseColor: baseColor,
-          highlightColor: highlightColor.withOpacity(0.2),
+          baseColor: HexColor(backgroundColor),
+          highlightColor: Colors.grey.withOpacity(.2),
           child: Stack(
             children: [
               ClipRRect(
-                borderRadius: BorderRadius.circular(12.0),
+                borderRadius: BorderRadius.circular(0.0),
                 child: Image.asset(
                   img,
                   fit: BoxFit.fill,

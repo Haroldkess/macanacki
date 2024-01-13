@@ -12,19 +12,19 @@ Future<http.Response?> getSwipedUsers(String type,
 
   SharedPreferences pref = await SharedPreferences.getInstance();
 
-  print("$country " + "$state " + "$city ");
+  // print("$country " + "$state " + "$city ");
   String? token = pref.getString(tokenKey);
   try {
     response = await http.get(
       Uri.parse(
-          '$baseUrl/public/api/user/filter/$type?country=${country ?? ""}&state=${state ?? ""}&city=${city ?? ""}'),
+          '$baseUrl/public/api/v3/user/filter/$type?country=${country ?? ""}&state=${state ?? ""}&city=${city ?? ""}'),
       headers: {
         HttpHeaders.contentTypeHeader: "application/json",
         HttpHeaders.authorizationHeader: "Bearer $token",
       },
     );
 
-  //  log(response.body.toString());
+    //  log(response.body.toString());
   } catch (e) {
     response = null;
   }

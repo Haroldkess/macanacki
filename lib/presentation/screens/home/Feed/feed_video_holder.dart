@@ -33,6 +33,7 @@ import '../../../widgets/feed_views/like_section.dart';
 import '../../../widgets/feed_views/new_action_design.dart';
 import '../../../widgets/text.dart';
 import '../test_api_video.dart';
+import 'package:flutter/services.dart';
 
 class VodClass {
   int? id;
@@ -91,7 +92,7 @@ class _FeedVideoHolderState extends State<FeedVideoHolder>
 
     animation = ColorTween(
       begin: Colors.transparent,
-      end: HexColor(primaryColor).withOpacity(.8),
+      end: secondaryColor.withOpacity(.8),
     ).animate(controller);
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
@@ -123,7 +124,6 @@ class _FeedVideoHolderState extends State<FeedVideoHolder>
     });
 
     super.dispose();
-
   }
 
   String apiToken = "";
@@ -154,7 +154,6 @@ class _FeedVideoHolderState extends State<FeedVideoHolder>
       List<VodClass> lister =
           vodVid.where((element) => element.id == id).toList();
       if (lister.isEmpty) {
-
         final videoOptions =
             VideoOptions(videoId: vod!, type: VideoType.vod, token: token);
 
@@ -188,7 +187,10 @@ class _FeedVideoHolderState extends State<FeedVideoHolder>
         List<dynamic> allThumbs = [];
         if (allVideos.isNotEmpty) {
           for (var i in allVideos) {
-            allThumbs.add(i.thumbnails!.first);
+            if (i.thumbnails!.isNotEmpty) {
+              allThumbs.add(i.thumbnails!.first);
+            }
+
             // if (i.vod!.first != null || i.vod != null) {
             //   buildVideoOptions(i.vod!.first, i.id);
             // }
@@ -225,6 +227,7 @@ class _FeedVideoHolderState extends State<FeedVideoHolder>
 
               return GestureDetector(
                 onDoubleTap: () async {
+                  HapticFeedback.heavyImpact();
                   if (mounted) {
                     if (controller.value == 1) {
                       controller.reset();
@@ -261,27 +264,29 @@ class _FeedVideoHolderState extends State<FeedVideoHolder>
                 child: Stack(
                   children: [
                     VideoView(
-                            allThumb: allThumbs,
-                            thumbLink: post.thumbnails!.first,
-                            page: widget.page,
-                            postId: post.id!,
-                            index: index,
-                            vodList: vodVid,
-                            data: post,
-                            inComingController: null,
-                            isHome: widget.isHome,
-                          ),
-                        // : VideoViewIos(
-                        //     allThumb: allThumbs,
-                        //     thumbLink: post.thumbnails!.first,
-                        //     page: widget.page,
-                        //     postId: post.id!,
-                        //     index: index,
-                        //     vodList: vodVid,
-                        //     data: post,
-                        //     inComingController: null,
-                        //     isHome: widget.isHome,
-                        //   ),
+                      allThumb: allThumbs,
+                      thumbLink: post.thumbnails!.isEmpty
+                          ? ""
+                          : post.thumbnails!.first,
+                      page: widget.page,
+                      postId: post.id!,
+                      index: index,
+                      vodList: vodVid,
+                      data: post,
+                      inComingController: null,
+                      isHome: widget.isHome,
+                    ),
+                    // : VideoViewIos(
+                    //     allThumb: allThumbs,
+                    //     thumbLink: post.thumbnails!.first,
+                    //     page: widget.page,
+                    //     postId: post.id!,
+                    //     index: index,
+                    //     vodList: vodVid,
+                    //     data: post,
+                    //     inComingController: null,
+                    //     isHome: widget.isHome,
+                    //   ),
                     post.promoted == "yes"
                         ? Positioned(
                             bottom: 140,
@@ -483,20 +488,21 @@ class _VideoViewState extends State<VideoView> {
     });
   }
 
-
   Future<void> initializePlayer() async {
     log(" ffffffffffffffff ${widget.data.mux!.first}");
     log(" ffffffffffffffff ${widget.data.vod!.first}");
 
-    _videoPlayerController = preloadController.getPreloadById(widget.postId).controller!;
+    _videoPlayerController =
+        preloadController.getPreloadById(widget.postId).controller!;
     // _videoPlayerController =
     //     VideoPlayerController.networkUrl(Uri.parse(widget.data.vod!.first));
     // await Future.wait([ _videoPlayerController.initialize()]);
     _createChewieController();
     setState(() {});
   }
-  void disposePlayer(){
-    if(_videoPlayerController != null){
+
+  void disposePlayer() {
+    if (_videoPlayerController != null) {
       _videoPlayerController.pause();
     }
     _chewieController?.dispose();
@@ -504,16 +510,21 @@ class _VideoViewState extends State<VideoView> {
 
   void _createChewieController() {
     _chewieController = ChewieController(
-      videoPlayerController: _videoPlayerController,
-      autoPlay: true,
-      looping: true,
-      progressIndicatorDelay:
-      bufferDelay != null ? Duration(milliseconds: bufferDelay!) : null,
-      showControls: true,
-      allowMuting: true,
-      //controlsSafeAreaMinimum: EdgeInsets.only(bottom: 40),
-      //autoInitialize: true,
-    );
+        videoPlayerController: _videoPlayerController,
+        autoPlay: true,
+        looping: true,
+        progressIndicatorDelay:
+            bufferDelay != null ? Duration(milliseconds: bufferDelay!) : null,
+        showControls: true,
+        allowMuting: false,
+        materialProgressColors: ChewieProgressColors(
+            backgroundColor: textPrimary, playedColor: secondaryColor),
+        cupertinoProgressColors: ChewieProgressColors(
+            backgroundColor: textPrimary, playedColor: secondaryColor)
+
+        //controlsSafeAreaMinimum: EdgeInsets.only(bottom: 40),
+        //autoInitialize: true,
+        );
   }
 
   // void buildVideoOptions() async {
@@ -559,46 +570,58 @@ class _VideoViewState extends State<VideoView> {
             alignment: Alignment.center,
             children: [
               _chewieController != null &&
-                  _chewieController!
-                      .videoPlayerController.value.isInitialized
+                      _chewieController!
+                          .videoPlayerController.value.isInitialized
                   ? Chewie(
-                controller: _chewieController!,
-              )
+                      controller: _chewieController!,
+                    )
                   : const Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircularProgressIndicator(),
-                  SizedBox(height: 20),
-                  Text('Loading'),
-                ],
-              ),
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircularProgressIndicator(),
+                        SizedBox(height: 20),
+                        Text('Loading'),
+                      ],
+                    ),
             ],
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(top: 30, left: 5),
-          child: Align(
-            alignment: Alignment.topLeft,
-            child: IconButton(
-                onPressed: () => PageRouting.popToPage(context),
-                icon: const Icon(
-                  Icons.arrow_back_ios,
-                  color: Colors.white,
-                )),
-          ),
-        ),
+            padding: const EdgeInsets.only(top: 10, left: 15),
+            child: InkWell(
+              onTap: () => PageRouting.popToPage(context),
+              child: const Icon(
+                Icons.arrow_back_ios,
+                color: Colors.white,
+                size: 22,
+              ),
+            )
+
+            //  Align(
+            //   alignment: Alignment.topLeft,
+            //   child: IconButton(
+            //       onPressed: () => PageRouting.popToPage(context),
+            //       icon: const Icon(
+            //         Icons.arrow_back_ios,
+            //         color: Colors.white,
+            //       )),
+            // ),
+            ),
         FadeInRight(
           duration: Duration(seconds: 1),
           animate: true,
           child: Align(
-            alignment: Alignment.centerRight,
-            child: LikeSection(
-              page: widget.page,
-              data: widget.data,
-              userName: widget.data.user!.username,
-              isHome: widget.isHome,
-              showComment: true,
-              mediaController: _controller,
+            alignment: Alignment.bottomRight,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 80),
+              child: LikeSection(
+                page: widget.page,
+                data: widget.data,
+                userName: widget.data.user!.username,
+                isHome: widget.isHome,
+                showComment: true,
+                mediaController: _controller,
+              ),
             ),
           ),
         ),
@@ -611,6 +634,7 @@ class _VideoViewState extends State<VideoView> {
             isHome: true,
             controller: _controller,
             isVideo: true,
+            showFollow: true,
           ),
         ),
         widget.data.btnLink != null && widget.data.button != null
@@ -740,8 +764,8 @@ class _VideoViewIosState extends State<VideoViewIos> {
   }
 
   void buildVideoOptions() async {
-    _controller = VideoPlayerController.networkUrl(Uri.parse(
-        "${widget.data.vod!.first}"));
+    _controller = VideoPlayerController.networkUrl(
+        Uri.parse("${widget.data.vod!.first}"));
 
     // final token = apiToken.isEmpty ? null : apiToken;
 

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
 import 'package:macanacki/presentation/model/ui_model.dart';
 import 'package:macanacki/presentation/screens/home/convo/chat/chatextra/reciever_chat_bubble.dart';
@@ -30,6 +31,7 @@ class ChatList extends StatefulWidget {
   String? toUserId;
   bool isHome;
   ChatData? user;
+  AudioPlayer? player;
   ChatList(
       {super.key,
       required this.chat,
@@ -39,6 +41,7 @@ class ChatList extends StatefulWidget {
       required this.controller,
       required this.myUserId,
       this.toUserId,
+      this.player,
       required this.isHome});
 
   @override
@@ -145,6 +148,8 @@ class _ChatListState extends State<ChatList> {
                         ? SenderBubble(chat: chats, isHome: widget.isHome)
                         : ReceivingBubble(
                             chat: chats,
+                            player: widget.player,
+                            user: widget.user,
                           );
                   },
                 );

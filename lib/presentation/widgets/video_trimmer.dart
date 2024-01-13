@@ -117,7 +117,7 @@ class _VideoTrimmerState extends State<VideoTrimmer> {
                         borderSide: BorderSide(color: HexColor("#F5F2F9"))),
                     focusedBorder: UnderlineInputBorder(
                         borderRadius: BorderRadius.circular(2.0),
-                        borderSide: BorderSide(color: HexColor(primaryColor))),
+                        borderSide: BorderSide(color: textPrimary)),
                   ),
                 ),
               ),
@@ -129,9 +129,9 @@ class _VideoTrimmerState extends State<VideoTrimmer> {
                   : AppButton(
                       width: 0.2,
                       height: 0.06,
-                      color: primaryColor,
+                      color: "#ffffff",
                       text: "Done",
-                      backColor: primaryColor,
+                      backColor: "#ffffff",
                       curves: buttonCurves,
                       textColor: backgroundColor,
                       onTap: () async {
@@ -229,7 +229,7 @@ class _VideoTrimmerState extends State<VideoTrimmer> {
             backgroundColor: Colors.transparent,
             color: HexColor(primaryColor),
             minHeight: 7,
-          //  borderRadius: const BorderRadius.all(Radius.circular(10)),
+            //  borderRadius: const BorderRadius.all(Radius.circular(10)),
           ),
         ),
         const SizedBox(height: 15),

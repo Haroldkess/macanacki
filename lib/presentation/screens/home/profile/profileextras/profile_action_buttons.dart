@@ -70,6 +70,7 @@ class AllProfileActions extends StatelessWidget {
                 EditProfile(
                   aboutMe: stream.userProfileModel.aboutMe,
                   phone: stream.userProfileModel.phone,
+                  web: stream.userProfileModel.website,
                 )),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -81,6 +82,7 @@ class AllProfileActions extends StatelessWidget {
                       EditProfile(
                         aboutMe: stream.userProfileModel.aboutMe,
                         phone: stream.userProfileModel.phone,
+                        web: stream.userProfileModel.website,
                       )),
                   color: "#C0C0C0",
                 ),
@@ -169,97 +171,231 @@ class AllProfileActions extends StatelessWidget {
     );
   }
 
-  void _showActionSheet(BuildContext context) {
+  void _showActionSheet(BuildContext context) async {
+    return showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: backgroundSecondary,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+        builder: (context) {
+          UserProfileWare user = context.watch<UserProfileWare>();
+          return Padding(
+            padding: const EdgeInsets.only(top: 8.0, bottom: 8),
+            child: Container(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  AppText(
+                    text: "Create",
+                    color: textWhite,
+                    fontWeight: FontWeight.bold,
+                    size: 16,
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  ListTile(
+                    onTap: () async {
+                      OperationsExt.pickForPost(
+                        context,
+                      );
+                    },
+                    title: Row(
+                      children: [
+                        Icon(
+                          Icons.image_outlined,
+                          color: textPrimary,
+                          size: 20,
+                        ),
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        AppText(
+                          text: "Post Images",
+                          color: textWhite,
+                          fontWeight: FontWeight.w400,
+                          size: 16,
+                        ),
+                      ],
+                    ),
+                    // leading: Icon(
+                    //   Icons.image_search_outlined,
+                    //   color: textPrimary,
+                    //   size: 20,
+                    // ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  ListTile(
+                    onTap: () async {
+                      OperationsExt.pickVideoForPost(context);
+                    },
+                    title: Row(
+                      children: [
+                        Icon(
+                          Icons.videocam_outlined,
+                          color: textPrimary,
+                          size: 20,
+                        ),
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        AppText(
+                          text: "Post Videos",
+                          color: textWhite,
+                          fontWeight: FontWeight.w400,
+                          size: 16,
+                        ),
+                      ],
+                    ),
+                    // leading: Icon(
+                    //   Icons.videocam_outlined,
+                    //   color: textPrimary,
+                    //   size: 20,
+                    // ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  ListTile(
+                    onTap: () async {
+                      PageRouting.pushToPage(context, const AudioScreen());
+                    },
+
+                    title: Row(
+                      children: [
+                        Icon(
+                          Icons.audiotrack_outlined,
+                          color: textPrimary,
+                          size: 20,
+                        ),
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        AppText(
+                          text: "Post Audio",
+                          color: textWhite,
+                          fontWeight: FontWeight.w400,
+                          size: 16,
+                        ),
+                      ],
+                    ),
+                    // leading: Icon(
+                    //   Icons.audiotrack_outlined,
+                    //   color: textPrimary,
+                    //   size: 20,
+                    // ),
+                  )
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  void _showActionSheet2(BuildContext context) {
     showCupertinoModalPopup<void>(
       context: context,
-      builder: (BuildContext context) => CupertinoActionSheet(
-        actions: <CupertinoActionSheetAction>[
-          CupertinoActionSheetAction(
-            /// This parameter indicates the action would be a default
-            /// default behavior, turns the action's text to bold text.
-            //isDefaultAction: true,
-            onPressed: () {
-              //Navigator.pop(context);
-              OperationsExt.pickForPost(
-                context,
-              );
-            },
-            child: Row(
-              children: [
-                Icon(
-                  Icons.image_search_outlined,
-                  color: HexColor(primaryColor),
-                ),
-                SizedBox(width: 10),
-                AppText(
-                  text: "Post Images",
-                  fontWeight: FontWeight.w400,
-                  size: 18,
-                  color: HexColor("#797979"),
-                ),
-              ],
+      //barrierColor: backgroundSecondary,
+      builder: (BuildContext context) => CupertinoTheme(
+        data: CupertinoThemeData(
+            barBackgroundColor: backgroundSecondary,
+            scaffoldBackgroundColor: backgroundSecondary,
+            primaryColor: backgroundSecondary),
+        child: CupertinoActionSheet(
+          actions: <CupertinoActionSheetAction>[
+            CupertinoActionSheetAction(
+              /// This parameter indicates the action would be a default
+              /// default behavior, turns the action's text to bold text.
+              //isDefaultAction: true,
+              onPressed: () {
+                //Navigator.pop(context);
+                OperationsExt.pickForPost(
+                  context,
+                );
+              },
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.image_search_outlined,
+                    color: HexColor(primaryColor),
+                  ),
+                  SizedBox(width: 10),
+                  AppText(
+                    text: "Post Images",
+                    fontWeight: FontWeight.w400,
+                    size: 18,
+                    color: HexColor("#797979"),
+                  ),
+                ],
+              ),
             ),
-          ),
-          CupertinoActionSheetAction(
-            onPressed: () {
-              //Navigator.pop(context);
-              OperationsExt.pickVideoForPost(context);
-            },
-            child: Row(
-              children: [
-                Icon(
-                  Icons.videocam_outlined,
-                  color: HexColor(primaryColor),
-                ),
-                SizedBox(width: 10),
-                AppText(
-                  text: "Post Videos",
-                  fontWeight: FontWeight.w400,
-                  size: 18,
-                  color: HexColor("#797979"),
-                ),
-              ],
+            CupertinoActionSheetAction(
+              onPressed: () {
+                //Navigator.pop(context);
+                OperationsExt.pickVideoForPost(context);
+              },
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.videocam_outlined,
+                    color: HexColor(primaryColor),
+                  ),
+                  SizedBox(width: 10),
+                  AppText(
+                    text: "Post Videos",
+                    fontWeight: FontWeight.w400,
+                    size: 18,
+                    color: HexColor("#797979"),
+                  ),
+                ],
+              ),
             ),
-          ),
-          CupertinoActionSheetAction(
-            onPressed: () {
-              //Navigator.pop(context);
+            CupertinoActionSheetAction(
+              onPressed: () {
+                //Navigator.pop(context);
 
-              PageRouting.pushToPage(context, const AudioScreen());
-              // Operations.pickAudio(context);
-            },
-            child: Row(
-              children: [
-                Icon(
-                  Icons.audiotrack_outlined,
-                  color: HexColor(primaryColor),
-                ),
-                SizedBox(width: 10),
-                AppText(
-                  text: "   Post Audio",
-                  fontWeight: FontWeight.w400,
-                  size: 18,
-                  color: HexColor("#797979"),
-                ),
-              ],
+                PageRouting.pushToPage(context, const AudioScreen());
+                // Operations.pickAudio(context);
+              },
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.audiotrack_outlined,
+                    color: HexColor(primaryColor),
+                  ),
+                  SizedBox(width: 10),
+                  AppText(
+                    text: "   Post Audio",
+                    fontWeight: FontWeight.w400,
+                    size: 18,
+                    color: HexColor("#797979"),
+                  ),
+                ],
+              ),
             ),
-          ),
-          CupertinoActionSheetAction(
-            /// This parameter indicates the action would perform
-            /// a destructive action such as delete or exit and turns
-            /// the action's text color to red.
-            isDestructiveAction: true,
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: AppText(
-              text: "Cancel",
-              fontWeight: FontWeight.w400,
-              size: 18,
-              color: HexColor(primaryColor),
+            CupertinoActionSheetAction(
+              /// This parameter indicates the action would perform
+              /// a destructive action such as delete or exit and turns
+              /// the action's text color to red.
+              isDestructiveAction: true,
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: AppText(
+                text: "Cancel",
+                fontWeight: FontWeight.w400,
+                size: 18,
+                color: HexColor(primaryColor),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

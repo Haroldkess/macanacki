@@ -173,6 +173,7 @@ class PublicUserData {
     this.posts,
     this.followers,
     this.followings,
+    this.website,
     this.gender,
     this.profilephoto,
     this.noOfFollowers,
@@ -220,6 +221,7 @@ class PublicUserData {
   List<PublicUserPost>? posts;
   List<PublicUserData>? followers;
   List<PublicUserData>? followings;
+  String? website;
   String? gender;
   String? profilephoto;
   dynamic activePlan;
@@ -282,6 +284,7 @@ class PublicUserData {
             ? []
             : List<PublicUserData>.from(
                 json["followings"]!.map((x) => PublicUserData.fromJson(x))),
+        website: json["website"],
         gender: json["gender"],
         profilephoto: json["profilephoto"],
         noOfFollowers: json["no_of_followers"],
@@ -338,6 +341,7 @@ class PublicUserData {
         "followings": followings == null
             ? []
             : List<dynamic>.from(followings!.map((x) => x.toJson())),
+        "website": website,
         "gender": gender,
         "profilephoto": profilephoto,
         "no_of_followers": noOfFollowers,

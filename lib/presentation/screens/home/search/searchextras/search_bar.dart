@@ -40,9 +40,8 @@ class GlobalSearchBar extends StatelessWidget {
           // }
           // SearchAppController.retrievSearchUserController(context, value);
 
-          await Future.delayed(const Duration(milliseconds: 1000)).whenComplete(
-              () => SearchAppController.retrievSearchUserController(
-                  context, value));
+          Future.delayed(const Duration(milliseconds: 1000)).whenComplete(() =>
+              SearchAppController.retrievSearchUserController(context, value));
         },
         onFieldSubmitted: (val) {
           if (val.isNotEmpty) {

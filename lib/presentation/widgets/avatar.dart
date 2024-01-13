@@ -12,7 +12,7 @@ class Avatar extends StatelessWidget {
   Widget build(BuildContext context) {
     return CircleAvatar(
       radius: radius,
-      backgroundColor: HexColor(primaryColor),
+      backgroundColor: backgroundSecondary,
       backgroundImage: CachedNetworkImageProvider(image),
     );
   }

@@ -2,31 +2,51 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:macanacki/presentation/widgets/debug_emitter.dart';
 import 'package:macanacki/services/api_url.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../model/create_post_model.dart';
 import '../temps/temps_id.dart';
 
-Future<http.Response?> getFeedPost(int pageNum) async {
+Future<http.Response?> getFeedPost(int pageNum, [String? filter]) async {
   SharedPreferences pref = await SharedPreferences.getInstance();
   String? token = pref.getString(tokenKey);
   http.Response? response;
+  // emitter(filter!);
   try {
-
-   //https://api.macanacki.com/api/v2/post/latest?page={page_number},
-    //v2/post/videos/list
-    //Uri.parse('$baseUrl/public/api/post/latest?page=$pageNum'),
-    //Uri.parse('https://api.macanacki.com/public/api/v2/user/e1/public/user/posts/tholscoa?type=videos_images&page=$pageNum'),
-    //Uri.parse('https://api.macanacki.com/public/api/v2/user/public/user/posts/tholscoa?type=videos_images&page=1'),
     response = await http.get(
-      Uri.parse('$baseUrl/public/api/v2/post/latest?page=$pageNum'),
+      Uri.parse(
+          '$baseUrl/public/api/v3/post/latest?page=$pageNum&type=${filter ?? "verified"}'),
       headers: {
         HttpHeaders.contentTypeHeader: "application/json",
         HttpHeaders.authorizationHeader: "Bearer $token",
       },
     ).timeout(Duration(minutes: 1));
     //  log(response.statusCode.toString());
-    //   log(response.body.toString());
+    // log(response.body.toString());
+    log(token.toString());
+  } catch (e) {
+    print("000000000000000000000000000000000000 Errorrrrrrrrrr");
+    response = null;
+  }
+  return response;
+}
+
+Future<http.Response?> getSinglePostPost(String id) async {
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  String? token = pref.getString(tokenKey);
+  http.Response? response;
+  try {
+    response = await http.get(
+      Uri.parse('$baseUrl/public/api/v3/post/view/$id'),
+      headers: {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $token",
+      },
+    ).timeout(Duration(minutes: 1));
+    log(response.statusCode.toString());
+    //log(response.body.toString());
+    //log(token.toString());
   } catch (e) {
     print("000000000000000000000000000000000000 Errorrrrrrrrrr");
     response = null;
@@ -66,8 +86,8 @@ Future<http.Response?> getAudioPost(int pageNum) async {
         HttpHeaders.authorizationHeader: "Bearer $token",
       },
     );
-    log(response.statusCode.toString());
-    log(response.body.toString());
+    // log(response.statusCode.toString());
+    // log(response.body.toString());
   } catch (e) {
     response = null;
   }
@@ -121,8 +141,8 @@ Future<http.Response?> getUserFeedPost(
   String? userName = pref.getString(userNameKey);
   http.Response? response;
 
-  print(
-      "$baseUrl/public/api/v2/user/public/user/posts/$userName?type=$filter&page=$pageNumber");
+  // print(
+  //     "$baseUrl/public/api/v2/user/public/user/posts/$userName?type=$filter&page=$pageNumber");
   try {
     response = await http.get(
       Uri.parse(
@@ -132,9 +152,9 @@ Future<http.Response?> getUserFeedPost(
         HttpHeaders.authorizationHeader: "Bearer $token",
       },
     );
-    log("for $filter");
+    //  log("for $filter");
     // if (filter == "audios") {
-    log(response.body.toString());
+    // log(token.toString());
     // }
   } catch (e) {
     response = null;

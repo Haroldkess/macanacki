@@ -1,4 +1,6 @@
+import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:macanacki/presentation/allNavigation.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
@@ -7,6 +9,7 @@ import 'package:macanacki/presentation/widgets/text.dart';
 import 'package:provider/provider.dart';
 import 'package:numeral/numeral.dart';
 import '../../../../../services/middleware/user_profile_ware.dart';
+import '../buy_followers/plan_modal.dart';
 
 class ProfileFollowersStatistics extends StatelessWidget {
   const ProfileFollowersStatistics({super.key});
@@ -24,45 +27,92 @@ class ProfileFollowersStatistics extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          InkWell(
-            onTap: () {
-              PageRouting.pushToPage(
-                  context,
-                  FollowersAndFollowingScreen(
-                      title: stream.userProfileModel.username,
-                      isFollowing: false));
-            },
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 5),
-              decoration: BoxDecoration(
-                  shape: BoxShape.rectangle,
-                  border: Border.all(
-                      color: HexColor("#C0C0C0").withOpacity(.4), width: 1),
-                  borderRadius: BorderRadius.circular(38)),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 85,
-                    // color: Colors.amber,
-                    alignment: Alignment.center,
-                    child: AppText(
-                      text: Numeral(stream.userProfileModel.noOfFollowers ?? 0)
-                          .format(fractionDigits: 1),
-                      fontWeight: FontWeight.w600,
-                      size: 18,
-                      color: Colors.white.withOpacity(.6),
+          Stack(
+            children: [
+              InkWell(
+                onTap: () {
+                  PageRouting.pushToPage(
+                      context,
+                      FollowersAndFollowingScreen(
+                          title: stream.userProfileModel.username,
+                          isFollowing: false));
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  decoration: BoxDecoration(
+                      shape: BoxShape.rectangle,
+                      border: Border.all(
+                          color: HexColor("#C0C0C0").withOpacity(.4), width: 1),
+                      borderRadius: BorderRadius.circular(38)),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 85,
+                        // color: Colors.amber,
+                        alignment: Alignment.center,
+                        child: AppText(
+                          text: Numeral(
+                                  stream.userProfileModel.noOfFollowers ?? 0)
+                              .format(fractionDigits: 1),
+                          fontWeight: FontWeight.w600,
+                          size: 18,
+                          color: Colors.white.withOpacity(.6),
+                        ),
+                      ),
+                      AppText(
+                        text: "Followers",
+                        fontWeight: FontWeight.w500,
+                        size: 10,
+                        color: Colors.white.withOpacity(.6),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Positioned(
+                left: -2,
+                top: -2,
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: InkWell(
+                    onTap: () {
+                      buyFollowersModal(context);
+                    },
+                    child: CircleAvatar(
+                      radius: 13,
+                      backgroundColor: Colors.black,
+                      child: CircleAvatar(
+                        backgroundColor: Colors.transparent,
+                        radius: 10,
+                        child: SvgPicture.asset(
+                          "assets/icon/add_profile.svg",
+                          color: Colors.green,
+                        ),
+                      ),
                     ),
                   ),
-                  AppText(
-                    text: "Followers",
-                    fontWeight: FontWeight.w500,
-                    size: 10,
-                    color: Colors.white.withOpacity(.6),
-                  ),
-                ],
+                ),
               ),
-            ),
+              Positioned(
+                left: -4,
+                top: -4,
+                child: InkWell(
+                  onTap: () {
+                    buyFollowersModal(context);
+                  },
+                  child: AvatarGlow(
+                    endRadius: 15.0,
+                    duration: Duration(milliseconds: 800),
+                    glowColor: secondaryColor,
+                    child: CircleAvatar(
+                      radius: 3,
+                      backgroundColor: Colors.transparent,
+                    ),
+                  ),
+                ),
+              )
+            ],
           ),
           InkWell(
             onTap: () {

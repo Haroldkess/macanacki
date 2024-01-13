@@ -16,10 +16,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:macanacki/preload/preload_controller.dart';
+import 'package:macanacki/presentation/operations.dart';
 import 'package:macanacki/presentation/screens/userprofile/extras/test_profle_view.dart';
 import 'package:macanacki/presentation/uiproviders/screen/tab_provider.dart';
 import 'package:macanacki/presentation/widgets/debug_emitter.dart';
 import 'package:macanacki/presentation/widgets/text.dart';
+import 'package:macanacki/services/controllers/url_launch_controller.dart';
 import 'package:macanacki/services/middleware/notification_ware..dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -49,10 +51,15 @@ import 'extras/public_profile_info.dart';
 
 class TestProfile extends StatefulWidget {
   final String username;
-  final bool extended;
+  final bool? extended;
   final String? page;
+  final bool? isFromRoute;
   const TestProfile(
-      {super.key, required this.username, required this.extended, this.page});
+      {super.key,
+      required this.username,
+      required this.extended,
+      this.page,
+      this.isFromRoute});
 
   @override
   State<TestProfile> createState() => _TestProfileState();
@@ -60,6 +67,7 @@ class TestProfile extends StatefulWidget {
 
 class _TestProfileState extends State<TestProfile>
     with SingleTickerProviderStateMixin {
+  late String routeName = "";
   bool showMore = false;
   int seeMoreVal = 100;
   TabController? _tabController;
@@ -118,6 +126,15 @@ class _TestProfileState extends State<TestProfile>
   @override
   void initState() {
     super.initState();
+    Operations.controlSystemColor();
+
+    if (widget.isFromRoute == true) {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        setState(() {
+          routeName = ModalRoute.of(context)!.settings.arguments.toString();
+        });
+      });
+    }
     _tabController = TabController(vsync: this, length: _tabs.length);
 
     _scrollController = ScrollController();
@@ -144,8 +161,10 @@ class _TestProfileState extends State<TestProfile>
             EasyDebounce.debounce(
                 'myx-debouncer',
                 const Duration(milliseconds: 500),
-                () async =>
-                    await getUserPublicPostFromApi(username: widget.username));
+                () async => await getUserPublicPostFromApi(
+                    username: widget.isFromRoute == true
+                        ? routeName
+                        : widget.username));
           });
         }
       }
@@ -173,7 +192,9 @@ class _TestProfileState extends State<TestProfile>
                 'myx-debouncer',
                 const Duration(milliseconds: 500),
                 () async => await getUserPublicPostAudioFromApi(
-                    username: widget.username));
+                    username: widget.isFromRoute == true
+                        ? routeName
+                        : widget.username));
           });
         }
       }
@@ -529,15 +550,33 @@ class _TestProfileState extends State<TestProfile>
                             Get.dialog(seeWebsiteDialog(
                                 svg: "seeweb",
                                 title: "Website",
-                                message: "Website not published by user",
+                                message: publicUserProfileModel.website == null
+                                    ? "Website not published by user"
+                                    : publicUserProfileModel.website!.isEmpty
+                                        ? "Website not published by user"
+                                        : publicUserProfileModel.website,
                                 confirmText: "Yes",
-                                cancelText: "Go back",
+                                cancelText: publicUserProfileModel.website ==
+                                        null
+                                    ? "Go back"
+                                    : publicUserProfileModel.website!.isEmpty
+                                        ? "Go back"
+                                        : "Visit",
                                 onPressedCancel: () {
-                                  Get.back();
+                                  if (publicUserProfileModel.website != null) {
+                                    if (publicUserProfileModel
+                                        .website!.isNotEmpty) {
+                                      UrlLaunchController.launchWebViewOrVC(
+                                          Uri.parse(
+                                              publicUserProfileModel.website!));
+                                    } else {
+                                      Get.back();
+                                    }
+                                  } else {
+                                    Get.back();
+                                  }
                                 },
-                                onPressed: () {
-                                  Get.back();
-                                }));
+                                onPressed: () {}));
                           },
                           name: "View Website",
                           icon: "assets/icon/seeweb.svg",
@@ -630,7 +669,9 @@ class _TestProfileState extends State<TestProfile>
                                 scrollController: _scrollController,
                                 tabKey: Key('Tab${entry.key}'),
                                 tabName: entry.value,
-                                username: widget.username,
+                                username: widget.isFromRoute == true
+                                    ? routeName
+                                    : widget.username,
                                 isHome: 0,
                                 pagingController: pagingController,
                               )
@@ -639,7 +680,9 @@ class _TestProfileState extends State<TestProfile>
                                 scrollController: _scrollController2,
                                 tabKey: Key('Tab${entry.key}'),
                                 tabName: entry.value,
-                                username: widget.username,
+                                username: widget.isFromRoute == true
+                                    ? routeName
+                                    : widget.username,
                                 isHome: 0,
                                 pagingController: pagingController2,
                               );
@@ -681,33 +724,69 @@ class _TestProfileState extends State<TestProfile>
   Future<void> getData(bool isRef) async {
     if (isRef) {
       SchedulerBinding.instance.addPostFrameCallback((_) async {
-        await getPublicUserProfileFromApi(widget.username);
+        await getPublicUserProfileFromApi(
+            widget.isFromRoute == true ? routeName : widget.username);
 
         //Re-initializing pagingController
         disposeAutoScroll();
         initializePagingController();
-        getUserPublicPostFromApi(username: widget.username);
-        getUserPublicPostAudioFromApi(username: widget.username);
+        getUserPublicPostFromApi(
+            username: widget.isFromRoute == true ? routeName : widget.username);
+        getUserPublicPostAudioFromApi(
+            username: widget.isFromRoute == true ? routeName : widget.username);
       });
     } else {
       SchedulerBinding.instance.addPostFrameCallback((_) async {
         if (publicUserProfileModel.username == null) {
-          getUserPublicPostFromApi(username: widget.username);
-          getUserPublicPostAudioFromApi(username: widget.username);
-          await getPublicUserProfileFromApi(widget.username);
-          getUserPublicPostFromApi(username: widget.username);
-          getUserPublicPostAudioFromApi(username: widget.username);
+          getUserPublicPostFromApi(
+              username:
+                  widget.isFromRoute == true ? routeName : widget.username);
+          getUserPublicPostAudioFromApi(
+              username:
+                  widget.isFromRoute == true ? routeName : widget.username);
+          await getPublicUserProfileFromApi(
+              widget.isFromRoute == true ? routeName : widget.username);
+          getUserPublicPostFromApi(
+              username:
+                  widget.isFromRoute == true ? routeName : widget.username);
+          getUserPublicPostAudioFromApi(
+              username:
+                  widget.isFromRoute == true ? routeName : widget.username);
         } else {
-          if (publicUserProfileModel.username == widget.username) {
-            await getPublicUserProfileFromApi(widget.username);
-            getUserPublicPostFromApi(username: widget.username);
-            getUserPublicPostAudioFromApi(username: widget.username);
+          if (widget.isFromRoute == true) {
+            if (publicUserProfileModel.username == routeName) {
+              await getPublicUserProfileFromApi(
+                  widget.isFromRoute == true ? routeName : widget.username);
+              getUserPublicPostFromApi(
+                  username:
+                      widget.isFromRoute == true ? routeName : widget.username);
+              getUserPublicPostAudioFromApi(
+                  username:
+                      widget.isFromRoute == true ? routeName : widget.username);
 
-            return;
+              return;
+            } else {
+              getUserPublicPostFromApi(
+                  username:
+                      widget.isFromRoute == true ? routeName : widget.username);
+              getUserPublicPostAudioFromApi(
+                  username:
+                      widget.isFromRoute == true ? routeName : widget.username);
+              await getPublicUserProfileFromApi(
+                  widget.isFromRoute == true ? routeName : widget.username);
+            }
           } else {
-            getUserPublicPostFromApi(username: widget.username);
-            getUserPublicPostAudioFromApi(username: widget.username);
-            await getPublicUserProfileFromApi(widget.username);
+            if (publicUserProfileModel.username == widget.username) {
+              await getPublicUserProfileFromApi(widget.username);
+              getUserPublicPostFromApi(username: widget.username);
+              getUserPublicPostAudioFromApi(username: widget.username);
+
+              return;
+            } else {
+              getUserPublicPostFromApi(username: widget.username);
+              getUserPublicPostAudioFromApi(username: widget.username);
+              await getPublicUserProfileFromApi(widget.username);
+            }
           }
         }
       });
@@ -791,7 +870,7 @@ class _TestProfileState extends State<TestProfile>
         for (final x in jsonData['data']) {
           final p = PublicUserPost.fromJson(x);
 
-         preloadController.addPreload(id: p.id!, vod: p.vod!);
+          preloadController.addPreload(id: p.id!, vod: p.vod!);
           newItems.add(p);
         }
 

@@ -323,11 +323,16 @@ class ChatController {
   }
 
   static void handleMessage(context, data) async {
+    late String? chatName;
     // log(data.toString());
     //   emitter(data.toString());
     ChatWare ware = Provider.of<ChatWare>(context, listen: false);
     final jsonData = jsonDecode(data);
     //  emitter(jsonData.toString());
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    if (pref.containsKey("chatNameKey")) {
+      chatName = pref.getString("chatNameKey")!;
+    }
 
     var val = AllConversationModel.fromJson(jsonData);
 
@@ -362,6 +367,8 @@ class ChatController {
 
     if (ware.chatPage != 0) {
       readAll(context, ware.chatPage);
+      // print(chatName ?? "Nothing");
+      //print(chatData.userOne);
     }
 
     // Conversation data3 = Conversation(
@@ -492,9 +499,13 @@ class ChatController {
 //  { "data": [  {"socketId": "ePYULb5MpymhWOA4AAsU", "userId": 17}, {"socketId": "yZbBEpAggJLn0vDYAAsa", "userId": 16}]}
   }
 
-  static Future<void> changeChatPage(context, int id) async {
+  static Future<void> changeChatPage(
+    context,
+    int id,
+  ) async {
     ChatWare ware = Provider.of<ChatWare>(context, listen: false);
     ware.chatPageChange(id);
+    ware.addChatName("");
 
     // emitter("Chat page id ${ware.chatPage}");
   }

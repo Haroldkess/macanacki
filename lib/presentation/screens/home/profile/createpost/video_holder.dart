@@ -30,11 +30,12 @@ class _VideoHolderState extends State<VideoHolder> {
     // Initialize the controller and store the Future for later use.
     _initializeVideoPlayerFuture = _controller.initialize().whenComplete(() {
       _controller.play();
+      // _controller.setLooping(true);
       setState(() {});
     });
 
     // Use the controller to loop the video.
-    _controller.setLooping(false);
+    _controller.setLooping(true);
   }
 
   Future<void> innit() async {}

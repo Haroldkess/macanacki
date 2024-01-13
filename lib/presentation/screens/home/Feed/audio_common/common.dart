@@ -45,7 +45,7 @@ class SeekBarState extends State<SeekBar> {
         SliderTheme(
           data: _sliderThemeData.copyWith(
             thumbShape: HiddenThumbComponentShape(),
-            activeTrackColor: Colors.pink.shade100,
+            activeTrackColor: secondaryColor.withOpacity(.8),
             inactiveTrackColor: Colors.grey.shade300,
           ),
           child: Container(
@@ -77,8 +77,8 @@ class SeekBarState extends State<SeekBar> {
         SliderTheme(
           data: _sliderThemeData.copyWith(
               inactiveTrackColor: Colors.transparent,
-              activeTrackColor: HexColor(primaryColor),
-              thumbColor: HexColor(primaryColor)),
+              activeTrackColor: secondaryColor,
+              thumbColor: secondaryColor),
           child: Container(
             height: 5,
             child: Slider(

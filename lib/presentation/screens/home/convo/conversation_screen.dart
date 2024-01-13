@@ -275,12 +275,15 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                             AppButton(
                                                 width: 0.5,
                                                 height: 0.06,
-                                                color: backgroundColor,
+                                                color: "#ffffff",
                                                 text: "Start a conversation",
-                                                backColor: primaryColor,
+                                                backColor: "#ffffff",
                                                 curves: buttonCurves * 5,
-                                                textColor: "#FFFFF",
+                                                textColor: backgroundColor,
                                                 onTap: () async {
+                                                  PageRouting.pushToPage(
+                                                      context,
+                                                      SwipeCardScreen());
                                                   // await FeedPostController.getFeedPostController(
                                                   //     context, 1, false);
                                                   //  PageRouting.pushToPage(context, const BusinessVerification());

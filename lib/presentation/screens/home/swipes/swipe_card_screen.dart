@@ -8,6 +8,7 @@ import 'package:macanacki/presentation/screens/home/Feed/scanning.dart';
 import 'package:macanacki/presentation/screens/home/swipes/swipeextra/tinder_card.dart';
 import 'package:macanacki/presentation/uiproviders/screen/card_provider.dart';
 import 'package:macanacki/presentation/widgets/text.dart';
+import 'package:macanacki/services/controllers/feed_post_controller.dart';
 import 'package:macanacki/services/middleware/notification_ware..dart';
 import 'package:macanacki/services/middleware/swipe_ware.dart';
 import 'package:provider/provider.dart';
@@ -127,11 +128,7 @@ class MenuCategory extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         Row(
-          children: [
-            ...cat.map((e) => CategoryView(
-                  name: e,
-                ))
-          ],
+          children: [...cat.map((e) => CategoryView(name: e, isHome: false))],
         )
       ],
     );
@@ -140,77 +137,203 @@ class MenuCategory extends StatelessWidget {
 
 class CategoryView extends StatelessWidget {
   final String name;
-  const CategoryView({super.key, required this.name});
+  final bool? isHome;
+  const CategoryView({super.key, required this.name, this.isHome});
 
   @override
   Widget build(BuildContext context) {
     SwipeWare swipe = context.watch<SwipeWare>();
+    SwipeWare tab = context.watch<SwipeWare>();
     return Padding(
       padding: const EdgeInsets.only(right: 8),
       child: InkWell(
         onTap: () {
           SwipeWare swipe = Provider.of<SwipeWare>(context, listen: false);
-          swipe.changeFilter(name);
-          if (swipe.filterName == "Women") {
-            SwipeController.retrievSwipeController(
-                context, "female", swipe.country, swipe.state, swipe.city);
-          } else if (swipe.filterName == "Men") {
-            SwipeController.retrievSwipeController(
-                context, "male", swipe.country, swipe.state, swipe.city);
+          TabProvider tab = Provider.of<TabProvider>(context, listen: false);
+          if (isHome == true) {
+            tab.changeFilter(name);
           } else {
-            SwipeController.retrievSwipeController(
-                context,
-                swipe.filterName.toLowerCase(),
-                swipe.country,
-                swipe.state,
-                swipe.city);
+            swipe.changeFilter(name);
+            if (swipe.filterName == "Women") {
+              SwipeController.retrievSwipeController(
+                  context, "female", swipe.country, swipe.state, swipe.city);
+            } else if (swipe.filterName == "Men") {
+              SwipeController.retrievSwipeController(
+                  context, "male", swipe.country, swipe.state, swipe.city);
+            } else {
+              SwipeController.retrievSwipeController(
+                  context,
+                  swipe.filterName.toLowerCase(),
+                  swipe.country,
+                  swipe.state,
+                  swipe.city);
+            }
           }
         },
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-          width: 85,
-          decoration: BoxDecoration(
-              color: swipe.filterName.toLowerCase() == name.toLowerCase()
-                  ? backgroundSecondary
-                  : HexColor(backgroundColor),
-              border: Border.all(
-                color: swipe.filterName.toLowerCase() == name.toLowerCase()
-                    ? Colors.grey
-                    : HexColor("#EBEBEB"),
+        child: isHome == true
+            ? Container(
+                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+                width: 83,
+                decoration: BoxDecoration(
+                    color: tab.filterName.toLowerCase() == name.toLowerCase()
+                        ? backgroundSecondary
+                        : HexColor(backgroundColor),
+                    border: Border.all(
+                      color: tab.filterName.toLowerCase() == name.toLowerCase()
+                          ? textPrimary
+                          : textPrimary,
+                    ),
+                    borderRadius: BorderRadius.circular(8)),
+                child: Row(
+                  mainAxisAlignment:
+                      tab.filterName.toLowerCase() == name.toLowerCase()
+                          ? MainAxisAlignment.spaceBetween
+                          : MainAxisAlignment.center,
+                  children: [
+                    tab.filterName.toLowerCase() == name.toLowerCase()
+                        ? SizedBox(
+                            width: 3,
+                          )
+                        : SizedBox.shrink(),
+                    AppText(
+                      text: name,
+                      color: tab.filterName.toLowerCase() == name.toLowerCase()
+                          ? textWhite
+                          : textPrimary,
+                      size: 12,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    tab.filterName.toLowerCase() == name.toLowerCase()
+                        ? CircleAvatar(
+                            backgroundColor: Colors.green,
+                            radius: 5,
+                            child: Icon(
+                              Icons.done,
+                              size: 8,
+                              color: Colors.white,
+                            ),
+                          )
+                        : SizedBox.shrink()
+                  ],
+                ),
+              )
+            : Container(
+                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                width: 85,
+                decoration: BoxDecoration(
+                    color: swipe.filterName.toLowerCase() == name.toLowerCase()
+                        ? backgroundSecondary
+                        : HexColor(backgroundColor),
+                    border: Border.all(
+                      color:
+                          swipe.filterName.toLowerCase() == name.toLowerCase()
+                              ? Colors.grey
+                              : HexColor("#EBEBEB"),
+                    ),
+                    borderRadius: BorderRadius.circular(50)),
+                child: Row(
+                  mainAxisAlignment:
+                      swipe.filterName.toLowerCase() == name.toLowerCase()
+                          ? MainAxisAlignment.spaceBetween
+                          : MainAxisAlignment.center,
+                  children: [
+                    swipe.filterName.toLowerCase() == name.toLowerCase()
+                        ? SizedBox(
+                            width: 3,
+                          )
+                        : SizedBox.shrink(),
+                    AppText(
+                      text: name,
+                      color:
+                          swipe.filterName.toLowerCase() == name.toLowerCase()
+                              ? textPrimary
+                              : HexColor("#979797"),
+                      size: 12,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    swipe.filterName.toLowerCase() == name.toLowerCase()
+                        ? CircleAvatar(
+                            backgroundColor: Colors.green,
+                            radius: 7,
+                            child: Icon(
+                              Icons.done,
+                              size: 10,
+                              color: Colors.white,
+                            ),
+                          )
+                        : SizedBox.shrink()
+                  ],
+                ),
               ),
-              borderRadius: BorderRadius.circular(50)),
-          child: Row(
-            mainAxisAlignment:
-                swipe.filterName.toLowerCase() == name.toLowerCase()
-                    ? MainAxisAlignment.spaceBetween
-                    : MainAxisAlignment.center,
-            children: [
-              swipe.filterName.toLowerCase() == name.toLowerCase()
-                  ? SizedBox(
-                      width: 3,
-                    )
-                  : SizedBox.shrink(),
-              AppText(
-                text: name,
-                color: swipe.filterName.toLowerCase() == name.toLowerCase()
-                    ? textPrimary
-                    : HexColor("#979797"),
-                size: 12,
-                fontWeight: FontWeight.w400,
-              ),
-              swipe.filterName.toLowerCase() == name.toLowerCase()
-                  ? CircleAvatar(
-                      backgroundColor: Colors.green,
-                      radius: 7,
-                      child: Icon(
-                        Icons.done,
-                        size: 10,
-                        color: Colors.white,
-                      ),
-                    )
-                  : SizedBox.shrink()
-            ],
-          ),
+      ),
+    );
+  }
+}
+
+class CategoryViewHome extends StatefulWidget {
+  final String name;
+  final bool? isHome;
+  TabProvider tab;
+  CategoryViewHome(
+      {super.key, required this.name, this.isHome, required this.tab});
+
+  @override
+  State<CategoryViewHome> createState() => _CategoryViewHomeState();
+}
+
+class _CategoryViewHomeState extends State<CategoryViewHome> {
+  @override
+  Widget build(BuildContext context) {
+    // TabProvider tab = context.watch<TabProvider>();
+    return Padding(
+      padding: const EdgeInsets.only(right: 8),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+        width: 83,
+        decoration: BoxDecoration(
+            color: widget.tab.filterNameHome.toLowerCase() ==
+                    widget.name.toLowerCase()
+                ? backgroundSecondary
+                : HexColor(backgroundColor),
+            border: Border.all(
+              color: widget.tab.filterNameHome.toLowerCase() ==
+                      widget.name.toLowerCase()
+                  ? textPrimary
+                  : textPrimary,
+            ),
+            borderRadius: BorderRadius.circular(8)),
+        child: Row(
+          mainAxisAlignment: widget.tab.filterNameHome.toLowerCase() ==
+                  widget.name.toLowerCase()
+              ? MainAxisAlignment.spaceBetween
+              : MainAxisAlignment.center,
+          children: [
+            widget.tab.filterNameHome.toLowerCase() == widget.name.toLowerCase()
+                ? SizedBox(
+                    width: 3,
+                  )
+                : SizedBox.shrink(),
+            AppText(
+              text: widget.name,
+              color: widget.tab.filterNameHome.toLowerCase() ==
+                      widget.name.toLowerCase()
+                  ? textWhite
+                  : textPrimary,
+              size: 12,
+              fontWeight: FontWeight.w400,
+            ),
+            widget.tab.filterNameHome.toLowerCase() == widget.name.toLowerCase()
+                ? CircleAvatar(
+                    backgroundColor: Colors.green,
+                    radius: 5,
+                    child: Icon(
+                      Icons.done,
+                      size: 8,
+                      color: Colors.white,
+                    ),
+                  )
+                : SizedBox.shrink()
+          ],
         ),
       ),
     );

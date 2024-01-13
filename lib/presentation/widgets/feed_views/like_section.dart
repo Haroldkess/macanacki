@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/services.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -63,7 +64,7 @@ class _LikeSectionState extends State<LikeSection> {
         right: 10,
       ),
       child: Container(
-        height: 250,
+        height: 200,
         width: 70,
         color: Colors.transparent,
         alignment: Alignment.centerRight,
@@ -289,7 +290,7 @@ class _LikeSectionState extends State<LikeSection> {
             svgPath,
             height: height,
             width: width,
-            color: hexString == null ? null : textPrimary,
+            color: hexString == null ? null : textWhite,
           ),
         ),
         text == null
@@ -320,18 +321,19 @@ class _LikeSectionState extends State<LikeSection> {
         LikeButton(
           isLiked: likedBefore,
           animationDuration: Duration(seconds: 2),
-          circleColor:
-              CircleColor(start: HexColor(primaryColor), end: Colors.red),
+          circleColor: CircleColor(start: Colors.blue, end: secondaryColor),
           bubblesColor: BubblesColor(
-              dotPrimaryColor: Colors.red,
-              dotSecondaryColor: HexColor(primaryColor),
+              dotPrimaryColor: Colors.grey,
+              dotSecondaryColor: Colors.blue,
               dotThirdColor: Colors.yellow,
-              dotLastColor: Colors.green),
+              dotLastColor: secondaryColor),
           countPostion: CountPostion.bottom,
           crossAxisAlignment: CrossAxisAlignment.end,
           mainAxisAlignment: MainAxisAlignment.end,
           likeCountPadding: EdgeInsets.only(top: 5, left: 40),
           onTap: (isLiked) async {
+            HapticFeedback.heavyImpact();
+
             likeAction(context, isLiked);
             return !isLiked;
           },
@@ -354,7 +356,7 @@ class _LikeSectionState extends State<LikeSection> {
                     padding: EdgeInsets.only(left: 5),
                     child: Icon(
                       Icons.favorite,
-                      color: HexColor(primaryColor),
+                      color: secondaryColor,
                       size: 25,
                     ),
                   )
@@ -367,7 +369,7 @@ class _LikeSectionState extends State<LikeSection> {
                         padding: const EdgeInsets.all(2.0),
                         child: SvgPicture.asset(
                           "assets/icon/hert.svg",
-                          color: HexColor(backgroundColor),
+                          color: textWhite,
                           height: 10,
                           width: 10,
                         ),

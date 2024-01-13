@@ -203,10 +203,14 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                 mainAxisSpacing: 1),
                         itemBuilder: (context, index) {
                           FeedPost _data = friends.friendPost[index];
-                          return FriendsViewItems(
-                            data: _data,
-                            index: index,
-                          );
+                          return _data.media == null
+                              ? SizedBox.shrink()
+                              : _data.media!.isEmpty
+                                  ? SizedBox.shrink()
+                                  : FriendsViewItems(
+                                      data: _data,
+                                      index: index,
+                                    );
                         }),
                   ),
                 ),
@@ -265,64 +269,73 @@ class _FriendsViewItemsState extends State<FriendsViewItems> {
           ? Stack(
               children: [
                 Container(
+                  height: Get.height,
+                  width: Get.width,
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(0),
-                      image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: widget.data.media!.first.contains(".mp4") ||
-                                  widget.data.media!.first.contains(".mp3")
-                              ? CachedNetworkImageProvider(
-                                  widget.data.thumbnails!.first ?? "")
-                              : CachedNetworkImageProvider(
-                                  widget.data.media!.first) as ImageProvider)),
+                    borderRadius: BorderRadius.circular(0),
+
+                    // image: DecorationImage(
+                    //     fit: BoxFit.cover,
+                    //     image: widget.data.media!.first.contains(".mp4") ||
+                    //             widget.data.media!.first.contains(".mp3")
+                    //         ? CachedNetworkImageProvider(
+                    //             widget.data.thumbnails!.first ?? "")
+                    //         : CachedNetworkImageProvider(
+                    //             widget.data.media!.first) as ImageProvider)
+                  ),
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
-                      CachedNetworkImage(
-                        imageUrl: widget.data.media!.first.contains(".mp4") ||
-                                widget.data.media!.first.contains(".mp3")
-                            ? widget.data.thumbnails!.first ?? ""
-                            : widget.data.media!.first,
-                        fit: BoxFit.cover,
-                        progressIndicatorBuilder:
-                            (context, url, downloadProgress) =>
-                                Shimmer.fromColors(
-                                    baseColor: HexColor(backgroundColor),
-                                    highlightColor: Colors.grey.withOpacity(.2),
-                                    period: Duration(seconds: 1),
-                                    child: Container(
-                                      color: HexColor(backgroundColor),
-                                    )),
-                        errorWidget: (context, url, error) =>
-                            CachedNetworkImage(
-                          imageUrl: url,
+                      Container(
+                        height: Get.height,
+                        width: Get.width,
+                        child: CachedNetworkImage(
+                          imageUrl: widget.data.media!.first.contains(".mp4") ||
+                                  widget.data.media!.first.contains(".mp3")
+                              ? widget.data.thumbnails!.first ?? ""
+                              : widget.data.media!.first,
                           fit: BoxFit.cover,
                           progressIndicatorBuilder: (context, url,
                                   downloadProgress) =>
                               Shimmer.fromColors(
                                   baseColor: HexColor(backgroundColor),
-                                  highlightColor:
-                                      HexColor(primaryColor).withOpacity(.2),
+                                  highlightColor: Colors.grey.withOpacity(.2),
                                   period: Duration(seconds: 1),
                                   child: Container(
                                     color: HexColor(backgroundColor),
                                   )),
                           errorWidget: (context, url, error) =>
                               CachedNetworkImage(
-                                  imageUrl: url,
-                                  fit: BoxFit.cover,
-                                  progressIndicatorBuilder: (context, url,
-                                          downloadProgress) =>
-                                      Shimmer.fromColors(
-                                          baseColor: HexColor(backgroundColor),
-                                          highlightColor:
-                                              Colors.grey.withOpacity(.2),
-                                          period: Duration(seconds: 1),
-                                          child: Container(
-                                            color: HexColor(backgroundColor),
-                                          )),
-                                  errorWidget: (context, url, error) =>
-                                      SizedBox()),
+                            imageUrl: url,
+                            fit: BoxFit.cover,
+                            progressIndicatorBuilder: (context, url,
+                                    downloadProgress) =>
+                                Shimmer.fromColors(
+                                    baseColor: HexColor(backgroundColor),
+                                    highlightColor:
+                                        HexColor(primaryColor).withOpacity(.2),
+                                    period: Duration(seconds: 1),
+                                    child: Container(
+                                      color: HexColor(backgroundColor),
+                                    )),
+                            errorWidget: (context, url, error) =>
+                                CachedNetworkImage(
+                                    imageUrl: url,
+                                    fit: BoxFit.cover,
+                                    progressIndicatorBuilder: (context, url,
+                                            downloadProgress) =>
+                                        Shimmer.fromColors(
+                                            baseColor:
+                                                HexColor(backgroundColor),
+                                            highlightColor:
+                                                Colors.grey.withOpacity(.2),
+                                            period: Duration(seconds: 1),
+                                            child: Container(
+                                              color: HexColor(backgroundColor),
+                                            )),
+                                    errorWidget: (context, url, error) =>
+                                        SizedBox()),
+                          ),
                         ),
                       ),
                       widget.data.media!.first.contains(".mp4")
@@ -387,33 +400,28 @@ class _FriendsViewItemsState extends State<FriendsViewItems> {
               ],
             )
           : Container(
+              height: Get.height,
+              width: Get.width,
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(0),
-                  image: DecorationImage(
-                      fit: BoxFit.cover,
-                      image: widget.data.media!.first.contains(".mp4")
-                          ? CachedNetworkImageProvider(
-                              widget.data.thumbnails!.first ?? "")
-                          : CachedNetworkImageProvider(widget.data.media!.first)
-                              as ImageProvider)),
+                borderRadius: BorderRadius.circular(0),
+                // image: DecorationImage(
+                //     fit: BoxFit.cover,
+                //     image: widget.data.media!.first.contains(".mp4")
+                //         ? CachedNetworkImageProvider(
+                //             widget.data.thumbnails!.first ?? "")
+                //         : CachedNetworkImageProvider(widget.data.media!.first)
+                //             as ImageProvider)
+              ),
               child: Stack(
                 alignment: Alignment.center,
                 children: [
-                  CachedNetworkImage(
-                    imageUrl: widget.data.media!.first.contains(".mp4")
-                        ? widget.data.thumbnails!.first ?? ""
-                        : widget.data.media!.first,
-                    fit: BoxFit.cover,
-                    progressIndicatorBuilder:
-                        (context, url, downloadProgress) => Shimmer.fromColors(
-                            baseColor: HexColor(backgroundColor),
-                            highlightColor: Colors.grey.withOpacity(.2),
-                            period: Duration(seconds: 1),
-                            child: Container(
-                              color: HexColor(backgroundColor),
-                            )),
-                    errorWidget: (context, url, error) => CachedNetworkImage(
-                      imageUrl: url,
+                  Container(
+                    height: Get.height,
+                    width: Get.width,
+                    child: CachedNetworkImage(
+                      imageUrl: widget.data.media!.first.contains(".mp4")
+                          ? widget.data.thumbnails!.first ?? ""
+                          : widget.data.media!.first,
                       fit: BoxFit.cover,
                       progressIndicatorBuilder:
                           (context, url, downloadProgress) =>
@@ -425,18 +433,34 @@ class _FriendsViewItemsState extends State<FriendsViewItems> {
                                     color: HexColor(backgroundColor),
                                   )),
                       errorWidget: (context, url, error) => CachedNetworkImage(
-                          imageUrl: url,
-                          fit: BoxFit.cover,
-                          progressIndicatorBuilder: (context, url,
-                                  downloadProgress) =>
-                              Shimmer.fromColors(
-                                  baseColor: HexColor(backgroundColor),
-                                  highlightColor: Colors.grey.withOpacity(.2),
-                                  period: Duration(seconds: 1),
-                                  child: Container(
-                                    color: HexColor(backgroundColor),
-                                  )),
-                          errorWidget: (context, url, error) => SizedBox()),
+                        imageUrl: url,
+                        fit: BoxFit.cover,
+                        progressIndicatorBuilder:
+                            (context, url, downloadProgress) =>
+                                Shimmer.fromColors(
+                                    baseColor: HexColor(backgroundColor),
+                                    highlightColor: Colors.grey.withOpacity(.2),
+                                    period: Duration(seconds: 1),
+                                    child: Container(
+                                      color: HexColor(backgroundColor),
+                                    )),
+                        errorWidget: (context, url, error) =>
+                            CachedNetworkImage(
+                                imageUrl: url,
+                                fit: BoxFit.cover,
+                                progressIndicatorBuilder: (context, url,
+                                        downloadProgress) =>
+                                    Shimmer.fromColors(
+                                        baseColor: HexColor(backgroundColor),
+                                        highlightColor:
+                                            Colors.grey.withOpacity(.2),
+                                        period: Duration(seconds: 1),
+                                        child: Container(
+                                          color: HexColor(backgroundColor),
+                                        )),
+                                errorWidget: (context, url, error) =>
+                                    SizedBox()),
+                      ),
                     ),
                   ),
                   widget.data.media!.first.contains(".mp4")

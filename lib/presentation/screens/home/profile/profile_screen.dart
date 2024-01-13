@@ -351,9 +351,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                                         child: Container(
                                           height: 10,
                                           width: 10,
-                                          decoration: const BoxDecoration(
+                                          decoration: BoxDecoration(
                                               shape: BoxShape.circle,
-                                              color: Colors.red),
+                                              color: secondaryColor),
                                           child: Padding(
                                             padding: const EdgeInsets.all(0.0),
                                             child: Center(

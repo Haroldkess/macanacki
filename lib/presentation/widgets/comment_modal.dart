@@ -24,6 +24,7 @@ import 'package:macanacki/services/middleware/create_post_ware.dart';
 import 'package:numeral/numeral.dart';
 import 'package:provider/provider.dart';
 
+import '../../preload/preload_controller.dart';
 import '../../services/middleware/extra_profile_ware.dart';
 import '../../services/middleware/user_profile_ware.dart';
 import '../allNavigation.dart';
@@ -384,6 +385,7 @@ class CommentTile extends StatelessWidget {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     ActionWare action = context.watch<ActionWare>();
+    final preloadController = PreloadController.to;
     var w = 30.0;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
@@ -474,6 +476,10 @@ class CommentTile extends StatelessWidget {
                         // PageRouting.pushToPage(
                         //     context, const ProfileScreen());
                       } else {}
+
+                      try {
+                        preloadController.pausePreloadById(id);
+                      } catch (e) {}
                     },
                     child: Container(
                         height: 43,
@@ -591,7 +597,7 @@ class CommentTile extends StatelessWidget {
                             child: action.commentId.contains(e.id)
                                 ? Icon(
                                     Icons.favorite,
-                                    color: HexColor(primaryColor),
+                                    color: secondaryColor,
                                     size: 20,
                                   )
                                 : SvgPicture.asset(

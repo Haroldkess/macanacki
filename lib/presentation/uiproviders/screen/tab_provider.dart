@@ -8,12 +8,15 @@ class TabProvider extends ChangeNotifier {
   bool isChanged = false;
   int multipleImageIndex = 1;
   String image = "";
+  String filterName = "Verified";
+  String filterNameHome = "Verified";
   VideoPlayerController? controller;
   VideoPlayerController? controllerHolder;
   VideoPlayerController? previousController;
   VideoPlayerController? nextController;
   bool isTapped = false;
   bool isHome = false;
+  bool isLoad = false;
   PageController? pageController = PageController();
   PersistentTabController persistentPagecontroller =
       PersistentTabController(initialIndex: 0);
@@ -22,6 +25,21 @@ class TabProvider extends ChangeNotifier {
 
   void tapTrack(int _index) {
     tapTracker = _index;
+    notifyListeners();
+  }
+
+  void changeFilter(String filter) {
+    filterName = filter;
+    notifyListeners();
+  }
+
+  void load(bool data) {
+    isLoad = data;
+    notifyListeners();
+  }
+
+  Future changeFilterHome(String filter) async {
+    filterNameHome = filter;
     notifyListeners();
   }
 
@@ -172,14 +190,19 @@ class PersistentNavController extends GetxController {
     return Get.find<PersistentNavController>();
   }
 
-  PersistentTabController persistentPagecontroller =
-      PersistentTabController(initialIndex: 0);
+  Rx<PersistentTabController> persistentPagecontroller =
+      PersistentTabController(initialIndex: 0).obs;
   RxBool hide = false.obs;
 
   @override
   void onInit() {
     // TODO: implement onInit
     super.onInit();
+  }
+
+  void changePersistentTabIndex() {
+    persistentPagecontroller.value.jumpToTab(3);
+    update();
   }
 
   void toggleHide() {

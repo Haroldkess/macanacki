@@ -55,9 +55,12 @@ class FriendWare extends GetxController {
         var incomingData = FeedData.fromJson(jsonData["data"]);
 
         // Martins
-        if(incomingData.data != null){
-          for (var element in incomingData.data!) {
-            preloadController.addPreload(id: element.id!, vod: element.vod!);
+        if (incomingData.data != null) {
+          if (incomingData.data!.isNotEmpty) {
+            for (var element in incomingData.data!) {
+              preloadController.addPreload(
+                  id: element.id!, vod: element.vod ?? [""]);
+            }
           }
         }
         friends.value = incomingData;

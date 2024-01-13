@@ -26,7 +26,6 @@ class CreatePostModel {
       };
 }
 
-
 class CreateAudioPostModel {
   String? description;
   int? published;
@@ -35,15 +34,13 @@ class CreateAudioPostModel {
   String? url;
   File? cover;
 
-
-  CreateAudioPostModel({
-    this.description,
-    this.published,
-    this.media,
-    this.btnId,
-    this.url,
-    this.cover
-  });
+  CreateAudioPostModel(
+      {this.description,
+      this.published,
+      this.media,
+      this.btnId,
+      this.url,
+      this.cover});
 
   Future<Map<String, dynamic>> toJson() async => {
         "description": description,
@@ -55,7 +52,6 @@ class CreateAudioPostModel {
         "btn_link": url,
       };
 }
-
 
 class ShareCommentsModel {
   String? body;
@@ -73,19 +69,23 @@ class EditProfileModel {
   String? description;
   String? phone;
   String? media;
+  String? website;
   String? country, state, city;
 
-  EditProfileModel({
-    this.description,
-    this.phone,
-    this.media,
-    this.country,this.state, this.city
-  });
+  EditProfileModel(
+      {this.description,
+      this.phone,
+      this.media,
+      this.country,
+      this.state,
+      this.city,
+      this.website});
 
   Future<Map<String, dynamic>> toJson() async => {
         "about_me": description,
         "phone": phone,
         "selfie": media,
+        "website": website
       };
 }
 

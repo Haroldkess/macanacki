@@ -211,25 +211,25 @@ class UserResultTile extends StatelessWidget {
                   progressIndicatorBuilder: (context, url, downloadProgress) =>
                       Center(
                           child: Loader(
-                    color: HexColor(primaryColor),
+                    color: textWhite,
                   )),
                   errorWidget: (context, url, error) => CachedNetworkImage(
                     imageUrl: url,
                     progressIndicatorBuilder:
                         (context, url, downloadProgress) => Center(
                             child: Loader(
-                      color: HexColor(primaryColor),
+                      color: textWhite,
                     )),
                     errorWidget: (context, url, error) => CachedNetworkImage(
                       imageUrl: url,
                       progressIndicatorBuilder:
                           (context, url, downloadProgress) => Center(
                               child: Loader(
-                        color: HexColor(primaryColor),
+                        color: textWhite,
                       )),
                       errorWidget: (context, url, error) => Icon(
                         Icons.person_2_outlined,
-                        color: HexColor(primaryColor),
+                        color: textWhite,
                         //size: 20,
                       ),
                     ),

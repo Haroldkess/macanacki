@@ -189,47 +189,52 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
                             }
                           }
                         }
-                        return ObxValue((nav) {
-                          return PersistentTabView(
-                            context,
-                            controller: tabs.persistentPagecontroller,
-                            items: _navBarsItems(),
-                            screens: _children,
-                            handleAndroidBackButtonPress: true,
-                            hideNavigationBarWhenKeyboardShows: true,
-                            navBarStyle: NavBarStyle.style12,
-                            confineInSafeArea: true,
-                            hideNavigationBar: nav.value,
-                            stateManagement: true,
-                            popAllScreensOnTapAnyTabs: false,
-                            // onWillPop: (context) async {
-                            //   final shouldPop =
-                            //       await Operations.showWarning(context!);
-                            //   return shouldPop!;
-                            // },
+                        return GetBuilder(
+                            init: PersistentNavController(),
+                            builder: (persist) {
+                              return ObxValue((nav) {
+                                return PersistentTabView(
+                                  context,
+                                  controller:
+                                      persist.persistentPagecontroller.value,
+                                  items: _navBarsItems(),
+                                  screens: _children,
+                                  handleAndroidBackButtonPress: true,
+                                  hideNavigationBarWhenKeyboardShows: true,
+                                  navBarStyle: NavBarStyle.style12,
+                                  confineInSafeArea: true,
+                                  hideNavigationBar: nav.value,
+                                  stateManagement: true,
+                                  popAllScreensOnTapAnyTabs: false,
+                                  // onWillPop: (context) async {
+                                  //   final shouldPop =
+                                  //       await Operations.showWarning(context!);
+                                  //   return shouldPop!;
+                                  // },
 
-                            backgroundColor: Platform.isIOS
-                                ? Colors.black
-                                : HexColor(backgroundColor),
-                            popAllScreensOnTapOfSelectedTab: true,
-                            onItemSelected: (index) {
-                              //   print(index);
-                              runTask(index);
-                            },
-                            //  resizeToAvoidBottomInset: true,
-                            screenTransitionAnimation:
-                                const ScreenTransitionAnimation(
-                              // Screen transition animation on change of selected tab.
-                              animateTabTransition: true,
-                              curve: Curves.ease,
-                              duration: Duration(milliseconds: 200),
-                            ),
-                            decoration: NavBarDecoration(
-                              borderRadius: BorderRadius.circular(0.0),
-                              colorBehindNavBar: Colors.white,
-                            ),
-                          );
-                        }, PersistentNavController.instance.hide);
+                                  backgroundColor: Platform.isIOS
+                                      ? Colors.black
+                                      : HexColor(backgroundColor),
+                                  popAllScreensOnTapOfSelectedTab: true,
+                                  onItemSelected: (index) {
+                                    //   print(index);
+                                    runTask(index);
+                                  },
+                                  //  resizeToAvoidBottomInset: true,
+                                  screenTransitionAnimation:
+                                      const ScreenTransitionAnimation(
+                                    // Screen transition animation on change of selected tab.
+                                    animateTabTransition: true,
+                                    curve: Curves.ease,
+                                    duration: Duration(milliseconds: 200),
+                                  ),
+                                  decoration: NavBarDecoration(
+                                    borderRadius: BorderRadius.circular(0.0),
+                                    colorBehindNavBar: Colors.white,
+                                  ),
+                                );
+                              }, PersistentNavController.instance.hide);
+                            });
 
                         //   PageView(
                         //   physics: const NeverScrollableScrollPhysics(),
@@ -350,13 +355,13 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
                     right: 1,
                     top: 5,
                     child: Padding(
-                      padding: const EdgeInsets.only(left: 0.0, top: 0),
+                      padding: const EdgeInsets.only(left: 0.0, top: 2),
                       child: Align(
                         alignment: Alignment.topCenter,
                         //top: -2,
                         child: Container(
                           constraints:
-                              BoxConstraints(maxHeight: 10, maxWidth: 10),
+                              BoxConstraints(maxHeight: 5, maxWidth: 10),
                           decoration: BoxDecoration(
                               color: secondaryColor, shape: BoxShape.circle),
                           child: Center(
@@ -392,13 +397,13 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
                     right: 1,
                     top: 5,
                     child: Padding(
-                      padding: const EdgeInsets.only(left: 0.0, top: 0),
+                      padding: const EdgeInsets.only(left: 0.0, top: 2),
                       child: Align(
                         alignment: Alignment.topCenter,
                         //top: -2,
                         child: Container(
                           constraints:
-                              BoxConstraints(maxHeight: 10, maxWidth: 10),
+                              BoxConstraints(maxHeight: 5, maxWidth: 10),
                           decoration: const BoxDecoration(
                               color: Colors.green, shape: BoxShape.circle),
                           child: Center(
@@ -454,7 +459,7 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
         PostSecurity.instance.toggleSecure(true);
       });
       provide.addtapTrack();
-      if (provide.index == 0 && index == 0 && provide.tapTracker > 1) {
+      if (provide.index == 0 && index == 0 && provide.tapTracker > 4) {
         await FeedPostController.reloadPage(context);
 
         // setState(() {});

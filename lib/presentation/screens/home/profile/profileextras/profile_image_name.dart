@@ -11,6 +11,7 @@ import 'package:macanacki/services/middleware/user_profile_ware.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../constants/colors.dart';
+import '../../../../operations.dart';
 import '../../../../widgets/feed_views/image_holder.dart';
 import '../../../../widgets/loader.dart';
 
@@ -107,15 +108,24 @@ class ProfileImageAndName extends StatelessWidget {
               Positioned(
                 bottom: 10,
                 right: w * 2 / 1.5,
-                child: CircleAvatar(
-                  radius: 13,
-                  backgroundColor: Colors.black,
+                child: InkWell(
+                  onTap: () async => await Operations.changePhotoFromGallery(
+                      context,
+                      stream.userProfileModel.aboutMe,
+                      stream.userProfileModel.phone,
+                      stream.userProfileModel.country,
+                      stream.userProfileModel.state,
+                      stream.userProfileModel.city),
                   child: CircleAvatar(
-                    backgroundColor: Colors.transparent,
-                    radius: 10,
-                    child: SvgPicture.asset(
-                      "assets/icon/add_profile.svg",
-                      color: Colors.green,
+                    radius: 13,
+                    backgroundColor: Colors.black,
+                    child: CircleAvatar(
+                      backgroundColor: Colors.transparent,
+                      radius: 10,
+                      child: SvgPicture.asset(
+                        "assets/icon/add_profile.svg",
+                        color: Colors.green,
+                      ),
                     ),
                   ),
                 ),

@@ -26,7 +26,7 @@ class FacialWare extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addDp(XFile photo) {
+  Future<void> addDp(XFile photo) async {
     addedDp = File(photo.path);
     notifyListeners();
   }

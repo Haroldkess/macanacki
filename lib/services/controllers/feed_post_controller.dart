@@ -22,14 +22,15 @@ import 'action_controller.dart';
 
 class FeedPostController {
   static Future<void> getFeedPostController(
-      BuildContext context, int pageNum, bool isPaginating) async {
+      BuildContext context, int pageNum, bool isPaginating,
+      [String? filter]) async {
     FeedPostWare ware = Provider.of<FeedPostWare>(context, listen: false);
 
     if (isPaginating == true) {
       ware.isLoading(true);
     }
 
-    bool isDone = await ware.getFeedPostFromApi(pageNum).whenComplete(
+    bool isDone = await ware.getFeedPostFromApi(pageNum, filter).whenComplete(
         () => emitter("everything from api and provider is done"));
     // ignore: use_build_context_synchronously
     //  VideosController.addVideosOffline(context);

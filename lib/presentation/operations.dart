@@ -36,6 +36,7 @@ import '../model/feed_post_model.dart';
 import '../model/gender_model.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../services/controllers/edit_profile_controller.dart';
 import '../services/controllers/plan_controller.dart';
 import '../services/controllers/user_profile_controller.dart';
 import '../services/middleware/chat_ware.dart';
@@ -166,7 +167,8 @@ class Operations {
     }
   }
 
-  static Future changePhotoFromGallery(BuildContext context) async {
+  static Future changePhotoFromGallery(BuildContext context,
+      [String? about, phone, country, state, city]) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     final ImagePicker picker = ImagePicker();
     //late XFile? imageFile;
@@ -216,14 +218,16 @@ class Operations {
           if (croppedFile == null) return;
           XFile croppedFileX = XFile(croppedFile.path);
 
-          print("xxxxxxxxxxxxxxxxxxxxxx 3333333");
+          // print("xxxxxxxxxxxxxxxxxxxxxx 3333333");
 
           pref.setString(temPhotoKey, croppedFileX.path);
-          emitter("FilePath after cropping: ${croppedFileX.path}");
+          //  emitter("FilePath after cropping: ${croppedFileX.path}");
 
-          print("xxxxxxxxxxxxxxxxxxxxxx 4444");
+          //  print("xxxxxxxxxxxxxxxxxxxxxx 4444");
 
-          facial.addDp(croppedFileX);
+          await facial.addDp(croppedFileX).whenComplete(() =>
+              EditProfileController.editProfileController(
+                  context, "", "", "", "", ""));
           // pref.setString(temPhotoKey, imageFile.path);
           // facial.isLoading(true);
         }

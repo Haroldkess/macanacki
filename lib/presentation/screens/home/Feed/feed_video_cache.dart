@@ -34,6 +34,7 @@ import '../../../widgets/debug_emitter.dart';
 import '../../../widgets/feed_views/like_section.dart';
 import '../../../widgets/loader.dart';
 import '../../../widgets/text.dart';
+import 'package:flutter/services.dart';
 
 class FeedVideoHolderPrivate extends StatefulWidget {
   String file;
@@ -84,7 +85,7 @@ class _FeedVideoHolderPrivateState extends State<FeedVideoHolderPrivate>
 
     animation = ColorTween(
       begin: Colors.transparent,
-      end: HexColor(primaryColor).withOpacity(.8),
+      end: secondaryColor.withOpacity(.8),
     ).animate(controller);
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
@@ -125,127 +126,130 @@ class _FeedVideoHolderPrivateState extends State<FeedVideoHolderPrivate>
     ActionWare action = Provider.of<ActionWare>(context, listen: false);
     // PreloadPageController controller =
     //     PreloadPageController(initialPage: 0, keepPage: true);
-    return Scaffold(
-      backgroundColor: Colors.black,
-      resizeToAvoidBottomInset: false,
-      body: ObxValue((allVideos) {
-        log(allVideos.length.toString() + "just checkinh");
-        return PageView.builder(
-          itemCount: allVideos.length,
-          controller: pageController,
-          //  preloadPagesCount: 0,
-          scrollDirection: Axis.vertical,
-          itemBuilder: ((context, index) {
-            FeedPost post = allVideos[index];
-            return GestureDetector(
-              onDoubleTap: () async {
-                if (mounted) {
-                  if (controller.value == 1) {
-                    controller.reset();
-                    controller.forward();
-                  } else {
-                    controller.forward();
-                  }
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.black,
+        resizeToAvoidBottomInset: false,
+        body: ObxValue((allVideos) {
+          //  log(allVideos.length.toString() + "just checkinh");
+          return PageView.builder(
+            itemCount: allVideos.length,
+            controller: pageController,
+            //  preloadPagesCount: 0,
+            scrollDirection: Axis.vertical,
+            itemBuilder: ((context, index) {
+              FeedPost post = allVideos[index];
+              return GestureDetector(
+                onDoubleTap: () async {
+                  if (mounted) {
+                    HapticFeedback.heavyImpact();
+                    if (controller.value == 1) {
+                      controller.reset();
+                      controller.forward();
+                    } else {
+                      controller.forward();
+                    }
 
-                  if (action.likeIds.contains(post.id!)) {
+                    if (action.likeIds.contains(post.id!)) {
+                      setState(() {
+                        flag = true;
+                      });
+                      await Future.delayed(const Duration(seconds: 2));
+
+                      setState(() {
+                        flag = false;
+                      });
+
+                      return;
+                    }
                     setState(() {
                       flag = true;
                     });
+
+                    await likeAction(context, true, post.id!);
+
                     await Future.delayed(const Duration(seconds: 2));
 
                     setState(() {
                       flag = false;
                     });
-
-                    return;
                   }
-                  setState(() {
-                    flag = true;
-                  });
-
-                  await likeAction(context, true, post.id!);
-
-                  await Future.delayed(const Duration(seconds: 2));
-
-                  setState(() {
-                    flag = false;
-                  });
-                }
-              },
-              child: Stack(
-                children: [
-                  /// Martins was here
-                     VideoView2(
-                          thumbLink: post.thumbnails!.first ?? "",
-                          page: widget.page,
-                          postId: post.id!,
-                          index: index,
-                          data: post,
-                          isHome: widget.isHome,
-                          showComment: widget.showComment,
-                        ),
-                      // : VideoView2Ios(
-                      //     thumbLink: post.thumbnails!.first ?? "",
-                      //     page: widget.page,
-                      //     postId: post.id!,
-                      //     index: index,
-                      //     data: post,
-                      //     isHome: widget.isHome,
-                      //     showComment: widget.showComment,
-                      //   ),
-                  widget.data.promoted == "yes"
-                      ? Positioned(
-                          bottom: 140,
-                          left: 0,
-                          child: Align(
-                              alignment: Alignment.bottomLeft,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  AdsDisplay(
-                                    sponsored: true,
-                                    //  color: HexColor('#00B074'),
-                                    color: Colors.grey.shade400,
-                                    title: 'Sponsored Ad',
-                                  ),
-                                ],
-                              )),
-                        )
-                      : SizedBox.shrink(),
-                  flag
-                      ? Center(
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: AnimatedContainer(
-                              duration: const Duration(seconds: 3),
-                              curve: Curves.bounceInOut,
-                              onEnd: () {
-                                setState(() {
-                                  flag = false;
-                                });
-                              },
-                              child: Icon(
-                                Icons.favorite,
-                                size: Get.width * 0.4,
-                                color: animation.value,
+                },
+                child: Stack(
+                  children: [
+                    /// Martins was here
+                    VideoView2(
+                      thumbLink: post.thumbnails!.first ?? "",
+                      page: widget.page,
+                      postId: post.id!,
+                      index: index,
+                      data: post,
+                      isHome: widget.isHome,
+                      showComment: widget.showComment,
+                    ),
+                    // : VideoView2Ios(
+                    //     thumbLink: post.thumbnails!.first ?? "",
+                    //     page: widget.page,
+                    //     postId: post.id!,
+                    //     index: index,
+                    //     data: post,
+                    //     isHome: widget.isHome,
+                    //     showComment: widget.showComment,
+                    //   ),
+                    widget.data.promoted == "yes"
+                        ? Positioned(
+                            bottom: 140,
+                            left: 0,
+                            child: Align(
+                                alignment: Alignment.bottomLeft,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    AdsDisplay(
+                                      sponsored: true,
+                                      //  color: HexColor('#00B074'),
+                                      color: Colors.grey.shade400,
+                                      title: 'Sponsored Ad',
+                                    ),
+                                  ],
+                                )),
+                          )
+                        : SizedBox.shrink(),
+                    flag
+                        ? Center(
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: AnimatedContainer(
+                                duration: const Duration(seconds: 3),
+                                curve: Curves.bounceInOut,
+                                onEnd: () {
+                                  setState(() {
+                                    flag = false;
+                                  });
+                                },
+                                child: Icon(
+                                  Icons.favorite,
+                                  size: Get.width * 0.4,
+                                  color: animation.value,
+                                ),
                               ),
                             ),
-                          ),
-                        )
-                      : const SizedBox.shrink(),
-                ],
-              ),
-            );
-          }),
-          onPageChanged: (index) {
-            if (index != 0) {
-              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                VideoWare.instance.loadVideo(false);
-              });
-            }
-          },
-        );
-      }, VideoWare.instance.feedPosts),
+                          )
+                        : const SizedBox.shrink(),
+                  ],
+                ),
+              );
+            }),
+            onPageChanged: (index) {
+              if (index != 0) {
+                WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                  VideoWare.instance.loadVideo(false);
+                });
+              }
+            },
+          );
+        }, VideoWare.instance.feedPosts),
+      ),
     );
   }
 
@@ -331,8 +335,8 @@ class _VideoView2State extends State<VideoView2> {
     initializePlayer();
   }
 
-  void disposePlayer(){
-    if(_videoPlayerController != null){
+  void disposePlayer() {
+    if (_videoPlayerController != null) {
       _videoPlayerController.pause();
     }
     _chewieController?.dispose();
@@ -342,7 +346,8 @@ class _VideoView2State extends State<VideoView2> {
     log(" ffffffffffffffff ${widget.data.mux!.first}");
     log(" ffffffffffffffff ${widget.data.vod!.first}");
 
-    _videoPlayerController = preloadController.getPreloadById(widget.postId).controller!;
+    _videoPlayerController =
+        preloadController.getPreloadById(widget.postId).controller!;
     // _videoPlayerController =
     //     VideoPlayerController.networkUrl(Uri.parse(widget.data.vod!.first));
     // await Future.wait([ _videoPlayerController.initialize()]);
@@ -352,24 +357,27 @@ class _VideoView2State extends State<VideoView2> {
 
   void _createChewieController() {
     _chewieController = ChewieController(
-      videoPlayerController: _videoPlayerController,
-      autoPlay: true,
-      looping: true,
-      progressIndicatorDelay:
-      bufferDelay != null ? Duration(milliseconds: bufferDelay!) : null,
-      showControls: true,
-      allowMuting: true,
-      //controlsSafeAreaMinimum: EdgeInsets.only(bottom: 40),
-      //autoInitialize: true,
-    );
+        videoPlayerController: _videoPlayerController,
+        isLive: false,
+        autoPlay: true,
+        looping: true,
+        progressIndicatorDelay:
+            bufferDelay != null ? Duration(milliseconds: bufferDelay!) : null,
+        showControls: true,
+        allowMuting: false,
+        materialProgressColors: ChewieProgressColors(
+            backgroundColor: textPrimary, playedColor: secondaryColor),
+        cupertinoProgressColors: ChewieProgressColors(
+            backgroundColor: textPrimary, playedColor: secondaryColor)
+        //controlsSafeAreaMinimum: EdgeInsets.only(bottom: 40),
+        //autoInitialize: true,
+        );
   }
-
 
   @override
   void dispose() {
     disposePlayer();
     super.dispose();
-
   }
 
   @override
@@ -381,26 +389,26 @@ class _VideoView2State extends State<VideoView2> {
             alignment: Alignment.center,
             children: [
               _chewieController != null &&
-                  _chewieController!
-                      .videoPlayerController.value.isInitialized
+                      _chewieController!
+                          .videoPlayerController.value.isInitialized
                   ? Chewie(
-                controller: _chewieController!,
-              )
+                      controller: _chewieController!,
+                    )
                   : const Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircularProgressIndicator(),
-                  SizedBox(height: 20),
-                  Text('Loading'),
-                ],
-              ),
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircularProgressIndicator(),
+                        SizedBox(height: 20),
+                        Text('Loading'),
+                      ],
+                    ),
             ],
           ),
         ),
         widget.isHome
             ? SizedBox.shrink()
             : Padding(
-                padding: const EdgeInsets.only(top: 30, left: 5),
+                padding: const EdgeInsets.only(top: 0, left: 5),
                 child: Align(
                   alignment: Alignment.topLeft,
                   child: IconButton(
@@ -409,23 +417,6 @@ class _VideoView2State extends State<VideoView2> {
                         Icons.arrow_back_ios,
                         color: Colors.white,
                       )),
-                ),
-              ),
-        widget.isHome
-            ? SizedBox.shrink()
-            : FadeInRight(
-                duration: Duration(seconds: 1),
-                animate: true,
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: LikeSection(
-                    page: widget.page,
-                    data: widget.data,
-                    userName: widget.data.user!.username,
-                    isHome: widget.isHome,
-                    showComment: widget.showComment,
-                    mediaController: _controller,
-                  ),
                 ),
               ),
         widget.isHome
@@ -439,6 +430,26 @@ class _VideoView2State extends State<VideoView2> {
                   media: [],
                   controller: _controller,
                   isVideo: true,
+                ),
+              ),
+        widget.isHome
+            ? SizedBox.shrink()
+            : FadeInRight(
+                duration: Duration(seconds: 1),
+                animate: true,
+                child: Align(
+                  alignment: Alignment.bottomRight,
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 80),
+                    child: LikeSection(
+                      page: widget.page,
+                      data: widget.data,
+                      userName: widget.data.user!.username,
+                      isHome: widget.isHome,
+                      showComment: widget.showComment,
+                      mediaController: _controller,
+                    ),
+                  ),
                 ),
               ),
         widget.data.btnLink != null && widget.data.button != null
@@ -551,8 +562,8 @@ class _VideoView2IosState extends State<VideoView2Ios> {
         videoId: widget.data.vod!.first!, type: VideoType.vod, token: null);
 
     log("8************ ${widget.data.vod!.first}");
-    _controller = VideoPlayerController.networkUrl(Uri.parse(
-        "${widget.data.vod!.first}"));
+    _controller = VideoPlayerController.networkUrl(
+        Uri.parse("${widget.data.vod!.first}"));
   }
 
   @override

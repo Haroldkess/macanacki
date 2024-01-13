@@ -36,11 +36,11 @@ class _ProfileInfoState extends State<ProfileInfo> {
               //  height: height / 2,
               width: width,
               alignment: Alignment.topCenter,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                   color: Colors.black,
                   // HexColor(backgroundColor),
                   shape: BoxShape.rectangle,
-                  borderRadius: const BorderRadius.only(
+                  borderRadius: BorderRadius.only(
                       bottomLeft: Radius.elliptical(250, 200),
                       bottomRight: Radius.elliptical(250, 200))),
               child: Column(

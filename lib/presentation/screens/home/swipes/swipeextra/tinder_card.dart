@@ -4,6 +4,7 @@ import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -158,7 +159,8 @@ class _TinderCardState extends State<TinderCard> {
                   widget.users[index].username == null
                       ? ""
                       : widget.users[index].username!,
-                  widget.users[index].id!);
+                  widget.users[index].id!,
+                  widget.users[index].promotedProfile ?? 0);
             },
             onStackFinished: () async {
               setState(() {
@@ -436,12 +438,20 @@ class _TinderCardState extends State<TinderCard> {
                           padding: const EdgeInsets.only(top: 5),
                           child: Row(
                             children: [
-                              AppText(
-                                text: "Suggested account",
-                                size: 12,
-                                fontWeight: FontWeight.w500,
-                                color: textPrimary,
-                              )
+                              widget.users[indexer].promotedProfile == 1
+                                  ? AppText(
+                                      text: "Sponsored ad",
+                                      size: 12,
+                                      fontWeight: FontWeight.w500,
+                                      color: textPrimary,
+                                    )
+                                  : AppText(
+                                      text: "Suggested account",
+                                      size: 12,
+                                      fontWeight: FontWeight.w500,
+                                      color: textPrimary,
+                                    )
+
                               // SvgPicture.asset("assets/icon/location.svg"),
                               // const SizedBox(
                               //   width: 5,
@@ -459,27 +469,30 @@ class _TinderCardState extends State<TinderCard> {
                     )
                   ],
                 ),
-                Align(
-                  alignment: Alignment.topRight,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 8, right: 12),
-                    child: InkWell(
-                      onTap: () => filterAdressModals(context),
-                      child: Container(
-                        height: 40,
-                        width: 40,
-                        decoration: BoxDecoration(
-                            color: backgroundSecondary, shape: BoxShape.circle),
+                widget.users[indexer].promotedProfile == 1
+                    ? SizedBox.shrink()
+                    : Align(
+                        alignment: Alignment.topRight,
                         child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: SvgPicture.asset(
-                            "assets/icon/filter.svg",
+                          padding: const EdgeInsets.only(top: 8, right: 12),
+                          child: InkWell(
+                            onTap: () => filterAdressModals(context),
+                            child: Container(
+                              height: 40,
+                              width: 40,
+                              decoration: BoxDecoration(
+                                  color: backgroundSecondary,
+                                  shape: BoxShape.circle),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: SvgPicture.asset(
+                                  "assets/icon/filter.svg",
+                                ),
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                  ),
-                )
+                      )
               ],
             ),
           ),
@@ -511,8 +524,8 @@ class _TinderCardState extends State<TinderCard> {
     }
   }
 
-  Widget buildCard(
-      BuildContext context, String image, String username, int id) {
+  Widget buildCard(BuildContext context, String image, String username, int id,
+      int promoted) {
     ActionWare stream = context.watch<ActionWare>();
     ActionWare action = Provider.of<ActionWare>(context, listen: false);
     return ClipRRect(
@@ -632,6 +645,9 @@ class _TinderCardState extends State<TinderCard> {
                                 onClick: () async {
                                   SharedPreferences pref =
                                       await SharedPreferences.getInstance();
+                                  try {
+                                    await HapticFeedback.heavyImpact();
+                                  } catch (e) {}
 
                                   await animateButton(0.0, true).whenComplete(
                                       () => mounted
@@ -642,7 +658,7 @@ class _TinderCardState extends State<TinderCard> {
                                   if (username == pref.getString(userNameKey)) {
                                     emitter("can n ot follow your self");
                                   } else {
-                                    // ignore: use_build_context_synchronously
+                                    // ignore: use_build_context_synchruonously
                                     followAction(
                                       context,
                                       id,
@@ -657,39 +673,42 @@ class _TinderCardState extends State<TinderCard> {
                         ),
                       ),
                     ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 15.0),
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Padding(
-                      padding: const EdgeInsets.all(1.0),
-                      child: Container(
-                        //  duration: Duration(seconds: 1),
-                        height: height,
-                        width: width,
-                        child: Card(
-                          color: Colors.transparent,
-                          shadowColor: backgroundSecondary,
-                          elevation: 10,
-                          child: ProfileActionButtonNotThisUsers(
-                            icon: "assets/icon/diamond.svg",
-                            isSwipe: true,
-                            onClick: () async {
-                              if (int.tryParse(GiftWare.instance.gift.value.data
-                                      .toString())! <
-                                  50) {
-                                buyDiamondsModal(
-                                    context, GiftWare.instance.rate.value.data);
-                              } else {
-                                giveDiamondsModal(context, username);
-                              }
-                            },
-                            color: null,
-                          ),
-                        ),
-                      )),
-                ),
-              )
+              promoted == 1
+                  ? SizedBox.shrink()
+                  : Padding(
+                      padding: const EdgeInsets.only(bottom: 15.0),
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Padding(
+                            padding: const EdgeInsets.all(1.0),
+                            child: Container(
+                              //  duration: Duration(seconds: 1),
+                              height: height,
+                              width: width,
+                              child: Card(
+                                color: Colors.transparent,
+                                shadowColor: backgroundSecondary,
+                                elevation: 10,
+                                child: ProfileActionButtonNotThisUsers(
+                                  icon: "assets/icon/diamond.svg",
+                                  isSwipe: true,
+                                  onClick: () async {
+                                    if (int.tryParse(GiftWare
+                                            .instance.gift.value.data
+                                            .toString())! <
+                                        50) {
+                                      buyDiamondsModal(context,
+                                          GiftWare.instance.rate.value.data);
+                                    } else {
+                                      giveDiamondsModal(context, username);
+                                    }
+                                  },
+                                  color: null,
+                                ),
+                              ),
+                            )),
+                      ),
+                    )
             ],
           )
         ],

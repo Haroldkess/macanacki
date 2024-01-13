@@ -91,7 +91,7 @@ class SenderBubble extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     AppText(
-                      text: Operations.times(chat.createdAt!).toString(),
+                      text: "${Operations.times(chat.createdAt!).toString()} ",
                       color: HexColor("#C0C0C0"),
                       size: 10,
                     ),

@@ -1,5 +1,6 @@
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:macanacki/presentation/allNavigation.dart';
@@ -21,6 +22,7 @@ buttonModal(
   return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      backgroundColor: backgroundSecondary,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (context) {
@@ -61,9 +63,14 @@ buttonModal(
                           text: e.name!,
                           fontWeight: FontWeight.bold,
                           size: 15,
+                          color: textWhite,
                         ),
                         expandedTextColor: HexColor(primaryColor),
-                        trailing: Icon(Icons.send),
+                        trailing: SvgPicture.asset(
+                          "assets/icon/add_profile.svg",
+                          color: Colors.green,
+                        ),
+                        // Icon(Icons.send),
                         children: <Widget>[
                           const Divider(
                             thickness: 1.0,
@@ -171,7 +178,7 @@ class _ButtonFormState extends State<ButtonForm> {
 
             cursorColor: HexColor(primaryColor),
             style: GoogleFonts.leagueSpartan(
-              color: HexColor(darkColor),
+              color: textWhite,
               fontSize: 14,
             ),
             maxLength: widget.name == "Call Now" ? 10 : null,
@@ -236,8 +243,8 @@ class _ButtonFormState extends State<ButtonForm> {
                   : "Url",
               errorText: error,
               errorStyle: TextStyle(color: Colors.red),
-              hintStyle:
-                  GoogleFonts.leagueSpartan(color: HexColor('#C0C0C0'), fontSize: 12),
+              hintStyle: GoogleFonts.leagueSpartan(
+                  color: HexColor('#C0C0C0'), fontSize: 12),
               border: InputBorder.none,
               enabledBorder: InputBorder.none,
               focusedBorder: InputBorder.none,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:macanacki/model/conversation_model.dart';
@@ -1534,6 +1535,10 @@ class UserProfileActionsTest extends StatelessWidget {
                 InkWell(
                   onTap: () async {
                     //   print("dfdd");
+                    try {
+                      HapticFeedback.heavyImpact();
+                    } catch (e) {}
+
                     await followAction(context, data.id!, data.username!);
                   },
                   child: AnimatedContainer(
@@ -1547,6 +1552,9 @@ class UserProfileActionsTest extends StatelessWidget {
                           icon: "assets/icon/follow.svg",
                           isSwipe: false,
                           onClick: () async {
+                                         try {
+                      await HapticFeedback.heavyImpact();
+                    } catch (e) {}
                             await followAction(
                               context,
                               data.id!,
@@ -1820,6 +1828,10 @@ class UserProfileActionsTest extends StatelessWidget {
                 ),
                 InkWell(
                   onTap: () async {
+                    try {
+                      await HapticFeedback.heavyImpact();
+                    } catch (e) {}
+
                     await followAction(context, data.id!, data.username!);
                   },
                   child: AnimatedContainer(
@@ -1833,6 +1845,9 @@ class UserProfileActionsTest extends StatelessWidget {
                               : "assets/icon/unfollow.svg",
                           isSwipe: false,
                           onClick: () async {
+                            try {
+                              await HapticFeedback.heavyImpact();
+                            } catch (e) {}
                             await followAction(
                               context,
                               data.id!,

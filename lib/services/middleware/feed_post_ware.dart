@@ -164,7 +164,7 @@ class FeedPostWare extends ChangeNotifier {
 
     // _profileFeedPostsAudio = [...mp3].distinct();
 
-     _profileFeedPostsAudio = [..._profileFeedPostsAudio, ...value].distinct();
+    _profileFeedPostsAudio = [..._profileFeedPostsAudio, ...value].distinct();
     notifyListeners();
   }
 
@@ -317,14 +317,14 @@ class FeedPostWare extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> getFeedPostFromApi(int pageNum) async {
+  Future<bool> getFeedPostFromApi(int pageNum, [String? filter]) async {
     late bool isSuccessful;
     List<FeedPost> _moreFeedPosts = [];
     print("000000000000000000000000000000000000 xxxxxx");
 
     try {
       final preloadController = PreloadController.to;
-      http.Response? response = await getFeedPost(pageNum).whenComplete(
+      http.Response? response = await getFeedPost(pageNum, filter).whenComplete(
           () => emitter("user feed posts data gotten successfully"));
       if (response == null) {
         print("000000000000000000000000000000000000 0");
@@ -341,7 +341,7 @@ class FeedPostWare extends ChangeNotifier {
         _feedData = incomingData;
 
         // Martins
-        if(incomingData.data != null){
+        if (incomingData.data != null) {
           for (var element in incomingData.data!) {
             preloadController.addPreload(id: element.id!, vod: element.vod!);
           }
@@ -415,7 +415,8 @@ class FeedPostWare extends ChangeNotifier {
         //  log("get feed posts data  request success");
         isSuccessful = true;
       } else {
-        print("000000000000000000000000000000000000 Status Code *** ${response.statusCode}");
+        print(
+            "000000000000000000000000000000000000 Status Code *** ${response.statusCode}");
         print("&&&&& ${response.body.toString()}");
         // log("get feed posts data  request failed");
         isSuccessful = false;
@@ -485,10 +486,10 @@ class FeedPostWare extends ChangeNotifier {
 
     try {
       updateLoading(true);
-      http.Response? response =
-          await getUserFeedPost(_pageNumber, _numberOfPostsPerRequest, "videos_images")
-              .whenComplete(
-                  () => emitter("user video posts data gotten successfully"));
+      http.Response? response = await getUserFeedPost(
+              _pageNumber, _numberOfPostsPerRequest, "videos_images")
+          .whenComplete(
+              () => emitter("user video posts data gotten successfully"));
       if (response == null) {
         isSuccessful = false;
         //   log("get user posts data request failed");
@@ -497,7 +498,7 @@ class FeedPostWare extends ChangeNotifier {
         int recordCount = jsonData['record_count'];
         var incomingData = ProfileFeedModel.fromJson(jsonData);
 
-        if(incomingData.data != null){
+        if (incomingData.data != null) {
           for (var element in incomingData.data!) {
             preloadController.addPreload(id: element.id!, vod: element.vod!);
           }
@@ -831,7 +832,7 @@ class FeedPostWareAudio extends ChangeNotifier {
 
         var incomingData = FeedData.fromJson(jsonData["data"]);
 
-        if(incomingData.data != null){
+        if (incomingData.data != null) {
           for (var element in incomingData.data!) {
             preloadController.addPreload(id: element.id!, vod: element.vod!);
           }

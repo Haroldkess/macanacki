@@ -149,7 +149,7 @@ class _SelectUserNameState extends State<SelectUserName> {
                                 ? "Username is valid"
                                 : "Username already exists",
                             color: stream.verifyName
-                                ? HexColor("#0597FF")
+                                ? secondaryColor
                                 : HexColor("#D82323")),
                       ],
                     ),

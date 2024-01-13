@@ -95,7 +95,7 @@ class _FeedAudioHolderUserState extends State<FeedAudioHolderUser>
 
     animation = ColorTween(
       begin: Colors.transparent,
-      end: HexColor(primaryColor).withOpacity(.8),
+      end: secondaryColor.withOpacity(.8),
     ).animate(controller);
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
@@ -197,6 +197,7 @@ class _FeedAudioHolderUserState extends State<FeedAudioHolderUser>
                           FeedPost post = newList[index];
                           return GestureDetector(
                             onDoubleTap: () async {
+                              HapticFeedback.heavyImpact();
                               if (mounted) {
                                 if (controller.value == 1) {
                                   controller.reset();
@@ -626,15 +627,18 @@ class _AudioViewState extends State<AudioView> {
           duration: Duration(seconds: 1),
           animate: true,
           child: Align(
-            alignment: Alignment.centerRight,
-            child: LikeSection(
-              page: widget.page,
-              data: widget.data,
-              isAudio: true,
-              userName: widget.data.user!.username,
-              isHome: widget.isHome,
-              showComment: widget.showComment,
-              mediaController: _player,
+            alignment: Alignment.bottomRight,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 100),
+              child: LikeSection(
+                page: widget.page,
+                data: widget.data,
+                isAudio: true,
+                userName: widget.data.user!.username,
+                isHome: widget.isHome,
+                showComment: widget.showComment,
+                mediaController: _player,
+              ),
             ),
           ),
         ),
@@ -767,7 +771,7 @@ class ControlButtons extends StatelessWidget {
                 width: 64.0,
                 height: 64.0,
                 child: Loader(
-                  color: HexColor(primaryColor),
+                  color: secondaryColor,
                 ),
               );
             } else if (playing != true) {
@@ -775,7 +779,7 @@ class ControlButtons extends StatelessWidget {
                 height: 50,
                 width: 50,
                 decoration: BoxDecoration(
-                    color: HexColor(primaryColor), shape: BoxShape.circle),
+                    color: secondaryColor, shape: BoxShape.circle),
                 child: Center(
                   child: IconButton(
                     icon: const Icon(
@@ -792,7 +796,7 @@ class ControlButtons extends StatelessWidget {
                 height: 50,
                 width: 50,
                 decoration: BoxDecoration(
-                    color: HexColor(primaryColor), shape: BoxShape.circle),
+                    color: secondaryColor, shape: BoxShape.circle),
                 child: IconButton(
                   icon: const Icon(
                     Icons.pause,
@@ -807,7 +811,7 @@ class ControlButtons extends StatelessWidget {
                 height: 50,
                 width: 50,
                 decoration: BoxDecoration(
-                    color: HexColor(primaryColor), shape: BoxShape.circle),
+                    color: secondaryColor, shape: BoxShape.circle),
                 child: IconButton(
                   icon: const Icon(
                     Icons.replay,

@@ -15,6 +15,7 @@ import 'package:macanacki/presentation/widgets/hexagon_avatar.dart';
 import 'package:macanacki/presentation/widgets/text.dart';
 import 'package:macanacki/services/controllers/chat_controller.dart';
 import 'package:macanacki/services/middleware/chat_ware.dart';
+import 'package:macanacki/services/middleware/user_profile_ware.dart';
 import 'package:macanacki/services/temps/temp.dart';
 import 'package:provider/provider.dart';
 
@@ -100,8 +101,10 @@ class _MessageWidgetState extends State<MessageWidget> {
     var padding = 8.0;
     var w = (size.width - 4 * 1) / 8;
     Temp temp = context.watch<Temp>();
+    UserProfileWare profie = context.watch<UserProfileWare>();
 
-    if (widget.people.conversations!.last.sender == temp.userName) {
+    if (widget.people.conversations!.last.sender ==
+        profie.userProfileModel.username) {
       isOnline = widget.people.userTwoMode ?? "";
       verify = widget.people.userTwoVerify!;
       id = widget.people.userTwoId!;
@@ -139,6 +142,7 @@ class _MessageWidgetState extends State<MessageWidget> {
         await ChatController.addToList(context, data);
         try {
           ware.chatPageChange(1);
+          ware.addChatName("");
           ware.addHoldingChats();
           if (ware.isTexted == true) {
             ware.getChatFromApi(false, 1, false);
@@ -237,15 +241,17 @@ class _MessageWidgetState extends State<MessageWidget> {
                                       )),
                                   verify == 0 || verify == null
                                       ? const SizedBox.shrink()
-                                      : Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 3),
-                                          child: SvgPicture.asset(
-                                            "assets/icon/badge.svg",
-                                            height: 10,
-                                            width: 10,
-                                          ),
-                                        )
+                                      : verify == 1
+                                          ? Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 3),
+                                              child: SvgPicture.asset(
+                                                "assets/icon/badge.svg",
+                                                height: 10,
+                                                width: 10,
+                                              ),
+                                            )
+                                          : const SizedBox.shrink()
                                 ],
                               ),
                             ),

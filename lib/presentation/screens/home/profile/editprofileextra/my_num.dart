@@ -13,14 +13,14 @@ class MyPhone extends StatelessWidget {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.only(bottom: 16, left: 30),
+          padding: const EdgeInsets.only(bottom: 5, left: 0),
           child: Row(
             children: [
               AppText(
                   text: "Phone Number",
                   fontWeight: FontWeight.w600,
                   size: 17,
-                  color: textPrimary)
+                  color: textWhite)
             ],
           ),
         ),

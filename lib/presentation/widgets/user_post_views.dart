@@ -40,6 +40,7 @@ import 'ads_display.dart';
 import 'feed_views/new_action_design.dart';
 import 'feed_views/user_multiple_post.dart';
 import 'option_modal.dart';
+import 'package:flutter/services.dart';
 
 class UserTikTokView extends StatefulWidget {
   final List<String> media;
@@ -113,11 +114,11 @@ class _UserTikTokViewState extends State<UserTikTokView>
 
     animation = ColorTween(
       begin: Colors.transparent,
-      end: HexColor(primaryColor).withOpacity(.8),
+      end: secondaryColor.withOpacity(.8),
     ).animate(controller);
 
     if (widget.media.length < 2) {
-      debugPrint("This is the url ${widget.data.media!.first}");
+      //  debugPrint("This is the url ${widget.data.media!.first}");
       if (widget.media == null || widget.media.isEmpty) return;
       if (!widget.media.first.contains("https")) {
         // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -193,6 +194,8 @@ class _UserTikTokViewState extends State<UserTikTokView>
 
     return GestureDetector(
       onDoubleTap: () async {
+        HapticFeedback.vibrate();
+
         if (controller.value == 1) {
           controller.reset();
           controller.forward();

@@ -114,7 +114,7 @@ class _TestPublicProfilePostGridState extends State<TestPublicProfilePostGrid>
                 );
               },
               newPageProgressIndicatorBuilder: (context) {
-                return Center(child: Loader(color: HexColor(primaryColor)));
+                return Center(child: Loader(color: textPrimary));
               },
               firstPageProgressIndicatorBuilder: (context) {
                 return const ProfilePostGridLoader();
@@ -252,7 +252,7 @@ class _TestPublicProfilePostGridAudioState
                 );
               },
               newPageProgressIndicatorBuilder: (context) {
-                return Center(child: Loader(color: HexColor(primaryColor)));
+                return Center(child: Loader(color: textPrimary));
               },
               firstPageProgressIndicatorBuilder: (context) {
                 return const ProfilePostGridLoader();

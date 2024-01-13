@@ -65,12 +65,13 @@ class SwipeWare extends ChangeNotifier {
   Future<bool> getSwipeFromApi(String type,
       [String? country, state, city]) async {
     late bool isSuccessful;
+    print(type);
     try {
       http.Response? response = await getSwipedUsers(type, country, state, city)
           .whenComplete(() => emitter("swwipe users gotten successfully"));
       if (response == null) {
         isSuccessful = false;
-        log("swwipe users request failed");
+        // log("swwipe users request failed");
       } else if (response.statusCode == 200) {
         emitter("200");
         var jsonData = jsonDecode(response.body);
@@ -78,10 +79,10 @@ class SwipeWare extends ChangeNotifier {
         var incomingData = SwipeUserModel.fromJson(jsonData);
         swipedUser = incomingData.data!;
 
-        log("swipe users request success");
+        // log("swipe users request success");
         isSuccessful = true;
       } else {
-        log("swipe users  request failed");
+        //  log("swipe users  request failed");
         isSuccessful = false;
       }
     } catch (e) {

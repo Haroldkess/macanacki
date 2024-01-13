@@ -28,6 +28,7 @@ import '../uiproviders/screen/comment_provider.dart';
 import '../uiproviders/screen/tab_provider.dart';
 import 'feed_views/new_action_design.dart';
 import 'option_modal.dart';
+import 'package:flutter/services.dart';
 
 class TikTokView extends StatefulWidget {
   final List<String> media;
@@ -92,11 +93,11 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
 
     animation = ColorTween(
       begin: Colors.transparent,
-      end: Colors.red.withOpacity(.8),
+      end: secondaryColor.withOpacity(.8),
     ).animate(controller);
 
     if (widget.media.length < 2) {
-      debugPrint("This is the url ${widget.data.media!.first}");
+      // debugPrint("This is the url ${widget.data.media!.first}");
       if (widget.media.isEmpty) return;
       if (!widget.media.first.contains("https")) {
       } else {
@@ -141,6 +142,7 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
     // print(widget.data.media!.first);
     return GestureDetector(
       onDoubleTap: () async {
+        HapticFeedback.heavyImpact();
         if (controller.value == 1) {
           controller.reset();
           controller.forward();
@@ -181,7 +183,7 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
                 : List.generate(
                     widget.nextImage == null ? 0 : widget.nextImage!.length,
                     (index) => Container(
-                      height: 5,
+                      height: 0,
                       color: Colors.black,
                       child: CachedNetworkImage(
                           color: Colors.black,
@@ -189,22 +191,26 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
                     ),
                   ),
           ),
-          Column(
-            children: widget.thumbails.first == null
-                ? []
-                : List.generate(
-                    widget.thumbails == null ? 0 : widget.thumbails.length,
-                    (index) => Container(
-                      height: 5,
-                      color: Colors.black,
-                      child: widget.thumbails[index] == null
-                          ? SizedBox.shrink()
-                          : CachedNetworkImage(
-                              color: Colors.black,
-                              imageUrl: widget.thumbails[index] ?? ""),
-                    ),
-                  ),
-          ),
+          widget.thumbails.isEmpty
+              ? SizedBox.shrink()
+              : Column(
+                  children: widget.thumbails.first == null
+                      ? []
+                      : List.generate(
+                          widget.thumbails == null
+                              ? 0
+                              : widget.thumbails.length,
+                          (index) => Container(
+                            height: 5,
+                            color: Colors.black,
+                            child: widget.thumbails[index] == null
+                                ? SizedBox.shrink()
+                                : CachedNetworkImage(
+                                    color: Colors.black,
+                                    imageUrl: widget.thumbails[index] ?? ""),
+                          ),
+                        ),
+                ),
           Container(
             width: width,
             height: height,
@@ -225,15 +231,19 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
                             //   )
 
                             SinglePost(
-                                media: widget.media.first,
+                                media: widget.media.isEmpty
+                                    ? ""
+                                    : widget.media.first,
                                 shouldPlay: true,
                                 constraints: constraints,
                                 isHome: widget.isHome,
-                                thumbLink: widget.thumbails.first ?? "",
+                                thumbLink: widget.thumbails.isEmpty
+                                    ? ""
+                                    : widget.thumbails.first ?? "",
                                 isInView: widget.isInView!,
                                 postId: widget.data.id!,
                                 data: widget.data,
-                                vod: widget.vod.first,
+                                vod: widget.vod.isEmpty ? "" : widget.vod.first,
                                 allPost: [],
                               )
                             : MultiplePost(
@@ -251,20 +261,18 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
             alignment: Alignment.topCenter,
             child: Padding(
               padding: EdgeInsets.only(
-                  right: 10, left: widget.isFriends ? 0 : 10, top: 18),
+                  right: 10, left: widget.isFriends ? 0 : 10, top: 0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Row(
                     children: [
-                      widget.isFriends
-                          ? IconButton(
-                              onPressed: () => PageRouting.popToPage(context),
-                              icon: const Icon(
-                                Icons.arrow_back_ios,
-                                color: Colors.white,
-                              ))
-                          : SizedBox.shrink(),
+                      IconButton(
+                          onPressed: () => PageRouting.popToPage(context),
+                          icon: Icon(
+                            Icons.arrow_back_ios,
+                            color: textPrimary,
+                          )),
                       GestureDetector(
                           onTap: () => giveDiamondsModal(
                               context, widget.data.user!.username!),
@@ -278,25 +286,28 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
                       SizedBox(
                         width: widget.isFriends ? 20 : 15,
                       ),
-                      widget.data.media!.first.contains(".mp3")
+                      widget.data.media!.isEmpty
                           ? SizedBox.shrink()
-                          : GestureDetector(
-                              onTap: () async {
-                                downloadDiamondsModal(
-                                    context,
-                                    widget.data.id!,
-                                    widget.data.media!.first.contains(".mp3")
-                                        ? true
-                                        : false);
-                              },
-                              child: Container(
-                                height: 25,
-                                width: 25,
-                                child: SvgPicture.asset(
-                                  "assets/icon/d.svg",
-                                  color: textPrimary,
-                                ),
-                              )),
+                          : widget.data.media!.first.contains(".mp3")
+                              ? SizedBox.shrink()
+                              : GestureDetector(
+                                  onTap: () async {
+                                    downloadDiamondsModal(
+                                        context,
+                                        widget.data.id!,
+                                        widget.data.media!.first
+                                                .contains(".mp3")
+                                            ? true
+                                            : false);
+                                  },
+                                  child: Container(
+                                    height: 25,
+                                    width: 25,
+                                    child: SvgPicture.asset(
+                                      "assets/icon/d.svg",
+                                      color: textPrimary,
+                                    ),
+                                  )),
                     ],
                   ),
                   widget.media.length > 1

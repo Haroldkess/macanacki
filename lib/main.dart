@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +10,10 @@ import 'package:macanacki/config/pay_ext.dart';
 import 'package:macanacki/preload/preload_controller.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
 import 'package:macanacki/presentation/screens/onboarding/splash_screen.dart';
+import 'package:macanacki/presentation/widgets/routes/routes.dart';
+import 'package:macanacki/presentation/widgets/text.dart';
 import 'package:macanacki/services/controllers/IAUpdate.dart';
+import 'package:macanacki/services/controllers/login_controller.dart';
 import 'package:macanacki/services/controllers/save_media_controller.dart';
 import 'package:macanacki/services/middleware/post_security.dart';
 import 'package:macanacki/services/middleware/video/video_ware.dart';
@@ -23,7 +27,9 @@ import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:advance_image_picker/advance_image_picker.dart';
 import 'package:intl/intl.dart';
 import 'presentation/uiproviders/screen/tab_provider.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void main() async {
   // Initialize inApp Store
   PayExt.initializeStore();
@@ -52,6 +58,12 @@ void main() async {
     // Configure inApp SDK
     await PayExt.configureSDK();
   } catch (e) {}
+  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    // Handle the incoming message when the app is in the background or terminated
+
+    //log("data =>  " + message.data.keys.first);
+    LoginController.handleNotification(message.data);
+  });
 
   runApp(Phoenix(child: const MyApp()));
 }
@@ -74,7 +86,7 @@ class MyApp extends StatelessWidget {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     final configs = ImagePickerConfigs();
     // AppBar text color
-    configs.appBarTextColor = HexColor(backgroundColor);
+    configs.appBarTextColor = textWhite;
     configs.appBarBackgroundColor = HexColor(darkColor);
     // Disable select images from album
     // configs.albumPickerModeEnabled = false;
@@ -136,6 +148,7 @@ class MyApp extends StatelessWidget {
           toastTheme: ToastThemeData(alignment: Alignment.center),
           child: GetMaterialApp(
             debugShowCheckedModeBanner: false,
+            navigatorKey: navigatorKey,
             title: 'Macanacki',
             theme: ThemeData(
                 primaryColor: HexColor(primaryColor),
@@ -145,6 +158,21 @@ class MyApp extends StatelessWidget {
                     style: ButtonStyle(
                         iconColor: MaterialStateProperty.all(Colors.black))),
                 primaryIconTheme: IconThemeData(color: Colors.black)),
+            // getPages: [
+            //   GetPage(
+            //     name: '/main',
+            //     page: () => UpgradeAlert(
+            //         upgrader: Upgrader(
+            //             dialogStyle: Platform.isIOS
+            //                 ? UpgradeDialogStyle.cupertino
+            //                 : UpgradeDialogStyle.material,
+            //             debugLogging: false),
+            //         child: const Splash()),
+            //     transition: Transition.leftToRight,
+            //     //  middlewares: [FirstRunMiddleware()],
+            //   ),
+            //   GetPage(name: '/test', page: () => const Test()),
+            // ],
             home: UpgradeAlert(
                 upgrader: Upgrader(
                     dialogStyle: Platform.isIOS
@@ -152,7 +180,32 @@ class MyApp extends StatelessWidget {
                         : UpgradeDialogStyle.material,
                     debugLogging: false),
                 child: const Splash()),
+            initialRoute: '/',
+            routes: getApplicationRoutes(),
           ),
         ));
+  }
+}
+
+class Test extends StatelessWidget {
+  const Test({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        title: AppText(
+          text: "Checking out notification",
+          color: Colors.purple,
+        ),
+      ),
+      body: Center(
+        child: AppText(
+          text: "NOTIFICATION WORKS",
+          color: secondaryColor,
+        ),
+      ),
+    );
   }
 }

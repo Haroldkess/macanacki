@@ -5,22 +5,22 @@ import 'package:macanacki/presentation/constants/colors.dart';
 import 'package:macanacki/presentation/widgets/text.dart';
 
 class MyWebsite extends StatelessWidget {
-  MyWebsite({super.key, required this.phone});
-  TextEditingController phone;
+  MyWebsite({super.key, required this.web});
+  TextEditingController web;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.only(bottom: 16, left: 30),
+          padding: const EdgeInsets.only(bottom: 5, left: 0),
           child: Row(
             children: [
               AppText(
                   text: "Website",
                   fontWeight: FontWeight.w600,
                   size: 17,
-                  color: textPrimary)
+                  color: textWhite)
             ],
           ),
         ),
@@ -34,10 +34,10 @@ class MyWebsite extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.only(left: 10),
             child: TextFormField(
-              controller: phone,
-              maxLength: 11,
+              controller: web,
+              //maxLength: 11,
               cursorColor: textPrimary,
-              keyboardType: TextInputType.name,
+              keyboardType: TextInputType.url,
               // maxLines: null,
               style: GoogleFonts.roboto(
                 color: textPrimary,

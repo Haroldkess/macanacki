@@ -3,6 +3,7 @@
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
 import 'package:macanacki/presentation/constants/params.dart';
@@ -19,6 +20,7 @@ import 'package:provider/provider.dart';
 import 'package:upgrader/upgrader.dart';
 import 'dart:io';
 import '../../../uiproviders/screen/find_people_provider.dart';
+import '../home_grid/home_grid.dart';
 
 class FeedHome extends StatefulWidget {
   const FeedHome({super.key});
@@ -43,18 +45,34 @@ class _FeedHomeState extends State<FeedHome>
     FeedPostWare stream = context.watch<FeedPostWare>();
     // ActionWare actionStream = context.watch<ActionWare>();
 
-    return RefreshIndicator(
-        onRefresh: () => callFeedPost(true),
-        backgroundColor: textPrimary,
-        color: HexColor(backgroundColor),
-        triggerMode: RefreshIndicatorTriggerMode.anywhere,
-        strokeWidth: 2,
-        child: stream.loadStatusReferesh
-            ? const Center(
+    return stream.loadStatusReferesh
+        ? Container(
+            height: Get.height,
+            width: Get.width,
+            color: backgroundSecondary,
+            child: const Center(
                 child: ScanningPerimeter(
-                msg: "Getting new posts for you...",
-              ))
-            : const PeopleHome());
+              msg: "Getting new posts for you...",
+            )),
+          )
+        : const HomeGridScreen();
+
+    // RefreshIndicator(
+    //     onRefresh: () => callFeedPost(true),
+    //     backgroundColor: textPrimary,
+    //     color: HexColor(backgroundColor),
+    //     triggerMode: RefreshIndicatorTriggerMode.anywhere,
+    //     strokeWidth: 2,
+    //     child: stream.loadStatusReferesh
+    //         ? const Center(
+    //             child: ScanningPerimeter(
+    //             msg: "Getting new posts for you...",
+    //           ))
+    //         : const HomeGridScreen()
+
+    //     // const PeopleHome()
+
+    //     );
   }
 
   callFeedPost(bool isRefreshed) async {

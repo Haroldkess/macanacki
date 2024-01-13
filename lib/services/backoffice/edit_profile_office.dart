@@ -31,6 +31,7 @@ Future<http.StreamedResponse?> editProfile(
   request.headers.addAll(headers);
   request.fields["about_me"] = data.description!;
   request.fields["phone"] = data.phone!.toString();
+  request.fields["website"] = data.website!.toString();
   request.fields["country"] = data.country!;
   request.fields["state"] = data.state!.toString();
   request.fields["city"] = data.city!;

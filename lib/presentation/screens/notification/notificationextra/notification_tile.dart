@@ -11,6 +11,7 @@ import 'package:macanacki/presentation/screens/matchrequest/match_request_screen
 import 'package:macanacki/presentation/widgets/text.dart';
 
 import '../../../widgets/hexagon_avatar.dart';
+import '../../userprofile/testing_profile.dart';
 
 class NotificationTile extends StatelessWidget {
   final NotifyData item;
@@ -27,11 +28,47 @@ class NotificationTile extends StatelessWidget {
         if (item.type == "follow") {
           PageRouting.pushToPage(
               context,
-              MatchRequestScreen(
-                userName: item.username!,
-                id: item.userId!,
-                img: item.picture!,
+              TestProfile(
+                username: item.username!,
+                extended: false,
+                page: "notifi",
               ));
+          // PageRouting.pushToPage(
+          //     context,
+          //     MatchRequestScreen(
+          //       userName: item.username!,
+          //       id: item.userId!,
+          //       img: item.picture!,
+          //     ));
+        } else {
+          // emitter(item.picture.toString());
+          if (item.type == "like") {
+            if (item.body!.contains("just liked")) {
+              final nameList = item.body!.split(" just liked");
+              if (nameList.first.isNotEmpty) {
+                PageRouting.pushToPage(
+                    context,
+                    TestProfile(
+                      username: nameList.first,
+                      extended: false,
+                      page: "notifi",
+                    ));
+              }
+            } else if (item.body!.contains("just commented")) {
+              final nameList = item.body!.split(" just commented");
+              if (nameList.first.isNotEmpty) {
+                PageRouting.pushToPage(
+                    context,
+                    TestProfile(
+                      username: nameList.first,
+                      extended: false,
+                      page: "notifi",
+                    ));
+              }
+            }
+
+            // emitter(nameList.first.toString());
+          }
         }
       },
       leading: item.picture == null

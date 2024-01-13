@@ -70,6 +70,7 @@ class UserData {
       this.verified,
       this.aboutMe,
       this.phone,
+      this.website,
       this.gender,
       this.profilephoto,
       this.noOfFollowers,
@@ -113,6 +114,7 @@ class UserData {
   dynamic verified;
   String? aboutMe;
   String? phone;
+  String? website;
   String? gender;
   String? profilephoto;
   int? noOfFollowers;
@@ -161,6 +163,7 @@ class UserData {
         aboutMe: json["about_me"],
         phone: json["phone"],
         gender: json["gender"],
+        website: json["website"],
         profilephoto: json["profilephoto"],
         noOfFollowers: json["no_of_followers"],
         noOfFollowing: json["no_of_following"],
@@ -207,6 +210,7 @@ class UserData {
         "verified": verified,
         "about_me": aboutMe,
         "phone": phone,
+        "website": website,
         "gender": gender,
         "profilephoto": profilephoto,
         "no_of_followers": noOfFollowers,

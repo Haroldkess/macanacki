@@ -164,6 +164,8 @@ class SwipedUser {
   String? idFront;
   String? idBack;
   Verification? verification;
+  dynamic category;
+  dynamic promotedProfile;
 
   SwipedUser({
     this.id,
@@ -214,6 +216,8 @@ class SwipedUser {
     this.idFront,
     this.idBack,
     this.verification,
+    this.category,
+    this.promotedProfile,
   });
 
   factory SwipedUser.fromJson(Map<String, dynamic> json) => SwipedUser(
@@ -273,6 +277,8 @@ class SwipedUser {
         verification: json["verification"] == null
             ? null
             : Verification.fromJson(json["verification"]),
+        category: json["category"],
+        promotedProfile: json["promoted_profile"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -306,7 +312,7 @@ class SwipedUser {
         "nationality": nationality,
         "id_type": idType,
         "id_number": idNumber,
-          "country": country,
+        "country": country,
         "state": state,
         "city": city,
         "id_front_capture": idFrontCapture,
@@ -324,6 +330,8 @@ class SwipedUser {
         "id_front": idFront,
         "id_back": idBack,
         "verification": verification?.toJson(),
+        "category": category,
+        "promoted_profile": promotedProfile
       };
 }
 

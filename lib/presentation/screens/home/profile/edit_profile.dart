@@ -22,7 +22,12 @@ import 'editprofileextra/website.dart';
 class EditProfile extends StatefulWidget {
   final String? aboutMe;
   final String? phone;
-  const EditProfile({super.key, required this.aboutMe, required this.phone});
+  final String? web;
+  const EditProfile(
+      {super.key,
+      required this.aboutMe,
+      required this.phone,
+      required this.web});
 
   @override
   State<EditProfile> createState() => _EditProfileState();
@@ -36,12 +41,13 @@ class _EditProfileState extends State<EditProfile> {
   late TextEditingController about;
 
   late TextEditingController phone;
-  late TextEditingController website = TextEditingController(text: "");
+  late TextEditingController website;
   @override
   void initState() {
     super.initState();
     about = TextEditingController(text: widget.aboutMe ?? "");
     phone = TextEditingController(text: widget.phone ?? "");
+    website = TextEditingController(text: widget.web ?? "");
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       UserProfileWare user =
@@ -104,7 +110,7 @@ class _EditProfileState extends State<EditProfile> {
                         height: 15,
                       ),
                       MyWebsite(
-                        phone: website,
+                        web: website,
                       ),
                       // EditSelectGender(),
                       const SizedBox(
@@ -113,15 +119,14 @@ class _EditProfileState extends State<EditProfile> {
                       Column(
                         children: [
                           Padding(
-                            padding:
-                                const EdgeInsets.only(bottom: 16, left: 30),
+                            padding: const EdgeInsets.only(bottom: 5, left: 0),
                             child: Row(
                               children: [
                                 AppText(
                                     text: "Your Location",
                                     fontWeight: FontWeight.w600,
                                     size: 17,
-                                    color: textPrimary)
+                                    color: textWhite)
                               ],
                             ),
                           ),
@@ -208,6 +213,6 @@ class _EditProfileState extends State<EditProfile> {
     // }
 
     EditProfileController.editProfileController(context, about.text, phone.text,
-        selectedCountry, selectedState, selectedCity);
+        website.text, selectedCountry, selectedState, selectedCity);
   }
 }

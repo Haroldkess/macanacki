@@ -35,6 +35,7 @@ import '../comment_modal.dart';
 import '../hexagon_avatar.dart';
 import '../text.dart';
 import 'package:macanacki/services/middleware/video/video_ware.dart';
+import 'package:flutter/services.dart';
 
 class NewDesignTest extends StatefulWidget {
   final FeedPost data;
@@ -80,7 +81,10 @@ class _NewDesignTestState extends State<NewDesignTest> {
   }
 
   int seeMoreVal = 89;
-
+  double height = 60;
+  bool show = false;
+  bool tapped = false;
+  double width = 60;
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -566,13 +570,12 @@ class _NewDesignTestState extends State<NewDesignTest> {
         LikeButton(
           isLiked: likedBefore,
           animationDuration: Duration(seconds: 2),
-          circleColor:
-              CircleColor(start: HexColor(primaryColor), end: Colors.red),
+          circleColor: CircleColor(start: Colors.blue, end: secondaryColor),
           bubblesColor: BubblesColor(
-              dotPrimaryColor: Colors.red,
-              dotSecondaryColor: HexColor(primaryColor),
+              dotPrimaryColor: Colors.grey,
+              dotSecondaryColor: Colors.blue,
               dotThirdColor: Colors.yellow,
-              dotLastColor: Colors.green),
+              dotLastColor: secondaryColor),
           countPostion: CountPostion.right,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -582,6 +585,9 @@ class _NewDesignTestState extends State<NewDesignTest> {
             bottom: 0,
           ),
           onTap: (isLiked) async {
+            try {
+              await HapticFeedback.heavyImpact();
+            } catch (e) {}
             likeAction(context, isLiked);
             return !isLiked;
           },
@@ -614,7 +620,7 @@ class _NewDesignTestState extends State<NewDesignTest> {
                         padding: const EdgeInsets.all(8.0),
                         child: Icon(
                           Icons.favorite,
-                          color: Colors.redAccent,
+                          color: secondaryColor,
                           size: 21,
                         ),
                       ),
@@ -672,6 +678,7 @@ class VideoUser extends StatefulWidget {
   AudioPlayer? player;
   bool? isVideo;
   bool isHome;
+  bool? showFollow;
   VideoUser(
       {super.key,
       required this.data,
@@ -679,6 +686,7 @@ class VideoUser extends StatefulWidget {
       required this.media,
       this.isAudio,
       this.isVideo,
+      this.showFollow,
       required this.isHome,
       this.player,
       this.controller});
@@ -709,7 +717,10 @@ class _VideoUserState extends State<VideoUser> {
   }
 
   int seeMoreVal = 89;
-
+  double height = 60;
+  bool show = false;
+  bool tapped = false;
+  double width = 60;
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -774,183 +785,235 @@ class _VideoUserState extends State<VideoUser> {
                               Container(
                                 //  color: Colors.amber,
                                 //475
+                                //  height: 120,
                                 constraints:
                                     BoxConstraints(maxWidth: width * 0.75),
                                 child: Row(
                                   children: [
-                                    GestureDetector(
-                                      onTap: () async {
-                                        print(" ******** Marto XX 1");
-                                        TabProvider action =
-                                            Provider.of<TabProvider>(context,
-                                                listen: false);
-
-                                        if (widget.isAudio == true) {
-                                          if (widget.player != null) {
-                                            widget.player!.pause();
-                                          }
-                                        }
-
-                                        // if (widget.isVideo == true) {
-                                        //   widget.controller!.pause();
-                                        // }
-
-                                        if (widget.data.user!.username! ==
-                                            user.userProfileModel.username) {
-                                          // action.pageController!.animateToPage(
-                                          //   4,
-                                          //   duration: const Duration(milliseconds: 1),
-                                          //   curve: Curves.easeIn,
-                                          // );
-                                        } else {
-                                          if (widget.isHome == false) {
-                                            return;
-                                          }
-                                          // try {
-                                          //   WidgetsBinding.instance
-                                          //       .addPostFrameCallback((timeStamp) {
-                                          //     VideoWareHome.instance.pauseAnyVideo();
-                                          //   });
-                                          // } catch (e) {}
-                                          PageRouting.pushToPage(
-                                              context,
-                                              TestProfile(
-                                                username:
-                                                    widget.data.user!.username!,
-                                                extended: true,
-                                                page: widget.page,
-                                              ));
-                                          preloadController.pausePreloadById(
-                                              widget.data.id!);
-                                          print(" ******** Marto XX 2");
-                                        }
-                                      },
-                                      child: Row(
-                                        children: [
-                                          Stack(
-                                            alignment: Alignment.center,
+                                    Stack(
+                                      children: [
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 8.0),
+                                          child: Row(
                                             children: [
-                                              // HexagonWidget.pointy(
-                                              //   width: w - 3,
-                                              //   elevation: 2.0,
-                                              //   color: Colors.white,
-                                              //   cornerRadius: 2.0,
-                                              //   child: AspectRatio(
-                                              //     aspectRatio: HexagonType.POINTY.ratio,
-                                              //     // child: Image.asset(
-                                              //     //   'assets/tram.jpg',
-                                              //     //   fit: BoxFit.fitWidth,
-                                              //     // ),
-                                              //   ),
-                                              // ),
-                                              // HexagonAvatar(
-                                              //   url: widget.data.user!.profilephoto!,
-                                              //   w: w,
-                                              // ),
-                                              DpAvatar(
-                                                url: widget
-                                                    .data.user!.profilephoto!,
-                                                w: w,
-                                              )
-                                            ],
-                                          ),
-                                          const SizedBox(
-                                            width: 5.5,
-                                          ),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Row(
+                                              Stack(
+                                                alignment: Alignment.center,
+                                                // alignment: Alignment.topCenter,
                                                 children: [
-                                                  Container(
-                                                    constraints:
-                                                        const BoxConstraints(
-                                                      maxWidth: 139,
-                                                    ),
-                                                    //   color: Colors.amber,
-                                                    child: AppText(
-                                                      text: widget
-                                                          .data.user!.username!,
-                                                      size: 16,
-                                                      fontWeight:
-                                                          FontWeight.w700,
-                                                      maxLines: 1,
-                                                      overflow: widget
+                                                  Column(
+                                                    children: [
+                                                      DpAvatar(
+                                                        url: widget.data.user!
+                                                            .profilephoto!,
+                                                        w: w,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                              const SizedBox(
+                                                width: 5.5,
+                                              ),
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      InkWell(
+                                                        onTap: () {
+                                                          //  print(" ******** Marto XX 1");
+                                                          TabProvider action =
+                                                              Provider.of<
+                                                                      TabProvider>(
+                                                                  context,
+                                                                  listen:
+                                                                      false);
+
+                                                          if (widget.isAudio ==
+                                                              true) {
+                                                            if (widget.player !=
+                                                                null) {
+                                                              widget.player!
+                                                                  .pause();
+                                                            }
+                                                          }
+
+                                                          // if (widget.isVideo == true) {
+                                                          //   widget.controller!.pause();
+                                                          // }
+
+                                                          if (widget.data.user!
+                                                                  .username! ==
+                                                              user.userProfileModel
+                                                                  .username) {
+                                                            // action.pageController!.animateToPage(
+                                                            //   4,
+                                                            //   duration: const Duration(milliseconds: 1),
+                                                            //   curve: Curves.easeIn,
+                                                            // );
+                                                          } else {
+                                                            if (widget.isHome ==
+                                                                false) {
+                                                              return;
+                                                            }
+                                                            // try {
+                                                            //   WidgetsBinding.instance
+                                                            //       .addPostFrameCallback((timeStamp) {
+                                                            //     VideoWareHome.instance.pauseAnyVideo();
+                                                            //   });
+                                                            // } catch (e) {}
+                                                            PageRouting
+                                                                .pushToPage(
+                                                                    context,
+                                                                    TestProfile(
+                                                                      username: widget
+                                                                          .data
+                                                                          .user!
+                                                                          .username!,
+                                                                      extended:
+                                                                          true,
+                                                                      page: widget
+                                                                          .page,
+                                                                    ));
+                                                            preloadController
+                                                                .pausePreloadById(
+                                                                    widget.data
+                                                                        .id!);
+                                                            print(
+                                                                " ******** Marto XX 2");
+                                                          }
+                                                        },
+                                                        child: Container(
+                                                          constraints:
+                                                              const BoxConstraints(
+                                                            maxWidth: 139,
+                                                          ),
+                                                          //   color: Colors.amber,
+                                                          child: AppText(
+                                                            text: widget
+                                                                .data
+                                                                .user!
+                                                                .username!,
+                                                            size: 16,
+                                                            fontWeight:
+                                                                FontWeight.w700,
+                                                            maxLines: 1,
+                                                            overflow: widget
+                                                                        .data
+                                                                        .user!
+                                                                        .username!
+                                                                        .length >
+                                                                    20
+                                                                ? TextOverflow
+                                                                    .ellipsis
+                                                                : TextOverflow
+                                                                    .ellipsis,
+                                                            color: textWhite,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      SizedBox(width: 4),
+                                                      widget.data.user!
+                                                                      .verified ==
+                                                                  1 &&
+                                                              widget.data.user!
+                                                                      .activePlan !=
+                                                                  sub
+                                                          ? SvgPicture.asset(
+                                                              "assets/icon/badge.svg",
+                                                              height: 13,
+                                                              width: 13)
+                                                          : const SizedBox
+                                                              .shrink(),
+                                                      // SizedBox(
+                                                      //   width: 7,
+                                                      // ),
+                                                      // user.userProfileModel.username ==
+                                                      //         widget.data.user!.username!
+                                                      //     ? const SizedBox.shrink()
+                                                      //     : Row(
+                                                      //         children: [
+                                                      //           followButton(() async {
+                                                      //             followAction(
+                                                      //               context,
+                                                      //             );
+                                                      //           },
+                                                      //               stream.followIds.contains(
+                                                      //                       widget.data.user!
+                                                      //                           .id!)
+                                                      //                   ? "Following"
+                                                      //                   : "Follow"),
+                                                      //         ],
+                                                      //       ),
+                                                    ],
+                                                  ),
+                                                  SizedBox(
+                                                    height: 3,
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      Container(
+                                                        constraints:
+                                                            const BoxConstraints(
+                                                          maxWidth: 139,
+                                                        ),
+                                                        //   color: Colors.amber,
+                                                        child: AppText(
+                                                          text: Operations
+                                                              .feedTimes(widget
                                                                   .data
-                                                                  .user!
-                                                                  .username!
-                                                                  .length >
-                                                              20
-                                                          ? TextOverflow
-                                                              .ellipsis
-                                                          : TextOverflow
-                                                              .ellipsis,
-                                                      color: textWhite,
-                                                    ),
-                                                  ),
-                                                  SizedBox(width: 4),
-                                                  widget.data.user!.verified ==
-                                                              1 &&
-                                                          widget.data.user!
-                                                                  .activePlan !=
-                                                              sub
-                                                      ? SvgPicture.asset(
-                                                          "assets/icon/badge.svg",
-                                                          height: 13,
-                                                          width: 13)
-                                                      : const SizedBox.shrink(),
-                                                  // SizedBox(
-                                                  //   width: 7,
-                                                  // ),
-                                                  // user.userProfileModel.username ==
-                                                  //         widget.data.user!.username!
-                                                  //     ? const SizedBox.shrink()
-                                                  //     : Row(
-                                                  //         children: [
-                                                  //           followButton(() async {
-                                                  //             followAction(
-                                                  //               context,
-                                                  //             );
-                                                  //           },
-                                                  //               stream.followIds.contains(
-                                                  //                       widget.data.user!
-                                                  //                           .id!)
-                                                  //                   ? "Following"
-                                                  //                   : "Follow"),
-                                                  //         ],
-                                                  //       ),
-                                                ],
-                                              ),
-                                              SizedBox(
-                                                height: 3,
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Container(
-                                                    constraints:
-                                                        const BoxConstraints(
-                                                      maxWidth: 139,
-                                                    ),
-                                                    //   color: Colors.amber,
-                                                    child: AppText(
-                                                      text:
-                                                          Operations.feedTimes(
-                                                              widget.data
                                                                   .createdAt!),
-                                                      size: 12,
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      maxLines: 1,
-                                                      color: textPrimary,
-                                                    ),
+                                                          size: 12,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          maxLines: 1,
+                                                          color: textPrimary,
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
                                                 ],
                                               ),
                                             ],
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                        Positioned(
+                                          top: 0,
+                                          left: 5,
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 8.0),
+                                            child: stream.followIds.contains(
+                                                    widget.data.user!.id!)
+                                                ? SizedBox.shrink()
+                                                : InkWell(
+                                                    onTap: () async {
+                                                      HapticFeedback
+                                                          .heavyImpact();
+                                                      followAction(
+                                                        context,
+                                                      );
+                                                    },
+                                                    child: CircleAvatar(
+                                                      radius: 10,
+                                                      backgroundColor:
+                                                          Colors.white,
+                                                      child: CircleAvatar(
+                                                        backgroundColor:
+                                                            Colors.transparent,
+                                                        radius: 7,
+                                                        child: SvgPicture.asset(
+                                                          "assets/icon/add_profile.svg",
+                                                          color: Colors.green,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                          ),
+                                        )
+                                      ],
                                     ),
                                     const SizedBox(
                                       width: 5.5,
@@ -1097,7 +1160,9 @@ class _VideoUserState extends State<VideoUser> {
                               color: Colors.black,
                               image: DecorationImage(
                                 image: CachedNetworkImageProvider(
-                                    widget.data.thumbnails!.first ?? ""),
+                                    widget.data.thumbnails!.isEmpty
+                                        ? ""
+                                        : widget.data.thumbnails!.first ?? ""),
                                 fit: BoxFit.cover,
                               ),
                               borderRadius: BorderRadius.circular(12)),
@@ -1117,6 +1182,26 @@ class _VideoUserState extends State<VideoUser> {
         ],
       ),
     );
+  }
+
+  Future animateButton(double val, bool isFirst) async {
+    if (isFirst) {
+      setState(() {
+        height = val;
+        width = val;
+        show = true;
+        tapped = true;
+      });
+
+      await Future.delayed(Duration(seconds: 1));
+    } else {
+      setState(() {
+        height = 60;
+        width = 60;
+        show = false;
+        tapped = false;
+      });
+    }
   }
 
   Widget followButton(VoidCallback onTap, String title) {

@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:get/get.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:macanacki/model/public_profile_model.dart';
 import 'dart:convert';
@@ -12,11 +13,14 @@ import 'package:macanacki/services/temps/temp.dart';
 import 'package:macanacki/services/temps/temps_id.dart';
 import 'package:provider/provider.dart';
 
+import '../../model/buy_follower_model.dart';
 import '../../model/gender_model.dart';
 import '../../model/register_model.dart';
 import '../../model/user_profile_model.dart';
 import '../../presentation/screens/onboarding/business/business_modal.dart';
 import '../../presentation/widgets/debug_emitter.dart';
+import '../backoffice/buy_followers_office.dart';
+import '../controllers/dialogues.dart';
 
 class UserProfileWare extends ChangeNotifier {
   ////////////@@@AutoScroll [State]
@@ -130,6 +134,7 @@ class UserProfileWare extends ChangeNotifier {
   bool _loadStatus = false;
   bool _loadStatus2 = false;
   bool _deleting = false;
+  bool _isLoadPromote = false;
   UserData _userProfileModel = UserData();
   PublicUserData _publicUserProfileModel = PublicUserData();
 
@@ -148,12 +153,18 @@ class UserProfileWare extends ChangeNotifier {
   bool get loadStatus => _loadStatus;
   bool get loadStatus2 => _loadStatus2;
   bool get deleting => _deleting;
+  bool get isLoadPromote => _isLoadPromote;
   UserData get userProfileModel => _userProfileModel;
   PublicUserData get publicUserProfileModel => _publicUserProfileModel;
   String id = "";
   VerifyUserModel verifyUserModel = VerifyUserModel();
   GenderList genderData = GenderList();
   RegisterBusinessModel registerBusinessModel = RegisterBusinessModel();
+
+  void loadPromomte(bool load) {
+    _isLoadPromote = load;
+    notifyListeners();
+  }
 
   void addId(String myId) {
     id = myId;
@@ -458,6 +469,78 @@ class UserProfileWare extends ChangeNotifier {
     }
 
     notifyListeners();
+
+    return isSuccessful;
+  }
+
+  Future<bool> buyFollowersFromApi(context, String diamondValue) async {
+    late bool isSuccessful;
+    try {
+      http.Response? response =
+          await BuyFollwersOffice.buyFollwers(diamondValue)
+              .whenComplete(() => emitter("buy done successfully"));
+      if (response == null) {
+        isSuccessful = false;
+
+        Get.dialog(seeDialog(
+            title: "Failed",
+            message: "Could not promote profile",
+            isFail: true,
+            cancelText: "Cancal",
+            onPressed: () {
+              Get.back();
+            },
+            confirmText: "Continue"));
+        // log("get user profile data request failed");
+      } else if (response.statusCode == 200) {
+        var jsonData = jsonDecode(response.body);
+
+        // log("get user profile data  request success");
+        try {
+          var incomingData = BuyFollowerModel.fromJson(jsonData);
+          Get.dialog(seeDialog(
+              title: "${incomingData.message}",
+              message:
+                  "Your promotion is runing and your target is set to ${convertToCurrency(incomingData.data!.followTarget!.toString())}",
+              cancelText: "Cancal",
+              onPressed: () {
+                Get.back();
+              },
+              confirmText: "Continue"));
+        } catch (e) {
+          emitter(e.toString());
+        }
+
+        isSuccessful = true;
+      } else {
+        //  log("get user profile data  request failed");
+        Get.dialog(seeDialog(
+            title: "Failed",
+            message: "Could not promote profile",
+            isFail: true,
+            cancelText: "Cancal",
+            onPressed: () {
+              Get.back();
+            },
+            confirmText: "Continue"));
+        isSuccessful = false;
+      }
+    } catch (e) {
+      isSuccessful = false;
+      //  log("get user profile data  request failed");
+      //  log(e.toString());
+      Get.dialog(seeDialog(
+          title: "Failed",
+          message: "Could not promote profile",
+          isFail: true,
+          cancelText: "Cancal",
+          onPressed: () {
+            Get.back();
+          },
+          confirmText: "Continue"));
+    }
+
+    //notifyListeners();
 
     return isSuccessful;
   }

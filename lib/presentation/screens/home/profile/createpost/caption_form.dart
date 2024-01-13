@@ -8,7 +8,8 @@ import '../../../../constants/colors.dart';
 
 class CaptionForm extends StatefulWidget {
   TextEditingController caption;
-  CaptionForm({super.key, required this.caption});
+  bool? enabled;
+  CaptionForm({super.key, required this.caption, this.enabled});
 
   @override
   State<CaptionForm> createState() => _CaptionFormState();
@@ -21,23 +22,24 @@ class _CaptionFormState extends State<CaptionForm> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Colors.transparent,
-      elevation: 10,
-      shadowColor: HexColor("#D8D1F4"),
+      color: backgroundSecondary,
+      //     elevation: 10,
+      //  shadowColor: HexColor("#D8D1F4"),
       child: Container(
-        height: increase ? 80 : 58,
+        // height: increase ? 80 : 58,
         width: 379,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-            color: HexColor(backgroundColor).withOpacity(0.6),
+            color: backgroundSecondary,
             shape: BoxShape.rectangle,
             border: Border.all(
-                width: 1.0,
-                color: HexColor("#E8E6EA"),
-                style: BorderStyle.solid),
+                //   width: 1.0,
+                //   color: HexColor("#E8E6EA"),
+                style: BorderStyle.none),
             borderRadius: const BorderRadius.all(Radius.circular(8.0))),
         child: TextFormField(
           controller: widget.caption,
+          enabled: widget.enabled ?? true,
           onTap: () {
             setState(() {
               done = false;
@@ -68,11 +70,13 @@ class _CaptionFormState extends State<CaptionForm> {
           maxLines: null,
           keyboardType: TextInputType.text,
           maxLength: 1500,
+          cursorColor: textPrimary,
+          style: GoogleFonts.roboto(color: textPrimary, fontSize: 14),
           decoration: InputDecoration(
-            hintText: "  Write a caption...",
-            hintStyle:
-                GoogleFonts.leagueSpartan(color: HexColor("#8B8B8B"), fontSize: 14),
+            hintText: "  Say something about this post...",
+            hintStyle: GoogleFonts.roboto(color: textPrimary, fontSize: 14),
             contentPadding: EdgeInsets.only(left: 15),
+
             // prefixIcon: Padding(
             //   padding: const EdgeInsets.all(15.0),
             //   child: SvgPicture.asset(
@@ -104,7 +108,8 @@ class _CaptionFormState extends State<CaptionForm> {
             //           ),
             //   ),
             // ),
-
+            labelStyle: TextStyle(color: textPrimary),
+            counterStyle: TextStyle(color: textPrimary),
             border: UnderlineInputBorder(
                 borderRadius: BorderRadius.circular(2.0),
                 borderSide: const BorderSide(color: Colors.transparent)),
@@ -113,7 +118,7 @@ class _CaptionFormState extends State<CaptionForm> {
                 borderSide: const BorderSide(color: Colors.transparent)),
             focusedBorder: UnderlineInputBorder(
                 borderRadius: BorderRadius.circular(2.0),
-                borderSide: const BorderSide(color: Colors.transparent)),
+                borderSide: BorderSide(color: Colors.transparent)),
           ),
         ),
       ),

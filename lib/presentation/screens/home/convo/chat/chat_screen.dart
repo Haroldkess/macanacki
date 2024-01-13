@@ -60,6 +60,7 @@ class _ChatScreenState extends State<ChatScreen> {
   ScrollController? controiller = ScrollController();
   TextEditingController msgController = TextEditingController();
   final player = AudioPlayer();
+  final player2 = AudioPlayer();
   int? verify = 0;
   bool showForm = false;
   String? toId;
@@ -121,6 +122,10 @@ class _ChatScreenState extends State<ChatScreen> {
                   : widget.user.userOneId!);
 
       chat.chatPageChange(0);
+      chat.addChatName(widget.user.conversations!.last.sender ==
+              ware.userProfileModel.username
+          ? "${widget.user.userTwo}"
+          : "${widget.user.userOne} ");
     });
 
     // ModeController.handleMode("online");
@@ -354,24 +359,24 @@ class _ChatScreenState extends State<ChatScreen> {
                           //         w: w + 4),
                         ],
                       ),
-                      // Positioned(
-                      //   right: 1.1,
-                      //   top: 0.0,
-                      //   child: Padding(
-                      //     padding: const EdgeInsets.only(right: 0, bottom: 0),
-                      //     child: CircleAvatar(
-                      //       radius: 5,
-                      //       backgroundColor: myChat.allSocketUsers
-                      //               .where((element) =>
-                      //                   element.userId.toString() ==
-                      //                   id.toString())
-                      //               .toList()
-                      //               .isNotEmpty
-                      //           ? Colors.green
-                      //           : Colors.red,
-                      //     ),
-                      //   ),
-                      // )
+                      Positioned(
+                        right: 1.1,
+                        top: 0.0,
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 0, bottom: 0),
+                          child: CircleAvatar(
+                            radius: 3,
+                            backgroundColor: myChat.allSocketUsers
+                                    .where((element) =>
+                                        element.userId.toString() ==
+                                        id.toString())
+                                    .toList()
+                                    .isNotEmpty
+                                ? Colors.green
+                                : Colors.red,
+                          ),
+                        ),
+                      )
                     ],
                   ),
                   const SizedBox(
@@ -539,6 +544,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                   controller: controiller!,
                                   isHome: widget.isHome,
                                   user: widget.user,
+                                  //   player: player2,
                                 )
                               : ChatList(
                                   chat: widget.chat,
@@ -560,6 +566,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                   controller: controiller!,
                                   isHome: widget.isHome,
                                   user: widget.user,
+                                  player: player2,
                                 ),
                         ),
                       ),

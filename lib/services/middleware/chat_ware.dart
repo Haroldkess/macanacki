@@ -8,12 +8,14 @@ import 'package:macanacki/presentation/widgets/debug_emitter.dart';
 import 'package:macanacki/services/backoffice/gender_office.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import '../backoffice/chat_office.dart';
 
 class ChatWare extends ChangeNotifier {
   bool _loadStatus = false;
   bool isTexted = false;
+  String chatName = "";
   ChatData? newChatData;
   Conversation? newConversationData;
   AllConversationModel? initialConverstation;
@@ -38,6 +40,13 @@ class ChatWare extends ChangeNotifier {
 
   void addNewChatData(newData) {
     newChatData = newData;
+    notifyListeners();
+  }
+
+  Future addChatName(String name) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    pref.setString("chatNameKey", name);
+    chatName = name;
     notifyListeners();
   }
 
