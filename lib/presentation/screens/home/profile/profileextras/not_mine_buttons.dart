@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:macanacki/model/conversation_model.dart';
 import 'package:macanacki/presentation/allNavigation.dart';
 import 'package:macanacki/presentation/screens/home/convo/chat/chat_screen.dart';
+import 'package:macanacki/presentation/screens/home/profile/profileextras/profile_action_buttons.dart';
 import 'package:macanacki/presentation/widgets/debug_emitter.dart';
 import 'package:macanacki/presentation/widgets/loader.dart';
 import 'package:macanacki/presentation/widgets/snack_msg.dart';
@@ -18,6 +20,8 @@ import '../../../../../services/middleware/action_ware.dart';
 import '../../../../../services/middleware/extra_profile_ware.dart';
 import '../../../../../services/middleware/user_profile_ware.dart';
 import '../../../../constants/colors.dart';
+import '../../../../operations.dart';
+import '../../../../widgets/dialogue.dart';
 import '../../../../widgets/text.dart';
 
 class ProfileActionButtonNotThisUsers extends StatelessWidget {
@@ -1483,13 +1487,54 @@ class UserProfileActionsTest extends StatelessWidget {
     ChatWare chatWareStream = context.watch<ChatWare>();
 
     return Container(
-      width: 220,
+      width: 230,
       height: 80,
-      //  color: Colors.amber,
+      //color: Colors.amber,
       child: data.gender == "Business"
           ? Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
+                InkWell(
+                  onTap: () {
+                    Get.dialog(seeWebsiteDialog(
+                        svg: "pin",
+                        title: "Lives in",
+                        message:
+                            "${data.city ?? ""}, ${data.state ?? ""}, ${data.country ?? ""} ",
+                        confirmText: "Yes",
+                        cancelText: "Go back",
+                        onPressedCancel: () {
+                          Get.back();
+                        },
+                        onPressed: () {
+                          Get.back();
+                        }));
+                  },
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      ProfileActionButtonSmall(
+                        icon: "assets/icon/pin.svg",
+                        color: secondaryColor,
+                        onClick: () {
+                          Get.dialog(seeWebsiteDialog(
+                              svg: "pin",
+                              title: "Lives in",
+                              message:
+                                  "${data.city ?? ""}, ${data.state ?? ""}, ${data.country ?? ""} ",
+                              confirmText: "Yes",
+                              cancelText: "Go back",
+                              onPressedCancel: () {
+                                Get.back();
+                              },
+                              onPressed: () {
+                                Get.back();
+                              }));
+                        },
+                      ),
+                    ],
+                  ),
+                ),
                 data.gender == "Business"
                     ? InkWell(
                         //   onTap: () => PageRouting.pushToPage(context, const EditProfile()),
@@ -1549,12 +1594,14 @@ class UserProfileActionsTest extends StatelessWidget {
                           : MainAxisAlignment.center,
                       children: [
                         ProfileActionButtonNotThisUsers(
-                          icon: "assets/icon/follow.svg",
+                          icon: !stream.followIds.contains(data.id)
+                              ? "assets/icon/follow.svg"
+                              : "assets/icon/unfollow.svg",
                           isSwipe: false,
                           onClick: () async {
-                                         try {
-                      await HapticFeedback.heavyImpact();
-                    } catch (e) {}
+                            try {
+                              await HapticFeedback.heavyImpact();
+                            } catch (e) {}
                             await followAction(
                               context,
                               data.id!,
@@ -1778,11 +1825,121 @@ class UserProfileActionsTest extends StatelessWidget {
                     ],
                   ),
                 ),
+                InkWell(
+                  onTap: () {
+                    Get.dialog(seeWebsiteDialog(
+                        svg: "seeweb",
+                        title: "Website",
+                        message: data.website == null
+                            ? "Website not published by user"
+                            : data.website!.isEmpty
+                                ? "Website not published by user"
+                                : data.website,
+                        confirmText: "Yes",
+                        cancelText: data.website == null
+                            ? "Go back"
+                            : data.website!.isEmpty
+                                ? "Go back"
+                                : "Visit",
+                        onPressedCancel: () {
+                          if (data.website != null) {
+                            if (data.website!.isNotEmpty) {
+                              UrlLaunchController.launchWebViewOrVC(
+                                  Uri.parse(data.website!));
+                            } else {
+                              Get.back();
+                            }
+                          } else {
+                            Get.back();
+                          }
+                        },
+                        onPressed: () {}));
+                  },
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      ProfileActionButtonSmall(
+                        color: textPrimary,
+                        icon: "assets/icon/seeweb.svg",
+                        onClick: () {
+                          Get.dialog(seeWebsiteDialog(
+                              svg: "seeweb",
+                              title: "Website",
+                              message: data.website == null
+                                  ? "Website not published by user"
+                                  : data.website!.isEmpty
+                                      ? "Website not published by user"
+                                      : data.website,
+                              confirmText: "Yes",
+                              cancelText: data.website == null
+                                  ? "Go back"
+                                  : data.website!.isEmpty
+                                      ? "Go back"
+                                      : "Visit",
+                              onPressedCancel: () {
+                                if (data.website != null) {
+                                  if (data.website!.isNotEmpty) {
+                                    UrlLaunchController.launchWebViewOrVC(
+                                        Uri.parse(data.website!));
+                                  } else {
+                                    Get.back();
+                                  }
+                                } else {
+                                  Get.back();
+                                }
+                              },
+                              onPressed: () {}));
+                        },
+                      ),
+                    ],
+                  ),
+                ),
               ],
             )
           : Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
+                InkWell(
+                  onTap: () {
+                    Get.dialog(seeWebsiteDialog(
+                        svg: "pin",
+                        title: "Lives in",
+                        message:
+                            "${data.city ?? ""}, ${data.state ?? ""}, ${data.country ?? ""} ",
+                        confirmText: "Yes",
+                        cancelText: "Go back",
+                        onPressedCancel: () {
+                          Get.back();
+                        },
+                        onPressed: () {
+                          Get.back();
+                        }));
+                  },
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      ProfileActionButtonSmall(
+                        icon: "assets/icon/pin.svg",
+                        color: secondaryColor,
+                        onClick: () {
+                          Get.dialog(seeWebsiteDialog(
+                              svg: "pin",
+                              title: "Lives in",
+                              message:
+                                  "${data.city ?? ""}, ${data.state ?? ""}, ${data.country ?? ""} ",
+                              confirmText: "Yes",
+                              cancelText: "Go back",
+                              onPressedCancel: () {
+                                Get.back();
+                              },
+                              onPressed: () {
+                                Get.back();
+                              }));
+                        },
+                      ),
+                    ],
+                  ),
+                ),
                 InkWell(
                   //   onTap: () => PageRouting.pushToPage(context, const EditProfile()),
                   child: Column(
@@ -1813,7 +1970,7 @@ class UserProfileActionsTest extends StatelessWidget {
                         height: 5,
                       ),
                       Container(
-                        constraints: BoxConstraints(maxWidth: 70, minWidth: 50),
+                        constraints: BoxConstraints(maxWidth: 50, minWidth: 50),
                         alignment: Alignment.center,
                         // color: Colors.amber,
                         child: AppText(
@@ -1863,7 +2020,7 @@ class UserProfileActionsTest extends StatelessWidget {
                         ),
                         AnimatedContainer(
                           constraints:
-                              BoxConstraints(maxWidth: 70, minWidth: 50),
+                              BoxConstraints(maxWidth: 50, minWidth: 50),
                           alignment: Alignment.center,
                           //color: Colors.amber,
                           duration: Duration(seconds: 2),
@@ -2055,7 +2212,7 @@ class UserProfileActionsTest extends StatelessWidget {
                         height: 5,
                       ),
                       Container(
-                        constraints: BoxConstraints(maxWidth: 70, minWidth: 50),
+                        constraints: BoxConstraints(maxWidth: 50, minWidth: 50),
                         alignment: Alignment.center,
                         //color: Colors.amber,
                         child: AppText(
@@ -2064,6 +2221,75 @@ class UserProfileActionsTest extends StatelessWidget {
                           size: 10,
                           color: HexColor("#797979"),
                         ),
+                      ),
+                    ],
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    Get.dialog(seeWebsiteDialog(
+                        svg: "seeweb",
+                        title: "Website",
+                        message: data.website == null
+                            ? "Website not published by user"
+                            : data.website!.isEmpty
+                                ? "Website not published by user"
+                                : data.website,
+                        confirmText: "Yes",
+                        cancelText: data.website == null
+                            ? "Go back"
+                            : data.website!.isEmpty
+                                ? "Go back"
+                                : "Visit",
+                        onPressedCancel: () {
+                          if (data.website != null) {
+                            if (data.website!.isNotEmpty) {
+                              UrlLaunchController.launchWebViewOrVC(
+                                  Uri.parse(data.website!));
+                            } else {
+                              Get.back();
+                            }
+                          } else {
+                            Get.back();
+                          }
+                        },
+                        onPressed: () {}));
+                  },
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      ProfileActionButtonSmall(
+                        color: textPrimary,
+                        icon: "assets/icon/seeweb.svg",
+                        onClick: () {
+                          Get.dialog(seeWebsiteDialog(
+                              svg: "seeweb",
+                              title: "Website",
+                              message: data.website == null
+                                  ? "Website not published by user"
+                                  : data.website!.isEmpty
+                                      ? "Website not published by user"
+                                      : data.website,
+                              confirmText: "Yes",
+                              cancelText: data.website == null
+                                  ? "Go back"
+                                  : data.website!.isEmpty
+                                      ? "Go back"
+                                      : "Visit",
+                              onPressedCancel: () {
+                                if (data.website != null) {
+                                  if (data.website!.isNotEmpty) {
+                                    UrlLaunchController.launchWebViewOrVC(
+                                        Uri.parse(data.website!));
+                                  } else {
+                                    Get.back();
+                                  }
+                                } else {
+                                  Get.back();
+                                }
+                              },
+                              onPressed: () {}));
+                        },
                       ),
                     ],
                   ),

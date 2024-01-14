@@ -1,21 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
-import 'package:macanacki/presentation/screens/home/settings/settingextra/account_settings.dart';
-import 'package:macanacki/presentation/screens/home/settings/settingextra/age_range.dart';
-import 'package:macanacki/presentation/screens/home/settings/settingextra/app_settings.dart';
-import 'package:macanacki/presentation/screens/home/settings/settingextra/community.dart';
-import 'package:macanacki/presentation/screens/home/settings/settingextra/control_sight.dart';
 import 'package:macanacki/presentation/screens/home/settings/settingextra/delete_account.dart';
-import 'package:macanacki/presentation/screens/home/settings/settingextra/discovery_settings.dart';
-import 'package:macanacki/presentation/screens/home/settings/settingextra/help_support.dart';
+
 import 'package:macanacki/presentation/screens/home/settings/settingextra/logout.dart';
-import 'package:macanacki/presentation/screens/home/settings/settingextra/manage_payment.dart';
-import 'package:macanacki/presentation/screens/home/settings/settingextra/measure.dart';
-import 'package:macanacki/presentation/screens/home/settings/settingextra/privacy.dart';
-import 'package:macanacki/presentation/screens/home/settings/settingextra/setting_logo.dart';
-import 'package:macanacki/presentation/screens/home/settings/settingextra/show_me.dart';
-import 'package:macanacki/presentation/screens/home/settings/settingextra/verification_status.dart';
+import 'package:macanacki/presentation/screens/home/settings/settingextra/wallet.dart';
+
 import 'package:macanacki/presentation/widgets/text.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -48,9 +38,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
         color: backgroundSecondary,
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
+            padding: EdgeInsets.symmetric(horizontal: 10),
             child: Column(
-              children: const [
+              children: [
                 SizedBox(
                   height: 16,
                 ),
@@ -102,10 +92,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 SizedBox(
                   height: 16,
                 ),
-                Logout(),
+                WalletAccess(),
+
                 SizedBox(
                   height: 16,
                 ),
+                Logout(),
+
                 // SettingLogo(),
                 SizedBox(
                   height: 16,

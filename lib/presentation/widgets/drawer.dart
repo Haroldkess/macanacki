@@ -412,13 +412,13 @@ drawerOptionModal(BuildContext context) async {
                             PageRouting.removeAllToPage(
                                 context, const Splash());
                             if (Platform.isAndroid) {
-                              Restart.restartApp();
+                              //     Restart.restartApp();
                             } else {
                               try {
                                 // Phoenix.rebirth(context);
-                                Restart.restartApp();
+                                //  Restart.restartApp();
                               } catch (e) {
-                                Restart.restartApp();
+                                //    Restart.restartApp();
                               }
                             }
 

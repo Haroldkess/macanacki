@@ -32,10 +32,12 @@ import '../../uiproviders/screen/comment_provider.dart';
 import '../../uiproviders/screen/tab_provider.dart';
 import '../ads_display.dart';
 import '../comment_modal.dart';
+import '../debug_emitter.dart';
 import '../hexagon_avatar.dart';
 import '../text.dart';
 import 'package:macanacki/services/middleware/video/video_ware.dart';
 import 'package:flutter/services.dart';
+import 'package:readmore/readmore.dart';
 
 class NewDesignTest extends StatefulWidget {
   final FeedPost data;
@@ -141,9 +143,9 @@ class _NewDesignTestState extends State<NewDesignTest> {
                       children: [
                         InkWell(
                           onTap: () async {
-                            TabProvider action = Provider.of<TabProvider>(
-                                context,
-                                listen: false);
+                            // TabProvider action = Provider.of<TabProvider>(
+                            //     context,
+                            //     listen: false);
 
                             if (widget.data.user!.username! ==
                                 user.userProfileModel.username) {
@@ -151,7 +153,7 @@ class _NewDesignTestState extends State<NewDesignTest> {
                               if (widget.isHome == false) {
                                 return;
                               }
-                              try {} catch (e) {}
+
                               PageRouting.pushToPage(
                                   context,
                                   TestProfile(
@@ -205,8 +207,12 @@ class _NewDesignTestState extends State<NewDesignTest> {
                                             extended: true,
                                             page: widget.page,
                                           ));
-                                      PreloadController.to
-                                          .pausePreloadById(widget.data.id!);
+                                      try {
+                                        PreloadController.to
+                                            .pausePreloadById(widget.data.id!);
+                                      } catch (e) {
+                                        emitter(e.toString());
+                                      }
                                     },
                                     child: Row(
                                       children: [
@@ -217,17 +223,20 @@ class _NewDesignTestState extends State<NewDesignTest> {
                                           //   color: Colors.amber,
                                           child: AppText(
                                             text: widget.data.user!.username!,
-                                            size: 16,
-                                            fontWeight: FontWeight.w400,
+
                                             maxLines: 1,
                                             overflow: widget.data.user!
                                                         .username!.length >
                                                     20
                                                 ? TextOverflow.ellipsis
                                                 : TextOverflow.ellipsis,
+                                            //color: textWhite,
                                             color: textWhite,
+                                            size: 16,
+                                            fontWeight: FontWeight.w700,
                                           ),
                                         ),
+                                        SizedBox(width: 4),
                                         widget.data.user!.verified == 1 &&
                                                 widget.data.user!.activePlan !=
                                                     sub
@@ -401,10 +410,10 @@ class _NewDesignTestState extends State<NewDesignTest> {
                                           : widget.data.description!,
                                       style: GoogleFonts.roboto(
                                           textStyle: TextStyle(
-                                        fontWeight: FontWeight.w600,
+                                        fontWeight: FontWeight.w500,
                                         color: Colors.white.withOpacity(.8),
-                                        decorationStyle:
-                                            TextDecorationStyle.solid,
+                                        // decorationStyle:
+                                        //     TextDecorationStyle.solid,
                                         fontSize: 12,
                                         fontFamily: '',
                                       )),
@@ -476,6 +485,19 @@ class _NewDesignTestState extends State<NewDesignTest> {
     StoreComment comment = context.watch<StoreComment>();
     return Row(
       children: [
+        // Container(
+        //                       height: 40,
+        //                       width: 40,
+        //                       decoration: BoxDecoration(
+        //                           color: backgroundSecondary,
+        //                           shape: BoxShape.circle),
+        //                       child: Padding(
+        //                         padding: const EdgeInsets.all(8.0),
+        //                         child: SvgPicture.asset(
+        //                           "assets/icon/filter.svg",
+        //                         ),
+        //                       ),
+        //                     ),
         Padding(
           padding: const EdgeInsets.only(bottom: 0),
           child: Container(
@@ -483,7 +505,8 @@ class _NewDesignTestState extends State<NewDesignTest> {
             height: 40,
             decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: textPrimary, width: 0.5)),
+                color: backgroundSecondary,
+                border: Border.all(color: Colors.transparent, width: 0.5)),
             child: Center(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -614,7 +637,9 @@ class _NewDesignTestState extends State<NewDesignTest> {
                     height: 40,
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        border: Border.all(color: textPrimary, width: 0.5)),
+                        color: backgroundSecondary,
+                        border:
+                            Border.all(color: Colors.transparent, width: 0.5)),
                     child: Center(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -631,7 +656,9 @@ class _NewDesignTestState extends State<NewDesignTest> {
                     height: 40,
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        border: Border.all(color: textPrimary, width: 0.5)),
+                        color: backgroundSecondary,
+                        border:
+                            Border.all(color: Colors.transparent, width: 0.5)),
                     child: Center(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -835,8 +862,13 @@ class _VideoUserState extends State<VideoUser> {
                                                               true) {
                                                             if (widget.player !=
                                                                 null) {
-                                                              widget.player!
-                                                                  .pause();
+                                                              try {
+                                                                widget.player!
+                                                                    .pause();
+                                                              } catch (e) {
+                                                                emitter(e
+                                                                    .toString());
+                                                              }
                                                             }
                                                           }
 
@@ -877,10 +909,17 @@ class _VideoUserState extends State<VideoUser> {
                                                                       page: widget
                                                                           .page,
                                                                     ));
-                                                            preloadController
-                                                                .pausePreloadById(
-                                                                    widget.data
-                                                                        .id!);
+                                                            try {
+                                                              preloadController
+                                                                  .pausePreloadById(
+                                                                      widget
+                                                                          .data
+                                                                          .id!);
+                                                            } catch (e) {
+                                                              emitter(
+                                                                  e.toString());
+                                                            }
+
                                                             print(
                                                                 " ******** Marto XX 2");
                                                           }
@@ -960,17 +999,36 @@ class _VideoUserState extends State<VideoUser> {
                                                           maxWidth: 139,
                                                         ),
                                                         //   color: Colors.amber,
-                                                        child: AppText(
-                                                          text: Operations
-                                                              .feedTimes(widget
-                                                                  .data
-                                                                  .createdAt!),
-                                                          size: 12,
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                          maxLines: 1,
-                                                          color: textPrimary,
-                                                        ),
+                                                        child: widget.data
+                                                                    .promoted ==
+                                                                "yes"
+                                                            ? AppText(
+                                                                text:
+                                                                    'Sponsored Ad',
+                                                                color:
+                                                                    textPrimary,
+                                                                size: 10,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                                maxLines: 1,
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                              )
+                                                            : AppText(
+                                                                text: Operations
+                                                                    .feedTimes(widget
+                                                                        .data
+                                                                        .createdAt!),
+                                                                size: 12,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                                maxLines: 1,
+                                                                color:
+                                                                    textPrimary,
+                                                              ),
                                                       ),
                                                     ],
                                                   ),
@@ -988,29 +1046,37 @@ class _VideoUserState extends State<VideoUser> {
                                             child: stream.followIds.contains(
                                                     widget.data.user!.id!)
                                                 ? SizedBox.shrink()
-                                                : InkWell(
-                                                    onTap: () async {
-                                                      HapticFeedback
-                                                          .heavyImpact();
-                                                      followAction(
-                                                        context,
-                                                      );
-                                                    },
-                                                    child: CircleAvatar(
-                                                      radius: 10,
-                                                      backgroundColor:
-                                                          Colors.white,
-                                                      child: CircleAvatar(
-                                                        backgroundColor:
-                                                            Colors.transparent,
-                                                        radius: 7,
-                                                        child: SvgPicture.asset(
-                                                          "assets/icon/add_profile.svg",
-                                                          color: Colors.green,
+                                                : user.userProfileModel
+                                                            .username ==
+                                                        widget
+                                                            .data.user!.username
+                                                    ? SizedBox.shrink()
+                                                    : InkWell(
+                                                        onTap: () async {
+                                                          HapticFeedback
+                                                              .heavyImpact();
+                                                          followAction(
+                                                            context,
+                                                          );
+                                                        },
+                                                        child: CircleAvatar(
+                                                          radius: 10,
+                                                          backgroundColor:
+                                                              Colors.white,
+                                                          child: CircleAvatar(
+                                                            backgroundColor:
+                                                                Colors
+                                                                    .transparent,
+                                                            radius: 7,
+                                                            child: SvgPicture
+                                                                .asset(
+                                                              "assets/icon/add_profile.svg",
+                                                              color:
+                                                                  Colors.green,
+                                                            ),
+                                                          ),
                                                         ),
                                                       ),
-                                                    ),
-                                                  ),
                                           ),
                                         )
                                       ],

@@ -52,7 +52,9 @@ class PreloadController extends GetxController {
 
   void pausePreloadById(int id) {
     print("--------------------------------------Pause Preload by ID");
-    state.preloads.where((x) => x.id == id).first.controller?.pause();
+    state.preloads.where((x) => x.id == id).isEmpty
+        ? null
+        : state.preloads.where((x) => x.id == id).first.controller?.pause();
   }
 
   void clear() {

@@ -343,8 +343,8 @@ class _VideoView2State extends State<VideoView2> {
   }
 
   Future<void> initializePlayer() async {
-    log(" ffffffffffffffff ${widget.data.mux!.first}");
-    log(" ffffffffffffffff ${widget.data.vod!.first}");
+    // log(" ffffffffffffffff ${widget.data.mux!.first}");
+    // log(" ffffffffffffffff ${widget.data.vod!.first}");
 
     _videoPlayerController =
         preloadController.getPreloadById(widget.postId).controller!;

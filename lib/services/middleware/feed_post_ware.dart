@@ -321,6 +321,7 @@ class FeedPostWare extends ChangeNotifier {
     late bool isSuccessful;
     List<FeedPost> _moreFeedPosts = [];
     print("000000000000000000000000000000000000 xxxxxx");
+    emitter("test 3+> $filter");
 
     try {
       final preloadController = PreloadController.to;

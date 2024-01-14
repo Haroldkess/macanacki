@@ -13,6 +13,7 @@ Future<http.Response?> getFeedPost(int pageNum, [String? filter]) async {
   String? token = pref.getString(tokenKey);
   http.Response? response;
   // emitter(filter!);
+  ///  emitter("test 4 +> $filter");
   try {
     response = await http.get(
       Uri.parse(
@@ -44,8 +45,8 @@ Future<http.Response?> getSinglePostPost(String id) async {
         HttpHeaders.authorizationHeader: "Bearer $token",
       },
     ).timeout(Duration(minutes: 1));
-    log(response.statusCode.toString());
-    //log(response.body.toString());
+    //  log(response.statusCode.toString());
+    //  log(response.body.toString());
     //log(token.toString());
   } catch (e) {
     print("000000000000000000000000000000000000 Errorrrrrrrrrr");

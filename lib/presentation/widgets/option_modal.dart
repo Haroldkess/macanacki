@@ -173,7 +173,7 @@ optionModal(BuildContext cont, List<String> url,
                                               ],
                                             ),
                                             backgroundColor:
-                                                HexColor(primaryColor)
+                                                HexColor(backgroundColor)
                                                     .withOpacity(.9),
                                             action: SnackBarAction(
                                                 label: "Yes",

@@ -45,17 +45,19 @@ class _FeedHomeState extends State<FeedHome>
     FeedPostWare stream = context.watch<FeedPostWare>();
     // ActionWare actionStream = context.watch<ActionWare>();
 
-    return stream.loadStatusReferesh
-        ? Container(
-            height: Get.height,
-            width: Get.width,
-            color: backgroundSecondary,
-            child: const Center(
-                child: ScanningPerimeter(
-              msg: "Getting new posts for you...",
-            )),
-          )
-        : const HomeGridScreen();
+    return const HomeGridScreen();
+
+    // stream.loadStatusReferesh
+    //     ? Container(
+    //         height: Get.height,
+    //         width: Get.width,
+    //         color: backgroundSecondary,
+    //         child: const Center(
+    //             child: ScanningPerimeter(
+    //           msg: "Getting new posts for you...",
+    //         )),
+    //       )
+    //     : const HomeGridScreen();
 
     // RefreshIndicator(
     //     onRefresh: () => callFeedPost(true),

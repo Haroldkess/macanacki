@@ -214,11 +214,11 @@ class _MultipleViewState extends State<MultipleView> {
                         width: width,
                         height: height,
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
+                            //  borderRadius: BorderRadius.circular(15),
                             image: DecorationImage(
-                              image: imageProvider,
-                              fit: BoxFit.fitWidth,
-                            )),
+                          image: imageProvider,
+                          fit: BoxFit.fitWidth,
+                        )),
                       ),
                       progressIndicatorBuilder:
                           (context, url, downloadProgress) => Center(
@@ -231,11 +231,11 @@ class _MultipleViewState extends State<MultipleView> {
                                 width: width,
                                 height: height,
                                 decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15),
+                                    //borderRadius: BorderRadius.circular(15),
                                     image: DecorationImage(
-                                      image: imageProvider,
-                                      fit: BoxFit.fitWidth,
-                                    )),
+                                  image: imageProvider,
+                                  fit: BoxFit.fitWidth,
+                                )),
                               ),
                           progressIndicatorBuilder:
                               (context, url, downloadProgress) => Center(

@@ -475,43 +475,44 @@ class _ProfileScreenState extends State<ProfileScreen>
                       : const SliverToBoxAdapter(
                           child: SizedBox(height: 20),
                         ),
-                  SliverToBoxAdapter(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        ProfileQuickLinks(
-                          onClick: () {
-                            PageRouting.pushToPage(
-                                context, const DiamondBalanceScreen());
-                          },
-                          name: "Account balance",
-                          icon: "assets/icon/diamond.svg",
-                          color: null,
-                          isVerified: false,
-                        ),
-                        ProfileQuickLinks(
-                          onClick: () async {
-                            PageRouting.pushToPage(
-                                context, const PromoteScreen());
-                          },
-                          name: "Promote post",
-                          icon: "assets/icon/promote.svg",
-                          color: Colors.grey,
-                          isVerified: false,
-                        ),
-                        ProfileQuickLinks(
-                          onClick: () => Operations.verifyOperation(context),
-                          name: "Verify account",
-                          icon: "assets/icon/badge.svg",
-                          color: HexColor("#0597FF"),
-                          isVerified: true,
-                        )
-                      ],
-                    ),
-                  ),
-                  const SliverToBoxAdapter(
-                    child: SizedBox(height: 20),
-                  ),
+                  // SliverToBoxAdapter(
+                  //   child: Row(
+                  //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  //     children: [
+                  //       ProfileQuickLinks(
+                  //         onClick: () {
+                  //           PageRouting.pushToPage(
+                  //               context, const DiamondBalanceScreen());
+                  //         },
+                  //         name: "Account balance",
+                  //         icon: "assets/icon/diamond.svg",
+                  //         color: null,
+                  //         isVerified: false,
+                  //       ),
+                  //       ProfileQuickLinks(
+                  //         onClick: () async {
+                  //           PageRouting.pushToPage(
+                  //               context, const PromoteScreen());
+                  //         },
+                  //         name: "Promote post",
+                  //         icon: "assets/icon/promote.svg",
+                  //         color: Colors.grey,
+                  //         isVerified: false,
+                  //       ),
+                  //       ProfileQuickLinks(
+                  //         onClick: () => Operations.verifyOperation(context),
+                  //         name: "Verify account",
+                  //         icon: "assets/icon/badge.svg",
+                  //         color: HexColor("#0597FF"),
+                  //         isVerified: true,
+                  //       )
+                  //     ],
+                  //   ),
+                  // ),
+
+                  // const SliverToBoxAdapter(
+                  //   child: SizedBox(height: 20),
+                  // ),
                 ];
               },
               restorationId: 'Tab${_tabController!.index}',

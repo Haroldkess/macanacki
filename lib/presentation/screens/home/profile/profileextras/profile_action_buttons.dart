@@ -14,6 +14,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../widgets/text.dart';
 import '../createpost/audio/create_audio_screen.dart';
+import '../promote_post/promote_screen.dart';
 
 class ProfileActionButton extends StatelessWidget {
   final String icon;
@@ -48,6 +49,40 @@ class ProfileActionButton extends StatelessWidget {
   }
 }
 
+class ProfileActionButtonSmall extends StatelessWidget {
+  final String icon;
+  VoidCallback onClick;
+  Color? color;
+  ProfileActionButtonSmall(
+      {super.key, required this.icon, required this.onClick, this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onClick,
+      child: Card(
+        elevation: 10,
+        color: Colors.grey.shade900,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(80),
+          //set border radius more than 50% of height and width to make circle
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(8.0),
+          child: SvgPicture.asset(
+            icon,
+            height: 13,
+            width: 13,
+            color: color,
+
+            //color: HexColor(color),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class AllProfileActions extends StatelessWidget {
   final bool isMine;
   const AllProfileActions({super.key, required this.isMine});
@@ -58,12 +93,32 @@ class AllProfileActions extends StatelessWidget {
     var height = MediaQuery.of(context).size.width;
     UserProfileWare stream = context.watch<UserProfileWare>();
     return Container(
-      width: 220,
+      width: 230,
       height: 80,
       //color: Colors.amber,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
+          InkWell(
+            onTap: () {
+              // PageRouting.pushToPage(context, const SettingsScreen());
+
+              PageRouting.pushToPage(context, const PromoteScreen());
+            },
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                ProfileActionButtonSmall(
+                  icon: "assets/icon/promote.svg",
+                  onClick: () {
+                    PageRouting.pushToPage(context, const PromoteScreen());
+                    //  PageRouting.pushToPage(context, const SettingsScreen());
+                  },
+                  color: textPrimary,
+                ),
+              ],
+            ),
+          ),
           InkWell(
             onTap: () => PageRouting.pushToPage(
                 context,
@@ -162,6 +217,23 @@ class AllProfileActions extends StatelessWidget {
                     size: 10,
                     color: HexColor("#797979"),
                   ),
+                ),
+              ],
+            ),
+          ),
+          InkWell(
+            onTap: () {
+              Operations.verifyOperation(context);
+              // PageRouting.pushToPage(context, const SettingsScreen());
+            },
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                ProfileActionButtonSmall(
+                  icon: "assets/icon/badge.svg",
+                  onClick: () {
+                    Operations.verifyOperation(context);
+                  },
                 ),
               ],
             ),

@@ -170,11 +170,11 @@ class GifterView extends StatelessWidget {
                   progressIndicatorBuilder: (context, url, downloadProgress) =>
                       Center(
                           child: Loader(
-                    color: HexColor(primaryColor),
+                    color: textPrimary,
                   )),
                   errorWidget: (context, url, error) => Icon(
                     Icons.error,
-                    color: HexColor(primaryColor),
+                    color: textPrimary,
                   ),
                 ),
               )),

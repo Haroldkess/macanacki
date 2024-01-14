@@ -25,6 +25,7 @@ class FeedPostController {
       BuildContext context, int pageNum, bool isPaginating,
       [String? filter]) async {
     FeedPostWare ware = Provider.of<FeedPostWare>(context, listen: false);
+    // emitter("test 2 +> $filter");
 
     if (isPaginating == true) {
       ware.isLoading(true);

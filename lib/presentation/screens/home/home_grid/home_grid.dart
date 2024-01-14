@@ -251,7 +251,7 @@ class _HomeGridScreenState extends State<HomeGridScreen> {
                       //   ),
                       // )
 
-                      tab.isLoad
+                      tab.isLoad || stream.loadStatusReferesh
                           ? ProfilePostGridLoader()
                           : MasonryGridView.count(
                               crossAxisCount: 3,
@@ -491,6 +491,7 @@ class _MenuCategoryState extends State<MenuCategory> {
           children: [
             ...cat.map((e) => InkWell(
                 onTap: () async {
+                  //  emitter("test 1 +> $e");
                   widget.tab!.load(true);
                   //  setState(() {});
                   ///   TabProvider tab = Provider.of<TabProvider>(context, listen: false);

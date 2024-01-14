@@ -184,31 +184,31 @@ class _FeedVideoHolderState extends State<FeedVideoHolder>
       backgroundColor: Colors.black,
       resizeToAvoidBottomInset: false,
       body: ObxValue((allVideos) {
-        List<dynamic> allThumbs = [];
-        if (allVideos.isNotEmpty) {
-          for (var i in allVideos) {
-            if (i.thumbnails!.isNotEmpty) {
-              allThumbs.add(i.thumbnails!.first);
-            }
+        // List<dynamic> allThumbs = [];
+        // if (allVideos.isNotEmpty) {
+        //   for (var i in allVideos) {
+        //     if (i.thumbnails!.isNotEmpty) {
+        //       allThumbs.add(i.thumbnails!.first);
+        //     }
 
-            // if (i.vod!.first != null || i.vod != null) {
-            //   buildVideoOptions(i.vod!.first, i.id);
-            // }
-          }
-        }
+        //     // if (i.vod!.first != null || i.vod != null) {
+        //     //   buildVideoOptions(i.vod!.first, i.id);
+        //     // }
+        //   }
+        // }
         return Stack(children: [
-          Column(
-            children: allThumbs == null
-                ? []
-                : List.generate(
-                    allThumbs == null ? 0 : allThumbs.length,
-                    (index) => Container(
-                      height: 1,
-                      child:
-                          CachedNetworkImage(imageUrl: allThumbs[index] ?? ""),
-                    ),
-                  ),
-          ),
+          // Column(
+          //   children: allThumbs == null
+          //       ? []
+          //       : List.generate(
+          //           allThumbs == null ? 0 : allThumbs.length,
+          //           (index) => Container(
+          //             height: 1,
+          //             child:
+          //                 CachedNetworkImage(imageUrl: allThumbs[index] ?? ""),
+          //           ),
+          //         ),
+          // ),
           PageView.builder(
             itemCount: allVideos.length,
             controller: pageController,
@@ -264,7 +264,7 @@ class _FeedVideoHolderState extends State<FeedVideoHolder>
                 child: Stack(
                   children: [
                     VideoView(
-                      allThumb: allThumbs,
+                      allThumb: [],
                       thumbLink: post.thumbnails!.isEmpty
                           ? ""
                           : post.thumbnails!.first,
@@ -489,8 +489,8 @@ class _VideoViewState extends State<VideoView> {
   }
 
   Future<void> initializePlayer() async {
-    log(" ffffffffffffffff ${widget.data.mux!.first}");
-    log(" ffffffffffffffff ${widget.data.vod!.first}");
+    // log(" ffffffffffffffff ${widget.data.mux!.first}");
+    // log(" ffffffffffffffff ${widget.data.vod!.first}");
 
     _videoPlayerController =
         preloadController.getPreloadById(widget.postId).controller!;
@@ -561,7 +561,7 @@ class _VideoViewState extends State<VideoView> {
   Rx<VideoPlayerController>? vid;
   @override
   Widget build(BuildContext context) {
-    log("-------------------------------------- Inside FeedVideoHolder");
+    // log("-------------------------------------- Inside FeedVideoHolder");
 
     return Stack(
       children: [
@@ -607,24 +607,6 @@ class _VideoViewState extends State<VideoView> {
             //       )),
             // ),
             ),
-        FadeInRight(
-          duration: Duration(seconds: 1),
-          animate: true,
-          child: Align(
-            alignment: Alignment.bottomRight,
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 80),
-              child: LikeSection(
-                page: widget.page,
-                data: widget.data,
-                userName: widget.data.user!.username,
-                isHome: widget.isHome,
-                showComment: true,
-                mediaController: _controller,
-              ),
-            ),
-          ),
-        ),
         Align(
           alignment: Alignment.bottomLeft,
           child: VideoUser(
@@ -635,6 +617,28 @@ class _VideoViewState extends State<VideoView> {
             controller: _controller,
             isVideo: true,
             showFollow: true,
+          ),
+        ),
+        FadeInRight(
+          duration: Duration(seconds: 1),
+          animate: true,
+          child: Align(
+            alignment: Alignment.bottomRight,
+            child: Padding(
+              padding: EdgeInsets.only(
+                  bottom:
+                      widget.data.btnLink != null && widget.data.button != null
+                          ? 100
+                          : 80),
+              child: LikeSection(
+                page: widget.page,
+                data: widget.data,
+                userName: widget.data.user!.username,
+                isHome: widget.isHome,
+                showComment: true,
+                mediaController: _controller,
+              ),
+            ),
           ),
         ),
         widget.data.btnLink != null && widget.data.button != null

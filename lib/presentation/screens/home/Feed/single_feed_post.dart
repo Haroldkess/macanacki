@@ -43,7 +43,7 @@ class _SingleFeedPostState extends State<SingleFeedPost> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       String id = ModalRoute.of(this.context)!.settings.arguments.toString();
 
-      getGenderFromApi(id);
+      getFromApi(id);
     });
   }
 
@@ -82,7 +82,7 @@ class _SingleFeedPostState extends State<SingleFeedPost> {
     ));
   }
 
-  Future<bool> getGenderFromApi(String id) async {
+  Future<bool> getFromApi(String id) async {
     late bool isSuccessful;
 
     emitter("this is the id $id");
@@ -91,11 +91,11 @@ class _SingleFeedPostState extends State<SingleFeedPost> {
     });
     try {
       http.Response? response = await getSinglePostPost(id)
-          .whenComplete(() => emitter("gender gotten successfully"));
+          .whenComplete(() => emitter(" gotten successfully"));
       if (response == null) {
         isSuccessful = false;
         //  log("get gender request failed");
-      } else if (response.statusCode == 201) {
+      } else if (response.statusCode == 200) {
         var jsonData = jsonDecode(response.body);
 
         try {

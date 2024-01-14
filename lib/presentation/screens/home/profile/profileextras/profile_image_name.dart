@@ -62,11 +62,19 @@ class ProfileImageAndName extends StatelessWidget {
                     elevation: 10.0,
                     color: Colors.black,
                     padding: 2,
-                    cornerRadius: 20.0,
+                    cornerRadius: 15.0,
                     child: AspectRatio(
                         aspectRatio: HexagonType.POINTY.ratio,
-                        child: Center(
-                          child: CachedNetworkImage(
+                        child: CachedNetworkImage(
+                          imageUrl: stream.userProfileModel.profilephoto ?? "",
+                          fit: BoxFit.cover,
+                          progressIndicatorBuilder:
+                              (context, url, downloadProgress) => Center(
+                                  child: Loader(
+                            color: textWhite,
+                          )),
+                          errorWidget: (context, url, error) =>
+                              CachedNetworkImage(
                             imageUrl:
                                 stream.userProfileModel.profilephoto ?? "",
                             fit: BoxFit.cover,
@@ -77,29 +85,18 @@ class ProfileImageAndName extends StatelessWidget {
                             )),
                             errorWidget: (context, url, error) =>
                                 CachedNetworkImage(
-                              imageUrl:
-                                  stream.userProfileModel.profilephoto ?? "",
-                              fit: BoxFit.cover,
-                              progressIndicatorBuilder:
-                                  (context, url, downloadProgress) => Center(
-                                      child: Loader(
-                                color: textWhite,
-                              )),
-                              errorWidget: (context, url, error) =>
-                                  CachedNetworkImage(
-                                      imageUrl: stream
-                                              .userProfileModel.profilephoto ??
-                                          "",
-                                      fit: BoxFit.cover,
-                                      progressIndicatorBuilder:
-                                          (context, url, downloadProgress) =>
-                                              Center(
-                                                  child: Loader(
-                                                color: textWhite,
-                                              )),
-                                      errorWidget: (context, url, error) =>
-                                          SizedBox()),
-                            ),
+                                    imageUrl:
+                                        stream.userProfileModel.profilephoto ??
+                                            "",
+                                    fit: BoxFit.cover,
+                                    progressIndicatorBuilder:
+                                        (context, url, downloadProgress) =>
+                                            Center(
+                                                child: Loader(
+                                              color: textWhite,
+                                            )),
+                                    errorWidget: (context, url, error) =>
+                                        SizedBox()),
                           ),
                         )),
                   ),

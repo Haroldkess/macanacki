@@ -151,28 +151,13 @@ class MyApp extends StatelessWidget {
             navigatorKey: navigatorKey,
             title: 'Macanacki',
             theme: ThemeData(
-                primaryColor: HexColor(primaryColor),
+                primaryColor: HexColor(backgroundColor),
                 brightness: Brightness.light,
                 iconTheme: IconThemeData(color: Colors.transparent),
                 iconButtonTheme: IconButtonThemeData(
                     style: ButtonStyle(
                         iconColor: MaterialStateProperty.all(Colors.black))),
                 primaryIconTheme: IconThemeData(color: Colors.black)),
-            // getPages: [
-            //   GetPage(
-            //     name: '/main',
-            //     page: () => UpgradeAlert(
-            //         upgrader: Upgrader(
-            //             dialogStyle: Platform.isIOS
-            //                 ? UpgradeDialogStyle.cupertino
-            //                 : UpgradeDialogStyle.material,
-            //             debugLogging: false),
-            //         child: const Splash()),
-            //     transition: Transition.leftToRight,
-            //     //  middlewares: [FirstRunMiddleware()],
-            //   ),
-            //   GetPage(name: '/test', page: () => const Test()),
-            // ],
             home: UpgradeAlert(
                 upgrader: Upgrader(
                     dialogStyle: Platform.isIOS

@@ -45,7 +45,7 @@ class SinglePost extends StatelessWidget {
       required this.media,
       //   required this.controller,
       required this.shouldPlay,
-      required this.constraints,
+      this.constraints,
       required this.isHome,
       required this.thumbLink,
       required this.isInView,
@@ -80,13 +80,8 @@ class SinglePost extends StatelessWidget {
             media.contains(".mp3") ||
             !media.contains("https")
         ? Stack(
-            alignment: Alignment.center,
+            alignment: Alignment.topCenter,
             children: [
-              Container(
-                width: width,
-                height: height,
-                decoration: BoxDecoration(color: Colors.black),
-              ),
               GestureDetector(
                 onTap: () async {
                   if (media.contains(".mp3")) {
@@ -149,6 +144,11 @@ class SinglePost extends StatelessWidget {
                 },
                 child: Padding(
                   padding: EdgeInsets.only(
+                      top: data.btnLink != null && data.button != null
+                          ? 10
+                          : data.description!.isEmpty
+                              ? 20
+                              : 0,
                       bottom: data.btnLink != null && data.button != null
                           ? 80
                           : data.description!.isEmpty
@@ -158,7 +158,7 @@ class SinglePost extends StatelessWidget {
                     alignment: Alignment.center,
                     children: [
                       Container(
-                          height: 350,
+                          //  height: 350,
                           width: double.infinity,
                           child: Container(
                             // height: 350,
@@ -182,12 +182,12 @@ class SinglePost extends StatelessWidget {
                                       width: width,
                                       height: height,
                                       decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(15),
+                                          // borderRadius:
+                                          //     BorderRadius.circular(15),
                                           image: DecorationImage(
-                                            image: imageProvider,
-                                            fit: BoxFit.fitWidth,
-                                          )),
+                                        image: imageProvider,
+                                        fit: BoxFit.fitWidth,
+                                      )),
                                     ),
                                 progressIndicatorBuilder:
                                     (context, url, downloadProgress) => Center(
@@ -204,12 +204,12 @@ class SinglePost extends StatelessWidget {
                                             width: width,
                                             height: height,
                                             decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(15),
+                                                // borderRadius:
+                                                //     BorderRadius.circular(15),
                                                 image: DecorationImage(
-                                                  image: imageProvider,
-                                                  fit: BoxFit.fitWidth,
-                                                )),
+                                              image: imageProvider,
+                                              fit: BoxFit.fitWidth,
+                                            )),
                                           ),
                                       progressIndicatorBuilder: (context, url,
                                               downloadProgress) =>
@@ -253,7 +253,7 @@ class SinglePost extends StatelessWidget {
             ],
           )
         : Stack(
-            alignment: Alignment.center,
+            alignment: Alignment.topCenter,
             children: [
               // Container(
               //   width: width,
@@ -263,7 +263,11 @@ class SinglePost extends StatelessWidget {
 
               Padding(
                 padding: EdgeInsets.only(
-                    top: 0,
+                    top: data.btnLink != null && data.button != null
+                        ? 10
+                        : data.description!.isEmpty
+                            ? 20
+                            : 0,
                     bottom: data.btnLink != null && data.button != null
                         ? 80
                         : data.description!.isEmpty
@@ -285,10 +289,12 @@ class SinglePost extends StatelessWidget {
                         : data.description!.isEmpty
                             ? 430
                             : 410,
+                    //   color: Colors.amber,
                     //   height: 430,
                     // height: data.description!.isEmpty ? Get.height : 400,
                     width: double.infinity,
                     //   color: Colors.amber,
+                    alignment: Alignment.bottomCenter,
 
                     child: CachedNetworkImage(
                         imageUrl: media,
@@ -297,11 +303,11 @@ class SinglePost extends StatelessWidget {
                               width: width,
                               height: height,
                               decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15),
+                                  // borderRadius: BorderRadius.circular(15),
                                   image: DecorationImage(
-                                    image: imageProvider,
-                                    fit: BoxFit.fitWidth,
-                                  )),
+                                image: imageProvider,
+                                fit: BoxFit.fitWidth,
+                              )),
                             ),
                         progressIndicatorBuilder:
                             (context, url, downloadProgress) => Center(
@@ -316,11 +322,11 @@ class SinglePost extends StatelessWidget {
                                     width: width,
                                     height: height,
                                     decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(15),
+                                        // borderRadius: BorderRadius.circular(15),
                                         image: DecorationImage(
-                                          image: imageProvider,
-                                          fit: BoxFit.fitWidth,
-                                        )),
+                                      image: imageProvider,
+                                      fit: BoxFit.fitWidth,
+                                    )),
                                   ),
                               progressIndicatorBuilder:
                                   (context, url, downloadProgress) =>
@@ -410,7 +416,7 @@ class UserSinglePost extends StatelessWidget {
             media.contains(".mp3") ||
             !media.contains("https")
         ? Stack(
-            alignment: Alignment.center,
+            alignment: Alignment.topCenter,
             children: [
               Container(
                 width: width,
@@ -498,12 +504,27 @@ class UserSinglePost extends StatelessWidget {
                         }
                       },
                       child: Padding(
-                        padding: const EdgeInsets.only(top: 0),
+                        padding: EdgeInsets.only(
+                            top: data.btnLink != null && data.button != null
+                                ? 10
+                                : data.description!.isEmpty
+                                    ? 20
+                                    : 0,
+                            bottom: data.btnLink != null && data.button != null
+                                ? 80
+                                : data.description!.isEmpty
+                                    ? 10
+                                    : 40),
                         child: Stack(
                           alignment: Alignment.center,
                           children: [
                             Container(
-                                height: 330,
+                                height:
+                                    data.btnLink != null && data.button != null
+                                        ? 380
+                                        : data.description!.isEmpty
+                                            ? 430
+                                            : 410,
                                 width: double.infinity,
                                 child: thumbLink == null
                                     ? Container(
@@ -579,7 +600,7 @@ class UserSinglePost extends StatelessWidget {
             ],
           )
         : Stack(
-            alignment: Alignment.center,
+            alignment: Alignment.topCenter,
             children: [
               Container(
                 width: width,
@@ -605,7 +626,11 @@ class UserSinglePost extends StatelessWidget {
               //     )),
               Padding(
                 padding: EdgeInsets.only(
-                    top: 0,
+                    top: data.btnLink != null && data.button != null
+                        ? 10
+                        : data.description!.isEmpty
+                            ? 20
+                            : 0,
                     bottom: data.btnLink != null && data.button != null
                         ? 80
                         : data.description!.isEmpty
@@ -636,11 +661,11 @@ class UserSinglePost extends StatelessWidget {
                         width: width,
                         height: height,
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
+                            //  borderRadius: BorderRadius.circular(15),
                             image: DecorationImage(
-                              image: imageProvider,
-                              fit: BoxFit.fitWidth,
-                            )),
+                          image: imageProvider,
+                          fit: BoxFit.fitWidth,
+                        )),
                       ),
                       progressIndicatorBuilder:
                           (context, url, downloadProgress) => Center(
@@ -654,11 +679,11 @@ class UserSinglePost extends StatelessWidget {
                                 width: width,
                                 height: height,
                                 decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15),
+                                    // borderRadius: BorderRadius.circular(15),
                                     image: DecorationImage(
-                                      image: imageProvider,
-                                      fit: BoxFit.fitWidth,
-                                    )),
+                                  image: imageProvider,
+                                  fit: BoxFit.fitWidth,
+                                )),
                               ),
                           progressIndicatorBuilder:
                               (context, url, downloadProgress) => Center(

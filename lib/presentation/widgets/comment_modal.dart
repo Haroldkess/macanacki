@@ -15,6 +15,7 @@ import 'package:macanacki/presentation/constants/params.dart';
 import 'package:macanacki/presentation/model/ui_model.dart';
 import 'package:macanacki/presentation/operations.dart';
 import 'package:macanacki/presentation/uiproviders/screen/comment_provider.dart';
+import 'package:macanacki/presentation/widgets/debug_emitter.dart';
 import 'package:macanacki/presentation/widgets/loader.dart';
 import 'package:macanacki/presentation/widgets/text.dart';
 import 'package:macanacki/services/controllers/action_controller.dart';
@@ -408,7 +409,11 @@ class CommentTile extends StatelessWidget {
                       TabProvider action =
                           Provider.of<TabProvider>(context, listen: false);
                       if (mediaController != null) {
-                        mediaController.pause();
+                        try {
+                          mediaController.pause();
+                        } catch (e) {
+                          emitter(e.toString());
+                        }
                       }
                       if (e.username == null) {
                         return;
@@ -425,11 +430,20 @@ class CommentTile extends StatelessWidget {
                         if (action.controller!.value.isInitialized) {
                           if (action.controller!.value.isBuffering ||
                               action.controller!.value.isPlaying) {
-                            action.pauseControl();
-                            action.tap(true);
+                            try {
+                              action.pauseControl();
+                              action.tap(true);
+                            } catch (e) {
+                              emitter(e.toString());
+                            }
                           } else {
-                            action.pauseControl();
-                            action.tap(true);
+                            try {
+                              action.pauseControl();
+                              action.tap(true);
+                            } catch (e) {
+                              emitter(e.toString());
+                            }
+
                             //  return;
                           }
                         }
@@ -479,7 +493,9 @@ class CommentTile extends StatelessWidget {
 
                       try {
                         preloadController.pausePreloadById(id);
-                      } catch (e) {}
+                      } catch (e) {
+                        emitter(e.toString());
+                      }
                     },
                     child: Container(
                         height: 43,

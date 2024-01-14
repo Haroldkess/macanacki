@@ -520,95 +520,95 @@ class _TestProfileState extends State<TestProfile>
                       : const SliverToBoxAdapter(
                           child: SizedBox(height: 20),
                         ),
-                  SliverToBoxAdapter(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        ProfileQuickLinks(
-                          onClick: () {
-                            Get.dialog(seeWebsiteDialog(
-                                svg: "pin",
-                                title: "Lives in",
-                                message:
-                                    "${publicUserProfileModel.city ?? ""}, ${publicUserProfileModel.state ?? ""}, ${publicUserProfileModel.country ?? ""} ",
-                                confirmText: "Yes",
-                                cancelText: "Go back",
-                                onPressedCancel: () {
-                                  Get.back();
-                                },
-                                onPressed: () {
-                                  Get.back();
-                                }));
-                          },
-                          name: "View Location",
-                          icon: "assets/icon/pin.svg",
-                          color: Colors.green,
-                          isVerified: false,
-                        ),
-                        ProfileQuickLinks(
-                          onClick: () async {
-                            Get.dialog(seeWebsiteDialog(
-                                svg: "seeweb",
-                                title: "Website",
-                                message: publicUserProfileModel.website == null
-                                    ? "Website not published by user"
-                                    : publicUserProfileModel.website!.isEmpty
-                                        ? "Website not published by user"
-                                        : publicUserProfileModel.website,
-                                confirmText: "Yes",
-                                cancelText: publicUserProfileModel.website ==
-                                        null
-                                    ? "Go back"
-                                    : publicUserProfileModel.website!.isEmpty
-                                        ? "Go back"
-                                        : "Visit",
-                                onPressedCancel: () {
-                                  if (publicUserProfileModel.website != null) {
-                                    if (publicUserProfileModel
-                                        .website!.isNotEmpty) {
-                                      UrlLaunchController.launchWebViewOrVC(
-                                          Uri.parse(
-                                              publicUserProfileModel.website!));
-                                    } else {
-                                      Get.back();
-                                    }
-                                  } else {
-                                    Get.back();
-                                  }
-                                },
-                                onPressed: () {}));
-                          },
-                          name: "View Website",
-                          icon: "assets/icon/seeweb.svg",
-                          color: Colors.grey,
-                          isVerified: false,
-                        ),
-                        ProfileQuickLinks(
-                          onClick: () {
-                            if (int.tryParse(GiftWare.instance.gift.value.data
-                                    .toString())! <
-                                50) {
-                              buyDiamondsModal(
-                                  context, GiftWare.instance.rate.value.data);
-                            } else {
-                              giveDiamondsModal(
-                                  context, publicUserProfileModel.username!);
-                            }
-                          },
-                          name: "Give Diamond",
-                          icon: "assets/icon/diamond.svg",
-                          color: null,
-                          isVerified: true,
-                        )
-                      ],
-                    ),
-                  ),
-                  const SliverToBoxAdapter(
-                    child: SizedBox(height: 20),
-                  ),
+                  // SliverToBoxAdapter(
+                  //   child: Row(
+                  //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  //     children: [
+                  //       ProfileQuickLinks(
+                  //         onClick: () {
+                  //           Get.dialog(seeWebsiteDialog(
+                  //               svg: "pin",
+                  //               title: "Lives in",
+                  //               message:
+                  //                   "${publicUserProfileModel.city ?? ""}, ${publicUserProfileModel.state ?? ""}, ${publicUserProfileModel.country ?? ""} ",
+                  //               confirmText: "Yes",
+                  //               cancelText: "Go back",
+                  //               onPressedCancel: () {
+                  //                 Get.back();
+                  //               },
+                  //               onPressed: () {
+                  //                 Get.back();
+                  //               }));
+                  //         },
+                  //         name: "View Location",
+                  //         icon: "assets/icon/pin.svg",
+                  //         color: Colors.green,
+                  //         isVerified: false,
+                  //       ),
+                  //       ProfileQuickLinks(
+                  //         onClick: () async {
+                  //           Get.dialog(seeWebsiteDialog(
+                  //               svg: "seeweb",
+                  //               title: "Website",
+                  //               message: publicUserProfileModel.website == null
+                  //                   ? "Website not published by user"
+                  //                   : publicUserProfileModel.website!.isEmpty
+                  //                       ? "Website not published by user"
+                  //                       : publicUserProfileModel.website,
+                  //               confirmText: "Yes",
+                  //               cancelText: publicUserProfileModel.website ==
+                  //                       null
+                  //                   ? "Go back"
+                  //                   : publicUserProfileModel.website!.isEmpty
+                  //                       ? "Go back"
+                  //                       : "Visit",
+                  //               onPressedCancel: () {
+                  //                 if (publicUserProfileModel.website != null) {
+                  //                   if (publicUserProfileModel
+                  //                       .website!.isNotEmpty) {
+                  //                     UrlLaunchController.launchWebViewOrVC(
+                  //                         Uri.parse(
+                  //                             publicUserProfileModel.website!));
+                  //                   } else {
+                  //                     Get.back();
+                  //                   }
+                  //                 } else {
+                  //                   Get.back();
+                  //                 }
+                  //               },
+                  //               onPressed: () {}));
+                  //         },
+                  //         name: "View Website",
+                  //         icon: "assets/icon/seeweb.svg",
+                  //         color: Colors.grey,
+                  //         isVerified: false,
+                  //       ),
+                  //       ProfileQuickLinks(
+                  //         onClick: () {
+                  //           if (int.tryParse(GiftWare.instance.gift.value.data
+                  //                   .toString())! <
+                  //               50) {
+                  //             buyDiamondsModal(
+                  //                 context, GiftWare.instance.rate.value.data);
+                  //           } else {
+                  //             giveDiamondsModal(
+                  //                 context, publicUserProfileModel.username!);
+                  //           }
+                  //         },
+                  //         name: "Give Diamond",
+                  //         icon: "assets/icon/diamond.svg",
+                  //         color: null,
+                  //         isVerified: true,
+                  //       )
+                  //     ],
+                  //   ),
+                  // ),
+                  // const SliverToBoxAdapter(
+                  //   child: SizedBox(height: 20),
+                  // ),
                 ];
               },
-              restorationId: 'Tab${_tabController!.index}',
+              // restorationId: 'Tab${_tabController!.index}',
               // innerScrollPositionKeyBuilder: () {
               //   return Key('Tab${_tabController.index}');
               // },
