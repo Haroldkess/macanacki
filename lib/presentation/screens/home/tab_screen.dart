@@ -683,7 +683,7 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
     //       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     //    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     //  = PageController(initialPage:  )
-    //  WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       TabProvider provide = Provider.of<TabProvider>(context, listen: false);
       PageController pageController =
@@ -738,7 +738,7 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
 
   @override
   void dispose() {
-    //WidgetsBinding.instance.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
     // if (mounted) {
     //   reloadTime.cancel();
