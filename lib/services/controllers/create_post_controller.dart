@@ -96,8 +96,9 @@ class CreatePostController {
       showToast2(context, ware.message, isError: false);
       await Future.delayed(const Duration(seconds: 2));
       // ignore: use_build_context_synchronously
-      Get.close(2);
-      // PageRouting.popToPage(context);
+      //  Get.back();
+      // ignore: use_build_context_synchronously
+      PageRouting.popToPage(context);
     } else {
       ware.isLoading(false);
       // ignore: use_build_context_synchronously
