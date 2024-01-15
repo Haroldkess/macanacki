@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
 import 'package:macanacki/presentation/widgets/loader.dart';
+import 'package:macanacki/presentation/widgets/text.dart';
 
 import 'package:macanacki/presentation/widgets/tik_tok_view.dart';
 import 'package:macanacki/services/backoffice/feed_post_office.dart';
@@ -65,7 +66,38 @@ class _SingleFeedPostState extends State<SingleFeedPost> {
                 child: Loader(color: textWhite),
               )
             : singlePost.id == null
-                ? SizedBox()
+                ? Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          BackButton(
+                            color: textWhite,
+                          )
+                        ],
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.image_not_supported_outlined,
+                            size: 50,
+                            color: Colors.redAccent,
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          AppText(
+                            text: "Post not found",
+                            color: textPrimary,
+                            size: 14,
+                          )
+                        ],
+                      ),
+                      SizedBox()
+                    ],
+                  )
                 : TikTokView(
                     media: singlePost.mux!,
                     vod: singlePost.vod!,

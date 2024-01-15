@@ -268,8 +268,8 @@ class LoginController {
     ///Extract custom data
     String notificationType = data['notification_type'];
     String targetPage = data['target_page'];
-    log("Notification type =>  " + notificationType);
-    log("Target page =>  " + targetPage);
+    //  log("Notification type =>  " + notificationType);
+    // log("Target page =>  " + targetPage);
 
     // Navigate based on notification type
     if (notificationType == 'post') {

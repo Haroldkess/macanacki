@@ -60,12 +60,6 @@ void main() async {
     // Configure inApp SDK
     await PayExt.configureSDK();
   } catch (e) {}
-  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-    // Handle the incoming message when the app is in the background or terminated
-
-    //log("data =>  " + message.data.keys.first);
-    LoginController.handleNotification(message.data);
-  });
 
   runApp(Phoenix(child: const MyApp()));
 }

@@ -162,26 +162,6 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                                     color: textWhite,
                                     fontWeight: FontWeight.w600,
                                   ))
-                          // stream.loadStatus
-                          //     ? Loader(color: textPrimary)
-                          //     : OutlinedButton(
-                          //         style: OutlinedButton.styleFrom(
-                          //             backgroundColor: HexColor(primaryColor),
-                          //             fixedSize: Size(68, 0),
-                          //             shape: RoundedRectangleBorder(
-                          //               borderRadius: BorderRadius.circular(16),
-                          //             ),
-                          //             side: BorderSide(
-                          //                 color: HexColor(primaryColor),
-                          //                 width: 1.0,
-                          //                 style: BorderStyle.solid)),
-                          //         onPressed: () => _submit(context),
-                          //         child: AppText(
-                          //           text: "Post",
-                          //           scaleFactor: 0.6,
-                          //           color: HexColor(backgroundColor),
-                          //           fontWeight: FontWeight.w600,
-                          //         ))
                         ],
                       )
                     ],

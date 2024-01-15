@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:async/async.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -33,17 +34,20 @@ import 'package:macanacki/services/controllers/user_profile_controller.dart';
 import 'package:macanacki/services/middleware/gift_ware.dart';
 import 'package:macanacki/services/middleware/video/video_ware.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:upgrader/upgrader.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 import '../../../model/feed_post_model.dart';
 import '../../../services/controllers/action_controller.dart';
+import '../../../services/controllers/login_controller.dart';
 import '../../../services/middleware/chat_ware.dart';
 import '../../../services/middleware/feed_post_ware.dart';
 import '../../../services/middleware/friends/friends_ware.dart';
 import '../../../services/middleware/post_security.dart';
 import '../../../services/middleware/swipe_ware.dart';
 import '../../../services/middleware/user_profile_ware.dart';
+import '../../../services/temps/temps_id.dart';
 import '../../uiproviders/screen/find_people_provider.dart';
 import '../../widgets/app_bar.dart';
 import '../../widgets/debug_emitter.dart';
@@ -628,6 +632,21 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
   //     ChatController.retreiveUnread(context);
   //   });
   // }
+  void checkTappedNotification() async {
+    // SharedPreferences pref = await SharedPreferences.getInstance();
+    try {
+      // if (pref.containsKey(isLoggedInKey)) {
+      //   if (pref.getBool(isLoggedInKey) == true) {}
+      // }
+      FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+        emitter("run");
+        LoginController.handleNotification(message.data);
+      });
+    } catch (e) {
+      emitter(e.toString());
+    }
+    return;
+  }
 
   @override
   void initState() {
@@ -635,6 +654,7 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
     super.initState();
     Get.put(GiftWare());
     Get.put(FriendWare());
+    checkTappedNotification();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       VideoWareHome.instance.getVideoPostFromApi(1);
       VideoWareHome.instance.getAudioPostFromApi(1);
@@ -648,7 +668,7 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
     //       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     //    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     //  = PageController(initialPage:  )
-    WidgetsBinding.instance.addObserver(this);
+    //  WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       TabProvider provide = Provider.of<TabProvider>(context, listen: false);
       PageController pageController =
@@ -703,7 +723,7 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
+    //WidgetsBinding.instance.removeObserver(this);
     super.dispose();
     // if (mounted) {
     //   reloadTime.cancel();
@@ -723,10 +743,10 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
 
     if (isBackground) {
       emitter("background");
-      ModeController.handleMode("offline");
+      // ModeController.handleMode("offline");
     } else if (isClosed) {
       emitter("closed");
-      ModeController.handleMode("offline");
+      //  ModeController.handleMode("offline");
     } else if (isResumed) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ChatWare action = Provider.of(context, listen: false);
@@ -737,10 +757,11 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
         }
       });
       emitter("resumed");
-      ModeController.handleMode("online");
+      checkTappedNotification();
+      //  ModeController.handleMode("online");
     } else if (isInactive) {
       emitter("inactive");
-      ModeController.handleMode("offline");
+      //   ModeController.handleMode("offline");
     }
 
     /* if (isBackground) {
