@@ -648,13 +648,26 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
     return;
   }
 
+  void checkTappedNotificationOnClosedApp() async {
+    try {
+      RemoteMessage? message =
+          await FirebaseMessaging.instance.getInitialMessage();
+      if (message != null) {
+        LoginController.handleNotification(message.data);
+      }
+    } catch (e) {
+      emitter(e.toString());
+    }
+    return;
+  }
+
   @override
   void initState() {
     //UpdateApp.basicStatusCheck(context);
     super.initState();
     Get.put(GiftWare());
     Get.put(FriendWare());
-    checkTappedNotification();
+    checkTappedNotificationOnClosedApp();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       VideoWareHome.instance.getVideoPostFromApi(1);
       VideoWareHome.instance.getAudioPostFromApi(1);
