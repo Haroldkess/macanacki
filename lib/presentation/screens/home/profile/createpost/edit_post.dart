@@ -49,6 +49,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
     UserProfileWare user = Provider.of<UserProfileWare>(context, listen: false);
 
     return Scaffold(
+      backgroundColor: HexColor(backgroundColor),
       body: Container(
         height: height,
         width: width,
@@ -82,7 +83,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
                     ),
                     AppText(
                       text: "Edit Post",
-                      color: Colors.black,
+                      color: textWhite,
                       fontWeight: FontWeight.w600,
                       size: 17,
                     ),
@@ -92,20 +93,20 @@ class _EditPostScreenState extends State<EditPostScreen> {
                             ? Loader(color: HexColor(primaryColor))
                             : OutlinedButton(
                                 style: OutlinedButton.styleFrom(
-                                    backgroundColor: HexColor(primaryColor),
+                                    backgroundColor: secondaryColor,
                                     fixedSize: Size(85, 0),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(16),
                                     ),
                                     side: BorderSide(
-                                        color: HexColor(primaryColor),
+                                        color: secondaryColor,
                                         width: 1.0,
                                         style: BorderStyle.solid)),
                                 onPressed: () => _submit(context),
                                 child: AppText(
                                   text: "Update",
                                   size: 10,
-                                  color: HexColor(backgroundColor),
+                                  color: textWhite,
                                   fontWeight: FontWeight.w700,
                                 ))
                       ],

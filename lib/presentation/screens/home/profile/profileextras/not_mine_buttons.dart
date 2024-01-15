@@ -1653,7 +1653,7 @@ class UserProfileActionsTest extends StatelessWidget {
                               child: Loader(color: textWhite),
                             )
                           : ProfileActionButtonNotThisUsers(
-                              isSwipe: false,
+                              isSwipe: true,
                               icon: "assets/icon/userchat.svg",
                               onClick: () async {
                                 late ChatData chat;
@@ -2057,7 +2057,7 @@ class UserProfileActionsTest extends StatelessWidget {
                               child: Loader(color: textWhite),
                             )
                           : ProfileActionButtonNotThisUsers(
-                              isSwipe: false,
+                              isSwipe: true,
                               icon: "assets/icon/userchat.svg",
                               onClick: () async {
                                 ChatWare chatWare = Provider.of<ChatWare>(
@@ -2212,7 +2212,7 @@ class UserProfileActionsTest extends StatelessWidget {
                         height: 5,
                       ),
                       Container(
-                        constraints: BoxConstraints(maxWidth: 50, minWidth: 50),
+                        width: 50,
                         alignment: Alignment.center,
                         //color: Colors.amber,
                         child: AppText(
@@ -2257,6 +2257,7 @@ class UserProfileActionsTest extends StatelessWidget {
                   },
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ProfileActionButtonSmall(
                         color: textPrimary,

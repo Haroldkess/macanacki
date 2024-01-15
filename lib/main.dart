@@ -10,6 +10,7 @@ import 'package:macanacki/config/pay_ext.dart';
 import 'package:macanacki/preload/preload_controller.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
 import 'package:macanacki/presentation/screens/onboarding/splash_screen.dart';
+import 'package:macanacki/presentation/uiproviders/screen/chat_provider.dart';
 import 'package:macanacki/presentation/widgets/routes/routes.dart';
 import 'package:macanacki/presentation/widgets/text.dart';
 import 'package:macanacki/services/controllers/IAUpdate.dart';
@@ -50,6 +51,7 @@ void main() async {
   Get.put(PersistentNavController());
   Get.put(PostSecurity());
   Get.put(scrolNotify());
+  Get.put(ChatProvider());
   Get.put(scrolNotifyPublic());
   Get.put<PreloadController>(PreloadController());
   PreloadController.to.clear();

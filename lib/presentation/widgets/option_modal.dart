@@ -300,10 +300,24 @@ optionModal(BuildContext cont, List<String> url,
                                               }
                                             }
                                           } else {
-                                            downloadDiamondsModal(
-                                              context,
-                                              postId!,
-                                            );
+                                            if (data.media!.first
+                                                .contains('.mp3')) {
+                                              showToast2(context,
+                                                  "Can't perfom this action",
+                                                  isError: true);
+                                              return;
+                                              // await SaveMediaController
+                                              //     .saveNetworkAudio(
+                                              //         context,
+                                              //         data.media!.first,
+                                              //         data.description ??
+                                              //             "macanacki");
+                                            } else {
+                                              downloadDiamondsModal(
+                                                context,
+                                                postId!,
+                                              );
+                                            }
                                           }
 
                                           // }

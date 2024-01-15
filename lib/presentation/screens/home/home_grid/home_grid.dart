@@ -98,10 +98,12 @@ class _HomeGridScreenState extends State<HomeGridScreen> {
 
   callFeedPost(bool isRefreshed) async {
     FeedPostWare provide = Provider.of<FeedPostWare>(context, listen: false);
+    TabProvider tab = Provider.of<TabProvider>(context, listen: false);
     if (isRefreshed == false) {
       if (provide.feedPosts.isEmpty) {
         SchedulerBinding.instance.addPostFrameCallback((_) async {
-          await FeedPostController.getFeedPostController(context, 1, false);
+          await FeedPostController.getFeedPostController(
+              context, 1, false, tab.filterNameHome);
         });
       }
 
@@ -119,7 +121,8 @@ class _HomeGridScreenState extends State<HomeGridScreen> {
 
       provide.isLoadingReferesh(true);
       provide.indexChange(0);
-      await FeedPostController.getFeedPostController(context, 1, false);
+      await FeedPostController.getFeedPostController(
+          context, 1, false, tab.filterNameHome);
       //   SchedulerBinding.instance.addPostFrameCallback((_) {
       ActionController.retrievAllUserLikedController(context);
       // });

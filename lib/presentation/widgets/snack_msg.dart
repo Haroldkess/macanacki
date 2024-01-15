@@ -156,9 +156,9 @@ showToast2(BuildContext context, String message, {bool isError = false}) async {
 Future<void> showToastLater(msg) async {
   await Fluttertoast.showToast(
       msg: msg,
-      textColor: HexColor(backgroundColor),
+      textColor: textWhite,
       gravity: ToastGravity.TOP,
-      backgroundColor: HexColor(primaryColor));
+      backgroundColor: HexColor(backgroundColor));
 }
 
 Future<void> showToastNew(msg) async {

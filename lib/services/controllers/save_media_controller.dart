@@ -216,7 +216,7 @@ class SaveMediaController {
                   child: CircularProgressIndicator(
                     value: double.tryParse(download.value.toString())! * 0.01,
                     valueColor: AlwaysStoppedAnimation(
-                      HexColor(primaryColor),
+                      secondaryColor,
                     ),
                     backgroundColor: Colors.black,
                     //semanticsValue: "${download.value}%",

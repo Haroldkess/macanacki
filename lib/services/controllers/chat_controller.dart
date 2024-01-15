@@ -20,6 +20,7 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:socket_io_client/socket_io_client.dart';
 
 import '../../presentation/uiproviders/screen/card_provider.dart';
+import '../../presentation/uiproviders/screen/chat_provider.dart';
 
 class StreamSocket {
   final _socketResponse = StreamController<dynamic>();
@@ -369,6 +370,23 @@ class ChatController {
       readAll(context, ware.chatPage);
       // print(chatName ?? "Nothing");
       //print(chatData.userOne);
+    }
+    try {
+      List find = ChatProvider.instance.idList
+          .where((p0) => p0 == chatData.conversations!.first.id)
+          .toList();
+
+      if (find.isEmpty) {
+        ChatProvider.instance
+            .changeId(chatData.conversations!.first.id ?? 0)
+            .whenComplete(() async {
+          await Future.delayed(Duration(seconds: 1), () {
+            ChatProvider.instance.changeId(0);
+          });
+        });
+      }
+    } catch (e) {
+      emitter(e.toString());
     }
 
     // Conversation data3 = Conversation(
