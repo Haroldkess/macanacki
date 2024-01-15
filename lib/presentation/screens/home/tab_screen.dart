@@ -638,10 +638,10 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
       // if (pref.containsKey(isLoggedInKey)) {
       //   if (pref.getBool(isLoggedInKey) == true) {}
       // }
-      FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-        emitter("run");
-        LoginController.handleNotification(message.data);
-      });
+      // FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      //   emitter("run");
+      //   LoginController.handleNotification(message.data);
+      // });
     } catch (e) {
       emitter(e.toString());
     }
@@ -658,7 +658,9 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
     } catch (e) {
       emitter(e.toString());
     }
-    return;
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      LoginController.handleNotification(message.data);
+    });
   }
 
   @override
