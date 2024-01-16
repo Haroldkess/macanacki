@@ -15,6 +15,7 @@ import 'package:provider/provider.dart';
 import '../../../../allNavigation.dart';
 import '../../../../widgets/loader.dart';
 import '../../../userprofile/testing_profile.dart';
+import 'package:macanacki/presentation/allNavigation.dart';
 
 class FollowTile extends StatelessWidget {
   final FollowingData data;
@@ -24,12 +25,13 @@ class FollowTile extends StatelessWidget {
   Widget build(BuildContext context) {
     ActionWare stream = context.watch<ActionWare>();
     return InkWell(
-      onTap: () {
+      onTap: () async {
+        PageRouting.popToPage(context);
         PageRouting.pushToPage(
             context,
-            TestProfile (
+            TestProfile(
               username: data.username!,
-extended: false,
+              extended: false,
             ));
       },
       child: Container(
