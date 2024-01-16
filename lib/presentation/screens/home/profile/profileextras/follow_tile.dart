@@ -12,11 +12,9 @@ import 'package:macanacki/services/controllers/action_controller.dart';
 import 'package:macanacki/services/middleware/action_ware.dart';
 import 'package:numeral/numeral.dart';
 import 'package:provider/provider.dart';
-
 import '../../../../allNavigation.dart';
-
 import '../../../../widgets/loader.dart';
-import '../../../userprofile/user_profile_screen.dart';
+import '../../../userprofile/testing_profile.dart';
 
 class FollowTile extends StatelessWidget {
   final FollowingData data;
@@ -29,8 +27,9 @@ class FollowTile extends StatelessWidget {
       onTap: () {
         PageRouting.pushToPage(
             context,
-            UsersProfile(
+            TestProfile (
               username: data.username!,
+extended: false,
             ));
       },
       child: Container(
