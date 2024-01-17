@@ -154,13 +154,7 @@ class MyApp extends StatelessWidget {
                     style: ButtonStyle(
                         iconColor: MaterialStateProperty.all(Colors.black))),
                 primaryIconTheme: IconThemeData(color: Colors.black)),
-            home: UpgradeAlert(
-                upgrader: Upgrader(
-                    dialogStyle: Platform.isIOS
-                        ? UpgradeDialogStyle.cupertino
-                        : UpgradeDialogStyle.material,
-                    debugLogging: false),
-                child: const Splash()),
+            home: const Splash(),
             initialRoute: '/',
             routes: getApplicationRoutes(),
           ),

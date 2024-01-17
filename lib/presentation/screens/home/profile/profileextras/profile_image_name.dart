@@ -25,56 +25,50 @@ class ProfileImageAndName extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        GestureDetector(
-          onTap: () {
-            stream.userProfileModel.profilephoto == null
-                ? null
-                : PageRouting.pushToPage(
-                    context,
-                    ImageHolder(
-                      images: [
-                        stream.userProfileModel.profilephoto!.isEmpty
-                            ? ""
-                            : stream.userProfileModel.profilephoto!
-                      ],
-                    ));
-          },
-          child: Stack(
-            alignment: Alignment.bottomCenter,
-            children: [
-              Stack(
-                children: [
-                  HexagonWidget.pointy(
-                    width: w,
-                    elevation: 10.0,
-                    color: HexColor("#C0C0C0").withOpacity(.4),
-                    cornerRadius: 15.0,
-                    child: AspectRatio(
-                      aspectRatio: HexagonType.POINTY.ratio,
-                      // child: Image.asset(
-                      //   'assets/tram.jpg',
-                      //   fit: BoxFit.fitWidth,
-                      // ),
-                    ),
-                  ),
-                  HexagonWidget.pointy(
-                    width: w,
-                    elevation: 10.0,
-                    color: Colors.black,
-                    padding: 2,
-                    cornerRadius: 15.0,
-                    child: AspectRatio(
+        Container(
+          width: 150,
+          // color: Colors.amber,
+          child: GestureDetector(
+            onTap: () {
+              stream.userProfileModel.profilephoto == null
+                  ? null
+                  : PageRouting.pushToPage(
+                      context,
+                      ImageHolder(
+                        images: [
+                          stream.userProfileModel.profilephoto!.isEmpty
+                              ? ""
+                              : stream.userProfileModel.profilephoto!
+                        ],
+                      ));
+            },
+            child: Stack(
+              alignment: Alignment.bottomCenter,
+              children: [
+                Stack(
+                  children: [
+                    HexagonWidget.pointy(
+                      width: w,
+                      elevation: 10.0,
+                      color: HexColor("#C0C0C0").withOpacity(.4),
+                      cornerRadius: 15.0,
+                      child: AspectRatio(
                         aspectRatio: HexagonType.POINTY.ratio,
-                        child: CachedNetworkImage(
-                          imageUrl: stream.userProfileModel.profilephoto ?? "",
-                          fit: BoxFit.cover,
-                          progressIndicatorBuilder:
-                              (context, url, downloadProgress) => Center(
-                                  child: Loader(
-                            color: textWhite,
-                          )),
-                          errorWidget: (context, url, error) =>
-                              CachedNetworkImage(
+                        // child: Image.asset(
+                        //   'assets/tram.jpg',
+                        //   fit: BoxFit.fitWidth,
+                        // ),
+                      ),
+                    ),
+                    HexagonWidget.pointy(
+                      width: w,
+                      elevation: 10.0,
+                      color: Colors.black,
+                      padding: 2,
+                      cornerRadius: 15.0,
+                      child: AspectRatio(
+                          aspectRatio: HexagonType.POINTY.ratio,
+                          child: CachedNetworkImage(
                             imageUrl:
                                 stream.userProfileModel.profilephoto ?? "",
                             fit: BoxFit.cover,
@@ -85,49 +79,60 @@ class ProfileImageAndName extends StatelessWidget {
                             )),
                             errorWidget: (context, url, error) =>
                                 CachedNetworkImage(
-                                    imageUrl:
-                                        stream.userProfileModel.profilephoto ??
-                                            "",
-                                    fit: BoxFit.cover,
-                                    progressIndicatorBuilder:
-                                        (context, url, downloadProgress) =>
-                                            Center(
-                                                child: Loader(
-                                              color: textWhite,
-                                            )),
-                                    errorWidget: (context, url, error) =>
-                                        SizedBox()),
-                          ),
-                        )),
-                  ),
-                ],
-              ),
-              Positioned(
-                bottom: 10,
-                right: w * 2 / 1.5,
-                child: InkWell(
-                  onTap: () async => await Operations.changePhotoFromGallery(
-                      context,
-                      stream.userProfileModel.aboutMe,
-                      stream.userProfileModel.phone,
-                      stream.userProfileModel.country,
-                      stream.userProfileModel.state,
-                      stream.userProfileModel.city),
-                  child: CircleAvatar(
-                    radius: 13,
-                    backgroundColor: Colors.black,
+                              imageUrl:
+                                  stream.userProfileModel.profilephoto ?? "",
+                              fit: BoxFit.cover,
+                              progressIndicatorBuilder:
+                                  (context, url, downloadProgress) => Center(
+                                      child: Loader(
+                                color: textWhite,
+                              )),
+                              errorWidget: (context, url, error) =>
+                                  CachedNetworkImage(
+                                      imageUrl: stream
+                                              .userProfileModel.profilephoto ??
+                                          "",
+                                      fit: BoxFit.cover,
+                                      progressIndicatorBuilder:
+                                          (context, url, downloadProgress) =>
+                                              Center(
+                                                  child: Loader(
+                                                color: textWhite,
+                                              )),
+                                      errorWidget: (context, url, error) =>
+                                          SizedBox()),
+                            ),
+                          )),
+                    ),
+                  ],
+                ),
+                Positioned(
+                  bottom: 10,
+                  right: 30,
+                  child: InkWell(
+                    onTap: () async => await Operations.changePhotoFromGallery(
+                        context,
+                        stream.userProfileModel.aboutMe,
+                        stream.userProfileModel.phone,
+                        stream.userProfileModel.country,
+                        stream.userProfileModel.state,
+                        stream.userProfileModel.city),
                     child: CircleAvatar(
-                      backgroundColor: Colors.transparent,
-                      radius: 10,
-                      child: SvgPicture.asset(
-                        "assets/icon/add_profile.svg",
-                        color: Colors.green,
+                      radius: 13,
+                      backgroundColor: Colors.black,
+                      child: CircleAvatar(
+                        backgroundColor: Colors.transparent,
+                        radius: 10,
+                        child: SvgPicture.asset(
+                          "assets/icon/add_profile.svg",
+                          color: Colors.green,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              )
-            ],
+                )
+              ],
+            ),
           ),
         ),
         const SizedBox(
