@@ -180,204 +180,180 @@ class _FeedVideoHolderState extends State<FeedVideoHolder>
   Widget build(BuildContext context) {
     ActionWare action = Provider.of<ActionWare>(context, listen: false);
 
-    return Scaffold(
-      backgroundColor: Colors.black,
-      resizeToAvoidBottomInset: false,
-      body: ObxValue((allVideos) {
-        // List<dynamic> allThumbs = [];
-        // if (allVideos.isNotEmpty) {
-        //   for (var i in allVideos) {
-        //     if (i.thumbnails!.isNotEmpty) {
-        //       allThumbs.add(i.thumbnails!.first);
-        //     }
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.black,
+        resizeToAvoidBottomInset: false,
+        body: ObxValue((allVideos) {
+          // List<dynamic> allThumbs = [];
+          // if (allVideos.isNotEmpty) {
+          //   for (var i in allVideos) {
+          //     if (i.thumbnails!.isNotEmpty) {
+          //       allThumbs.add(i.thumbnails!.first);
+          //     }
 
-        //     // if (i.vod!.first != null || i.vod != null) {
-        //     //   buildVideoOptions(i.vod!.first, i.id);
-        //     // }
-        //   }
-        // }
-        return Stack(children: [
-          // Column(
-          //   children: allThumbs == null
-          //       ? []
-          //       : List.generate(
-          //           allThumbs == null ? 0 : allThumbs.length,
-          //           (index) => Container(
-          //             height: 1,
-          //             child:
-          //                 CachedNetworkImage(imageUrl: allThumbs[index] ?? ""),
-          //           ),
-          //         ),
-          // ),
-          PageView.builder(
-            itemCount: allVideos.length,
-            controller: pageController,
-            //  preloadPagesCount: 0,
-            scrollDirection: Axis.vertical,
-            itemBuilder: ((context, index) {
-              FeedPost post = allVideos[index];
-              // FeedPost? post2 =
-              //     index + 1 < allVideos.length ? allVideos[index + 1] : null;
-              // FeedPost? post3 =
-              //     index + 2 < allVideos.length ? allVideos[index + 2] : null;
+          //     // if (i.vod!.first != null || i.vod != null) {
+          //     //   buildVideoOptions(i.vod!.first, i.id);
+          //     // }
+          //   }
+          // }
+          return Stack(children: [
+            // Column(
+            //   children: allThumbs == null
+            //       ? []
+            //       : List.generate(
+            //           allThumbs == null ? 0 : allThumbs.length,
+            //           (index) => Container(
+            //             height: 1,
+            //             child:
+            //                 CachedNetworkImage(imageUrl: allThumbs[index] ?? ""),
+            //           ),
+            //         ),
+            // ),
+            PageView.builder(
+              itemCount: allVideos.length,
+              controller: pageController,
+              //  preloadPagesCount: 0,
+              scrollDirection: Axis.vertical,
+              itemBuilder: ((context, index) {
+                FeedPost post = allVideos[index];
+                // FeedPost? post2 =
+                //     index + 1 < allVideos.length ? allVideos[index + 1] : null;
+                // FeedPost? post3 =
+                //     index + 2 < allVideos.length ? allVideos[index + 2] : null;
 
-              // if (loadVod) {
-              //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {});
-              // }
+                // if (loadVod) {
+                //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {});
+                // }
 
-              return GestureDetector(
-                onDoubleTap: () async {
-                  HapticFeedback.heavyImpact();
-                  if (mounted) {
-                    if (controller.value == 1) {
-                      controller.reset();
-                      controller.forward();
-                    } else {
-                      controller.forward();
-                    }
+                return GestureDetector(
+                  onDoubleTap: () async {
+                    HapticFeedback.heavyImpact();
+                    if (mounted) {
+                      if (controller.value == 1) {
+                        controller.reset();
+                        controller.forward();
+                      } else {
+                        controller.forward();
+                      }
 
-                    if (action.likeIds.contains(post.id!)) {
+                      if (action.likeIds.contains(post.id!)) {
+                        setState(() {
+                          flag = true;
+                        });
+                        await Future.delayed(const Duration(seconds: 2));
+
+                        setState(() {
+                          flag = false;
+                        });
+
+                        return;
+                      }
                       setState(() {
                         flag = true;
                       });
+
+                      await likeAction(context, true, post.id!);
+
                       await Future.delayed(const Duration(seconds: 2));
 
                       setState(() {
                         flag = false;
                       });
-
-                      return;
                     }
-                    setState(() {
-                      flag = true;
-                    });
+                  },
+                  child: Stack(
+                    children: [
+                      VideoView(
+                        allThumb: [],
+                        thumbLink: post.thumbnails!.isEmpty
+                            ? ""
+                            : post.thumbnails!.first,
+                        page: widget.page,
+                        postId: post.id!,
+                        index: index,
+                        vodList: vodVid,
+                        data: post,
+                        inComingController: null,
+                        isHome: widget.isHome,
+                      ),
+                      // : VideoViewIos(
+                      //     allThumb: allThumbs,
+                      //     thumbLink: post.thumbnails!.first,
+                      //     page: widget.page,
+                      //     postId: post.id!,
+                      //     index: index,
+                      //     vodList: vodVid,
+                      //     data: post,
+                      //     inComingController: null,
+                      //     isHome: widget.isHome,
+                      //   ),
 
-                    await likeAction(context, true, post.id!);
-
-                    await Future.delayed(const Duration(seconds: 2));
-
-                    setState(() {
-                      flag = false;
-                    });
-                  }
-                },
-                child: Stack(
-                  children: [
-                    VideoView(
-                      allThumb: [],
-                      thumbLink: post.thumbnails!.isEmpty
-                          ? ""
-                          : post.thumbnails!.first,
-                      page: widget.page,
-                      postId: post.id!,
-                      index: index,
-                      vodList: vodVid,
-                      data: post,
-                      inComingController: null,
-                      isHome: widget.isHome,
-                    ),
-                    // : VideoViewIos(
-                    //     allThumb: allThumbs,
-                    //     thumbLink: post.thumbnails!.first,
-                    //     page: widget.page,
-                    //     postId: post.id!,
-                    //     index: index,
-                    //     vodList: vodVid,
-                    //     data: post,
-                    //     inComingController: null,
-                    //     isHome: widget.isHome,
-                    //   ),
-                    post.promoted == "yes"
-                        ? Positioned(
-                            bottom: 140,
-                            left: 0,
-                            child: Align(
-                                alignment: Alignment.bottomLeft,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    // AdsDisplay(
-                                    //   sponsored: false,
-                                    //   color: HexColor('#00B074'),
-                                    //   title: '\$10.000.00',
-                                    // ),
-                                    // SizedBox(
-                                    //   height: 10,
-                                    // ),
-                                    AdsDisplay(
-                                      sponsored: true,
-                                      //  color: HexColor('#00B074'),
-                                      color: Colors.grey.shade400,
-                                      title: 'Sponsored Ad',
-                                    ),
-                                  ],
-                                )),
-                          )
-                        : SizedBox.shrink(),
-                    flag
-                        ? Center(
-                            child: Align(
-                              alignment: Alignment.center,
-                              child: AnimatedContainer(
-                                duration: const Duration(seconds: 3),
-                                curve: Curves.bounceInOut,
-                                onEnd: () {
-                                  setState(() {
-                                    flag = false;
-                                  });
-                                },
-                                child: Icon(
-                                  Icons.favorite,
-                                  size: Get.width * 0.4,
-                                  color: animation.value,
+                      flag
+                          ? Center(
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: AnimatedContainer(
+                                  duration: const Duration(seconds: 3),
+                                  curve: Curves.bounceInOut,
+                                  onEnd: () {
+                                    setState(() {
+                                      flag = false;
+                                    });
+                                  },
+                                  child: Icon(
+                                    Icons.favorite,
+                                    size: Get.width * 0.4,
+                                    color: animation.value,
+                                  ),
                                 ),
                               ),
-                            ),
-                          )
-                        : const SizedBox.shrink(),
-                  ],
-                ),
-              );
-            }),
-            onPageChanged: (index) {
-              // if (index > (allVideos.length - 1) || index < 1) {
-              // } else {
-              //   if (index % 3 == 0) {
-              //     removeAllVideoOption();
-              //   } else {
-              //     List<dynamic> sendToVod = [
-              //       allVideos[index - 1].vod!.first +
-              //           "|${allVideos[index - 1].id}",
-              //       allVideos[index].vod!.first + "|${allVideos[index - 1].id}",
-              //       allVideos[index + 1].vod!.first +
-              //           "|${allVideos[index - 1].id}"
-              //     ];
+                            )
+                          : const SizedBox.shrink(),
+                    ],
+                  ),
+                );
+              }),
+              onPageChanged: (index) {
+                // if (index > (allVideos.length - 1) || index < 1) {
+                // } else {
+                //   if (index % 3 == 0) {
+                //     removeAllVideoOption();
+                //   } else {
+                //     List<dynamic> sendToVod = [
+                //       allVideos[index - 1].vod!.first +
+                //           "|${allVideos[index - 1].id}",
+                //       allVideos[index].vod!.first + "|${allVideos[index - 1].id}",
+                //       allVideos[index + 1].vod!.first +
+                //           "|${allVideos[index - 1].id}"
+                //     ];
 
-              //     for (var i in sendToVod) {
-              //       if (i != null) {
-              //         buildVideoOptions(i.toString().split("|").first,
-              //             i.toString().split("|").last, index);
-              //       }
-              //     }
-              //   }
-              // }
+                //     for (var i in sendToVod) {
+                //       if (i != null) {
+                //         buildVideoOptions(i.toString().split("|").first,
+                //             i.toString().split("|").last, index);
+                //       }
+                //     }
+                //   }
+                // }
 
-              if (index != 0) {
-                WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                  VideoWare.instance.loadVideo(false);
-                });
-              }
-              if (mounted) {
-                if (index > VideoWareHome.instance.feedPosts.length - 4) {
-                  SchedulerBinding.instance.addPostFrameCallback((_) {
-                    paginateFeed();
+                if (index != 0) {
+                  WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                    VideoWare.instance.loadVideo(false);
                   });
                 }
-              }
-            },
-          ),
-        ]);
-      }, VideoWareHome.instance.feedPosts),
+                if (mounted) {
+                  if (index > VideoWareHome.instance.feedPosts.length - 4) {
+                    SchedulerBinding.instance.addPostFrameCallback((_) {
+                      paginateFeed();
+                    });
+                  }
+                }
+              },
+            ),
+          ]);
+        }, VideoWareHome.instance.feedPosts),
+      ),
     );
   }
 

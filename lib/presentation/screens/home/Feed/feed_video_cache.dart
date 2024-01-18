@@ -196,25 +196,25 @@ class _FeedVideoHolderPrivateState extends State<FeedVideoHolderPrivate>
                     //     isHome: widget.isHome,
                     //     showComment: widget.showComment,
                     //   ),
-                    widget.data.promoted == "yes"
-                        ? Positioned(
-                            bottom: 140,
-                            left: 0,
-                            child: Align(
-                                alignment: Alignment.bottomLeft,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    AdsDisplay(
-                                      sponsored: true,
-                                      //  color: HexColor('#00B074'),
-                                      color: Colors.grey.shade400,
-                                      title: 'Sponsored Ad',
-                                    ),
-                                  ],
-                                )),
-                          )
-                        : SizedBox.shrink(),
+                    // widget.data.promoted == "yes"
+                    //     ? Positioned(
+                    //         bottom: 140,
+                    //         left: 0,
+                    //         child: Align(
+                    //             alignment: Alignment.bottomLeft,
+                    //             child: Column(
+                    //               crossAxisAlignment: CrossAxisAlignment.start,
+                    //               children: [
+                    //                 AdsDisplay(
+                    //                   sponsored: true,
+                    //                   //  color: HexColor('#00B074'),
+                    //                   color: Colors.grey.shade400,
+                    //                   title: 'Sponsored Ad',
+                    //                 ),
+                    //               ],
+                    //             )),
+                    //       )
+                    //     : SizedBox.shrink(),
                     flag
                         ? Center(
                             child: Align(
@@ -346,13 +346,17 @@ class _VideoView2State extends State<VideoView2> {
     // log(" ffffffffffffffff ${widget.data.mux!.first}");
     // log(" ffffffffffffffff ${widget.data.vod!.first}");
 
-    _videoPlayerController =
-        preloadController.getPreloadById(widget.postId).controller!;
-    // _videoPlayerController =
-    //     VideoPlayerController.networkUrl(Uri.parse(widget.data.vod!.first));
-    // await Future.wait([ _videoPlayerController.initialize()]);
-    _createChewieController();
-    setState(() {});
+    try {
+      _videoPlayerController =
+          preloadController.getPreloadById(widget.postId).controller!;
+      // _videoPlayerController =
+      //     VideoPlayerController.networkUrl(Uri.parse(widget.data.vod!.first));
+      // await Future.wait([ _videoPlayerController.initialize()]);
+      _createChewieController();
+      setState(() {});
+    } catch (e) {
+      emitter(e.toString());
+    }
   }
 
   void _createChewieController() {
