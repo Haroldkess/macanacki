@@ -339,3 +339,75 @@ class _CategoryViewHomeState extends State<CategoryViewHome> {
     );
   }
 }
+
+class CategoryViewHomePost extends StatefulWidget {
+  final String name;
+  final bool? isHome;
+  TabProvider tab;
+  CategoryViewHomePost(
+      {super.key, required this.name, this.isHome, required this.tab});
+
+  @override
+  State<CategoryViewHomePost> createState() => _CategoryViewHomePostState();
+}
+
+class _CategoryViewHomePostState extends State<CategoryViewHomePost> {
+  @override
+  Widget build(BuildContext context) {
+    // TabProvider tab = context.watch<TabProvider>();
+    return Padding(
+      padding: const EdgeInsets.only(right: 8),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+        width: 83,
+        decoration: BoxDecoration(
+            color: widget.tab.filterNameHomePost.toLowerCase() ==
+                    widget.name.toLowerCase()
+                ? backgroundSecondary
+                : HexColor(backgroundColor),
+            border: Border.all(
+              color: widget.tab.filterNameHomePost.toLowerCase() ==
+                      widget.name.toLowerCase()
+                  ? textPrimary
+                  : textPrimary,
+            ),
+            borderRadius: BorderRadius.circular(8)),
+        child: Row(
+          mainAxisAlignment: widget.tab.filterNameHomePost.toLowerCase() ==
+                  widget.name.toLowerCase()
+              ? MainAxisAlignment.spaceBetween
+              : MainAxisAlignment.center,
+          children: [
+            widget.tab.filterNameHomePost.toLowerCase() ==
+                    widget.name.toLowerCase()
+                ? SizedBox(
+                    width: 3,
+                  )
+                : SizedBox.shrink(),
+            AppText(
+              text: widget.name,
+              color: widget.tab.filterNameHomePost.toLowerCase() ==
+                      widget.name.toLowerCase()
+                  ? textWhite
+                  : textPrimary,
+              size: 12,
+              fontWeight: FontWeight.w400,
+            ),
+            widget.tab.filterNameHomePost.toLowerCase() ==
+                    widget.name.toLowerCase()
+                ? CircleAvatar(
+                    backgroundColor: Colors.green,
+                    radius: 5,
+                    child: Icon(
+                      Icons.done,
+                      size: 8,
+                      color: Colors.white,
+                    ),
+                  )
+                : SizedBox.shrink()
+          ],
+        ),
+      ),
+    );
+  }
+}

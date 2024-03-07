@@ -28,6 +28,7 @@ import '../../operations.dart';
 import '../../screens/home/profile/profile_screen.dart';
 import '../../screens/userprofile/testing_profile.dart';
 import '../../screens/userprofile/user_profile_screen.dart';
+import '../../uiproviders/buttons/button_state.dart';
 import '../../uiproviders/screen/comment_provider.dart';
 import '../../uiproviders/screen/tab_provider.dart';
 import '../ads_display.dart';
@@ -47,12 +48,14 @@ class NewDesignTest extends StatefulWidget {
   bool isHome;
   bool showComment;
   bool extended;
+  bool? showDesign;
   NewDesignTest(
       {super.key,
       required this.isHome,
       required this.data,
       required this.page,
       required this.media,
+      this.showDesign,
       required this.showComment,
       this.controller,
       required this.extended});
@@ -100,16 +103,19 @@ class _NewDesignTestState extends State<NewDesignTest> {
       child: Container(
         height: showMore
             ? height / 1.4
-            : widget.data.user!.gender == "Business"
-                ? widget.data.btnLink != null && widget.data.button != null
-                    ? 130
-                    : 124
+            : widget.data.user!.gender == "Business" &&
+                    widget.data.btnLink != null &&
+                    widget.data.button != null
+                ? 130
                 : widget.data.btnLink != null && widget.data.button != null
                     ? 130
-                    : 124,
+                    : widget.data.description!.isEmpty
+                        ? 70
+                        : 124,
         width: width,
         decoration: BoxDecoration(
           //    backgroundBlendMode: BlendMode.colorDodge,
+          // color: Colors.amber,
           gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
@@ -419,14 +425,23 @@ class _NewDesignTestState extends State<NewDesignTest> {
                                       )),
                                       recognizer: tapGestureRecognizer
                                         ..onTap = () async {
-                                          //    print("object");
+                                          print("object");
                                           if (showMore) {
                                             setState(() {
                                               showMore = false;
                                             });
+                                            WidgetsBinding.instance
+                                                .addPostFrameCallback((_) {
+                                              ButtonState.instance.tapClose();
+                                            });
                                           } else {
                                             setState(() {
                                               showMore = true;
+                                            });
+
+                                            WidgetsBinding.instance
+                                                .addPostFrameCallback((_) {
+                                              ButtonState.instance.tapOpen();
                                             });
                                           }
                                         },
@@ -451,9 +466,21 @@ class _NewDesignTestState extends State<NewDesignTest> {
                                                       setState(() {
                                                         showMore = false;
                                                       });
+                                                      WidgetsBinding.instance
+                                                          .addPostFrameCallback(
+                                                              (_) {
+                                                        ButtonState.instance
+                                                            .tapClose();
+                                                      });
                                                     } else {
                                                       setState(() {
                                                         showMore = true;
+                                                      });
+                                                      WidgetsBinding.instance
+                                                          .addPostFrameCallback(
+                                                              (_) {
+                                                        ButtonState.instance
+                                                            .tapOpen();
                                                       });
                                                     }
                                                   },

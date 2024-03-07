@@ -52,14 +52,14 @@ class ProfileActionButtonNotThisUsers extends StatelessWidget {
           decoration:
               BoxDecoration(shape: BoxShape.circle, color: backgroundSecondary),
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: EdgeInsets.all(8.0),
             child: SvgPicture.asset(
               icon,
               height: isSwipe ? 22 : null,
               width: isSwipe ? 22 : null,
               color: color == null
                   ? null
-                  : primaryColor == primaryColor
+                  : color == primaryColor
                       ? textPrimary
                       : HexColor(color!),
             ),
@@ -1609,8 +1609,8 @@ class UserProfileActionsTest extends StatelessWidget {
                             );
                           },
                           color: !stream.followIds.contains(data.id)
-                              ? "#F94C84"
-                              : "#FFC1D6",
+                              ? primaryColor
+                              : "#00A300",
                         ),
                         SizedBox(
                           height: 5,
@@ -1806,7 +1806,7 @@ class UserProfileActionsTest extends StatelessWidget {
                                 // PageRouting.pushToPage(
                                 //     context, ChatScreen(user: user, chat: chat));
                               },
-                              color: "#FFC1D6",
+                              color: primaryColor,
                             ),
                       const SizedBox(
                         height: 5,
@@ -2012,8 +2012,8 @@ class UserProfileActionsTest extends StatelessWidget {
                             );
                           },
                           color: !stream.followIds.contains(data.id)
-                              ? "#F94C84"
-                              : "#FFC1D6",
+                              ? primaryColor
+                              : "#00A300",
                         ),
                         SizedBox(
                           height: 5,
@@ -2206,8 +2206,7 @@ class UserProfileActionsTest extends StatelessWidget {
                                   // ignore: use_build_context_synchronously
                                 }
                               },
-                              color: "#C0C0C0",
-                            ),
+                              color: primaryColor),
                       const SizedBox(
                         height: 5,
                       ),

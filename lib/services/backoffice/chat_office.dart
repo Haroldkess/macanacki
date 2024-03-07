@@ -64,7 +64,7 @@ Future<http.Response?> getAllConversation(int page) async {
         HttpHeaders.authorizationHeader: "Bearer $token",
       },
     );
- //   log(response.body.toString());
+    //   log(response.body.toString());
   } catch (e) {
     response = null;
   }
@@ -104,7 +104,7 @@ Future<http.Response?> readAllChats(int userId) async {
         HttpHeaders.authorizationHeader: "Bearer $token",
       },
     );
-    log("read this${response.body}");
+    emitter("read this${response.body}");
   } catch (e) {
     response = null;
   }

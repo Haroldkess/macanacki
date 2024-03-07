@@ -13,6 +13,7 @@ import 'package:macanacki/presentation/widgets/loader.dart';
 import 'package:macanacki/presentation/widgets/snack_msg.dart';
 import 'package:macanacki/services/controllers/ads_controller.dart';
 import 'package:macanacki/services/middleware/ads_ware.dart';
+import 'package:macanacki/services/middleware/plan_ware.dart';
 import 'package:provider/provider.dart';
 import '../../../../../model/ads_price_model.dart';
 import '../../../../../model/profile_feed_post.dart';
@@ -20,6 +21,7 @@ import '../../../../../services/api_url.dart';
 import '../../../../../services/controllers/payment_controller.dart';
 import '../../../../../services/controllers/url_launch_controller.dart';
 import '../../../../../services/middleware/feed_post_ware.dart';
+import '../../../../../services/middleware/user_profile_ware.dart';
 import '../../../../constants/colors.dart';
 import '../../../../constants/params.dart';
 import '../../../../widgets/buttons.dart';
@@ -67,7 +69,9 @@ class _PromoteScreenState extends State<PromoteScreen> {
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
     AdsWare stream = context.watch<AdsWare>();
+    PlanWare plan = context.watch<PlanWare>();
     FeedPostWare feed = context.watch<FeedPostWare>();
+    UserProfileWare user = context.watch<UserProfileWare>();
     return SafeArea(
       child: Scaffold(
         backgroundColor: backgroundSecondary,
@@ -143,18 +147,21 @@ class _PromoteScreenState extends State<PromoteScreen> {
                   const SizedBox(
                     height: 20,
                   ),
-                  // AdsAction(
-                  //     title: "select budget  ",
-                  //     subTitle:
-                  //         "Price: N${convertToCurrency(stream.selected.price == null ? "0" : stream.selected.price.toString())}      Reach: ${convertToCurrency(stream.selected.reach ?? "0")}",
-                  //     name: "Budget & Reach",
-                  //     SubName: "Select your preferred budget and reach ",
-                  //     action: () {
-                  //       priceOptionModal(context);
-                  //     }),
-                  // const SizedBox(
-                  //   height: 20,
-                  // ),
+                  user.userProfileModel.country!.toLowerCase() ==
+                          "Nigeria".toLowerCase()
+                      ? AdsAction(
+                          title: "select budget  ",
+                          subTitle:
+                              "Price: N${convertToCurrency(stream.selected.price == null ? "0" : stream.selected.price.toString())}      Reach: ${convertToCurrency(stream.selected.reach ?? "0")}",
+                          name: "Budget & Reach",
+                          SubName: "Select your preferred budget and reach ",
+                          action: () {
+                            priceOptionModal(context);
+                          })
+                      : SizedBox.shrink(),
+                  const SizedBox(
+                    height: 20,
+                  ),
                   AdsAction(
                       title: "select Duration  ",
                       subTitle: stream.duration,
@@ -322,8 +329,8 @@ class _PromoteScreenState extends State<PromoteScreen> {
                   SizedBox(
                     height: 40,
                   ),
-                  stream.loadStatus2
-                      ? Loader(color: HexColor(primaryColor))
+                  stream.loadStatus2 || plan.loadPromote
+                      ? Loader(color: textPrimary)
                       : AppButton(
                           width: 0.9,
                           height: 0.06,
@@ -333,6 +340,15 @@ class _PromoteScreenState extends State<PromoteScreen> {
                           curves: buttonCurves * 5,
                           textColor: "#FFFFFF",
                           onTap: () async {
+                            if (user.userProfileModel.country!.toLowerCase() ==
+                                "Nigeria".toLowerCase()) {
+                              if (stream.selected.id == null) {
+                                showToast2(context, "Please select your budget",
+                                    isError: true);
+
+                                return;
+                              }
+                            }
                             if (widget.postId == null) {
                               if (post == null) {
                                 showToast2(context,

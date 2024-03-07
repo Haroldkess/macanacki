@@ -4,6 +4,7 @@ import 'dart:ui';
 
 import 'package:apivideo_player/apivideo_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -30,7 +31,7 @@ import '../loader.dart';
 
 class SinglePost extends StatelessWidget {
   final String media;
-  // final VideoPlayerController? controller;
+  final ChewieController? controller;
   final bool shouldPlay;
   final BoxConstraints? constraints;
   final bool isHome;
@@ -43,7 +44,7 @@ class SinglePost extends StatelessWidget {
   SinglePost(
       {super.key,
       required this.media,
-      //   required this.controller,
+      this.controller,
       required this.shouldPlay,
       this.constraints,
       required this.isHome,
@@ -115,6 +116,16 @@ class SinglePost extends StatelessWidget {
                       // VideoWareHome.instance.loadVideo(true);
                     });
 
+                    // VideoWareHome.instance
+                    //     .addVideoToList(data)
+                    //     .whenComplete(() {
+                    //   // VideoWareHome.instance.initSomeVideo(
+                    //   //     "$muxStreamBaseUrl/$media.$videoExtension",
+                    //   //     data.id!,
+                    //   //     0);
+
+                    // });
+
                     VideoWareHome.instance
                         .addVideoToList(data)
                         .whenComplete(() {
@@ -134,7 +145,6 @@ class SinglePost extends StatelessWidget {
                           page: "feed",
                           isInView: isInView,
                           extended: false,
-
                           postId: postId,
                           data: data,
                         ),
@@ -142,118 +152,103 @@ class SinglePost extends StatelessWidget {
                     });
                   }
                 },
-                child: Padding(
-                  padding: EdgeInsets.only(
-                      top: data.btnLink != null && data.button != null
-                          ? 10
-                          : data.description!.isEmpty
-                              ? 20
-                              : 0,
-                      bottom: data.btnLink != null && data.button != null
-                          ? 80
-                          : data.description!.isEmpty
-                              ? 10
-                              : 40),
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      Container(
-                          //  height: 350,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Container(
+                        //  height: 350,
+                        width: double.infinity,
+                        child: Container(
+                          // height: 350,
+                          // height: data.btnLink != null && data.button != null
+                          //     ? 380
+                          //     : data.description!.isEmpty
+                          //         ? 430
+                          //         : 410,
                           width: double.infinity,
-                          child: Container(
-                            // height: 350,
-                            height: data.btnLink != null && data.button != null
-                                ? 380
-                                : data.description!.isEmpty
-                                    ? 430
-                                    : 410,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: Colors.black,
-                              //   borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: CachedNetworkImage(
-                                imageUrl: data.thumbnails!.isEmpty
-                                    ? ""
-                                    : data.thumbnails!.first ?? "",
-                                fit: BoxFit.fitWidth,
-                                imageBuilder: (context, imageProvider) =>
-                                    Container(
-                                      width: width,
-                                      height: height,
-                                      decoration: BoxDecoration(
-                                          // borderRadius:
-                                          //     BorderRadius.circular(15),
-                                          image: DecorationImage(
-                                        image: imageProvider,
-                                        fit: BoxFit.fitWidth,
-                                      )),
-                                    ),
-                                progressIndicatorBuilder:
-                                    (context, url, downloadProgress) => Center(
-                                            child: Loader(
-                                          color: textWhite,
-                                        )),
-                                errorWidget: (context, url, error) {
-                                  return CachedNetworkImage(
-                                      imageUrl: data.thumbnails!.isEmpty
-                                          ? ""
-                                          : data.thumbnails!.first ?? "",
-                                      imageBuilder: (context, imageProvider) =>
-                                          Container(
-                                            width: width,
-                                            height: height,
-                                            decoration: BoxDecoration(
-                                                // borderRadius:
-                                                //     BorderRadius.circular(15),
-                                                image: DecorationImage(
-                                              image: imageProvider,
-                                              fit: BoxFit.fitWidth,
-                                            )),
-                                          ),
-                                      progressIndicatorBuilder: (context, url,
-                                              downloadProgress) =>
-                                          Center(
-                                              child: Loader(color: textWhite)),
-                                      errorWidget: (context, url, error) {
-                                        return SizedBox();
-                                      });
-                                }),
-                          )),
-                      PlayAnimationBuilder<double>(
-                          tween: Tween(begin: 10.0, end: 50.0), // set tween
-                          duration: const Duration(
-                              milliseconds: 1000), // set duration
-                          builder: (context, value, _) {
-                            return Container(
-                              height: value,
-                              width: value,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(13),
-                                  border: Border.all(
-                                      width: 4.0, color: Colors.white)),
-                              child: Center(
-                                child: IconButton(
-                                  onPressed: null,
-                                  icon: Icon(
-                                    Icons.play_arrow,
-                                    color: Colors.white,
-                                    // size: 35,
+                          decoration: BoxDecoration(
+                            color: Colors.black,
+                            //   borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: CachedNetworkImage(
+                              imageUrl: data.thumbnails!.isEmpty
+                                  ? ""
+                                  : data.thumbnails!.first ?? "",
+                              fit: BoxFit.fitWidth,
+                              imageBuilder: (context, imageProvider) =>
+                                  Container(
+                                    width: width,
+                                    height: height,
+                                    decoration: BoxDecoration(
+                                        // borderRadius:
+                                        //     BorderRadius.circular(15),
+                                        image: DecorationImage(
+                                      image: imageProvider,
+                                      fit: BoxFit.fitWidth,
+                                    )),
                                   ),
-                                  style:
-                                      controlsBarStyle.mainControlButtonStyle,
+                              progressIndicatorBuilder:
+                                  (context, url, downloadProgress) => Center(
+                                          child: Loader(
+                                        color: textWhite,
+                                      )),
+                              errorWidget: (context, url, error) {
+                                return CachedNetworkImage(
+                                    imageUrl: data.thumbnails!.isEmpty
+                                        ? ""
+                                        : data.thumbnails!.first ?? "",
+                                    imageBuilder: (context, imageProvider) =>
+                                        Container(
+                                          width: width,
+                                          height: height,
+                                          decoration: BoxDecoration(
+                                              // borderRadius:
+                                              //     BorderRadius.circular(15),
+                                              image: DecorationImage(
+                                            image: imageProvider,
+                                            fit: BoxFit.fitWidth,
+                                          )),
+                                        ),
+                                    progressIndicatorBuilder: (context, url,
+                                            downloadProgress) =>
+                                        Center(child: Loader(color: textWhite)),
+                                    errorWidget: (context, url, error) {
+                                      return SizedBox();
+                                    });
+                              }),
+                        )),
+                    PlayAnimationBuilder<double>(
+                        tween: Tween(begin: 10.0, end: 50.0), // set tween
+                        duration:
+                            const Duration(milliseconds: 1000), // set duration
+                        builder: (context, value, _) {
+                          return Container(
+                            height: value,
+                            width: value,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(13),
+                                border: Border.all(
+                                    width: 4.0, color: Colors.white)),
+                            child: Center(
+                              child: IconButton(
+                                onPressed: null,
+                                icon: Icon(
+                                  Icons.play_arrow,
+                                  color: Colors.white,
+                                  // size: 35,
                                 ),
+                                style: controlsBarStyle.mainControlButtonStyle,
                               ),
-                            );
-                          })
-                    ],
-                  ),
+                            ),
+                          );
+                        })
+                  ],
                 ),
               ),
             ],
           )
         : Stack(
-            alignment: Alignment.topCenter,
+            //    alignment: Alignment.topCenter,
             children: [
               // Container(
               //   width: width,
@@ -261,81 +256,64 @@ class SinglePost extends StatelessWidget {
               //   decoration: BoxDecoration(color: Colors.black),
               // ),
 
-              Padding(
-                padding: EdgeInsets.only(
-                    top: data.btnLink != null && data.button != null
-                        ? 10
-                        : data.description!.isEmpty
-                            ? 20
-                            : 0,
-                    bottom: data.btnLink != null && data.button != null
-                        ? 80
-                        : data.description!.isEmpty
-                            ? 10
-                            : 40),
-                child: GestureDetector(
-                  onTap: () {
-                    PageRouting.pushToPage(
-                        context,
-                        EnlargeImageHolder(
-                            images: [media],
-                            page: "feed",
-                            data: data,
-                            index: 0));
-                  },
-                  child: Container(
-                    height: data.btnLink != null && data.button != null
-                        ? 380
-                        : data.description!.isEmpty
-                            ? 430
-                            : 410,
-                    //   color: Colors.amber,
-                    //   height: 430,
-                    // height: data.description!.isEmpty ? Get.height : 400,
-                    width: double.infinity,
-                    //   color: Colors.amber,
-                    alignment: Alignment.bottomCenter,
+              GestureDetector(
+                onTap: () {
+                  PageRouting.pushToPage(
+                      context,
+                      EnlargeImageHolder(
+                          images: [media], page: "feed", data: data, index: 0));
+                },
+                child: Container(
+                  // height: data.btnLink != null && data.button != null
+                  //     ? 380
+                  //     : data.description!.isEmpty
+                  //         ? 430
+                  //         : 410,
+                  //   color: Colors.amber,
+                  //   height: 430,
+                  // height: data.description!.isEmpty ? Get.height : 400,
+                  width: double.infinity,
+                  //   color: Colors.amber,
+                  alignment: Alignment.bottomCenter,
 
-                    child: CachedNetworkImage(
-                        imageUrl: media,
-                        fit: BoxFit.fitWidth,
-                        imageBuilder: (context, imageProvider) => Container(
-                              width: width,
-                              height: height,
-                              decoration: BoxDecoration(
-                                  // borderRadius: BorderRadius.circular(15),
-                                  image: DecorationImage(
-                                image: imageProvider,
-                                fit: BoxFit.fitWidth,
+                  child: CachedNetworkImage(
+                      imageUrl: media,
+                      fit: BoxFit.fitWidth,
+                      imageBuilder: (context, imageProvider) => Container(
+                            width: width,
+                            height: height,
+                            decoration: BoxDecoration(
+                                // borderRadius: BorderRadius.circular(15),
+                                image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.fitWidth,
+                            )),
+                          ),
+                      progressIndicatorBuilder:
+                          (context, url, downloadProgress) => Center(
+                                  child: Loader(
+                                color: textWhite,
                               )),
-                            ),
-                        progressIndicatorBuilder:
-                            (context, url, downloadProgress) => Center(
-                                    child: Loader(
-                                  color: textWhite,
-                                )),
-                        errorWidget: (context, url, error) {
-                          return CachedNetworkImage(
-                              imageUrl: media,
-                              imageBuilder: (context, imageProvider) =>
-                                  Container(
-                                    width: width,
-                                    height: height,
-                                    decoration: BoxDecoration(
-                                        // borderRadius: BorderRadius.circular(15),
-                                        image: DecorationImage(
-                                      image: imageProvider,
-                                      fit: BoxFit.fitWidth,
-                                    )),
-                                  ),
-                              progressIndicatorBuilder:
-                                  (context, url, downloadProgress) =>
-                                      Center(child: Loader(color: textWhite)),
-                              errorWidget: (context, url, error) {
-                                return SizedBox();
-                              });
-                        }),
-                  ),
+                      errorWidget: (context, url, error) {
+                        return CachedNetworkImage(
+                            imageUrl: media,
+                            imageBuilder: (context, imageProvider) => Container(
+                                  width: width,
+                                  height: height,
+                                  decoration: BoxDecoration(
+                                      // borderRadius: BorderRadius.circular(15),
+                                      image: DecorationImage(
+                                    image: imageProvider,
+                                    fit: BoxFit.fitWidth,
+                                  )),
+                                ),
+                            progressIndicatorBuilder:
+                                (context, url, downloadProgress) =>
+                                    Center(child: Loader(color: textWhite)),
+                            errorWidget: (context, url, error) {
+                              return SizedBox();
+                            });
+                      }),
                 ),
               ),
               // Image(

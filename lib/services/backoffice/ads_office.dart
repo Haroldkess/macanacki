@@ -6,6 +6,7 @@ import 'package:macanacki/services/api_url.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../model/ads_price_model.dart';
+import '../../presentation/widgets/debug_emitter.dart';
 import '../temps/temps_id.dart';
 
 Future<http.Response?> getAdsPrice() async {
@@ -22,7 +23,7 @@ Future<http.Response?> getAdsPrice() async {
       },
     );
 
-    log(response.body.toString());
+    //log(response.body.toString());
   } catch (e) {
     response = null;
   }
@@ -39,13 +40,11 @@ Future<http.Response?> sendAd(SendAdModel data) async {
     "duration": data.duration,
   };
 
-  print('$baseUrl/public/api/post/promote/${data.postId}/${data.planId}');
+  // emitter('$baseUrl/public/api/post/promote/${data.postId}/${data.planId}');
 
   try {
     response = await http
-        .post(
-            Uri.parse(
-                '$baseUrl/public/api/v2/post/promote/${data.postId}'),
+        .post(Uri.parse('$baseUrl/public/api/v2/post/promote/${data.postId}'),
             headers: {
               HttpHeaders.contentTypeHeader: "application/json",
               HttpHeaders.authorizationHeader: "Bearer $token",

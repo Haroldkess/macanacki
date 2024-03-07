@@ -6,6 +6,8 @@ import 'package:macanacki/presentation/allNavigation.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
 import 'package:macanacki/presentation/widgets/text.dart';
 import 'package:macanacki/services/middleware/gift_ware.dart';
+import 'package:macanacki/services/middleware/user_profile_ware.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../operations.dart';
 import '../../../../widgets/snack_msg.dart';
@@ -33,66 +35,79 @@ class DiamondBalanceScreen extends StatelessWidget {
             size: 24,
           ),
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              SizedBox(
-                height: 20,
-              ),
-              BalanceCard(),
-              SizedBox(
-                height: 10,
-              ),
-              RevenueCard(),
-              // SizedBox(
-              //   height: 10,
-              // ),
-              // EstimatedRevenue(),
-              SizedBox(
-                height: 30,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Row(
-                  children: [
-                    Column(
+        body: RefreshIndicator(
+          onRefresh: () async {
+            await Future.wait([
+              GiftWare.instance.getWalletFromApi(),
+              GiftWare.instance.getGiftFromApi(),
+              GiftWare.instance.getBankLocally()
+            ]);
+          },
+          child: SingleChildScrollView(
+            physics: AlwaysScrollableScrollPhysics(),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 20,
+                  ),
+                  BalanceCard(),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  RevenueCard(),
+                  // SizedBox(
+                  //   height: 10,
+                  // ),
+                  // EstimatedRevenue(),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Row(
                       children: [
-                        GestureDetector(
-                          onTap: () {
-                            PageRouting.pushToPage(context, const MyGifters());
-                          },
-                          child: Container(
-                            height: 60,
-                            width: 60,
-                            decoration: BoxDecoration(
-                                color: HexColor("#C0C0C0"),
-                                shape: BoxShape.circle),
-                            child: Center(
-                              child: SvgPicture.asset(
-                                "assets/icon/follow.svg",
-                                color: HexColor(backgroundColor),
-                                height: 25,
-                                width: 25,
+                        Column(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                PageRouting.pushToPage(
+                                    context, const MyGifters());
+                              },
+                              child: Container(
+                                height: 60,
+                                width: 60,
+                                decoration: BoxDecoration(
+                                    color: HexColor("#C0C0C0"),
+                                    shape: BoxShape.circle),
+                                child: Center(
+                                  child: SvgPicture.asset(
+                                    "assets/icon/follow.svg",
+                                    color: HexColor(backgroundColor),
+                                    height: 25,
+                                    width: 25,
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        AppText(
-                          text: "My Gifters",
-                          size: 12,
-                          fontWeight: FontWeight.w400,
-                          color: textPrimary,
-                        ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            AppText(
+                              text: "My Gifters",
+                              size: 12,
+                              fontWeight: FontWeight.w400,
+                              color: textPrimary,
+                            ),
+                          ],
+                        )
                       ],
-                    )
-                  ],
-                ),
-              )
-            ],
+                    ),
+                  )
+                ],
+              ),
+            ),
           ),
         ),
       ),
@@ -138,8 +153,10 @@ class BalanceCard extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 5, vertical: 5),
                             child: AppText(
-                              text: Operations.convertToCurrency(
-                                  int.tryParse(balance.value.data.toString())! <
+                              text: balance.value.data == null
+                                  ? "0.00"
+                                  : Operations.convertToCurrency(int.tryParse(
+                                              balance.value.data.toString())! <
                                           1
                                       ? "0.00"
                                       : "${balance.value.data}"),
@@ -168,8 +185,18 @@ class BalanceCard extends StatelessWidget {
                   ],
                 ),
                 GestureDetector(
-                  onTap: () => buyDiamondsModal(
-                      context, GiftWare.instance.rate.value.data),
+                  onTap: () async {
+                    UserProfileWare user =
+                        Provider.of<UserProfileWare>(context, listen: false);
+                    if (user.userProfileModel.country!.toLowerCase() ==
+                        "Nigeria".toLowerCase()) {
+                      buyDiamondsModalNG(
+                          context, GiftWare.instance.rate.value.data);
+                    } else {
+                      buyDiamondsModal(
+                          context, GiftWare.instance.rate.value.data);
+                    }
+                  },
                   child: Container(
                     decoration: const BoxDecoration(
                         shape: BoxShape.circle, color: Colors.white),
@@ -247,8 +274,9 @@ class RevenueCard extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 5, vertical: 5),
                             child: AppText(
-                              text:
-                                  "\$${Operations.convertToCurrency(((num.tryParse(giftValue.value.data.toString())! / 50) / 2).toString())}",
+                              text: giftValue.value.data == null
+                                  ? "0.0"
+                                  : "\$${Operations.convertToCurrency(((num.tryParse(giftValue.value.data.toString())! / 50) / 2).toString())}",
                               size: 17,
                               fontWeight: FontWeight.w500,
                               color: textWhite,

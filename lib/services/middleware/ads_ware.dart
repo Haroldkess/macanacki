@@ -20,7 +20,6 @@ class AdsWare extends ChangeNotifier {
   List<AdsData> adsPrice = [];
   AdsData selected = AdsData();
   String duration = "select";
-  
 
   bool get loadStatus => _loadStatus;
 

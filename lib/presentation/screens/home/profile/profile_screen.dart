@@ -39,6 +39,7 @@ import '../../../../config/pay_wall.dart';
 import '../../../../model/gender_model.dart';
 import '../../../../services/controllers/plan_controller.dart';
 import '../../../../services/middleware/feed_post_ware.dart';
+import '../../../../services/middleware/gift_ware.dart';
 import '../../../allNavigation.dart';
 import '../../../constants/params.dart';
 import '../../../operations.dart';
@@ -312,11 +313,19 @@ class _ProfileScreenState extends State<ProfileScreen>
                             onTap: () => {
                                   WidgetsBinding.instance
                                       .addPostFrameCallback((timeStamp) {
-                                    UserProfileController
-                                        .retrievProfileController(
-                                            context, true);
+                                    GiftWare.instance.getWalletFromApi();
+                                    GiftWare.instance.getGiftFromApi();
+                                    GiftWare.instance.getBankLocally();
                                   }),
-                                  drawerOptionModal(context)
+                                  PageRouting.pushToPage(
+                                      context, const DiamondBalanceScreen())
+                                  // WidgetsBinding.instance
+                                  //     .addPostFrameCallback((timeStamp) {
+                                  //   UserProfileController
+                                  //       .retrievProfileController(
+                                  //           context, true);
+                                  // }),
+                                  // drawerOptionModal(context)
                                 },
                             //   onTap: () => key.currentState!.openDrawer(),
                             child: Stack(
@@ -325,9 +334,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   height: 20,
                                   width: 25,
                                   child: SvgPicture.asset(
-                                    "assets/icon/drawer.svg",
-                                    height: 15,
-                                    width: 20,
+                                    "assets/icon/wallet.svg",
+                                    height: 25,
+                                    width: 25,
                                   ),
                                 ),
                               ],

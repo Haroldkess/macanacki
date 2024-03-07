@@ -17,7 +17,7 @@ class PreloadController extends GetxController {
   }
 
   Future<void> addPreload({required int id, required List<dynamic> vod}) async {
-    if (vod == null) return;
+    // if (vod == null) return;
     if (vod.isEmpty) return;
     if (vod.first == null) return;
 
@@ -41,7 +41,9 @@ class PreloadController extends GetxController {
 
   PreloadModel getPreloadById(int id) {
     print("--------------------------------------Getting Data from Preload");
-    return state.preloads.where((x) => x.id == id).first;
+    return state.preloads.where((x) => x.id == id).toList().isEmpty
+        ? PreloadModel(controller: null)
+        : state.preloads.where((x) => x.id == id).toList().first;
   }
 
   void removePreloadById(int id) {

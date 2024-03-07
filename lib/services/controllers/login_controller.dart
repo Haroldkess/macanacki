@@ -144,6 +144,7 @@ class LoginController {
 
   static Future callFeedPost(BuildContext context) async {
     await FeedPostController.getFeedPostController(context, 1, false);
+    await FeedPostController.getRoyaltyController(context, "king");
     //  await UserProfileController.retrievProfileController(context, true);
     ChatController.retreiveUnread(context);
     ChatController.retrievChatController(context, false, false);

@@ -445,7 +445,11 @@ class _VideoViewState extends State<VideoView> {
   void initState() {
     log("--------------------------------------xxx Inside FeedVideoHolder");
     //buildVideoOptions();
-    initializePlayer();
+    try {
+      initializePlayer();
+    } catch (e) {
+      emitter(e.toString());
+    }
     // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
     //   if (mounted) {
     //     for (var i in widget.vodList) {

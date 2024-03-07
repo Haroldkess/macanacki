@@ -24,8 +24,81 @@ Future<http.Response?> getFeedPost(int pageNum, [String? filter]) async {
       },
     ).timeout(Duration(minutes: 1));
     //  log(response.statusCode.toString());
-    // log(response.body.toString());
-    log(token.toString());
+    emitter(response.body.toString());
+    // log(token.toString());
+  } catch (e) {
+    print("000000000000000000000000000000000000 Errorrrrrrrrrr");
+    response = null;
+  }
+  return response;
+}
+
+Future<http.Response?> getKingOrQueen(String type) async {
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  String? token = pref.getString(tokenKey);
+  http.Response? response;
+  // emitter(filter!);
+  ///  emitter("test 4 +> $filter");
+  try {
+    response = await http.get(
+      Uri.parse('$baseUrl/public/api/v3/macanacki/$type'),
+      headers: {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $token",
+      },
+    ).timeout(Duration(minutes: 1));
+    //  log(response.statusCode.toString());
+    log(response.body.toString());
+    // log(token.toString());
+  } catch (e) {
+    print("000000000000000000000000000000000000 Errorrrrrrrrrr");
+    response = null;
+  }
+  return response;
+}
+
+Future<http.Response?> dethroneKingOrQueenNG() async {
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  String? token = pref.getString(tokenKey);
+  http.Response? response;
+  // emitter(filter!);
+  ///  emitter("test 4 +> $filter");
+  try {
+    response = await http.post(
+      Uri.parse('$baseUrl/public/api/v3/kingqueen/ng/dethrone'),
+      headers: {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $token",
+      },
+    ).timeout(Duration(minutes: 1));
+    log(response.statusCode.toString());
+    log(response.body.toString());
+    // log(token.toString());
+  } catch (e) {
+    print("000000000000000000000000000000000000 Errorrrrrrrrrr");
+    response = null;
+  }
+  return response;
+}
+
+Future<http.Response?> dethroneKingOrQueen(String type) async {
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  String? token = pref.getString(tokenKey);
+  http.Response? response;
+  emitter(type);
+
+  ///  emitter("test 4 +> $filter");
+  try {
+    response = await http.post(
+      Uri.parse('$baseUrl/public/api/v3/macanacki/$type'),
+      headers: {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader: "Bearer $token",
+      },
+    ).timeout(Duration(minutes: 1));
+    //  log(response.statusCode.toString());
+    log(response.body.toString());
+    // log(token.toString());
   } catch (e) {
     print("000000000000000000000000000000000000 Errorrrrrrrrrr");
     response = null;
@@ -49,7 +122,7 @@ Future<http.Response?> getSinglePostPost(String id) async {
     //  log(response.body.toString());
     //log(token.toString());
   } catch (e) {
-    print("000000000000000000000000000000000000 Errorrrrrrrrrr");
+    emitter("000000000000000000000000000000000000 Errorrrrrrrrrr");
     response = null;
   }
   return response;

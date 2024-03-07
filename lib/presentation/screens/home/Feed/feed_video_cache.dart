@@ -349,33 +349,47 @@ class _VideoView2State extends State<VideoView2> {
     try {
       _videoPlayerController =
           preloadController.getPreloadById(widget.postId).controller!;
+
+      // if (preloadController.getPreloadById(widget.postId).controller == null) {
+      //   _videoPlayerController =
+      //       VideoPlayerController.networkUrl(Uri.parse(widget.data.vod!.first));
+      //   // _videoPlayerController.initialize().then((_) => setState(() {}));
+      // } else {
+      //   _videoPlayerController =
+      //       preloadController.getPreloadById(widget.postId).controller!;
+      // }
+
       // _videoPlayerController =
       //     VideoPlayerController.networkUrl(Uri.parse(widget.data.vod!.first));
       // await Future.wait([ _videoPlayerController.initialize()]);
-      _createChewieController();
-      setState(() {});
+      if (_videoPlayerController != null) {
+        _createChewieController();
+        setState(() {});
+      }
     } catch (e) {
       emitter(e.toString());
     }
   }
 
   void _createChewieController() {
-    _chewieController = ChewieController(
-        videoPlayerController: _videoPlayerController,
-        isLive: false,
-        autoPlay: true,
-        looping: true,
-        progressIndicatorDelay:
-            bufferDelay != null ? Duration(milliseconds: bufferDelay!) : null,
-        showControls: true,
-        allowMuting: false,
-        materialProgressColors: ChewieProgressColors(
-            backgroundColor: textPrimary, playedColor: secondaryColor),
-        cupertinoProgressColors: ChewieProgressColors(
-            backgroundColor: textPrimary, playedColor: secondaryColor)
-        //controlsSafeAreaMinimum: EdgeInsets.only(bottom: 40),
-        //autoInitialize: true,
-        );
+    setState(() {
+      _chewieController = ChewieController(
+          videoPlayerController: _videoPlayerController,
+          isLive: false,
+          autoPlay: true,
+          looping: true,
+          progressIndicatorDelay:
+              bufferDelay != null ? Duration(milliseconds: bufferDelay!) : null,
+          showControls: true,
+          allowMuting: false,
+          materialProgressColors: ChewieProgressColors(
+              backgroundColor: textPrimary, playedColor: secondaryColor),
+          cupertinoProgressColors: ChewieProgressColors(
+              backgroundColor: textPrimary, playedColor: secondaryColor)
+          //controlsSafeAreaMinimum: EdgeInsets.only(bottom: 40),
+          //autoInitialize: true,
+          );
+    });
   }
 
   @override

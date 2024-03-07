@@ -92,19 +92,28 @@ class _FriendsScreenState extends State<FriendsScreen> {
               alignment: Alignment.bottomLeft,
               child: Padding(
                 padding:
-                    const EdgeInsets.only(left: 15.0, bottom: 15, right: 15),
+                    const EdgeInsets.only(left: 0.0, bottom: 15, right: 15),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     const SizedBox(
                       height: 10,
                     ),
-                    GestureDetector(
-                      onTap: () =>
-                          PageRouting.pushToPage(context, const GlobalSearch()),
-                      child: GlobalSearchBarHolder(
-                          // x: controller,
+                    Row(
+                      children: [
+                        BackButton(
+                          color: textPrimary,
+                        ),
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () => PageRouting.pushToPage(
+                                context, const GlobalSearch()),
+                            child: GlobalSearchBarHolder(
+                                // x: controller,
+                                ),
                           ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -312,8 +321,7 @@ class _FriendsViewItemsState extends State<FriendsViewItems> {
                                     downloadProgress) =>
                                 Shimmer.fromColors(
                                     baseColor: HexColor(backgroundColor),
-                                    highlightColor:
-                                        HexColor(primaryColor).withOpacity(.2),
+                                    highlightColor: Colors.grey.withOpacity(.2),
                                     period: Duration(seconds: 1),
                                     child: Container(
                                       color: HexColor(backgroundColor),

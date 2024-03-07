@@ -7,6 +7,8 @@ import 'package:macanacki/services/temps/temps_id.dart';
 import 'dart:developer';
 import 'dart:io';
 
+import '../../presentation/widgets/debug_emitter.dart';
+
 class BuyFollwersOffice {
   static Future<http.Response?> buyFollwers(String value) async {
     http.Response? response;
@@ -22,7 +24,7 @@ class BuyFollwersOffice {
           },
           body: jsonEncode(map));
 
-      log(response.body.toString());
+      emitter(response.body.toString());
     } catch (e) {
       response = null;
     }

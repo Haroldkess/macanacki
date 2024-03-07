@@ -343,6 +343,9 @@ class User {
     this.noOfFollowers,
     this.noOfFollowing,
     this.verified,
+    this.country,
+    this.state,
+    this.city,
     this.activePlan,
     this.verification,
   });
@@ -378,6 +381,9 @@ class User {
   int? noOfFollowers;
   int? noOfFollowing;
   int? verified;
+  String? country;
+  String? state;
+  String? city;
   dynamic activePlan;
   Verification? verification;
 
@@ -419,6 +425,9 @@ class User {
         noOfFollowers: json["no_of_followers"],
         noOfFollowing: json["no_of_following"],
         verified: json["verified"],
+        country: json["country"],
+        state: json["state"],
+        city: json["city"],
         activePlan: json["active_plan"],
         verification: json["verification"] == null
             ? null
@@ -457,6 +466,9 @@ class User {
         "no_of_followers": noOfFollowers,
         "no_of_following": noOfFollowing,
         "verified": verified,
+        "country": country,
+        "state": state,
+        "city": city,
         "active_plan": activePlan,
         "verification": verification?.toJson(),
       };

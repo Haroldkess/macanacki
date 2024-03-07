@@ -21,7 +21,7 @@ Future<http.Response?> getUserProfile() async {
       },
     );
 
-    log(response.body.toString());
+    emitter(response.body.toString());
   } catch (e) {
     response = null;
   }
@@ -51,8 +51,8 @@ Future<http.Response?> getUserPublicProfile(String username) async {
 }
 
 //###################
-Future<http.Response?> getUserPublicPost(
-    String username, int pageNumber, int numberOfPostPerRequest, String filter) async {
+Future<http.Response?> getUserPublicPost(String username, int pageNumber,
+    int numberOfPostPerRequest, String filter) async {
   http.Response? response;
   SharedPreferences pref = await SharedPreferences.getInstance();
 
@@ -92,7 +92,7 @@ Future<http.Response?> deletePubProfile() async {
       },
     ).timeout(Duration(seconds: 30));
 
-    log(response.body.toString());
+    emitter(response.body.toString());
   } catch (e) {
     response = null;
   }

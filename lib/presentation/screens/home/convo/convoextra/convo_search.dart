@@ -27,6 +27,7 @@ class ConvoSearch extends StatelessWidget {
         },
         enableSuggestions: false,
         autocorrect: false,
+        style: GoogleFonts.leagueSpartan(color: textWhite, fontSize: 14),
         decoration: InputDecoration(
           hintText: "  Search Conversations",
           hintStyle:

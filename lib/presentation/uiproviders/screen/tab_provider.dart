@@ -9,7 +9,8 @@ class TabProvider extends ChangeNotifier {
   int multipleImageIndex = 1;
   String image = "";
   String filterName = "Verified";
-  String filterNameHome = "Verified";
+  String filterNameHome = "King";
+  String filterNameHomePost = "Verified";
   VideoPlayerController? controller;
   VideoPlayerController? controllerHolder;
   VideoPlayerController? previousController;
@@ -40,6 +41,11 @@ class TabProvider extends ChangeNotifier {
 
   Future changeFilterHome(String filter) async {
     filterNameHome = filter;
+    notifyListeners();
+  }
+
+  Future changeFilterHomePost(String filter) async {
+    filterNameHomePost = filter;
     notifyListeners();
   }
 

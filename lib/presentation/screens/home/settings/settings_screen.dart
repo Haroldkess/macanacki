@@ -8,6 +8,9 @@ import 'package:macanacki/presentation/screens/home/settings/settingextra/wallet
 
 import 'package:macanacki/presentation/widgets/text.dart';
 
+import 'settingextra/buy_follows.dart';
+import 'settingextra/verify_acct.dart';
+
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
 
@@ -36,7 +39,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         height: height,
         width: width,
         color: backgroundSecondary,
-        child: SingleChildScrollView(
+        child: const SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 10),
             child: Column(
@@ -93,6 +96,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   height: 16,
                 ),
                 WalletAccess(),
+                SizedBox(
+                  height: 16,
+                ),
+                BuyFollows(),
+                SizedBox(
+                  height: 16,
+                ),
+                VerifyAccount(),
 
                 SizedBox(
                   height: 16,

@@ -75,7 +75,9 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
     const FeedHome(),
     //  const ApiVideoDemo(),
 
-    const FriendsScreen(),
+    const FeedHomePost(),
+
+    // const FriendsScreen(),
     //  const GlobalSearch(),
     const SwipeCardScreen(),
     const ConversationScreen(),
@@ -99,167 +101,157 @@ class _TabScreenState extends State<TabScreen> with WidgetsBindingObserver {
       // ChatController.listenForUser(context);
     }
 
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle(
-          systemNavigationBarIconBrightness:
-              Platform.isAndroid ? Brightness.dark : null,
-          systemNavigationBarColor: Platform.isAndroid ? Colors.white : null,
-          statusBarColor: Platform.isAndroid ? Colors.black : null,
-          statusBarIconBrightness:
-              Platform.isAndroid ? Brightness.light : null),
-      child: UpgradeAlert(
-        upgrader: Upgrader(
-            durationUntilAlertAgain: Duration(minutes: 5),
-            dialogStyle: Platform.isIOS
-                ? UpgradeDialogStyle.cupertino
-                : UpgradeDialogStyle.material,
-            debugLogging: false),
-        child: SafeArea(
-          top: true,
-          child: Scaffold(
-            backgroundColor: tabs.index == 4 || tabs.index == 2
-                ? HexColor(backgroundColor)
-                : HexColor(backgroundColor),
-            appBar: tabs.index == 0 ||
-                    tabs.index == 3 ||
-                    tabs.index == 4 ||
-                    tabs.index == 1 ||
-                    tabs.index == 2
-                ? null
-                : AppHeader(
-                    index: tabs.index,
-                    color: tabs.index == 4
-                        ? HexColor(backgroundColor)
-                        : Colors.transparent,
-                  ),
-            body: StreamBuilder(
-                stream: streamSocketMsgs.getResponse,
-                builder: (con, AsyncSnapshot<dynamic> snapshot) {
-                  // if (tabs.index != 0) {
-                  //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                  //     try {
-                  //       if (provide.controller != null) {
-                  //         if (provide.controller!.value.isInitialized) {
-                  //           if (provide.controller!.value.isBuffering ||
-                  //               provide.controller!.value.isPlaying) {
-                  //             if (mounted) {
-                  //               provide.tap(true);
-                  //               try {
-                  //                 provide.pauseControl();
-                  //                 provide.tap(true);
-                  //               } catch (e) {}
-                  //             }
-                  //           } else {
-                  //             if (mounted) {
-                  //               provide.pauseControl();
-                  //               provide.tap(true);
-                  //             }
-                  //           }
-                  //         }
-                  //       }
-                  //     } catch (e) {
-                  //       //   emitter(e.toString());
-                  //     }
-                  //   });
-                  // }
-                  if (snapshot.connectionState == ConnectionState.active) {
-                    if (snapshot.hasData) {
-                      if (snapshot.data != null) {
-                        if (mounted) {
-                          WidgetsBinding.instance
-                              .addPostFrameCallback((timeStamp) async {
-                            ChatController.handleMessage(
-                                context, snapshot.data);
-                            streamSocketMsgs.addResponse(null);
-                          });
-                        }
-                      } else {
-                        emitter("snapshot is null");
+    return UpgradeAlert(
+      upgrader: Upgrader(
+          durationUntilAlertAgain: Duration(minutes: 5),
+          dialogStyle: Platform.isIOS
+              ? UpgradeDialogStyle.cupertino
+              : UpgradeDialogStyle.material,
+          debugLogging: false),
+      child: SafeArea(
+        top: true,
+        child: Scaffold(
+          backgroundColor: tabs.index == 4 || tabs.index == 2
+              ? HexColor(backgroundColor)
+              : HexColor(backgroundColor),
+          appBar: tabs.index == 0 ||
+                  tabs.index == 3 ||
+                  tabs.index == 4 ||
+                  tabs.index == 1 ||
+                  tabs.index == 2
+              ? null
+              : AppHeader(
+                  index: tabs.index,
+                  color: tabs.index == 4
+                      ? HexColor(backgroundColor)
+                      : Colors.transparent,
+                ),
+          body: StreamBuilder(
+              stream: streamSocketMsgs.getResponse,
+              builder: (con, AsyncSnapshot<dynamic> snapshot) {
+                // if (tabs.index != 0) {
+                //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                //     try {
+                //       if (provide.controller != null) {
+                //         if (provide.controller!.value.isInitialized) {
+                //           if (provide.controller!.value.isBuffering ||
+                //               provide.controller!.value.isPlaying) {
+                //             if (mounted) {
+                //               provide.tap(true);
+                //               try {
+                //                 provide.pauseControl();
+                //                 provide.tap(true);
+                //               } catch (e) {}
+                //             }
+                //           } else {
+                //             if (mounted) {
+                //               provide.pauseControl();
+                //               provide.tap(true);
+                //             }
+                //           }
+                //         }
+                //       }
+                //     } catch (e) {
+                //       //   emitter(e.toString());
+                //     }
+                //   });
+                // }
+                if (snapshot.connectionState == ConnectionState.active) {
+                  if (snapshot.hasData) {
+                    if (snapshot.data != null) {
+                      if (mounted) {
+                        WidgetsBinding.instance
+                            .addPostFrameCallback((timeStamp) async {
+                          ChatController.handleMessage(context, snapshot.data);
+                          streamSocketMsgs.addResponse(null);
+                        });
                       }
+                    } else {
+                      emitter("snapshot is null");
                     }
                   }
-                  return SizedBox(
-                    height: Get.height,
-                    width: Get.width,
-                    child: StreamBuilder(
-                        stream: streamSocket.getResponse,
-                        builder: (con, AsyncSnapshot<dynamic> snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.active) {
-                            if (snapshot.hasData) {
-                              if (snapshot.data != null) {
-                                if (mounted) {
-                                  WidgetsBinding.instance
-                                      .addPostFrameCallback((timeStamp) async {
-                                    ChatController.addUserToList(
-                                        context, snapshot.data);
-                                    streamSocket.addResponse(null);
-                                  });
-                                }
-                              } else {
-                                emitter("snapshot is null");
+                }
+                return SizedBox(
+                  height: Get.height,
+                  width: Get.width,
+                  child: StreamBuilder(
+                      stream: streamSocket.getResponse,
+                      builder: (con, AsyncSnapshot<dynamic> snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.active) {
+                          if (snapshot.hasData) {
+                            if (snapshot.data != null) {
+                              if (mounted) {
+                                WidgetsBinding.instance
+                                    .addPostFrameCallback((timeStamp) async {
+                                  ChatController.addUserToList(
+                                      context, snapshot.data);
+                                  streamSocket.addResponse(null);
+                                });
                               }
+                            } else {
+                              emitter("snapshot is null");
                             }
                           }
-                          return GetBuilder(
-                              init: PersistentNavController(),
-                              builder: (persist) {
-                                return ObxValue((nav) {
-                                  return PersistentTabView(
-                                    context,
-                                    controller:
-                                        persist.persistentPagecontroller.value,
-                                    items: _navBarsItems(),
-                                    screens: _children,
-                                    handleAndroidBackButtonPress: true,
-                                    hideNavigationBarWhenKeyboardShows: true,
-                                    navBarStyle: NavBarStyle.style12,
-                                    confineInSafeArea: true,
-                                    hideNavigationBar: nav.value,
-                                    stateManagement: true,
-                                    popAllScreensOnTapAnyTabs: false,
-                                    // onWillPop: (context) async {
-                                    //   final shouldPop =
-                                    //       await Operations.showWarning(context!);
-                                    //   return shouldPop!;
-                                    // },
+                        }
+                        return GetBuilder(
+                            init: PersistentNavController(),
+                            builder: (persist) {
+                              return ObxValue((nav) {
+                                return PersistentTabView(
+                                  context,
+                                  controller:
+                                      persist.persistentPagecontroller.value,
+                                  items: _navBarsItems(),
+                                  screens: _children,
+                                  handleAndroidBackButtonPress: true,
+                                  hideNavigationBarWhenKeyboardShows: true,
+                                  navBarStyle: NavBarStyle.style12,
+                                  confineInSafeArea: true,
+                                  hideNavigationBar: nav.value,
+                                  stateManagement: true,
+                                  popAllScreensOnTapAnyTabs: false,
+                                  // onWillPop: (context) async {
+                                  //   final shouldPop =
+                                  //       await Operations.showWarning(context!);
+                                  //   return shouldPop!;
+                                  // },
 
-                                    backgroundColor: Platform.isIOS
-                                        ? Colors.black
-                                        : HexColor(backgroundColor),
-                                    popAllScreensOnTapOfSelectedTab: true,
-                                    onItemSelected: (index) {
-                                      //   print(index);
-                                      runTask(index);
-                                    },
-                                    //  resizeToAvoidBottomInset: true,
-                                    screenTransitionAnimation:
-                                        const ScreenTransitionAnimation(
-                                      // Screen transition animation on change of selected tab.
-                                      animateTabTransition: true,
-                                      curve: Curves.ease,
-                                      duration: Duration(milliseconds: 200),
-                                    ),
-                                    decoration: NavBarDecoration(
-                                      borderRadius: BorderRadius.circular(0.0),
-                                      colorBehindNavBar: Colors.white,
-                                    ),
-                                  );
-                                }, PersistentNavController.instance.hide);
-                              });
+                                  backgroundColor: Platform.isIOS
+                                      ? Colors.black
+                                      : HexColor(backgroundColor),
+                                  popAllScreensOnTapOfSelectedTab: true,
+                                  onItemSelected: (index) {
+                                    //   print(index);
+                                    runTask(index);
+                                  },
+                                  //  resizeToAvoidBottomInset: true,
+                                  screenTransitionAnimation:
+                                      const ScreenTransitionAnimation(
+                                    // Screen transition animation on change of selected tab.
+                                    animateTabTransition: true,
+                                    curve: Curves.ease,
+                                    duration: Duration(milliseconds: 200),
+                                  ),
+                                  decoration: NavBarDecoration(
+                                    borderRadius: BorderRadius.circular(0.0),
+                                    colorBehindNavBar: Colors.white,
+                                  ),
+                                );
+                              }, PersistentNavController.instance.hide);
+                            });
 
-                          //   PageView(
-                          //   physics: const NeverScrollableScrollPhysics(),
-                          //   controller: tabs.pageController,
-                          //   children: _children,
-                          //   onPageChanged: (index) {
-                          //     provide.changeIndex(index);
-                          //   },
-                          // );
-                        }),
-                  );
-                }),
-          ),
+                        //   PageView(
+                        //   physics: const NeverScrollableScrollPhysics(),
+                        //   controller: tabs.pageController,
+                        //   children: _children,
+                        //   onPageChanged: (index) {
+                        //     provide.changeIndex(index);
+                        //   },
+                        // );
+                      }),
+                );
+              }),
         ),
       ),
     );

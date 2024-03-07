@@ -81,7 +81,7 @@ class ChatForm extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Row(
                   children: [
                     // SvgPicture.asset(
@@ -98,11 +98,27 @@ class ChatForm extends StatelessWidget {
                         //  print(sendTo);
                         giveDiamondsModal(context, sendTo);
                       },
-                      child: SvgPicture.asset(
-                        "assets/icon/diamond.svg",
-                        height: 20,
-                        width: 20,
-                        //  color: const Color.fromRGBO(0, 0, 0, 0.4),
+                      child: Card(
+                        elevation: 10,
+                        color: Colors.grey.shade900,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(80),
+                          //set border radius more than 50% of height and width to make circle
+                        ),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: HexColor(backgroundColor)),
+                          child: Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: SvgPicture.asset(
+                              "assets/icon/diamond.svg",
+                              height: 20,
+                              width: 20,
+                              //  color: const Color.fromRGBO(0, 0, 0, 0.4),
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ],
@@ -165,7 +181,8 @@ class ChatForm extends StatelessWidget {
               ),
               stream.isTyping
                   ? Padding(
-                      padding: const EdgeInsets.all(10.0),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 10),
                       child: InkWell(
                         onTap: () async {
                           if (chatWare.socket != null) {
@@ -220,11 +237,27 @@ class ChatForm extends StatelessWidget {
                           //   chat,
                           // );
                         },
-                        child: SvgPicture.asset(
-                          "assets/icon/Send.svg",
-                          height: 20,
-                          width: 20,
-                          color: textWhite,
+                        child: Card(
+                          elevation: 10,
+                          color: Colors.grey.shade900,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(80),
+                            //set border radius more than 50% of height and width to make circle
+                          ),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: HexColor(backgroundColor)),
+                            child: Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: SvgPicture.asset(
+                                "assets/icon/Send.svg",
+                                height: 20,
+                                width: 20,
+                                color: textWhite,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     )

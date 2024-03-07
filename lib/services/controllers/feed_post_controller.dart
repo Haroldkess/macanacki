@@ -16,6 +16,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import '../../model/feed_post_model.dart';
 import '../../model/public_profile_model.dart';
+import '../../presentation/uiproviders/screen/tab_provider.dart';
 import '../../presentation/widgets/debug_emitter.dart';
 import '../middleware/feed_post_ware.dart';
 import 'action_controller.dart';
@@ -67,6 +68,118 @@ class FeedPostController {
     if (isPaginating == true) {
       ware.isLoading(false);
     }
+  }
+
+  static Future<void> getRoyaltyController(
+      BuildContext context, String type) async {
+    FeedPostWare ware = Provider.of<FeedPostWare>(context, listen: false);
+
+    ware.isLoadingRoyalty(true);
+
+    bool isDone = await ware.getRoyaltyFromApi(type).whenComplete(
+        () => emitter("everything from api and provider is done"));
+    // ignore: use_build_context_synchronously
+    //  VideosController.addVideosOffline(context);
+
+    // ignore: use_build_context_synchronously
+
+    if (isDone) {
+      ware.isLoadingRoyalty(false);
+
+      //  List<FeedPost> data = [];
+      // for (var i = 0; i < 10; i++) {
+      //   data.add(ware.feedPosts[i]);
+      // }
+
+      emitter("feed post stored");
+      // ignore: use_build_context_synchronously
+      // await  FeedPostController.downloadThumbs(
+      //       // ignore: use_build_context_synchronously
+      //       data, context, MediaQuery.of(context).size.height);
+    } else {
+      ware.isLoadingRoyalty(false);
+      floatToast("Can't get royalty", Colors.red.shade300);
+
+      // ignore: use_build_context_synchronously
+      // showToast(context, "An error occured", Colors.red);
+    }
+
+    ware.isLoadingRoyalty(false);
+  }
+
+  static Future<void> deThroneNgController(
+    BuildContext context,
+  ) async {
+    FeedPostWare ware = Provider.of<FeedPostWare>(context, listen: false);
+
+    ware.isLoadingNg(true);
+
+    bool isDone = await ware.deThroneNgFromApi().whenComplete(
+        () => emitter("everything from api and provider is done"));
+    // ignore: use_build_context_synchronously
+    //  VideosController.addVideosOffline(context);
+
+    // ignore: use_build_context_synchronously
+
+    if (isDone) {
+      ware.isLoadingNg(false);
+
+      //  List<FeedPost> data = [];
+      // for (var i = 0; i < 10; i++) {
+      //   data.add(ware.feedPosts[i]);
+      // }
+
+      emitter("feed post stored");
+      // ignore: use_build_context_synchronously
+      // await  FeedPostController.downloadThumbs(
+      //       // ignore: use_build_context_synchronously
+      //       data, context, MediaQuery.of(context).size.height);
+    } else {
+      ware.isLoadingNg(false);
+
+      // ignore: use_build_context_synchronously
+      // showToast(context, "An error occured", Colors.red);
+    }
+
+    ware.isLoadingRoyalty(false);
+  }
+
+  static Future<void> deThroneController(
+    BuildContext context,
+  ) async {
+    FeedPostWare ware = Provider.of<FeedPostWare>(context, listen: false);
+    TabProvider tab = Provider.of<TabProvider>(context, listen: false);
+
+    ware.isLoadingNotNg(true);
+
+    bool isDone = await ware.deThroneFromApi(tab.filterNameHome).whenComplete(
+        () => emitter("everything from api and provider is done"));
+    // ignore: use_build_context_synchronously
+    //  VideosController.addVideosOffline(context);
+
+    // ignore: use_build_context_synchronously
+
+    if (isDone) {
+      ware.isLoadingNotNg(false);
+
+      //  List<FeedPost> data = [];
+      // for (var i = 0; i < 10; i++) {
+      //   data.add(ware.feedPosts[i]);
+      // }
+
+      emitter("feed post stored");
+      // ignore: use_build_context_synchronously
+      // await  FeedPostController.downloadThumbs(
+      //       // ignore: use_build_context_synchronously
+      //       data, context, MediaQuery.of(context).size.height);
+    } else {
+      ware.isLoadingNotNg(false);
+
+      // ignore: use_build_context_synchronously
+      // showToast(context, "An error occured", Colors.red);
+    }
+
+    ware.isLoadingNotNg(false);
   }
 
   static Future reloadPage(context) async {

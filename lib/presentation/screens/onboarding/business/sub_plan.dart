@@ -12,6 +12,7 @@ import 'package:macanacki/presentation/screens/home/subscription/sub_successful.
 import 'package:macanacki/presentation/screens/onboarding/business/success.dart';
 import 'package:macanacki/presentation/screens/onboarding/login_screen.dart';
 import 'package:macanacki/presentation/widgets/buttons.dart';
+import 'package:macanacki/presentation/widgets/loader.dart';
 import 'package:macanacki/presentation/widgets/snack_msg.dart';
 import 'package:macanacki/services/controllers/payment_controller.dart';
 import 'package:macanacki/services/middleware/plan_ware.dart';
@@ -23,6 +24,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../config/pay_ext.dart';
 import '../../../../config/pay_wall.dart';
 import '../../../../model/plan_model.dart';
+import '../../../../services/controllers/plan_controller.dart';
 import '../../../../services/temps/temps_id.dart';
 import '../../../allNavigation.dart';
 import '../../../constants/colors.dart';
@@ -248,27 +250,43 @@ class _SubscriptionPlansBusinessState extends State<SubscriptionPlansBusiness> {
                           ),
                           Column(
                             children: [
-                              AppButton(
-                                  width: 0.7,
-                                  height: 0.06,
-                                  color: "#ffffff",
-                                  text: "Continue",
-                                  backColor: "#ffffff",
-                                  curves: buttonCurves * 5,
-                                  textColor: backgroundColor,
-                                  onTap: () async {
-                                    setState(() {
-                                      myPlan = plans.plans[0];
-                                    });
-                                    //mmmmmmmmmmmmm
-                                    payModal(
-                                        context,
-                                        myPlan!,
-                                        widget.isBusiness,
-                                        widget.isSubmiting == "pay"
-                                            ? true
-                                            : false);
-                                  }),
+                              plans.loadVerification
+                                  ? Loader(color: textWhite)
+                                  : AppButton(
+                                      width: 0.7,
+                                      height: 0.06,
+                                      color: "#ffffff",
+                                      text: "Continue",
+                                      backColor: "#ffffff",
+                                      curves: buttonCurves * 5,
+                                      textColor: backgroundColor,
+                                      onTap: () async {
+                                        setState(() {
+                                          myPlan = plans.plans[0];
+                                        });
+                                        //mmmmmmmmmmmmm
+                                        UserProfileWare user =
+                                            Provider.of<UserProfileWare>(
+                                                context,
+                                                listen: false);
+
+                                        if (user.userProfileModel.country!
+                                                .toLowerCase() ==
+                                            "Nigeria".toLowerCase()) {
+                                          await PlanController
+                                              .verificationLinkController(
+                                            context,
+                                          );
+                                        } else {
+                                          payModal(
+                                              context,
+                                              myPlan!,
+                                              widget.isBusiness,
+                                              widget.isSubmiting == "pay"
+                                                  ? true
+                                                  : false);
+                                        }
+                                      }),
                               const SizedBox(
                                 height: 20,
                               ),
@@ -373,6 +391,7 @@ payModal(BuildContext context, PlanData plan, bool? isBusiness, bool isPayOnly,
     [String? id]) async {
   List<Package> verificationPackages =
       await PayExt.fetchPackagesFromOfferings(identifier: 'verification');
+  UserProfileWare user = Provider.of<UserProfileWare>(context, listen: false);
   if (!context.mounted) return;
   await showModalBottomSheet(
     useRootNavigator: true,
@@ -394,6 +413,7 @@ payModal(BuildContext context, PlanData plan, bool? isBusiness, bool isPayOnly,
             title: "Verification Packages",
             description: "Unlock the full verification experience",
             packages: verificationPackages,
+            isDiamond: false,
             onError: (String e) {
               showToast2(context, "Payment not verified try again",
                   isError: true);

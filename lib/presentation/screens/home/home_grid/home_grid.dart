@@ -27,8 +27,10 @@ import '../../../uiproviders/screen/tab_provider.dart';
 import '../../../widgets/debug_emitter.dart';
 import '../../../widgets/text.dart';
 import '../../notification/notification_screen.dart';
+import '../Feed/feed_home.dart';
 import '../Feed/friends_page_view.dart';
 import '../Feed/people_near_you.dart';
+import '../friends/friends_screen.dart';
 import '../profile/profileextras/extra_profile_view.dart';
 import '../profile/profileextras/not_mine_buttons.dart';
 import '../search/global_search_screen.dart';
@@ -91,7 +93,7 @@ class _HomeGridScreenState extends State<HomeGridScreen> {
         return;
       }
       await FeedPostController.getFeedPostController(
-              context, pageNum + 1, true, tab.filterNameHome)
+              context, pageNum + 1, true, tab.filterNameHomePost)
           .whenComplete(() => emitter("paginated"));
     }
   }
@@ -103,7 +105,7 @@ class _HomeGridScreenState extends State<HomeGridScreen> {
       if (provide.feedPosts.isEmpty) {
         SchedulerBinding.instance.addPostFrameCallback((_) async {
           await FeedPostController.getFeedPostController(
-              context, 1, false, tab.filterNameHome);
+              context, 1, false, tab.filterNameHomePost);
         });
       }
 
@@ -122,7 +124,7 @@ class _HomeGridScreenState extends State<HomeGridScreen> {
       provide.isLoadingReferesh(true);
       provide.indexChange(0);
       await FeedPostController.getFeedPostController(
-          context, 1, false, tab.filterNameHome);
+          context, 1, false, tab.filterNameHomePost);
       //   SchedulerBinding.instance.addPostFrameCallback((_) {
       ActionController.retrievAllUserLikedController(context);
       // });
@@ -152,8 +154,8 @@ class _HomeGridScreenState extends State<HomeGridScreen> {
           backgroundColor: HexColor(backgroundColor),
           elevation: 0,
           automaticallyImplyLeading: false,
-          actions: [],
-          title: MenuCategory(
+
+          title: MenuCategorySearch(
             tab: tab,
           ),
         ),
@@ -481,15 +483,20 @@ class MenuCategory extends StatefulWidget {
 }
 
 class _MenuCategoryState extends State<MenuCategory> {
+  // List<String> cat = [
+  //   "Verified",
+  //   "Unverified",
+  // ];
   List<String> cat = [
-    "Verified",
-    "Unverified",
+    "King",
+    "Queen",
   ];
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
+        // SizedBox(),
         Row(
           children: [
             ...cat.map((e) => InkWell(
@@ -499,8 +506,10 @@ class _MenuCategoryState extends State<MenuCategory> {
                   //  setState(() {});
                   ///   TabProvider tab = Provider.of<TabProvider>(context, listen: false);
                   await widget.tab!.changeFilterHome(e).whenComplete(() async {
-                    await FeedPostController.getFeedPostController(
-                        context, 1, false, e);
+                    // await FeedPostController.getFeedPostController(
+                    //     context, 1, false, e);
+                    FeedPostController.getRoyaltyController(
+                        context, e.toLowerCase());
                     //   setState(() {});
                   });
                   widget.tab!.load(false);
@@ -508,6 +517,65 @@ class _MenuCategoryState extends State<MenuCategory> {
                 child:
                     CategoryViewHome(name: e, isHome: true, tab: widget.tab!)))
           ],
+        ),
+      ],
+    );
+  }
+}
+
+class MenuCategorySearch extends StatefulWidget {
+  TabProvider? tab;
+  MenuCategorySearch({super.key, required this.tab});
+
+  @override
+  State<MenuCategorySearch> createState() => _MenuCategorySearchState();
+}
+
+class _MenuCategorySearchState extends State<MenuCategorySearch> {
+  List<String> cat = [
+    "Verified",
+    "Unverified",
+  ];
+  // List<String> cat = [
+  //   "King",
+  //   "Queen",
+  // ];
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        // SizedBox(),
+        Row(
+          children: [
+            ...cat.map((e) => InkWell(
+                onTap: () async {
+                  //  emitter("test 1 +> $e");
+                  widget.tab!.load(true);
+                  //  setState(() {});
+                  ///   TabProvider tab = Provider.of<TabProvider>(context, listen: false);
+                  await widget.tab!
+                      .changeFilterHomePost(e)
+                      .whenComplete(() async {
+                    await FeedPostController.getFeedPostController(
+                        context, 1, false, e);
+
+                    //   setState(() {});
+                  });
+                  widget.tab!.load(false);
+                },
+                child: CategoryViewHomePost(
+                    name: e, isHome: true, tab: widget.tab!)))
+          ],
+        ),
+        InkWell(
+          onTap: () {
+            PageRouting.pushToPage(context, const FriendsScreen());
+          },
+          child: SvgPicture.asset(
+            "assets/icon/searchicon.svg",
+            color: Colors.white,
+          ),
         )
       ],
     );

@@ -12,12 +12,14 @@ priceOptionModal(BuildContext context) async {
   return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      backgroundColor: Colors.black,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (context) => Padding(
             padding: const EdgeInsets.all(8.0),
             child: Container(
               //   height: MediaQuery.of(context).size.height / 2,
+              color: Colors.black,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -30,7 +32,7 @@ priceOptionModal(BuildContext context) async {
                       children: [
                         AppText(
                           text: "Select budget",
-                          color: HexColor(darkColor),
+                          color: textWhite,
                           size: 16,
                           fontWeight: FontWeight.w700,
                         ),
@@ -61,9 +63,10 @@ priceOptionModal(BuildContext context) async {
                                       ),
                                       AppText(
                                         text:
-                                            "Price: N${convertToCurrency(e.price.toString())}",
+                                            "Price: N${convertToCurrency((e.price * 1000).toString())}",
                                         fontWeight: FontWeight.w500,
                                         size: 14,
+                                        color: textPrimary,
                                       ),
                                       SizedBox(
                                         width: 10,
@@ -73,6 +76,7 @@ priceOptionModal(BuildContext context) async {
                                             "Reach: ${convertToCurrency(e.reach.toString())}",
                                         fontWeight: FontWeight.w500,
                                         size: 14,
+                                        color: textPrimary,
                                       ),
                                     ],
                                   ),

@@ -126,10 +126,13 @@ class _TestProfileState extends State<TestProfile>
   @override
   void initState() {
     super.initState();
-    Operations.controlSystemColor();
+    //  Operations.controlSystemColor();
 
     if (widget.isFromRoute == true) {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        if (PersistentNavController.instance.hide.value == true) {
+          PersistentNavController.instance.toggleHide();
+        }
         setState(() {
           routeName = ModalRoute.of(context)!.settings.arguments.toString();
         });

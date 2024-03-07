@@ -143,6 +143,7 @@ class _EditProfileState extends State<EditProfile> {
                             currentCountry: user.userProfileModel.country ??
                                 "Select country",
                             flagState: CountryFlag.DISABLE,
+                            disableCountry: true,
                             onCountryChanged: (country) {
                               if (country != "Select country") {
                                 setState(() {

@@ -65,7 +65,7 @@ class GiftCalls {
         },
       );
 
-      log(response.body.toString());
+      emitter(response.body.toString());
     } catch (e) {
       response = null;
     }
@@ -133,7 +133,7 @@ class GiftCalls {
         },
       );
 
-      log(response.body.toString());
+      emitter(response.body.toString());
     } catch (e) {
       response = null;
     }
@@ -200,7 +200,7 @@ class GiftCalls {
         },
       );
 
-      log(response.body.toString());
+      emitter(response.body.toString());
     } catch (e) {
       response = null;
     }
@@ -221,8 +221,8 @@ class GiftCalls {
         },
       );
 
-      log(response.body.toString());
-      log(response.statusCode.toString());
+      emitter(response.body.toString());
+      emitter(response.statusCode.toString());
     } catch (e) {
       response = null;
     }

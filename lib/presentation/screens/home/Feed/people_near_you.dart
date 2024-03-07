@@ -15,7 +15,7 @@ import 'package:macanacki/presentation/widgets/tik_tok_view.dart';
 import 'package:path/path.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 import 'package:provider/provider.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+
 import 'package:video_player/video_player.dart';
 import '../../../../services/backoffice/mux_client.dart';
 import '../../../../services/controllers/feed_post_controller.dart';
@@ -26,6 +26,7 @@ import '../../../uiproviders/screen/find_people_provider.dart';
 import '../../../uiproviders/screen/tab_provider.dart';
 import '../../../widgets/buttons.dart';
 import '../../../widgets/debug_emitter.dart';
+import '../home_grid/home_grid.dart';
 import '../profile/buy_followers/profile_ad_screen.dart';
 
 class PeopleHome extends StatefulWidget {
@@ -47,126 +48,152 @@ class _PeopleHomeState extends State<PeopleHome> {
 //    controller = PageController(initialPage: stream.index, keepPage: true);
     PreloadPageController controller = PreloadPageController(
         initialPage: widget.index ?? stream.index, keepPage: true);
-
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onPanDown: (_) {
-        // PersistentNavController.instance.toggleHide();
-        WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-          if (PersistentNavController.instance.hide.value == true) {
-            PersistentNavController.instance.toggleHide();
-          }
-        });
-      },
-      child: Container(
-        color: HexColor(backgroundColor),
-        height: Get.height,
-        width: Get.width,
-        child: stream.feedPosts.isEmpty
-            ? Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Center(
-                    child: Column(
+    TabProvider tab = context.watch<TabProvider>();
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: backgroundSecondary,
+        appBar: AppBar(
+          //   backgroundColor: backgroundSecondary,
+          backgroundColor: HexColor(backgroundColor),
+          elevation: 0,
+          automaticallyImplyLeading: false,
+          actions: [],
+          title: MenuCategory(
+            tab: tab,
+          ),
+        ),
+        body: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onPanDown: (_) {
+            // PersistentNavController.instance.toggleHide();
+            WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+              if (PersistentNavController.instance.hide.value == true) {
+                PersistentNavController.instance.toggleHide();
+              }
+            });
+          },
+          child: Container(
+              color: HexColor(backgroundColor),
+              height: Get.height,
+              width: Get.width,
+              child: stream.feedPosts.isEmpty
+                  ? Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        LottieBuilder.asset("assets/icon/nodata.json"),
-                        stream.loadStatus
-                            ? Loader(color: textWhite)
-                            : AppButton(
-                                width: 0.5,
-                                height: 0.06,
-                                color: backgroundColor,
-                                text: "Reload",
-                                backColor: primaryColor,
-                                curves: buttonCurves * 5,
-                                textColor: backgroundColor,
-                                onTap: () async {
-                                  await FeedPostController
-                                      .getFeedPostController(context, 1, true);
-                                  //  PageRouting.pushToPage(context, const BusinessVerification());
-                                }),
+                        Center(
+                          child: Column(
+                            children: [
+                              LottieBuilder.asset("assets/icon/nodata.json"),
+                              stream.loadStatus
+                                  ? Loader(color: textWhite)
+                                  : AppButton(
+                                      width: 0.5,
+                                      height: 0.06,
+                                      color: backgroundColor,
+                                      text: "Reload",
+                                      backColor: primaryColor,
+                                      curves: buttonCurves * 5,
+                                      textColor: backgroundColor,
+                                      onTap: () async {
+                                        await FeedPostController
+                                            .getFeedPostController(
+                                                context, 1, true);
+                                        //  PageRouting.pushToPage(context, const BusinessVerification());
+                                      }),
+                            ],
+                          ),
+                        )
                       ],
-                    ),
-                  )
-                ],
-              )
-            : PreloadPageView.builder(
-                itemCount: stream.feedPosts.length,
-                controller: controller,
-                preloadPagesCount: 0,
-                scrollDirection: Axis.vertical,
-                itemBuilder: ((context, index) {
-                  FeedPost post = stream.feedPosts[index];
-                  FeedPost? post2 = index + 1 < stream.feedPosts.length
-                      ? stream.feedPosts[index + 1]
-                      : null;
-                  FeedPost? post3 = index + 2 < stream.feedPosts.length
-                      ? stream.feedPosts[index + 2]
-                      : null;
-                  FeedPost? post4 = index + 3 < stream.feedPosts.length
-                      ? stream.feedPosts[index + 3]
-                      : null;
+                    )
+                  : ProfileAds(
+                      post: stream.royalUser,
+                    )
 
-                  return TikTokView(
-                    media: post.mux!,
-                    vod: post.vod!,
-                    data: post,
-                    isFriends: false,
-                    nextImage: [
-                      post2 == null
-                          ? null
-                          : post2.media!.isEmpty
-                              ? null
-                              : post2.media!.first,
-                      post3 == null
-                          ? null
-                          : post3.media!.isEmpty
-                              ? null
-                              : post3.media!.first,
-                      post4 == null
-                          ? null
-                          : post4.media!.isEmpty
-                              ? null
-                              : post4.media!.first
-                    ],
-                    page: "feed",
-                    feedPosts: stream.feedPosts,
-                    index1: index,
-                    index2: index + 1,
-                    urls: post.media!,
-                    isHome: true,
-                    isInView: true,
-                    thumbails: post.thumbnails!,
-                  );
-                }),
-                onPageChanged: (index) {
-                  if (mounted) {
-                    if (index > stream.feedPosts.length - 5) {
-                      SchedulerBinding.instance.addPostFrameCallback((_) {
-                        paginateFeed(context);
-                      });
-                    }
-                    // SchedulerBinding.instance.addPostFrameCallback((_) {
-                    //   FeedPostWare postLenght =
-                    //       Provider.of<FeedPostWare>(context, listen: false);
-                    //   if (index % 1 == 0) {
-                    //     List<FeedPost> toSend = [];
+              // PreloadPageView.builder(
+              //     itemCount: stream.feedPosts.length,
+              //     controller: controller,
+              //     preloadPagesCount: 0,
+              //     scrollDirection: Axis.vertical,
+              //     physics: NeverScrollableScrollPhysics(),
+              //     itemBuilder: ((context, index) {
+              //       FeedPost post = stream.feedPosts[index];
+              //       FeedPost? post2 = index + 1 < stream.feedPosts.length
+              //           ? stream.feedPosts[index + 1]
+              //           : null;
+              //       FeedPost? post3 = index + 2 < stream.feedPosts.length
+              //           ? stream.feedPosts[index + 2]
+              //           : null;
+              //       FeedPost? post4 = index + 3 < stream.feedPosts.length
+              //           ? stream.feedPosts[index + 3]
+              //           : null;
 
-                    //     for (var i = index; i < (stream.feedPosts.length); i++) {
-                    //       toSend.add(postLenght.feedPosts[i]);
-                    //     }
-                    //     emitter("sending ${toSend.length} posts for caching");
-                    //     FeedPostController.downloadThumbs(
-                    //         toSend, context, MediaQuery.of(context).size.height);
-                    //     //  emitter('caching next ${toSend.length} sent');
-                    //   }
-                    // });
-                  }
-                  // paginateFeed(context);
-                  // provide.changeIndex(index);
-                },
+              //       // return TikTokView(
+              //       //   media: post.mux!,
+              //       //   vod: post.vod!,
+              //       //   data: post,
+              //       //   isFriends: false,
+              //       //   nextImage: [
+              //       //     post2 == null
+              //       //         ? null
+              //       //         : post2.media!.isEmpty
+              //       //             ? null
+              //       //             : post2.media!.first,
+              //       //     post3 == null
+              //       //         ? null
+              //       //         : post3.media!.isEmpty
+              //       //             ? null
+              //       //             : post3.media!.first,
+              //       //     post4 == null
+              //       //         ? null
+              //       //         : post4.media!.isEmpty
+              //       //             ? null
+              //       //             : post4.media!.first
+              //       //   ],
+              //       //   page: "feed",
+              //       //   feedPosts: stream.feedPosts,
+              //       //   index1: index,
+              //       //   index2: index + 1,
+              //       //   urls: post.media!,
+              //       //   isHome: true,
+              //       //   isInView: true,
+              //       //   thumbails: post.thumbnails!,
+              //       // );
+
+              //       return ProfileAds(
+              //         post: post,
+              //       );
+              //     }),
+              //     onPageChanged: (index) {
+              //       if (mounted) {
+              //         if (index > stream.feedPosts.length - 5) {
+              //           SchedulerBinding.instance.addPostFrameCallback((_) {
+              //             paginateFeed(context);
+              //           });
+              //         }
+              //         // SchedulerBinding.instance.addPostFrameCallback((_) {
+              //         //   FeedPostWare postLenght =
+              //         //       Provider.of<FeedPostWare>(context, listen: false);
+              //         //   if (index % 1 == 0) {
+              //         //     List<FeedPost> toSend = [];
+
+              //         //     for (var i = index; i < (stream.feedPosts.length); i++) {
+              //         //       toSend.add(postLenght.feedPosts[i]);
+              //         //     }
+              //         //     emitter("sending ${toSend.length} posts for caching");
+              //         //     FeedPostController.downloadThumbs(
+              //         //         toSend, context, MediaQuery.of(context).size.height);
+              //         //     //  emitter('caching next ${toSend.length} sent');
+              //         //   }
+              //         // });
+              //       }
+              //       // paginateFeed(context);
+              //       // provide.changeIndex(index);
+              //     },
+              //   ),
+
               ),
+        ),
       ),
     );
     // InViewNotifierList(

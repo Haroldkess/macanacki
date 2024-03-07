@@ -1,9 +1,11 @@
 import 'package:apivideo_player/apivideo_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:chewie/chewie.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:macanacki/presentation/allNavigation.dart';
 import 'package:macanacki/presentation/constants/colors.dart';
@@ -24,11 +26,13 @@ import 'package:video_player/video_player.dart';
 import '../../model/feed_post_model.dart';
 import '../../services/controllers/url_launch_controller.dart';
 import '../screens/home/diamond/diamond_modal/download_modal.dart';
+import '../uiproviders/buttons/button_state.dart';
 import '../uiproviders/screen/comment_provider.dart';
 import '../uiproviders/screen/tab_provider.dart';
 import 'feed_views/new_action_design.dart';
 import 'option_modal.dart';
 import 'package:flutter/services.dart';
+import 'package:macanacki/services/middleware/video/video_ware.dart';
 
 class TikTokView extends StatefulWidget {
   final List<String> media;
@@ -69,7 +73,7 @@ class TikTokView extends StatefulWidget {
 class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
   // VideoPlayerController? _controller;
   FeedPost? thisData;
-
+  ChewieController? _chewieController;
   List<String> savedVid = [];
   bool flag = false;
   late AnimationController controller;
@@ -83,7 +87,28 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    // emitter(widget.media.first.toString());
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   if (widget.media.isNotEmpty) {
+    //     if (widget.media.first.contains(".mp4")) {
+    //       try {
+    //         VideoWareHome.instance.addVideoToList(widget.data).whenComplete(() {
+    //           emitter("video added");
+    //         }).whenComplete(() {
+    //              try {
+    //   initializePlayer();
+    // } catch (e) {
+    //   emitter(e.toString());
+    // }
+    //         });
+    //       } catch (e) {
+    //         emitter(e.toString());
+    //       }
+    //     }
+    //   }
 
+    //   //  ButtonState.instance.tapClose();
+    // });
     controller = AnimationController(
       duration: const Duration(milliseconds: 500), //controll animation duration
       vsync: this,
@@ -255,252 +280,267 @@ class _TikTokViewState extends State<TikTokView> with TickerProviderStateMixin {
         ),
       ),
       body: GestureDetector(
-        onDoubleTap: () async {
-          HapticFeedback.heavyImpact();
-          if (controller.value == 1) {
-            controller.reset();
-            controller.forward();
-          } else {
-            controller.forward();
-          }
+          onDoubleTap: () async {
+            HapticFeedback.heavyImpact();
+            if (controller.value == 1) {
+              controller.reset();
+              controller.forward();
+            } else {
+              controller.forward();
+            }
 
-          if (action.likeIds.contains(widget.data.id!)) {
+            if (action.likeIds.contains(widget.data.id!)) {
+              setState(() {
+                flag = true;
+              });
+              await Future.delayed(const Duration(seconds: 2));
+
+              setState(() {
+                flag = false;
+              });
+
+              return;
+            }
             setState(() {
               flag = true;
             });
+
+            try {
+              await likeAction(context, true);
+            } catch (e) {
+              emitter(e.toString());
+            }
+
             await Future.delayed(const Duration(seconds: 2));
 
             setState(() {
               flag = false;
             });
-
-            return;
-          }
-          setState(() {
-            flag = true;
-          });
-
-          try {
-            await likeAction(context, true);
-          } catch (e) {
-            emitter(e.toString());
-          }
-
-          await Future.delayed(const Duration(seconds: 2));
-
-          setState(() {
-            flag = false;
-          });
-        },
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            Column(
-              children: widget.nextImage == null
-                  ? []
-                  : List.generate(
-                      widget.nextImage == null ? 0 : widget.nextImage!.length,
-                      (index) => Container(
-                        height: 0,
-                        color: Colors.black,
-                        child: CachedNetworkImage(
-                            color: Colors.black,
-                            imageUrl: widget.nextImage![index] ?? ""),
-                      ),
-                    ),
-            ),
-            widget.thumbails.isEmpty
-                ? SizedBox.shrink()
-                : Column(
-                    children: widget.thumbails.first == null
-                        ? []
-                        : List.generate(
-                            widget.thumbails == null
-                                ? 0
-                                : widget.thumbails.length,
-                            (index) => Container(
-                              height: 5,
+          },
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Column(
+                children: widget.nextImage == null
+                    ? []
+                    : List.generate(
+                        widget.nextImage == null ? 0 : widget.nextImage!.length,
+                        (index) => Container(
+                          height: 0,
+                          color: Colors.black,
+                          child: CachedNetworkImage(
                               color: Colors.black,
-                              child: widget.thumbails[index] == null
-                                  ? SizedBox.shrink()
-                                  : CachedNetworkImage(
-                                      color: Colors.black,
-                                      imageUrl: widget.thumbails[index] ?? ""),
-                            ),
-                          ),
-                  ),
-            Container(
-              width: width,
-              height: height,
-              child: Flex(
-                direction: Axis.vertical,
-                children: <Widget>[
-                  Expanded(
-                      child: LayoutBuilder(
-                          builder: (_, constraints) => widget.media.length < 2
-                              ? SinglePost(
-                                  media: widget.media.isEmpty
-                                      ? ""
-                                      : widget.media.first,
-                                  shouldPlay: true,
-                                  constraints: constraints,
-                                  isHome: widget.isHome,
-                                  thumbLink: widget.thumbails.isEmpty
-                                      ? ""
-                                      : widget.thumbails.first ?? "",
-                                  isInView: widget.isInView!,
-                                  postId: widget.data.id!,
-                                  data: widget.data,
-                                  vod: widget.vod.isEmpty
-                                      ? ""
-                                      : widget.vod.first,
-                                  allPost: [],
-                                )
-                              : MultiplePost(
-                                  media: widget.media,
-                                  constraints: constraints,
-                                  data: widget.data,
-                                  isHome: widget.isHome,
-                                  thumbLinks: widget.urls,
-                                  isInView: widget.isInView,
-                                )))
-                ],
-              ),
-            ),
-            Positioned(
-              bottom: 0,
-              child: Align(
-                  alignment: Alignment.bottomLeft,
-                  child: NewDesignTest(
-                    data: widget.data,
-                    page: widget.page,
-                    media: widget.media,
-                    controller: _controller,
-                    isHome: true,
-                    showComment: true,
-                    extended: false,
-                  )),
-            ),
-            widget.page == "user"
-                ? Positioned(
-                    bottom: 120,
-                    right: 0,
-                    child: Align(
-                        alignment: Alignment.bottomRight,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            AdsDisplay(
-                              action: () {
-                                PageRouting.pushToPage(
-                                    context,
-                                    PromoteScreen(
-                                        postId: widget.data.id.toString()));
-                              },
-                              sponsored: false,
-                              color: HexColor('#00B074'),
-                              title: 'PROMOTE',
-                            ),
-                          ],
-                        )),
-                  )
-                : SizedBox.shrink(),
-            flag
-                ? Center(
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: AnimatedContainer(
-                        duration: const Duration(seconds: 3),
-                        curve: Curves.bounceInOut,
-                        onEnd: () {
-                          setState(() {
-                            flag = false;
-                          });
-                        },
-                        child: Icon(
-                          Icons.favorite,
-                          size: MediaQuery.of(context).size.width * 0.4,
-                          color: animation.value,
+                              imageUrl: widget.nextImage![index] ?? ""),
                         ),
                       ),
+              ),
+              widget.thumbails.isEmpty
+                  ? SizedBox.shrink()
+                  : Column(
+                      children: widget.thumbails.first == null
+                          ? []
+                          : List.generate(
+                              widget.thumbails == null
+                                  ? 0
+                                  : widget.thumbails.length,
+                              (index) => Container(
+                                height: 5,
+                                color: Colors.black,
+                                child: widget.thumbails[index] == null
+                                    ? SizedBox.shrink()
+                                    : CachedNetworkImage(
+                                        color: Colors.black,
+                                        imageUrl:
+                                            widget.thumbails[index] ?? ""),
+                              ),
+                            ),
                     ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Expanded(
+                      child: widget.media.length < 2
+                          ? Center(
+                              child: SinglePost(
+                                media: widget.media.isEmpty
+                                    ? ""
+                                    : widget.media.first,
+                                shouldPlay: true,
+                                // constraints: constraints,
+                                isHome: widget.isHome,
+                                thumbLink: widget.thumbails.isEmpty
+                                    ? ""
+                                    : widget.thumbails.first ?? "",
+                                isInView: widget.isInView!,
+                                postId: widget.data.id!,
+                                data: widget.data,
+                                vod: widget.vod.isEmpty ? "" : widget.vod.first,
+                                allPost: [],
+                              ),
+                            )
+                          : MultiplePost(
+                              media: widget.media,
+                              //  constraints: constraints,
+                              data: widget.data,
+                              isHome: widget.isHome,
+                              thumbLinks: widget.urls,
+                              isInView: widget.isInView,
+                            )),
+                  SizedBox(
+                    height: widget.data.user!.gender == "Business"
+                        ? widget.data.btnLink != null &&
+                                widget.data.button != null
+                            ? 130
+                            : 124
+                        : widget.data.btnLink != null &&
+                                widget.data.button != null
+                            ? 130
+                            : widget.data.description!.isEmpty
+                                ? 70
+                                : 124,
                   )
-                : const SizedBox.shrink(),
-            widget.data.btnLink != null && widget.data.button != null
-                ? Positioned(
-                    bottom: .1,
-                    child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Row(
-                        children: [
-                          SizedBox(
-                            width: width,
-                            child: InkWell(
-                              onTap: () async {
-                                if (widget.data.button == "Call Now") {
-                                  await UrlLaunchController.makePhoneCall(
-                                      widget.data.btnLink!);
-                                }
-                                if (widget.data.button == "Whatsapp") {
-                                  //   print(widget.data.btnLink!);
-
-                                  if (widget.data.btnLink!
-                                      .contains("https://wa.me/https://")) {
-                                    var start = widget.data.btnLink!
-                                        .split("https://wa.me/https://");
-
-                                    String newVal =
-                                        "https://${start.last}".toString();
-                                    emitter(newVal);
-                                    await UrlLaunchController.launchWebViewOrVC(
-                                        Uri.parse(newVal));
-                                  } else {
-                                    await UrlLaunchController.launchWebViewOrVC(
-                                        Uri.parse(widget.data.btnLink!));
+                ],
+              ),
+              Positioned(
+                bottom: 0,
+                child: Align(
+                    alignment: Alignment.bottomLeft,
+                    child: NewDesignTest(
+                      data: widget.data,
+                      page: widget.page,
+                      media: widget.media,
+                      controller: _controller,
+                      isHome: true,
+                      showComment: true,
+                      extended: false,
+                    )),
+              ),
+              widget.page == "user"
+                  ? Positioned(
+                      bottom: 120,
+                      right: 0,
+                      child: Align(
+                          alignment: Alignment.bottomRight,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              AdsDisplay(
+                                action: () {
+                                  PageRouting.pushToPage(
+                                      context,
+                                      PromoteScreen(
+                                          postId: widget.data.id.toString()));
+                                },
+                                sponsored: false,
+                                color: HexColor('#00B074'),
+                                title: 'PROMOTE',
+                              ),
+                            ],
+                          )),
+                    )
+                  : SizedBox.shrink(),
+              flag
+                  ? Center(
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: AnimatedContainer(
+                          duration: const Duration(seconds: 3),
+                          curve: Curves.bounceInOut,
+                          onEnd: () {
+                            setState(() {
+                              flag = false;
+                            });
+                          },
+                          child: Icon(
+                            Icons.favorite,
+                            size: MediaQuery.of(context).size.width * 0.4,
+                            color: animation.value,
+                          ),
+                        ),
+                      ),
+                    )
+                  : const SizedBox.shrink(),
+              widget.data.btnLink != null && widget.data.button != null
+                  ? Positioned(
+                      bottom: .1,
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              width: width,
+                              child: InkWell(
+                                onTap: () async {
+                                  if (widget.data.button == "Call Now") {
+                                    await UrlLaunchController.makePhoneCall(
+                                        widget.data.btnLink!);
                                   }
-                                } else {
-                                  //  print(widget.data.btnLink);
-                                  if (widget.data.button == "Spotify") {
-                                    await UrlLaunchController.launchWebViewOrVC(
-                                        Uri.parse(widget.data.btnLink!));
+                                  if (widget.data.button == "Whatsapp") {
+                                    //   print(widget.data.btnLink!);
+
+                                    if (widget.data.btnLink!
+                                        .contains("https://wa.me/https://")) {
+                                      var start = widget.data.btnLink!
+                                          .split("https://wa.me/https://");
+
+                                      String newVal =
+                                          "https://${start.last}".toString();
+                                      emitter(newVal);
+                                      await UrlLaunchController
+                                          .launchWebViewOrVC(Uri.parse(newVal));
+                                    } else {
+                                      await UrlLaunchController
+                                          .launchWebViewOrVC(
+                                              Uri.parse(widget.data.btnLink!));
+                                    }
                                   } else {
-                                    await UrlLaunchController.launchWebViewOrVC(
-                                        Uri.parse(widget.data.btnLink!));
+                                    //  print(widget.data.btnLink);
+                                    if (widget.data.button == "Spotify") {
+                                      await UrlLaunchController
+                                          .launchWebViewOrVC(
+                                              Uri.parse(widget.data.btnLink!));
+                                    } else {
+                                      await UrlLaunchController
+                                          .launchWebViewOrVC(
+                                              Uri.parse(widget.data.btnLink!));
+                                    }
                                   }
-                                }
-                              },
-                              child: Container(
-                                height: 35,
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.zero,
-                                    color: Colors.white),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      AppText(
-                                        text: widget.data.button!,
-                                        color: HexColor(backgroundColor),
-                                        fontWeight: FontWeight.w500,
-                                        size: 12,
-                                      ),
-                                    ],
+                                },
+                                child: Container(
+                                  height: 35,
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.zero,
+                                      color: Colors.white),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        AppText(
+                                          text: widget.data.button!,
+                                          color: HexColor(backgroundColor),
+                                          fontWeight: FontWeight.w500,
+                                          size: 12,
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  )
-                : const SizedBox.shrink(),
-          ],
-        ),
-      ),
+                    )
+                  : const SizedBox.shrink(),
+            ],
+          )),
     );
   }
 

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:macanacki/model/common/data.dart';
@@ -21,12 +22,16 @@ import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../model/asset_data.dart';
+import '../../model/dethrone_model.dart';
 import '../../model/profile_feed_post.dart';
+import '../../model/royalty_model.dart';
 import '../../model/user_profile_model.dart';
 import '../../presentation/constants/string.dart';
 import '../../presentation/widgets/debug_emitter.dart';
+import '../../presentation/widgets/float_toast.dart';
 import '../backoffice/db.dart';
 import '../backoffice/mux_client.dart';
+import '../controllers/url_launch_controller.dart';
 
 class FeedPostWare extends ChangeNotifier {
 ////////////@@@AutoScroll [State]
@@ -187,7 +192,10 @@ class FeedPostWare extends ChangeNotifier {
 
   MUXClient muxClient = MUXClient();
   bool _loadStatus = false;
+  bool _loadRoyal = false;
   bool _loadStatus2 = false;
+  bool _loadNg = false;
+  bool _loadNotNg = false;
   bool _loadStatusReferesh = false;
   int _index = 0;
   FeedData _feedData = FeedData();
@@ -205,11 +213,16 @@ class FeedPostWare extends ChangeNotifier {
   int tabIndex = 0;
 
   ProfileFeedModel _profileFeedData = ProfileFeedModel();
+  RoyalData royalUser = RoyalData();
+  DethroneModel dethroneNg = DethroneModel();
   List<ProfileFeedDatum> _profileFeedPosts = [];
   List<ProfileFeedDatum> _profileFeedPostsAudio = [];
   int get index => _index;
   bool get loadStatus => _loadStatus;
+  bool get loadRoyal => _loadRoyal;
   bool get loadStatus2 => _loadStatus2;
+  bool get loadNg => _loadNg;
+  bool get loadNotNg => _loadNotNg;
   bool get loadStatusReferesh => _loadStatusReferesh;
   FeedData get feedData => _feedData;
   List<FeedPost> get feedPosts => _feedPosts;
@@ -302,6 +315,21 @@ class FeedPostWare extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> isLoadingRoyalty(bool isLoad) async {
+    _loadRoyal = isLoad;
+    notifyListeners();
+  }
+
+  Future<void> isLoadingNg(bool isLoad) async {
+    _loadNg = isLoad;
+    notifyListeners();
+  }
+
+  Future<void> isLoadingNotNg(bool isLoad) async {
+    _loadNotNg = isLoad;
+    notifyListeners();
+  }
+
   Future<void> isLoadingReferesh(bool isLoad) async {
     _loadStatusReferesh = isLoad;
     notifyListeners();
@@ -315,6 +343,119 @@ class FeedPostWare extends ChangeNotifier {
   Future<void> isLoading2(bool isLoad) async {
     _loadStatus2 = isLoad;
     notifyListeners();
+  }
+
+  Future<bool> deThroneFromApi(String type) async {
+    late bool isSuccessful;
+
+    try {
+      http.Response? response = await dethroneKingOrQueen(type)
+          .whenComplete(() => emitter(" dethroned successfully"));
+      if (response == null) {
+        isSuccessful = false;
+        // log("swwipe users request failed"); 
+      } else if (response.statusCode == 200) {
+        emitter("200");
+        var jsonData = jsonDecode(response.body);
+
+        var incomingData = DethroneModel.fromJson(jsonData);
+        dethroneNg = incomingData;
+
+        isSuccessful = true;
+      } else {
+        //  log("swipe users  request failed");
+        isSuccessful = false;
+      }
+    } catch (e) {
+      emitter(e.toString());
+      isSuccessful = false;
+      // log(e.toString());
+    }
+
+    notifyListeners();
+
+    return isSuccessful;
+  }
+
+  Future<bool> deThroneNgFromApi() async {
+    late bool isSuccessful;
+
+    try {
+      http.Response? response = await dethroneKingOrQueenNG()
+          .whenComplete(() => emitter(" dethroned successfully"));
+      if (response == null) {
+        isSuccessful = false;
+        // log("swwipe users request failed");
+      } else if (response.statusCode == 200) {
+        emitter("200");
+        var jsonData = jsonDecode(response.body);
+
+        var incomingData = DethroneModel.fromJson(jsonData);
+        dethroneNg = incomingData;
+
+        isSuccessful = true;
+
+        if (Platform.isAndroid) {
+          UrlLaunchController.launchWebViewOrVC(
+              Uri.parse(dethroneNg.paymentLink!));
+        } else {
+          UrlLaunchController.launchInWebViewOrVC(
+              Uri.parse(dethroneNg.paymentLink!));
+        }
+      } else {
+        var jsonData = jsonDecode(response.body);
+        //  log("swipe users  request failed");
+        floatToast(jsonData["message"], const Color.fromARGB(255, 109, 84, 84));
+        isSuccessful = false;
+      }
+    } catch (e) {
+      emitter(e.toString());
+      isSuccessful = false;
+      floatToast("Can't Dethrone at the moment", Colors.red.shade300);
+      // log(e.toString());
+    }
+
+    notifyListeners();
+
+    return isSuccessful;
+  }
+
+  Future<bool> getRoyaltyFromApi(
+    String type,
+  ) async {
+    late bool isSuccessful;
+    print(type);
+    try {
+      http.Response? response = await getKingOrQueen(type)
+          .whenComplete(() => emitter("royalty users gotten successfully"));
+      if (response == null) {
+        isSuccessful = false;
+        // log("swwipe users request failed");
+      } else if (response.statusCode == 200) {
+        emitter("200");
+        var jsonData = jsonDecode(response.body);
+
+        try {
+          var incomingData = Royalty.fromJson(jsonData);
+          royalUser = incomingData.data!;
+        } catch (e) {
+          royalUser = RoyalData();
+        }
+
+        isSuccessful = true;
+      } else {
+        //  log("swipe users  request failed");
+        isSuccessful = false;
+      }
+    } catch (e) {
+      emitter(e.toString());
+      isSuccessful = false;
+      // log(e.toString());
+    }
+
+    notifyListeners();
+
+    return isSuccessful;
   }
 
   Future<bool> getFeedPostFromApi(int pageNum, [String? filter]) async {

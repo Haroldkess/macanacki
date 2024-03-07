@@ -40,9 +40,9 @@ class _PublicUserProfileFeedState extends State<PublicUserProfileFeed> {
       provide.changePublicIndex(widget.index);
     });
 
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        systemNavigationBarIconBrightness: Brightness.dark,
-        systemNavigationBarColor: HexColor(backgroundColor)));
+    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    //     systemNavigationBarIconBrightness: Brightness.dark,
+    //     systemNavigationBarColor: HexColor(backgroundColor)));
   }
 
   @override

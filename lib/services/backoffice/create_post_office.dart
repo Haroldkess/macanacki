@@ -19,7 +19,7 @@ double getFileSize(File file) {
 Future<http.StreamedResponse?> createPost(
   CreatePostModel data,
 ) async {
-  print("Inside CreatePost Office");
+  emitter("Inside CreatePost Office");
   http.StreamedResponse? response;
   SharedPreferences pref = await SharedPreferences.getInstance();
   String? token = pref.getString(tokenKey);
@@ -76,7 +76,7 @@ Future<http.StreamedResponse?> createPost(
 Future<http.StreamedResponse?> createAudioPost(
   CreateAudioPostModel data,
 ) async {
-  print("Inside CreateAudioPost Office");
+  emitter("Inside CreateAudioPost Office");
   http.StreamedResponse? response;
   SharedPreferences pref = await SharedPreferences.getInstance();
   String? token = pref.getString(tokenKey);
@@ -89,7 +89,7 @@ Future<http.StreamedResponse?> createAudioPost(
     'authorization': 'Bearer $token',
   };
 
-  print(data.media!.first.path);
+  emitter(data.media!.first.path);
   // await Future.forEach(data.media!, (element) async {
   //   var f = await http.MultipartFile.fromPath('media', element.path,
   //       filename: basename(element.path));
@@ -152,8 +152,8 @@ Future<http.Response?> shareComment(ShareCommentsModel data, int id) async {
       // body: jsonEncode(data.toJson())
     ).timeout(const Duration(seconds: 30));
 
-    log(response.body.toString());
-    log(response.statusCode.toString());
+    emitter(response.body.toString());
+    emitter(response.statusCode.toString());
   } catch (e) {
     response = null;
   }

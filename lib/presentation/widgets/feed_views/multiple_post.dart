@@ -179,73 +179,62 @@ class _MultipleViewState extends State<MultipleView> {
                 height: height,
                 decoration: BoxDecoration(color: Colors.black),
               ),
-              Padding(
-                padding: EdgeInsets.only(
-                    bottom: widget.data.btnLink != null &&
-                            widget.data.button != null
-                        ? widget.data.description!.isNotEmpty
-                            ? 70
-                            : 40
-                        : widget.data.description!.isNotEmpty
-                            ? 40
-                            : 40),
-                child: GestureDetector(
-                  onTap: () {
-                    PageRouting.pushToPage(
-                        context,
-                        EnlargeImageHolder(
-                            images: widget.images,
-                            page: "feed",
-                            data: widget.data,
-                            index: widget.index));
-                  },
-                  child: Container(
-                    height: widget.data.btnLink != null &&
-                            widget.data.button != null
-                        ? 380
-                        : widget.data.description!.isEmpty
-                            ? 430
-                            : 400,
-                    width: double.infinity,
-                    //  color: Colors.amber,
-                    child: CachedNetworkImage(
-                      imageUrl: widget.media!.replaceAll('\\', '/'),
-                      imageBuilder: (context, imageProvider) => Container(
-                        width: width,
-                        height: height,
-                        decoration: BoxDecoration(
-                            //  borderRadius: BorderRadius.circular(15),
-                            image: DecorationImage(
-                          image: imageProvider,
-                          fit: BoxFit.fitWidth,
-                        )),
-                      ),
-                      progressIndicatorBuilder:
-                          (context, url, downloadProgress) => Center(
-                              child: Loader(
-                        color: textWhite,
+              GestureDetector(
+                onTap: () {
+                  PageRouting.pushToPage(
+                      context,
+                      EnlargeImageHolder(
+                          images: widget.images,
+                          page: "feed",
+                          data: widget.data,
+                          index: widget.index));
+                },
+                child: Container(
+                  // height: widget.data.btnLink != null &&
+                  //         widget.data.button != null
+                  //     ? 380
+                  //     : widget.data.description!.isEmpty
+                  //         ? 430
+                  //         : 400,
+                  width: double.infinity,
+                  //  color: Colors.amber,
+                  child: CachedNetworkImage(
+                    imageUrl: widget.media!.replaceAll('\\', '/'),
+                    imageBuilder: (context, imageProvider) => Container(
+                      width: width,
+                      height: height,
+                      decoration: BoxDecoration(
+                          //  borderRadius: BorderRadius.circular(15),
+                          image: DecorationImage(
+                        image: imageProvider,
+                        fit: BoxFit.fitWidth,
                       )),
-                      errorWidget: (context, url, error) => CachedNetworkImage(
-                          imageUrl: widget.media!.replaceAll('\\', '/'),
-                          imageBuilder: (context, imageProvider) => Container(
-                                width: width,
-                                height: height,
-                                decoration: BoxDecoration(
-                                    //borderRadius: BorderRadius.circular(15),
-                                    image: DecorationImage(
-                                  image: imageProvider,
-                                  fit: BoxFit.fitWidth,
-                                )),
-                              ),
-                          progressIndicatorBuilder:
-                              (context, url, downloadProgress) => Center(
-                                      child: Loader(
-                                    color: textWhite,
-                                  )),
-                          errorWidget: (context, url, error) {
-                            return SizedBox();
-                          }),
                     ),
+                    progressIndicatorBuilder:
+                        (context, url, downloadProgress) => Center(
+                            child: Loader(
+                      color: textWhite,
+                    )),
+                    errorWidget: (context, url, error) => CachedNetworkImage(
+                        imageUrl: widget.media!.replaceAll('\\', '/'),
+                        imageBuilder: (context, imageProvider) => Container(
+                              width: width,
+                              height: height,
+                              decoration: BoxDecoration(
+                                  //borderRadius: BorderRadius.circular(15),
+                                  image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit.fitWidth,
+                              )),
+                            ),
+                        progressIndicatorBuilder:
+                            (context, url, downloadProgress) => Center(
+                                    child: Loader(
+                                  color: textWhite,
+                                )),
+                        errorWidget: (context, url, error) {
+                          return SizedBox();
+                        }),
                   ),
                 ),
               ),

@@ -1,12 +1,8 @@
-
 import 'package:flutter/material.dart';
-
-
+import 'package:macanacki/presentation/screens/home/friends/friends_screen.dart';
 
 class PageRouting {
   static void pushToPage(BuildContext context, Widget page) {
- 
- 
     Navigator.push(context, MaterialPageRoute(builder: (context) => page));
   }
 
